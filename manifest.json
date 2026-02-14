@@ -1,0 +1,8 @@
+{
+  "name": "Jio Omni AI Prototypes",
+  "short_name": "Jio Omni AI",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3535f3"
+}
