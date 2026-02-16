@@ -76,7 +76,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <span class="k">"mcpServers"</span>: {
     <span class="k">"JioBharatIQ"</span>: {
       <span class="k">"command"</span>: <span class="s">"bash"</span>,
-      <span class="k">"args"</span>: [<span class="s">"-c"</span>, <span class="s">"mkdir -p ~/.jds && [ -f ~/.jds/server.py ] || curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py; python3 ~/.jds/server.py"</span>]
+      <span class="k">"args"</span>: [<span class="s">"-c"</span>, <span class="s">"mkdir -p ~/.jds && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/knowledge_base.py -o ~/.jds/knowledge_base.py; python3 ~/.jds/server.py"</span>]
     }
   }
 }</pre>
@@ -94,7 +94,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <span class="k">"mcpServers"</span>: {
     <span class="k">"JioBharatIQ"</span>: {
       <span class="k">"command"</span>: <span class="s">"bash"</span>,
-      <span class="k">"args"</span>: [<span class="s">"-c"</span>, <span class="s">"mkdir -p ~/.jds && [ -f ~/.jds/server.py ] || curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py; python3 ~/.jds/server.py"</span>]
+      <span class="k">"args"</span>: [<span class="s">"-c"</span>, <span class="s">"mkdir -p ~/.jds && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/knowledge_base.py -o ~/.jds/knowledge_base.py; python3 ~/.jds/server.py"</span>]
     }
   }
 }</pre>
@@ -108,7 +108,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
     <h2>Claude Code (CLI)</h2>
     <div class="block-where">Paste in terminal:</div>
     <div class="code-wrap">
-      <pre class="code-block" id="c-cli">claude mcp add JioBharatIQ -- bash -c 'mkdir -p ~/.jds && [ -f ~/.jds/server.py ] || curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py; python3 ~/.jds/server.py'</pre>
+      <pre class="code-block" id="c-cli">claude mcp add JioBharatIQ -- bash -c 'mkdir -p ~/.jds && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/knowledge_base.py -o ~/.jds/knowledge_base.py; python3 ~/.jds/server.py'</pre>
       <button class="copy-btn" onclick="copyEl('c-cli',this)">Copy</button>
     </div>
   </div>
@@ -122,9 +122,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <hr class="divider">
 
   <div style="font-size:13px;color:var(--text3);line-height:1.8">
-    <strong style="color:var(--text2)">How it works:</strong> First launch auto-downloads <code style="font-family:var(--mono);font-size:11px">server.py</code> to <code style="font-family:var(--mono);font-size:11px">~/.jds/</code>. No git needed.<br>
+    <strong style="color:var(--text2)">How it works:</strong> Each launch downloads the latest server files to <code style="font-family:var(--mono);font-size:11px">~/.jds/</code>. No git needed.<br>
     <strong style="color:var(--text2)">Requirements:</strong> Python 3 only.<br>
-    <strong style="color:var(--text2)">Update:</strong> Delete <code style="font-family:var(--mono);font-size:11px">~/.jds/server.py</code> and restart — it re-downloads the latest.
+    <strong style="color:var(--text2)">Updates:</strong> Automatic — every restart fetches the latest version.
   </div>
 
   <div class="footer">JDS Design Systems Team</div>
