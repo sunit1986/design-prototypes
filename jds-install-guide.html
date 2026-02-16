@@ -50,11 +50,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .divider{border:none;border-top:1px solid var(--border);margin:28px 0}
 .footer{text-align:center;color:var(--text3);font-size:12px;margin-top:20px}
 .note{font-size:12px;color:var(--text3);margin-top:6px}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--purple);text-decoration:none;padding:8px 0;transition:opacity .15s}
+.back-link:hover{opacity:.7}
+.back-link svg{width:16px;height:16px}
 </style>
 </head>
 <body>
 
 <div class="container">
+
+  <a class="back-link" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Back to Prototypes</a>
 
   <div class="header">
     <div class="badge">Paste &amp; Go</div>
