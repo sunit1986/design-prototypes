@@ -71,6 +71,85 @@
       border-radius: 999px;
       margin-bottom: 10px;
     }
+    .card-install {
+      background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
+      border: none;
+      padding: 22px 20px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-install::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -20%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .card-install::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 150px;
+      height: 150px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    .card-install .badge-install {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      backdrop-filter: blur(4px);
+    }
+    .card-install .card-title {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .card-install .card-desc {
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+    }
+    .card-install .arrow-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 10px;
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .card-install:hover {
+      box-shadow: 0 8px 28px rgba(124,58,237,0.4);
+      transform: translateY(-3px);
+    }
+    .card-install:hover .arrow-hint { color: #fff; }
+    .divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 4px 0 16px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
     .footer {
       text-align: center;
       margin-top: 24px;
@@ -83,6 +162,16 @@
   <div class="container">
     <h1>Jio Omni AI</h1>
     <p class="subtitle">Chat Interface Prototypes</p>
+
+    <a class="card card-install" href="jds-install-guide.html">
+      <span class="badge-install">&#9889; Setup Guide</span>
+      <div class="card-title">JDS Knowledge Server</div>
+      <div class="card-desc">Paste the MCP config into Claude or Cursor. One step — no installs needed.</div>
+      <span class="arrow-hint">Open guide &#8594;</span>
+    </a>
+
+    <hr class="divider">
+    <div class="section-label">Prototypes</div>
 
     <a class="card" href="live-cricket-companion-chat.html">
       <span class="badge">Entertainment</span>
