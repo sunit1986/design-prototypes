@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Personalized Evening News Brief</title>
+<style>
+/* JioType Font */
+@font-face { font-family: 'JioType'; font-weight: 400; src: url('Assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 500; src: url('Assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 700; src: url('Assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 900; src: url('Assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+/* JDS Design Tokens */
+:root {
+  --primary-20: #e8e8fc;
+  --primary-30: #9999ff;
+  --primary-40: #6464ff;
+  --primary-50: #3535f3;
+  --primary-60: #000093;
+  --primary-70: #00004c;
+  --primary-80: #010029;
+  --secondary-50: #f7ab20;
+  --sparkle-50: #1eccb0;
+  --sparkle-20: #e8faf7;
+  --error: #fa2f40;
+  --warning: #f06d0f;
+  --success: #25ab21;
+  --grey-100: #141414;
+  --grey-80: rgba(0,0,0,0.66);
+  --grey-60: #b5b5b5;
+  --grey-40: #e0e0e0;
+  --grey-20: #f5f5f5;
+  --white: #ffffff;
+  --surface-ghost: #eeeeef;
+  --surface-bold: #3900ad;
+  --text-high: #0c0d10;
+  --text-low: #191b1e;
+  --icon-medium: #170054;
+  --spacing-4xs: 2px;
+  --spacing-3xs: 4px;
+  --spacing-2xs: 6px;
+  --spacing-xs: 8px;
+  --spacing-s: 12px;
+  --spacing-base: 16px;
+  --spacing-m: 24px;
+  --spacing-l: 32px;
+  --spacing-xl: 48px;
+  --shape-pill: 999px;
+  --shape-4xl: 23px;
+  --shape-large: 16px;
+  --shape-medium: 12px;
+  --shape-small: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'JioType', sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px 0; }
+
+.device-frame {
+  width: 360px; height: 800px; background: var(--white); border-radius: 32px;
+  overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* Status Bar */
+.status-bar {
+  height: 48px; padding: 12px 24px 0; display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; font-weight: 600; color: var(--grey-100); flex-shrink: 0; z-index: 10;
+}
+.status-bar.light { color: var(--white); }
+.status-icons { display: flex; gap: 4px; align-items: center; }
+.status-icons svg { width: 16px; height: 16px; }
+
+/* Scrollable Content */
+.scroll-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.scroll-content::-webkit-scrollbar { display: none; }
+
+/* ============ SCREEN 1: Welcome & Setup ============ */
+.welcome-bg {
+  background: linear-gradient(135deg, #3535f3 0%, #6464ff 50%, #9999ff 100%);
+  color: var(--white);
+}
+.welcome-header { padding: 16px 24px 0; text-align: center; }
+.welcome-logo { width: 72px; height: 72px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; }
+.welcome-logo .jio-dots { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 48px; height: 48px; }
+.welcome-logo .jio-dot { border-radius: 6px; }
+.welcome-title { font-size: 24px; font-weight: 900; line-height: 1.2; letter-spacing: -0.03em; margin-bottom: 8px; }
+.welcome-subtitle { font-size: 14px; font-weight: 400; opacity: 0.85; margin-bottom: 24px; }
+
+.setup-section { padding: 0 24px 24px; }
+.setup-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8; margin-bottom: 12px; }
+
+/* Language Cards */
+.lang-cards { display: flex; gap: 10px; margin-bottom: 28px; overflow-x: auto; padding-bottom: 4px; }
+.lang-card {
+  min-width: 92px; padding: 14px 12px; border-radius: var(--shape-large); background: rgba(255,255,255,0.15);
+  border: 2px solid transparent; text-align: center; cursor: pointer; transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+.lang-card.selected { background: rgba(255,255,255,0.3); border-color: var(--white); transform: scale(1.05); }
+.lang-card-icon { font-size: 24px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; }
+.lang-card-icon svg { width: 24px; height: 24px; fill: currentColor; }
+.lang-card-name { font-size: 14px; font-weight: 700; }
+.lang-card-native { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+
+/* Location Input */
+.location-input-wrap {
+  position: relative; margin-bottom: 28px;
+}
+.location-input {
+  width: 100%; padding: 14px 16px 14px 44px; border-radius: var(--shape-medium);
+  background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.3);
+  color: var(--white); font-family: 'JioType'; font-size: 15px; font-weight: 500;
+  outline: none; transition: all 0.2s;
+}
+.location-input::placeholder { color: rgba(255,255,255,0.6); }
+.location-input:focus { background: rgba(255,255,255,0.25); border-color: var(--white); }
+.location-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); }
+.location-icon svg { width: 20px; height: 20px; fill: rgba(255,255,255,0.7); }
+.location-mic { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; }
+.location-mic svg { width: 20px; height: 20px; fill: rgba(255,255,255,0.7); }
+.location-check { display: none; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); }
+.location-check.show { display: block; }
+.location-check svg { width: 20px; height: 20px; fill: #25ab21; }
+
+/* Interest Tags */
+.interest-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+.interest-chip {
+  padding: 10px 16px; border-radius: var(--shape-pill); border: 1.5px solid rgba(255,255,255,0.4);
+  background: transparent; color: var(--white); font-family: 'JioType'; font-size: 13px;
+  font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.interest-chip.selected { background: var(--white); color: var(--primary-50); border-color: var(--white); font-weight: 700; }
+
+/* CTA Button */
+.cta-primary {
+  width: 100%; padding: 16px; border-radius: var(--shape-pill); border: none;
+  background: var(--white); color: var(--primary-50); font-family: 'JioType';
+  font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.cta-primary:active { transform: scale(0.97); }
+
+/* ============ SCREEN 2: Main Dashboard ============ */
+.dashboard-bg { background: var(--white); }
+.dash-header {
+  padding: 8px 20px 0; display: flex; justify-content: space-between; align-items: center;
+}
+.dash-greeting { font-size: 20px; font-weight: 900; color: var(--grey-100); letter-spacing: -0.02em; }
+.dash-subgreeting { font-size: 13px; color: var(--grey-80); margin-top: 2px; font-weight: 400; }
+.dash-profile {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--primary-20);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.dash-profile svg { width: 22px; height: 22px; fill: var(--primary-50); }
+
+/* Start Brief Card */
+.brief-card {
+  margin: 20px 20px 0; padding: 28px 24px; border-radius: 20px;
+  background: linear-gradient(135deg, #3535f3 0%, #6464ff 100%);
+  color: var(--white); position: relative; cursor: pointer; overflow: hidden;
+  transition: all 0.2s;
+}
+.brief-card:active { transform: scale(0.98); }
+.brief-card-animation {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;
+  overflow: hidden; background: rgba(255,255,255,0.1);
+}
+.brief-card-animation video { width: 100%; height: 100%; object-fit: cover; }
+.brief-card-title { font-size: 20px; font-weight: 900; text-align: center; letter-spacing: -0.02em; }
+.brief-card-meta { font-size: 13px; text-align: center; opacity: 0.8; margin-top: 6px; }
+.brief-card-time {
+  display: inline-flex; align-items: center; gap: 4px; margin-top: 12px;
+  padding: 6px 14px; border-radius: var(--shape-pill); background: rgba(255,255,255,0.2);
+  font-size: 12px; font-weight: 500;
+}
+
+/* Topic Chips */
+.topics-section { padding: 24px 20px 0; }
+.topics-title { font-size: 14px; font-weight: 700; color: var(--grey-100); margin-bottom: 12px; }
+.topics-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
+.topics-scroll::-webkit-scrollbar { display: none; }
+.topic-chip {
+  flex-shrink: 0; padding: 10px 16px; border-radius: var(--shape-pill);
+  border: 1.5px solid var(--primary-20); background: var(--primary-20);
+  color: var(--primary-50); font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+}
+.topic-chip:active { background: var(--primary-50); color: var(--white); border-color: var(--primary-50); }
+.topic-chip svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* Floating Mic */
+.floating-mic {
+  position: absolute; bottom: 24px; right: 20px; width: 56px; height: 56px;
+  border-radius: 50%; background: var(--primary-50); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(53,53,243,0.35); z-index: 10;
+}
+.floating-mic svg { width: 24px; height: 24px; fill: var(--white); }
+.floating-mic::before {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid rgba(53,53,243,0.3); animation: micPulse 2s infinite;
+}
+@keyframes micPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0; }
+}
+
+/* Quick Updates */
+.updates-section { padding: 20px 20px 100px; }
+.update-card {
+  padding: 16px; border-radius: var(--shape-large); border: 1px solid var(--grey-40);
+  margin-bottom: 12px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
+}
+.update-icon { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.update-icon svg { width: 20px; height: 20px; }
+.update-title { font-size: 14px; font-weight: 700; color: var(--grey-100); }
+.update-desc { font-size: 12px; color: var(--grey-80); margin-top: 3px; line-height: 1.4; }
+.update-source { font-size: 11px; color: var(--grey-60); margin-top: 4px; }
+
+/* ============ SCREEN 3: Active Listening ============ */
+.listening-bg { background: linear-gradient(180deg, var(--white) 0%, var(--primary-20) 100%); }
+.listening-header {
+  padding: 8px 20px 0; display: flex; justify-content: space-between; align-items: center;
+}
+.listening-back { width: 40px; height: 40px; border-radius: 50%; background: var(--grey-20); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+.listening-back svg { width: 20px; height: 20px; fill: var(--grey-100); }
+.listening-speed { padding: 6px 12px; border-radius: var(--shape-pill); background: var(--grey-20); font-family: 'JioType'; font-size: 12px; font-weight: 700; color: var(--grey-100); border: none; cursor: pointer; }
+
+/* Voice Visualization */
+.voice-viz-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 24px; }
+.voice-circle {
+  width: 180px; height: 180px; border-radius: 50%; position: relative;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  overflow: hidden;
+}
+.voice-circle video { width: 100%; height: 100%; object-fit: cover; }
+.voice-circle-ring {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 3px solid var(--primary-30); animation: ringPulse 1.5s ease-in-out infinite;
+}
+.voice-circle-ring:nth-child(2) { inset: -18px; border-color: var(--primary-20); animation-delay: 0.3s; }
+@keyframes ringPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+.story-label { margin-top: 28px; text-align: center; }
+.story-label-title { font-size: 16px; font-weight: 700; color: var(--grey-100); line-height: 1.4; padding: 0 12px; }
+.story-label-source { font-size: 12px; color: var(--grey-80); margin-top: 6px; }
+
+/* Progress */
+.story-progress { width: 100%; padding: 0 32px; margin-top: 20px; }
+.progress-bar-track { height: 4px; background: var(--grey-40); border-radius: 2px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--primary-50); border-radius: 2px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; color: var(--grey-80); text-align: center; margin-top: 8px; }
+
+/* Action Buttons */
+.listening-actions { padding: 24px 20px 32px; display: flex; gap: 10px; justify-content: center; flex-shrink: 0; }
+.action-btn {
+  padding: 12px 20px; border-radius: var(--shape-pill); border: none; font-family: 'JioType';
+  font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+}
+.action-btn svg { width: 18px; height: 18px; fill: currentColor; }
+.action-btn-primary { background: var(--primary-50); color: var(--white); }
+.action-btn-secondary { background: var(--primary-20); color: var(--primary-50); }
+.action-btn:active { transform: scale(0.96); }
+
+/* ============ SCREEN 4: Story Deep Dive ============ */
+.deepdive-bg { background: var(--white); }
+.deepdive-nav {
+  padding: 8px 20px 0; display: flex; justify-content: space-between; align-items: center;
+}
+.dd-back { display: flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; font-family: 'JioType'; font-size: 13px; font-weight: 600; color: var(--primary-50); }
+.dd-back svg { width: 18px; height: 18px; fill: var(--primary-50); }
+.dd-share { width: 36px; height: 36px; border-radius: 50%; background: var(--grey-20); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+.dd-share svg { width: 18px; height: 18px; fill: var(--grey-100); }
+
+.dd-content { padding: 20px 20px 100px; }
+.dd-badge { display: inline-flex; padding: 4px 10px; border-radius: var(--shape-pill); background: var(--primary-20); color: var(--primary-50); font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
+.dd-headline { font-size: 22px; font-weight: 900; color: var(--grey-100); line-height: 1.3; letter-spacing: -0.02em; margin-bottom: 12px; }
+.dd-meta { display: flex; gap: 12px; font-size: 12px; color: var(--grey-60); margin-bottom: 20px; }
+.dd-body { font-size: 15px; color: var(--grey-100); line-height: 1.65; }
+.dd-body p { margin-bottom: 16px; }
+.dd-sources { padding: 16px; border-radius: var(--shape-medium); background: var(--grey-20); margin-top: 20px; }
+.dd-sources-label { font-size: 12px; font-weight: 700; color: var(--grey-80); margin-bottom: 6px; }
+.dd-sources-list { font-size: 13px; color: var(--grey-100); }
+
+/* Listen Toggle */
+.listen-toggle {
+  display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+  border-radius: var(--shape-medium); background: var(--primary-20); margin-top: 20px;
+  cursor: pointer; border: none; width: 100%; font-family: 'JioType';
+}
+.listen-toggle svg { width: 22px; height: 22px; fill: var(--primary-50); }
+.listen-toggle-text { font-size: 14px; font-weight: 600; color: var(--primary-50); }
+
+/* Related Stories */
+.related-section { margin-top: 28px; }
+.related-title { font-size: 14px; font-weight: 700; color: var(--grey-100); margin-bottom: 12px; }
+.related-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+.related-scroll::-webkit-scrollbar { display: none; }
+.related-card {
+  min-width: 200px; padding: 14px; border-radius: var(--shape-large);
+  border: 1px solid var(--grey-40); cursor: pointer; flex-shrink: 0;
+}
+.related-card-title { font-size: 13px; font-weight: 700; color: var(--grey-100); line-height: 1.3; margin-bottom: 6px; }
+.related-card-source { font-size: 11px; color: var(--grey-60); }
+
+/* ============ SCREEN 5: Brief Summary ============ */
+.summary-bg { background: var(--white); }
+.summary-hero { text-align: center; padding: 20px 24px 0; }
+.summary-check {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--sparkle-20);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+}
+.summary-check svg { width: 32px; height: 32px; fill: var(--sparkle-50); }
+.summary-title { font-size: 20px; font-weight: 900; color: var(--grey-100); letter-spacing: -0.02em; }
+.summary-stats { font-size: 13px; color: var(--grey-80); margin-top: 6px; }
+
+/* Story Ratings */
+.rating-section { padding: 24px 20px 0; }
+.rating-card {
+  display: flex; align-items: center; gap: 12px; padding: 14px 0;
+  border-bottom: 1px solid var(--grey-20);
+}
+.rating-check { width: 24px; height: 24px; border-radius: 50%; background: var(--sparkle-20); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rating-check svg { width: 14px; height: 14px; fill: var(--sparkle-50); }
+.rating-info { flex: 1; }
+.rating-story-title { font-size: 14px; font-weight: 600; color: var(--grey-100); }
+.rating-story-cat { font-size: 11px; color: var(--grey-60); margin-top: 2px; }
+.rating-stars { display: flex; gap: 2px; }
+.rating-stars svg { width: 18px; height: 18px; cursor: pointer; transition: all 0.15s; }
+.rating-stars svg.filled { fill: #f7ab20; }
+.rating-stars svg.empty { fill: var(--grey-40); }
+
+/* Tomorrow Preview */
+.tomorrow-card {
+  margin: 24px 20px 0; padding: 18px; border-radius: var(--shape-large);
+  background: linear-gradient(135deg, var(--primary-20) 0%, var(--sparkle-20) 100%);
+  cursor: pointer;
+}
+.tomorrow-label { font-size: 12px; font-weight: 700; color: var(--primary-50); margin-bottom: 8px; }
+.tomorrow-topics { display: flex; flex-wrap: wrap; gap: 6px; }
+.tomorrow-chip { padding: 6px 12px; border-radius: var(--shape-pill); background: var(--white); font-size: 12px; font-weight: 500; color: var(--grey-100); }
+
+/* Summary Actions */
+.summary-actions { padding: 24px 20px 32px; display: flex; flex-direction: column; gap: 10px; }
+.btn-finish {
+  width: 100%; padding: 16px; border-radius: var(--shape-pill); border: none;
+  background: var(--primary-50); color: var(--white); font-family: 'JioType';
+  font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.btn-share-friends {
+  width: 100%; padding: 14px; border-radius: var(--shape-pill); border: 1.5px solid var(--primary-50);
+  background: transparent; color: var(--primary-50); font-family: 'JioType';
+  font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.btn-share-friends svg { width: 18px; height: 18px; fill: var(--primary-50); }
+
+/* ============ SCREEN 6: Settings ============ */
+.settings-bg { background: var(--grey-20); }
+.settings-header {
+  padding: 8px 20px 16px; display: flex; align-items: center; gap: 12px;
+  background: var(--white);
+}
+.settings-back { width: 36px; height: 36px; border-radius: 50%; background: var(--grey-20); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+.settings-back svg { width: 18px; height: 18px; fill: var(--grey-100); }
+.settings-title { font-size: 18px; font-weight: 900; color: var(--grey-100); }
+
+.settings-profile {
+  padding: 20px; margin: 16px 16px 0; border-radius: var(--shape-large);
+  background: var(--white); display: flex; align-items: center; gap: 14px;
+}
+.settings-avatar {
+  width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-50), var(--primary-30));
+  display: flex; align-items: center; justify-content: center;
+}
+.settings-avatar svg { width: 28px; height: 28px; fill: var(--white); }
+.settings-name { font-size: 16px; font-weight: 700; color: var(--grey-100); }
+.settings-location { font-size: 13px; color: var(--grey-80); margin-top: 2px; }
+
+.settings-group { margin: 16px; }
+.settings-group-label { font-size: 12px; font-weight: 700; color: var(--grey-60); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; padding: 0 4px; }
+.settings-card { background: var(--white); border-radius: var(--shape-large); overflow: hidden; }
+
+.settings-item {
+  padding: 16px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--grey-20); cursor: pointer;
+}
+.settings-item:last-child { border-bottom: none; }
+.settings-item-left { display: flex; align-items: center; gap: 12px; }
+.settings-item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.settings-item-icon svg { width: 20px; height: 20px; }
+.settings-item-label { font-size: 14px; font-weight: 600; color: var(--grey-100); }
+.settings-item-value { font-size: 13px; color: var(--grey-60); margin-top: 2px; }
+.settings-item-right { display: flex; align-items: center; }
+.settings-item-right svg { width: 18px; height: 18px; fill: var(--grey-60); }
+
+/* Toggle Switch */
+.toggle-switch { width: 44px; height: 24px; border-radius: 12px; background: var(--grey-40); position: relative; cursor: pointer; transition: all 0.2s; }
+.toggle-switch.on { background: var(--primary-50); }
+.toggle-knob { width: 20px; height: 20px; border-radius: 50%; background: var(--white); position: absolute; top: 2px; left: 2px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.toggle-switch.on .toggle-knob { left: 22px; }
+
+/* Slider */
+.settings-slider { padding: 12px 16px 16px; }
+.slider-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.slider-label { font-size: 13px; font-weight: 500; color: var(--grey-80); }
+.slider-value { font-size: 13px; font-weight: 700; color: var(--primary-50); }
+.slider-track { width: 100%; height: 4px; border-radius: 2px; appearance: none; background: var(--grey-40); outline: none; }
+.slider-track::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--primary-50); cursor: pointer; }
+
+/* Category Bars */
+.cat-bars { padding: 0 16px 16px; }
+.cat-bar-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.cat-bar-label { font-size: 13px; font-weight: 500; color: var(--grey-100); width: 80px; flex-shrink: 0; }
+.cat-bar-track { flex: 1; height: 6px; border-radius: 3px; background: var(--grey-40); overflow: hidden; }
+.cat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.cat-bar-pct { font-size: 12px; font-weight: 700; color: var(--grey-80); width: 32px; text-align: right; }
+
+/* ============ SCREEN 7: Offline Mode ============ */
+.offline-bg { background: var(--white); }
+.offline-banner {
+  margin: 16px 20px 0; padding: 12px 16px; border-radius: var(--shape-medium);
+  background: #fff3e0; display: flex; align-items: center; gap: 10px;
+}
+.offline-banner svg { width: 20px; height: 20px; fill: var(--warning); flex-shrink: 0; }
+.offline-banner-text { font-size: 13px; font-weight: 500; color: var(--grey-100); }
+
+.offline-content { padding: 20px; }
+.offline-title { font-size: 18px; font-weight: 900; color: var(--grey-100); margin-bottom: 4px; }
+.offline-subtitle { font-size: 13px; color: var(--grey-80); margin-bottom: 20px; }
+
+.offline-story-list {}
+.offline-story {
+  display: flex; align-items: center; gap: 12px; padding: 14px 0;
+  border-bottom: 1px solid var(--grey-20); cursor: pointer;
+}
+.offline-story-num {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--primary-20);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: var(--primary-50); flex-shrink: 0;
+}
+.offline-story-info { flex: 1; }
+.offline-story-title { font-size: 14px; font-weight: 600; color: var(--grey-100); }
+.offline-story-dur { font-size: 12px; color: var(--grey-60); margin-top: 2px; }
+.offline-story-play { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-50); display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
+.offline-story-play svg { width: 16px; height: 16px; fill: var(--white); }
+
+.offline-player {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px 32px;
+  background: var(--white); border-top: 1px solid var(--grey-40);
+}
+.offline-player-info { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.offline-player-title { font-size: 14px; font-weight: 600; color: var(--grey-100); flex: 1; }
+.offline-player-controls { display: flex; align-items: center; justify-content: center; gap: 24px; }
+.player-btn { width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.player-btn svg { fill: currentColor; }
+.player-btn-main { background: var(--primary-50); color: var(--white); }
+.player-btn-main svg { width: 22px; height: 22px; }
+.player-btn-sec { background: var(--grey-20); color: var(--grey-100); }
+.player-btn-sec svg { width: 18px; height: 18px; }
+
+/* Screen Nav Dots */
+.screen-nav {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; padding: 8px 16px; border-radius: var(--shape-pill);
+  background: rgba(0,0,0,0.75); z-index: 100;
+}
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4);
+  cursor: pointer; transition: all 0.2s; border: none;
+}
+.nav-dot.active { background: var(--white); width: 24px; border-radius: 4px; }
+.nav-label {
+  font-size: 10px; color: rgba(255,255,255,0.7); margin-left: 8px;
+  display: flex; align-items: center;
+}
+</style>
+</head>
+<body>
+
+<div class="device-frame">
+
+  <!-- ===== SCREEN 1: Welcome & Setup ===== -->
+  <div class="screen active welcome-bg" id="screen1">
+    <div class="status-bar light"><span>9:30</span><div class="status-icons"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 10h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-3h2v13h-2z"/></svg><svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 2H2a1 1 0 00-1 1v8a1 1 0 001 1h5v2H5v1h6v-1H9v-2h5a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg></div></div>
+    <div class="scroll-content">
+      <div class="welcome-header">
+        <div class="welcome-logo">
+          <div class="jio-dots">
+            <div class="jio-dot" style="background:#3535f3"></div>
+            <div class="jio-dot" style="background:#f7ab20"></div>
+            <div class="jio-dot" style="background:#6464ff"></div>
+            <div class="jio-dot" style="background:#1eccb0"></div>
+          </div>
+        </div>
+        <div class="welcome-title">आपकी पसंदीदा खबरें कैसी हों?</div>
+        <div class="welcome-subtitle">Your personalized evening news brief in 2 minutes</div>
+      </div>
+
+      <div class="setup-section">
+        <div class="setup-label">भाषा चुनें</div>
+        <div class="lang-cards">
+          <div class="lang-card selected" onclick="selectLang(this)">
+            <div class="lang-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.71 4.29A1 1 0 0021 4h-2.23a1 1 0 00-.71.29 1 1 0 00-.29.71 1 1 0 001 1H19v1.48a2 2 0 01-.85.09 2.3 2.3 0 01-.81-.24A2.29 2.29 0 0016 4.1a2.3 2.3 0 00-2.62.9 1 1 0 00-.15.75 1 1 0 00.43.63 1 1 0 001.39-.28.36.36 0 01.14-.1.54.54 0 01.18 0 .4.4 0 01.15.1.28.28 0 01.07.17.32.32 0 01-.08.21.309.309 0 01-.22.09 1 1 0 00-.92.615 1 1 0 00-.08.385 1 1 0 00.3.7 1 1 0 00.7.3.76.76 0 01.42.12.7.7 0 01.27.34.779.779 0 01.05.43.72.72 0 01-.21.38.78.78 0 01-.38.2A.71.71 0 0115 10a.82.82 0 01-.34-.27.791.791 0 01-.12-.42 1 1 0 00-2 0 2.73 2.73 0 004.56 2.05 2.72 2.72 0 00.9-1.81c.133.01.267.01.4 0 .2.014.402.008.6-.02v1.56c.004.265.108.518.29.71a1.001 1.001 0 001.42 0 1.05 1.05 0 00.29-.71V6a1 1 0 00.71-.29A1.05 1.05 0 0022 5a.999.999 0 00-.29-.71zm-12.28.34a1 1 0 00-1.86 0l-5.5 14a1 1 0 000 .77c.11.24.307.428.55.53a1 1 0 00.77 0c.24-.11.429-.307.53-.55L5.65 15h5.7l1.72 4.37c.049.119.12.228.21.32.09.097.2.175.32.23a1.07 1.07 0 00.79.01c.12-.049.228-.12.32-.21.097-.09.176-.2.23-.32A.998.998 0 0015 19a1.067 1.067 0 00-.07-.39L9.43 4.63zm-3 8.37L8.5 7.73 10.57 13H6.43z"/></svg></div>
+            <div class="lang-card-name">Hindi</div>
+            <div class="lang-card-native">हिन्दी</div>
+          </div>
+          <div class="lang-card" onclick="selectLang(this)">
+            <div class="lang-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.71 4.29A1 1 0 0021 4h-2.23a1 1 0 00-.71.29 1 1 0 00-.29.71 1 1 0 001 1H19v1.48a2 2 0 01-.85.09 2.3 2.3 0 01-.81-.24A2.29 2.29 0 0016 4.1a2.3 2.3 0 00-2.62.9 1 1 0 00-.15.75 1 1 0 00.43.63 1 1 0 001.39-.28.36.36 0 01.14-.1.54.54 0 01.18 0 .4.4 0 01.15.1.28.28 0 01.07.17.32.32 0 01-.08.21.309.309 0 01-.22.09 1 1 0 00-.92.615 1 1 0 00-.08.385 1 1 0 00.3.7 1 1 0 00.7.3.76.76 0 01.42.12.7.7 0 01.27.34.779.779 0 01.05.43.72.72 0 01-.21.38.78.78 0 01-.38.2A.71.71 0 0115 10a.82.82 0 01-.34-.27.791.791 0 01-.12-.42 1 1 0 00-2 0 2.73 2.73 0 004.56 2.05 2.72 2.72 0 00.9-1.81c.133.01.267.01.4 0 .2.014.402.008.6-.02v1.56c.004.265.108.518.29.71a1.001 1.001 0 001.42 0 1.05 1.05 0 00.29-.71V6a1 1 0 00.71-.29A1.05 1.05 0 0022 5a.999.999 0 00-.29-.71zm-12.28.34a1 1 0 00-1.86 0l-5.5 14a1 1 0 000 .77c.11.24.307.428.55.53a1 1 0 00.77 0c.24-.11.429-.307.53-.55L5.65 15h5.7l1.72 4.37c.049.119.12.228.21.32.09.097.2.175.32.23a1.07 1.07 0 00.79.01c.12-.049.228-.12.32-.21.097-.09.176-.2.23-.32A.998.998 0 0015 19a1.067 1.067 0 00-.07-.39L9.43 4.63zm-3 8.37L8.5 7.73 10.57 13H6.43z"/></svg></div>
+            <div class="lang-card-name">English</div>
+            <div class="lang-card-native">English</div>
+          </div>
+          <div class="lang-card" onclick="selectLang(this)">
+            <div class="lang-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.71 4.29A1 1 0 0021 4h-2.23a1 1 0 00-.71.29 1 1 0 00-.29.71 1 1 0 001 1H19v1.48a2 2 0 01-.85.09 2.3 2.3 0 01-.81-.24A2.29 2.29 0 0016 4.1a2.3 2.3 0 00-2.62.9 1 1 0 00-.15.75 1 1 0 00.43.63 1 1 0 001.39-.28.36.36 0 01.14-.1.54.54 0 01.18 0 .4.4 0 01.15.1.28.28 0 01.07.17.32.32 0 01-.08.21.309.309 0 01-.22.09 1 1 0 00-.92.615 1 1 0 00-.08.385 1 1 0 00.3.7 1 1 0 00.7.3.76.76 0 01.42.12.7.7 0 01.27.34.779.779 0 01.05.43.72.72 0 01-.21.38.78.78 0 01-.38.2A.71.71 0 0115 10a.82.82 0 01-.34-.27.791.791 0 01-.12-.42 1 1 0 00-2 0 2.73 2.73 0 004.56 2.05 2.72 2.72 0 00.9-1.81c.133.01.267.01.4 0 .2.014.402.008.6-.02v1.56c.004.265.108.518.29.71a1.001 1.001 0 001.42 0 1.05 1.05 0 00.29-.71V6a1 1 0 00.71-.29A1.05 1.05 0 0022 5a.999.999 0 00-.29-.71zm-12.28.34a1 1 0 00-1.86 0l-5.5 14a1 1 0 000 .77c.11.24.307.428.55.53a1 1 0 00.77 0c.24-.11.429-.307.53-.55L5.65 15h5.7l1.72 4.37c.049.119.12.228.21.32.09.097.2.175.32.23a1.07 1.07 0 00.79.01c.12-.049.228-.12.32-.21.097-.09.176-.2.23-.32A.998.998 0 0015 19a1.067 1.067 0 00-.07-.39L9.43 4.63zm-3 8.37L8.5 7.73 10.57 13H6.43z"/></svg></div>
+            <div class="lang-card-name">Marathi</div>
+            <div class="lang-card-native">मराठी</div>
+          </div>
+        </div>
+
+        <div class="setup-label">आपका शहर</div>
+        <div class="location-input-wrap">
+          <span class="location-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg></span>
+          <input type="text" class="location-input" placeholder="शहर का नाम लिखें..." value="पुणे, महाराष्ट्र" id="locationInput">
+          <span class="location-check show"><svg viewBox="0 0 24 24"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z" fill="#25ab21"/></svg></span>
+          <span class="location-mic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z"/></svg></span>
+        </div>
+
+        <div class="setup-label">आपकी पसंद</div>
+        <div class="interest-grid">
+          <div class="interest-chip selected" onclick="toggleChip(this)">Technology</div>
+          <div class="interest-chip selected" onclick="toggleChip(this)">व्यापार</div>
+          <div class="interest-chip selected" onclick="toggleChip(this)">स्थानीय समाचार</div>
+          <div class="interest-chip" onclick="toggleChip(this)">राजनीति</div>
+          <div class="interest-chip" onclick="toggleChip(this)">खेल</div>
+          <div class="interest-chip" onclick="toggleChip(this)">मनोरंजन</div>
+          <div class="interest-chip" onclick="toggleChip(this)">स्वास्थ्य</div>
+          <div class="interest-chip" onclick="toggleChip(this)">शिक्षा</div>
+        </div>
+
+        <button class="cta-primary" onclick="goScreen(2)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z"/></svg>
+          शुरू करें
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 2: Main Dashboard ===== -->
+  <div class="screen dashboard-bg" id="screen2">
+    <div class="status-bar"><span>6:30 PM</span><div class="status-icons"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 10h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-3h2v13h-2z"/></svg><svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 2H2a1 1 0 00-1 1v8a1 1 0 001 1h5v2H5v1h6v-1H9v-2h5a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg></div></div>
+    <div class="dash-header">
+      <div>
+        <div class="dash-greeting">नमस्ते प्रिया!</div>
+        <div class="dash-subgreeting">आज 4 महत्वपूर्ण खबरें हैं</div>
+      </div>
+      <div class="dash-profile" onclick="goScreen(6)"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 6a4 4 0 11-8 0 4 4 0 018 0zm4 10.5c0 3.038-3.582 5.5-8 5.5s-8-2.462-8-5.5S7.582 11 12 11s8 2.462 8 5.5z" fill="currentColor"/></svg></div>
+    </div>
+    <div class="scroll-content">
+      <div class="brief-card" onclick="goScreen(3)">
+        <div class="brief-card-animation">
+          <video autoplay loop muted playsinline><source src="Assets/HelloJio_Breath(IdleState)_241.mp4" type="video/mp4"></video>
+        </div>
+        <div class="brief-card-title">ब्रीफ शुरू करें</div>
+        <div class="brief-card-meta">आपका शाम का पर्सनलाइज्ड न्यूज ब्रीफ</div>
+        <div style="text-align:center">
+          <span class="brief-card-time">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+            अनुमानित समय: 1 मिनट 20 सेकंड
+          </span>
+        </div>
+      </div>
+
+      <div class="topics-section">
+        <div class="topics-title">आज के टॉपिक्स</div>
+        <div class="topics-scroll">
+          <div class="topic-chip" onclick="goScreen(3)">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" fill="currentColor"/></svg>
+            IT Policy Update
+          </div>
+          <div class="topic-chip" onclick="goScreen(3)">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z" fill="currentColor"/></svg>
+            Pune Metro
+          </div>
+          <div class="topic-chip" onclick="goScreen(3)">
+            <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" fill="currentColor"/></svg>
+            RBI Housing
+          </div>
+          <div class="topic-chip" onclick="goScreen(3)">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9L10 5.5 13.5 9H11v4H9V9H6.5zm11 6L14 18.5 10.5 15H13v-4h2v4h2.5z" fill="currentColor"/></svg>
+            Evening Weather
+          </div>
+        </div>
+      </div>
+
+      <div class="updates-section">
+        <div class="update-card" onclick="goScreen(4)">
+          <div class="update-icon" style="background:var(--primary-20)"><svg viewBox="0 0 24 24" width="20" height="20" fill="#3535f3"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg></div>
+          <div>
+            <div class="update-title">महाराष्ट्र में नई IT पॉलिसी</div>
+            <div class="update-desc">टेक कंपनियों को अगले 5 सालों में टैक्स में 30% छूट</div>
+            <div class="update-source">पुणे टाइम्स + 3 अन्य स्रोत</div>
+          </div>
+        </div>
+        <div class="update-card" onclick="goScreen(4)">
+          <div class="update-icon" style="background:var(--sparkle-20)"><svg viewBox="0 0 24 24" width="20" height="20" fill="#1eccb0"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg></div>
+          <div>
+            <div class="update-title">पुणे मेट्रो अपडेट</div>
+            <div class="update-desc">हिंजवडी रूट पर नया स्टेशन का काम शुरू</div>
+            <div class="update-source">Maharashtra Times</div>
+          </div>
+        </div>
+        <div class="update-card" onclick="goScreen(4)">
+          <div class="update-icon" style="background:#fff3e0"><svg viewBox="0 0 24 24" width="20" height="20" fill="#f7ab20"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div>
+          <div>
+            <div class="update-title">RBI हाउसिंग लोन पॉलिसी</div>
+            <div class="update-desc">होम लोन की ब्याज दरों में 0.25% की कमी</div>
+            <div class="update-source">Economic Times</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="floating-mic" onclick="goScreen(3)"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z" fill="currentColor"/></svg></button>
+  </div>
+
+  <!-- ===== SCREEN 3: Active Listening Mode ===== -->
+  <div class="screen listening-bg" id="screen3">
+    <div class="status-bar"><span>6:31 PM</span><div class="status-icons"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 10h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-3h2v13h-2z"/></svg></div></div>
+    <div class="listening-header">
+      <button class="listening-back" onclick="goScreen(2)"><svg viewBox="0 0 24 24"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z" fill="currentColor"/></svg></button>
+      <button class="listening-speed" onclick="toggleSpeed(this)">1.0x</button>
+    </div>
+    <div class="voice-viz-container">
+      <div class="voice-circle" onclick="togglePlayback()">
+        <div class="voice-circle-ring"></div>
+        <div class="voice-circle-ring"></div>
+        <video autoplay loop muted playsinline><source src="Assets/HelloJio_Listening_241.mp4" type="video/mp4"></video>
+      </div>
+      <div class="story-label">
+        <div class="story-label-title">महाराष्ट्र में नई IT पॉलिसी - टेक कंपनियों को बड़ी राहत</div>
+        <div class="story-label-source">पुणे टाइम्स + 3 अन्य स्रोत</div>
+      </div>
+      <div class="story-progress">
+        <div class="progress-bar-track"><div class="progress-bar-fill" style="width:50%"></div></div>
+        <div class="progress-text">2 of 4 stories &bull; 25 सेकंड बचे</div>
+      </div>
+    </div>
+    <div class="listening-actions">
+      <button class="action-btn action-btn-secondary" onclick="goScreen(4)">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/></svg>
+        और बताइए
+      </button>
+      <button class="action-btn action-btn-primary" onclick="goScreen(3)">
+        <svg viewBox="0 0 24 24"><path d="M9 20a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l6.3-6.29-6.3-6.29a1.004 1.004 0 011.42-1.42l7 7a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-7 7A1 1 0 019 20z" fill="currentColor"/></svg>
+        अगली खबर
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 4: Story Deep Dive ===== -->
+  <div class="screen deepdive-bg" id="screen4">
+    <div class="status-bar"><span>6:32 PM</span><div class="status-icons"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 10h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-3h2v13h-2z"/></svg></div></div>
+    <div class="deepdive-nav">
+      <button class="dd-back" onclick="goScreen(3)">
+        <svg viewBox="0 0 24 24"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z" fill="currentColor"/></svg>
+        वापस ब्रीफ पर
+      </button>
+      <button class="dd-share"><svg viewBox="0 0 24 24"><path d="M18 15a3 3 0 00-2.15.91L8 12.27c.005-.09.005-.18 0-.27.005-.09.005-.18 0-.27l7.88-3.64A3 3 0 1015 6c-.005.09-.005.18 0 .27L7.15 9.91a3 3 0 100 4.18L15 17.73c-.005.09-.005.18 0 .27a3 3 0 103-3z" fill="currentColor"/></svg></button>
+    </div>
+    <div class="scroll-content">
+      <div class="dd-content">
+        <div class="dd-badge">Technology</div>
+        <div class="dd-headline">महाराष्ट्र में नई IT पॉलिसी - टेक कंपनियों को बड़ी राहत</div>
+        <div class="dd-meta">
+          <span>16 Feb 2026</span>
+          <span>3 min read</span>
+          <span>PTI</span>
+        </div>
+        <div class="dd-body">
+          <p>महाराष्ट्र सरकार ने आज IT कंपनियों के लिए नई पॉलिसी घोषित की है जिसके तहत अगले 5 सालों में टैक्स में 30% छूट मिलेगी। यह कदम राज्य में IT सेक्टर को बढ़ावा देने और रोजगार के अवसर बढ़ाने के लिए उठाया गया है।</p>
+          <p>नई पॉलिसी के तहत पुणे, नागपुर और नासिक में IT पार्कों के विकास पर विशेष ध्यान दिया जाएगा। स्टार्टअप्स को पहले 3 सालों के लिए पूरी टैक्स छूट मिलेगी।</p>
+          <p>उद्योग विशेषज्ञों का कहना है कि इस फैसले से महाराष्ट्र बैंगलोर के बाद भारत का दूसरा सबसे बड़ा IT हब बन सकता है।</p>
+        </div>
+
+        <button class="listen-toggle" onclick="toggleListenMode(this)">
+          <svg viewBox="0 0 24 24"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z" fill="currentColor"/></svg>
+          <span class="listen-toggle-text">आवाज़ में सुनें</span>
+        </button>
+
+        <div class="dd-sources">
+          <div class="dd-sources-label">Sources</div>
+          <div class="dd-sources-list">PTI, Maharashtra Times, Tech Today</div>
+        </div>
+
+        <div class="related-section">
+          <div class="related-title">संबंधित खबरें</div>
+          <div class="related-scroll">
+            <div class="related-card" onclick="goScreen(4)">
+              <div class="related-card-title">Bangalore IT Policy Comparison</div>
+              <div class="related-card-source">Economic Times</div>
+            </div>
+            <div class="related-card" onclick="goScreen(4)">
+              <div class="related-card-title">Startup Funding Impact Analysis</div>
+              <div class="related-card-source">Inc42</div>
+            </div>
+            <div class="related-card" onclick="goScreen(4)">
+              <div class="related-card-title">Job Market Analysis 2026</div>
+              <div class="related-card-source">Mint</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 5: Brief Summary ===== -->
+  <div class="screen summary-bg" id="screen5">
+    <div class="status-bar"><span>6:33 PM</span><div class="status-icons"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 10h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-3h2v13h-2z"/></svg></div></div>
+    <div class="scroll-content">
+      <div class="summary-hero">
+        <div class="summary-check"><svg viewBox="0 0 24 24"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z" fill="currentColor"/></svg></div>
+        <div class="summary-title">ब्रीफ पूरा हुआ!</div>
+        <div class="summary-stats">4 stories &bull; 1m 18s &bull; IT, Local, Finance, Weather</div>
+      </div>
+
+      <div class="rating-section">
+        <div class="rating-card">
+          <div class="rating-check"><svg viewBox="0 0 24 24"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z" fill="currentColor"/></svg></div>
+          <div class="rating-info">
+            <div class="rating-story-title">महाराष्ट्र IT पॉलिसी</div>
+            <div class="rating-story-cat">Technology</div>
+          </div>
+          <div class="rating-stars" onclick="rateStory(event, this)">
+            <svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg>
+            <svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg>
+            <svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg>
+            <svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg>
+            <svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg>
+          </div>
+        </div>
+        <div class="rating-card">
+          <div class="rating-check"><svg viewBox="0 0 24 24"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z" fill="currentColor"/></svg></div>
+          <div class="rating-info">
+            <div class="rating-story-title">पुणे मेट्रो अपडेट</div>
+            <div class="rating-story-cat">Local</div>
+          </div>
+          <div class="rating-stars"><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="empty" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg></div>
+        </div>
+        <div class="rating-card">
+          <div class="rating-check"><svg viewBox="0 0 24 24"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z" fill="currentColor"/></svg></div>
+          <div class="rating-info">
+            <div class="rating-story-title">RBI हाउसिंग लोन</div>
+            <div class="rating-story-cat">Finance</div>
+          </div>
+          <div class="rating-stars"><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="empty" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="empty" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg></div>
+        </div>
+        <div class="rating-card" style="border:none">
+          <div class="rating-check"><svg viewBox="0 0 24 24"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z" fill="currentColor"/></svg></div>
+          <div class="rating-info">
+            <div class="rating-story-title">आज की बारिश</div>
+            <div class="rating-story-cat">Weather</div>
+          </div>
+          <div class="rating-stars"><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="filled" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg><svg class="empty" viewBox="0 0 24 24"><path d="M21.37 9.61a1.964 1.964 0 00-.58-.856 1.896 1.896 0 00-.94-.428l-4.235-.646-1.899-4.087a1.963 1.963 0 00-.702-.798 1.917 1.917 0 00-1.016-.295c-.361 0-.712.105-1.016.295a1.85 1.85 0 00-.703.798L8.38 7.68l-4.273.646c-.342.057-.674.2-.94.428a1.964 1.964 0 00-.58.855 1.91 1.91 0 00.447 1.901l3.124 3.213-.74 4.553c-.058.351-.01.712.123 1.036.133.323.36.608.655.817.313.238.703.37 1.102.38.332 0 .655-.076.95-.237l3.788-2.091 3.788 2.09c.285.162.618.248.95.238a1.9 1.9 0 001.101-.351c.285-.21.513-.485.655-.818.133-.323.181-.684.124-1.036l-.74-4.552 3.123-3.213c.228-.257.37-.58.437-.922a1.91 1.91 0 00-.104-1.008z" fill="currentColor"/></svg></div>
+        </div>
+      </div>
+
+      <div class="tomorrow-card">
+        <div class="tomorrow-label">कल का प्रीव्यू</div>
+        <div class="tomorrow-topics">
+          <div class="tomorrow-chip">Budget 2024 Highlights</div>
+          <div class="tomorrow-chip">Mumbai Traffic Update</div>
+          <div class="tomorrow-chip">Cricket World Cup</div>
+        </div>
+      </div>
+
+      <div class="summary-actions">
+        <button class="btn-finish" onclick="goScreen(2)">समाप्त</button>
+        <button class="btn-share-friends">
+          <svg viewBox="0 0 24 24"><path d="M18 15a3 3 0 00-2.15.91L8 12.27c.005-.09.005-.18 0-.27.005-.09.005-.18 0-.27l7.88-3.64A3 3 0 1015 6c-.005.09-.005.18 0 .27L7.15 9.91a3 3 0 100 4.18L15 17.73c-.005.09-.005.18 0 .27a3 3 0 103-3z" fill="currentColor"/></svg>
+          दोस्तों को भेजें
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 6: Settings ===== -->
+  <div class="screen settings-bg" id="screen6">
+    <div class="status-bar" style="background:var(--white)"><span>6:34 PM</span><div class="status-icons"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 10h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-3h2v13h-2z"/></svg></div></div>
+    <div class="settings-header">
+      <button class="settings-back" onclick="goScreen(2)"><svg viewBox="0 0 24 24"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z" fill="currentColor"/></svg></button>
+      <div class="settings-title">Settings</div>
+    </div>
+    <div class="scroll-content">
+      <div class="settings-profile">
+        <div class="settings-avatar"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 6a4 4 0 11-8 0 4 4 0 018 0zm4 10.5c0 3.038-3.582 5.5-8 5.5s-8-2.462-8-5.5S7.582 11 12 11s8 2.462 8 5.5z" fill="currentColor"/></svg></div>
+        <div>
+          <div class="settings-name">प्रिया शर्मा</div>
+          <div class="settings-location">पुणे, महाराष्ट्र</div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Language & Voice</div>
+        <div class="settings-card">
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-item-icon" style="background:var(--primary-20)"><svg viewBox="0 0 24 24" fill="#3535f3"><path d="M21.71 4.29A1 1 0 0021 4h-2.23a1 1 0 00-.71.29 1 1 0 00-.29.71 1 1 0 001 1H19v1.48a2 2 0 01-.85.09 2.3 2.3 0 01-.81-.24A2.29 2.29 0 0016 4.1a2.3 2.3 0 00-2.62.9 1 1 0 00-.15.75 1 1 0 00.43.63 1 1 0 001.39-.28.36.36 0 01.14-.1.54.54 0 01.18 0 .4.4 0 01.15.1.28.28 0 01.07.17.32.32 0 01-.08.21.309.309 0 01-.22.09 1 1 0 00-.92.615 1 1 0 00-.08.385 1 1 0 00.3.7 1 1 0 00.7.3.76.76 0 01.42.12.7.7 0 01.27.34.779.779 0 01.05.43.72.72 0 01-.21.38.78.78 0 01-.38.2A.71.71 0 0115 10a.82.82 0 01-.34-.27.791.791 0 01-.12-.42 1 1 0 00-2 0 2.73 2.73 0 004.56 2.05 2.72 2.72 0 00.9-1.81c.133.01.267.01.4 0 .2.014.402.008.6-.02v1.56c.004.265.108.518.29.71a1.001 1.001 0 001.42 0 1.05 1.05 0 00.29-.71V6a1 1 0 00.71-.29A1.05 1.05 0 0022 5a.999.999 0 00-.29-.71zm-12.28.34a1 1 0 00-1.86 0l-5.5 14a1 1 0 000 .77c.11.24.307.428.55.53a1 1 0 00.77 0c.24-.11.429-.307.53-.55L5.65 15h5.7l1.72 4.37c.049.119.12.228.21.32.09.097.2.175.32.23a1.07 1.07 0 00.79.01c.12-.049.228-.12.32-.21.097-.09.176-.2.23-.32A.998.998 0 0015 19a1.067 1.067 0 00-.07-.39L9.43 4.63zm-3 8.37L8.5 7.73 10.57 13H6.43z"/></svg></div>
+              <div><div class="settings-item-label">Primary Language</div><div class="settings-item-value">Hindi + English mixing</div></div>
+            </div>
+            <div class="settings-item-right"><svg viewBox="0 0 24 24"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z" fill="currentColor"/></svg></div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-item-icon" style="background:var(--sparkle-20)"><svg viewBox="0 0 24 24" fill="#1eccb0"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z"/></svg></div>
+              <div><div class="settings-item-label">Voice Speed</div><div class="settings-item-value">1.2x (Normal+)</div></div>
+            </div>
+            <div class="settings-item-right"><svg viewBox="0 0 24 24"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z" fill="currentColor"/></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Content Preferences</div>
+        <div class="settings-card">
+          <div class="cat-bars" style="padding-top:16px">
+            <div class="cat-bar-item">
+              <div class="cat-bar-label">Technology</div>
+              <div class="cat-bar-track"><div class="cat-bar-fill" style="width:80%;background:var(--primary-50)"></div></div>
+              <div class="cat-bar-pct">80%</div>
+            </div>
+            <div class="cat-bar-item">
+              <div class="cat-bar-label">Local</div>
+              <div class="cat-bar-track"><div class="cat-bar-fill" style="width:70%;background:var(--sparkle-50)"></div></div>
+              <div class="cat-bar-pct">70%</div>
+            </div>
+            <div class="cat-bar-item">
+              <div class="cat-bar-label">Business</div>
+              <div class="cat-bar-track"><div class="cat-bar-fill" style="width:60%;background:var(--secondary-50)"></div></div>
+              <div class="cat-bar-pct">60%</div>
+            </div>
+            <div class="cat-bar-item">
+              <div class="cat-bar-label">Sports</div>
+              <div class="cat-bar-track"><div class="cat-bar-fill" style="width:20%;background:var(--grey-60)"></div></div>
+              <div class="cat-bar-pct">20%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Notifications</div>
+        <div class="settings-card">
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-item-icon" style="background:#fff3e0"><svg viewBox="0 0 24 24" fill="#f7ab20"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
+              <div><div class="settings-item-label">Brief Time</div><div class="settings-item-value">6:30 PM daily</div></div>
+            </div>
+            <div class="settings-item-right"><svg viewBox="0 0 24 24"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z" fill="currentColor"/></svg></div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div><div class="settings-item-label">Offline Download</div><div class="settings-item-value">Auto-download briefs on WiFi</div></div>
+            </div>
+            <div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="height:40px"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 7: Offline Mode ===== -->
+  <div class="screen offline-bg" id="screen7">
+    <div class="status-bar"><span>6:35 PM</span><div class="status-icons"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M24.005 4.586L22.59 3.172l-4.763 4.761A10.862 10.862 0 0012 6C7.306 6 3.326 8.65 1.195 12.5c.89 1.607 2.164 2.977 3.68 3.992l-3.28 3.28 1.414 1.415L24.005 4.586zM4.437 12.5C6.37 9.428 9.013 8 12 8c1.434 0 2.791.356 4.003.974L14.22 10.76A3.966 3.966 0 0012 10a4 4 0 00-4 4c0 .845.27 1.618.704 2.265l-1.94 1.94A9.1 9.1 0 014.437 12.5zM12 17c-1.434 0-2.792-.357-4.003-.974l2.224-2.224A3.98 3.98 0 0012 14.5c.216 0 .427-.028.632-.072l2.73-2.73A3.988 3.988 0 0016 14c0-.845-.27-1.619-.704-2.266l2.383-2.383A9.1 9.1 0 0119.563 12.5C17.63 15.572 14.987 17 12 17z"/></svg></div></div>
+    <div class="settings-header" style="background:var(--white)">
+      <button class="settings-back" onclick="goScreen(2)"><svg viewBox="0 0 24 24"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z" fill="currentColor"/></svg></button>
+      <div class="settings-title">Offline Mode</div>
+    </div>
+
+    <div class="offline-banner">
+      <svg viewBox="0 0 24 24"><path d="M24.005 4.586L22.59 3.172l-4.763 4.761A10.862 10.862 0 0012 6C7.306 6 3.326 8.65 1.195 12.5c.89 1.607 2.164 2.977 3.68 3.992l-3.28 3.28 1.414 1.415L24.005 4.586z" fill="currentColor"/></svg>
+      <span class="offline-banner-text">No internet connection. Playing downloaded brief.</span>
+    </div>
+
+    <div class="offline-content">
+      <div class="offline-title">Today's Downloaded Brief</div>
+      <div class="offline-subtitle">4 stories ready to play</div>
+
+      <div class="offline-story-list">
+        <div class="offline-story">
+          <div class="offline-story-num">1</div>
+          <div class="offline-story-info">
+            <div class="offline-story-title">महाराष्ट्र IT पॉलिसी</div>
+            <div class="offline-story-dur">22 sec</div>
+          </div>
+          <button class="offline-story-play"><svg viewBox="0 0 24 24"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z" fill="currentColor"/></svg></button>
+        </div>
+        <div class="offline-story">
+          <div class="offline-story-num">2</div>
+          <div class="offline-story-info">
+            <div class="offline-story-title">पुणे मेट्रो अपडेट</div>
+            <div class="offline-story-dur">18 sec</div>
+          </div>
+          <button class="offline-story-play"><svg viewBox="0 0 24 24"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z" fill="currentColor"/></svg></button>
+        </div>
+        <div class="offline-story">
+          <div class="offline-story-num">3</div>
+          <div class="offline-story-info">
+            <div class="offline-story-title">RBI हाउसिंग लोन</div>
+            <div class="offline-story-dur">20 sec</div>
+          </div>
+          <button class="offline-story-play"><svg viewBox="0 0 24 24"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z" fill="currentColor"/></svg></button>
+        </div>
+        <div class="offline-story">
+          <div class="offline-story-num">4</div>
+          <div class="offline-story-info">
+            <div class="offline-story-title">Evening Weather</div>
+            <div class="offline-story-dur">18 sec</div>
+          </div>
+          <button class="offline-story-play"><svg viewBox="0 0 24 24"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z" fill="currentColor"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="offline-player">
+      <div class="offline-player-info">
+        <div class="offline-player-title">महाराष्ट्र IT पॉलिसी</div>
+        <span style="font-size:12px;color:var(--grey-60)">0:12 / 0:22</span>
+      </div>
+      <div style="margin-bottom:12px"><div class="progress-bar-track"><div class="progress-bar-fill" style="width:55%"></div></div></div>
+      <div class="offline-player-controls">
+        <button class="player-btn player-btn-sec"><svg viewBox="0 0 24 24"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z" fill="currentColor"/></svg></button>
+        <button class="player-btn player-btn-main"><svg viewBox="0 0 24 24"><path d="M8.5 4A1.5 1.5 0 007 5.5v13a1.5 1.5 0 003 0v-13A1.5 1.5 0 008.5 4zm7 0A1.5 1.5 0 0014 5.5v13a1.5 1.5 0 103 0v-13A1.5 1.5 0 0015.5 4z" fill="currentColor"/></svg></button>
+        <button class="player-btn player-btn-sec"><svg viewBox="0 0 24 24"><path d="M9 20a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l6.3-6.29-6.3-6.29a1.004 1.004 0 011.42-1.42l7 7a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-7 7A1 1 0 019 20z" fill="currentColor"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Screen Navigation Dots -->
+<div class="screen-nav">
+  <button class="nav-dot active" onclick="goScreen(1)"></button>
+  <button class="nav-dot" onclick="goScreen(2)"></button>
+  <button class="nav-dot" onclick="goScreen(3)"></button>
+  <button class="nav-dot" onclick="goScreen(4)"></button>
+  <button class="nav-dot" onclick="goScreen(5)"></button>
+  <button class="nav-dot" onclick="goScreen(6)"></button>
+  <button class="nav-dot" onclick="goScreen(7)"></button>
+  <span class="nav-label" id="navLabel">1/7</span>
+</div>
+
+<script>
+let currentScreen = 1;
+
+function goScreen(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen' + n).classList.add('active');
+  document.querySelectorAll('.nav-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === n - 1);
+  });
+  document.getElementById('navLabel').textContent = n + '/7';
+  currentScreen = n;
+}
+
+function selectLang(el) {
+  el.parentElement.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+function toggleSpeed(el) {
+  const speeds = ['1.0x', '1.2x', '1.5x', '2.0x'];
+  let idx = speeds.indexOf(el.textContent);
+  el.textContent = speeds[(idx + 1) % speeds.length];
+}
+
+function togglePlayback() {
+  /* Visual toggle for prototype */
+}
+
+function toggleListenMode(el) {
+  el.querySelector('.listen-toggle-text').textContent =
+    el.querySelector('.listen-toggle-text').textContent === 'आवाज़ में सुनें' ? 'पढ़ने का मोड' : 'आवाज़ में सुनें';
+}
+
+function rateStory(event, container) {
+  /* Interactive rating for prototype */
+}
+
+/* Keyboard shortcuts for quick nav */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' && currentScreen < 7) goScreen(currentScreen + 1);
+  if (e.key === 'ArrowLeft' && currentScreen > 1) goScreen(currentScreen - 1);
+});
+</script>
+
+</body>
+</html>
