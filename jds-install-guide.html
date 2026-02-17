@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JDS Server — Setup</title>
+<title>JDS Server Setup Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -12,131 +13,189 @@
   --text:#1C1917;--text2:#57534E;--text3:#A8A29E;
   --purple:#7C3AED;--purple-light:#EDE9FE;
   --green:#059669;--green-light:#D1FAE5;
-  --radius:12px;--font:'Outfit',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --blue:#2563EB;--blue-light:#DBEAFE;
+  --amber:#D97706;--amber-light:#FEF3C7;
+  --radius:12px;--font:'Outfit',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
 .container{max-width:640px;margin:0 auto;padding:40px 24px 60px}
-
 .header{text-align:center;padding:32px 0 28px}
 .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:var(--purple-light);color:var(--purple);font-size:12px;font-weight:600;margin-bottom:10px}
 .header h1{font-size:26px;font-weight:800;letter-spacing:-0.5px}
 .header h1 span{color:var(--purple)}
 .header p{font-size:14px;color:var(--text2);margin-top:4px}
-
+.step-label{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:16px;font-size:11px;font-weight:600;margin-bottom:8px}
+.step-one{background:var(--amber-light);color:var(--amber)}
+.step-two{background:var(--blue-light);color:var(--blue)}
 .block{margin-top:28px}
 .block h2{font-size:15px;font-weight:700;margin-bottom:6px}
 .block-where{font-size:13px;color:var(--text2);margin-bottom:8px}
 .block-where strong{color:var(--text)}
-
 .code-wrap{position:relative}
-.code-block{
-  background:#1C1917;color:#E7E5E4;padding:16px 18px;border-radius:10px;
-  font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto;white-space:pre;
-}
+.code-block{background:#1C1917;color:#E7E5E4;padding:16px 18px;border-radius:10px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto;white-space:pre}
 .code-block .k{color:#34D399}
 .code-block .s{color:#A78BFA}
 .code-block .c{color:#78716C}
-.copy-btn{
-  position:absolute;top:8px;right:8px;padding:7px 13px;border-radius:7px;
-  background:rgba(255,255,255,.1);color:#A8A29E;border:none;
-  font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .15s;
-}
+.copy-btn{position:absolute;top:8px;right:8px;padding:7px 13px;border-radius:7px;background:rgba(255,255,255,.1);color:#A8A29E;border:none;font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .15s}
 .copy-btn:hover{background:rgba(255,255,255,.2);color:#fff}
 .copy-btn.copied{background:rgba(5,150,105,.3);color:#34D399}
-
 .callout{display:flex;gap:8px;padding:12px 14px;border-radius:10px;margin-top:12px;font-size:13px}
 .callout-green{background:var(--green-light);color:#065F46}
-
+.callout-amber{background:var(--amber-light);color:#92400E}
 .divider{border:none;border-top:1px solid var(--border);margin:28px 0}
 .footer{text-align:center;color:var(--text3);font-size:12px;margin-top:20px}
 .note{font-size:12px;color:var(--text3);margin-top:6px}
 .back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--purple);text-decoration:none;padding:8px 0;transition:opacity .15s}
 .back-link:hover{opacity:.7}
-.back-link svg{width:16px;height:16px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.info-card{padding:10px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border);font-size:12px}
+.info-card strong{display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
 </style>
 </head>
 <body>
-
 <div class="container">
+<a href="index.html" class="back-link">&larr; Back to Prototypes</a>
 
-  <a class="back-link" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Back to Prototypes</a>
+<div class="header">
+  <div class="badge">2 Steps</div>
+  <h1>JDS Knowledge <span>Server</span></h1>
+  <p>Install uv once. Paste the config. Restart. Done.<br>No git, no Xcode, no Python install needed.</p>
+</div>
 
-  <div class="header">
-    <div class="badge">Paste &amp; Go</div>
-    <h1>JDS <span>Knowledge Server</span></h1>
-    <p>Paste the config. Restart the app. That's it.<br>No git, no terminal, no installs.</p>
+<!-- ===== STEP 1: ONE-TIME UV INSTALL ===== -->
+
+<div class="block">
+  <div class="step-label step-one">Step 1 &mdash; One Time Only</div>
+  <h2>Install uv</h2>
+  <div class="block-where">Open <strong>Terminal</strong> and paste this:</div>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyEl('uv-install', this)">Copy</button>
+    <pre class="code-block" id="uv-install">curl -LsSf https://astral.sh/uv/install.sh | sh</pre>
   </div>
+  <p class="note">~30 MB download. Bundles its own Python &mdash; no Xcode or system Python needed. Close and reopen Terminal after.</p>
+</div>
 
-  <!-- CLAUDE DESKTOP -->
-  <div class="block">
-    <h2>Claude Desktop</h2>
-    <div class="block-where">Settings &gt; Developer &gt; Edit Config &mdash; paste this:</div>
-    <div class="code-wrap">
-      <pre class="code-block" id="c-claude">{
-  <span class="k">"mcpServers"</span>: {
-    <span class="k">"JioBharatIQ"</span>: {
-      <span class="k">"command"</span>: <span class="s">"bash"</span>,
-      <span class="k">"args"</span>: [<span class="s">"-c"</span>, <span class="s">"mkdir -p ~/.jds && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/knowledge_base.py -o ~/.jds/knowledge_base.py; python3 ~/.jds/server.py"</span>]
+<hr class="divider">
+
+<!-- ===== STEP 2: CONFIG ===== -->
+
+<div class="block">
+  <div class="step-label step-two">Step 2 &mdash; Add Server</div>
+  <h2>Claude Desktop</h2>
+  <div class="block-where"><strong>Settings</strong> &gt; <strong>Developer</strong> &gt; <strong>Edit Config</strong> &mdash; paste this:</div>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyEl('code-claude', this)">Copy</button>
+    <pre class="code-block" id="code-claude">{
+  <span class="s">"mcpServers"</span>: {
+    <span class="s">"JioBharatIQ"</span>: {
+      <span class="s">"command"</span>: <span class="k">"uvx"</span>,
+      <span class="s">"args"</span>: [<span class="k">"jiobharatiq-server"</span>]
     }
   }
 }</pre>
-      <button class="copy-btn" onclick="copyEl('c-claude',this)">Copy</button>
-    </div>
-    <div class="note">Quit (Cmd+Q) and reopen Claude Desktop.</div>
   </div>
+  <p class="note">Quit (<strong>Cmd+Q</strong>) and reopen Claude Desktop.</p>
+</div>
 
-  <!-- CURSOR -->
-  <div class="block">
-    <h2>Cursor</h2>
-    <div class="block-where">Settings &gt; MCP &gt; Add Server &mdash; paste this:</div>
-    <div class="code-wrap">
-      <pre class="code-block" id="c-cursor">{
-  <span class="k">"mcpServers"</span>: {
-    <span class="k">"JioBharatIQ"</span>: {
-      <span class="k">"command"</span>: <span class="s">"bash"</span>,
-      <span class="k">"args"</span>: [<span class="s">"-c"</span>, <span class="s">"mkdir -p ~/.jds && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/knowledge_base.py -o ~/.jds/knowledge_base.py; python3 ~/.jds/server.py"</span>]
+<div class="block">
+  <h2>Cursor</h2>
+  <div class="block-where"><strong>Settings</strong> &gt; <strong>MCP</strong> &gt; <strong>Add Server</strong> &mdash; paste this:</div>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyEl('code-cursor', this)">Copy</button>
+    <pre class="code-block" id="code-cursor">{
+  <span class="s">"mcpServers"</span>: {
+    <span class="s">"JioBharatIQ"</span>: {
+      <span class="s">"command"</span>: <span class="k">"uvx"</span>,
+      <span class="s">"args"</span>: [<span class="k">"jiobharatiq-server"</span>]
     }
   }
 }</pre>
-      <button class="copy-btn" onclick="copyEl('c-cursor',this)">Copy</button>
+  </div>
+  <p class="note">Restart Cursor.</p>
+</div>
+
+<div class="block">
+  <h2>Claude Code (CLI)</h2>
+  <div class="block-where">Paste in terminal:</div>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyEl('code-cli', this)">Copy</button>
+    <pre class="code-block" id="code-cli">claude mcp add JioBharatIQ -- uvx jiobharatiq-server</pre>
+  </div>
+  <div class="callout callout-green">Test it &mdash; ask Claude: <em>"What JDS button variants are available?"</em></div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== HOW IT WORKS ===== -->
+
+<div class="block">
+  <h2>How it works</h2>
+  <div class="info-grid">
+    <div class="info-card">
+      <strong>Auto-updates</strong>
+      Knowledge base fetches latest from GitHub on every startup. No action needed.
     </div>
-    <div class="note">Restart Cursor.</div>
-  </div>
-
-  <!-- CLAUDE CODE -->
-  <div class="block">
-    <h2>Claude Code (CLI)</h2>
-    <div class="block-where">Paste in terminal:</div>
-    <div class="code-wrap">
-      <pre class="code-block" id="c-cli">claude mcp add JioBharatIQ -- bash -c 'mkdir -p ~/.jds && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/server.py -o ~/.jds/server.py && curl -sL https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/knowledge_base.py -o ~/.jds/knowledge_base.py; python3 ~/.jds/server.py'</pre>
-      <button class="copy-btn" onclick="copyEl('c-cli',this)">Copy</button>
+    <div class="info-card">
+      <strong>Assets</strong>
+      Fonts, icons, animations served from GitHub CDN. No local files.
+    </div>
+    <div class="info-card">
+      <strong>Requirements</strong>
+      uv only (~30 MB). Bundles its own Python runtime.
+    </div>
+    <div class="info-card">
+      <strong>First launch</strong>
+      ~10 sec to download package. Cached after that &mdash; instant starts.
     </div>
   </div>
+</div>
 
-  <!-- DONE -->
-  <div class="callout callout-green" style="margin-top:24px">
-    <span>&#x2705;</span>
-    <span>Test it — ask Claude: <em>"What JDS button variants are available?"</em></span>
+<div class="block">
+  <h2>Force update</h2>
+  <div class="block-where">If you need the latest server code immediately:</div>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyEl('code-upgrade', this)">Copy</button>
+    <pre class="code-block" id="code-upgrade">uvx --upgrade jiobharatiq-server</pre>
   </div>
+  <p class="note">Knowledge base updates automatically. This command is only needed for server code changes.</p>
+</div>
 
-  <hr class="divider">
+<hr class="divider">
 
-  <div style="font-size:13px;color:var(--text3);line-height:1.8">
-    <strong style="color:var(--text2)">How it works:</strong> Each launch downloads the latest server files to <code style="font-family:var(--mono);font-size:11px">~/.jds/</code>. No git needed.<br>
-    <strong style="color:var(--text2)">Requirements:</strong> Python 3 only.<br>
-    <strong style="color:var(--text2)">Updates:</strong> Automatic — every restart fetches the latest version.
+<div class="block">
+  <h2>Troubleshooting</h2>
+  <div class="callout callout-amber">
+    <div>
+      <strong>uvx: command not found?</strong><br>
+      Close and reopen Terminal after installing uv. Then try the config again.
+    </div>
   </div>
+  <div class="callout callout-amber" style="margin-top:8px">
+    <div>
+      <strong>Tools not showing up?</strong><br>
+      Fully quit the app (Cmd+Q on Mac) and reopen. Just closing the window isn't enough.
+    </div>
+  </div>
+</div>
 
-  <div class="footer">JDS Design Systems Team</div>
+<div class="footer">
+  JDS Design Systems Team &middot; v3.1.0
+</div>
 
 </div>
 
 <script>
 function copyEl(id, btn) {
-  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
+  const el = document.getElementById(id);
+  const text = el.textContent || el.innerText;
+  navigator.clipboard.writeText(text).then(() => {
     btn.textContent = 'Copied!';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
   });
 }
 </script>
