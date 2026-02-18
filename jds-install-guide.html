@@ -90,7 +90,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <span class="s">"mcpServers"</span>: {
     <span class="s">"JioBharatIQ"</span>: {
       <span class="s">"command"</span>: <span class="k">"uvx"</span>,
-      <span class="s">"args"</span>: [<span class="k">"jiobharatiq-server"</span>]
+      <span class="s">"args"</span>: [<span class="k">"--from"</span>, <span class="k">"git+https://github.com/sunit1986/JioBharatIQ_Server.git"</span>, <span class="k">"jiobharatiq-server"</span>]
     }
   }
 }</pre>
@@ -107,7 +107,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <span class="s">"mcpServers"</span>: {
     <span class="s">"JioBharatIQ"</span>: {
       <span class="s">"command"</span>: <span class="k">"uvx"</span>,
-      <span class="s">"args"</span>: [<span class="k">"jiobharatiq-server"</span>]
+      <span class="s">"args"</span>: [<span class="k">"--from"</span>, <span class="k">"git+https://github.com/sunit1986/JioBharatIQ_Server.git"</span>, <span class="k">"jiobharatiq-server"</span>]
     }
   }
 }</pre>
@@ -120,7 +120,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <div class="block-where">Paste in terminal:</div>
   <div class="code-wrap">
     <button class="copy-btn" onclick="copyEl('code-cli', this)">Copy</button>
-    <pre class="code-block" id="code-cli">claude mcp add JioBharatIQ -- uvx jiobharatiq-server</pre>
+    <pre class="code-block" id="code-cli">claude mcp add JioBharatIQ -- uvx --from "git+https://github.com/sunit1986/JioBharatIQ_Server.git" jiobharatiq-server</pre>
   </div>
   <div class="callout callout-green">Test it &mdash; ask Claude: <em>"What JDS button variants are available?"</em></div>
 </div>
@@ -156,7 +156,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <div class="block-where">If you need the latest server code immediately:</div>
   <div class="code-wrap">
     <button class="copy-btn" onclick="copyEl('code-upgrade', this)">Copy</button>
-    <pre class="code-block" id="code-upgrade">uvx --upgrade jiobharatiq-server</pre>
+    <pre class="code-block" id="code-upgrade">uvx --reinstall --from "git+https://github.com/sunit1986/JioBharatIQ_Server.git" jiobharatiq-server</pre>
   </div>
   <p class="note">Knowledge base updates automatically. This command is only needed for server code changes.</p>
 </div>
