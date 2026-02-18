@@ -58,30 +58,31 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 <a href="index.html" class="back-link">&larr; Back to Prototypes</a>
 
 <div class="header">
-  <div class="badge">2 Steps</div>
+  <div class="badge">1 Command</div>
   <h1>JDS Knowledge <span>Server</span></h1>
-  <p>Install uv once. Paste the config. Restart. Done.<br>No git, no Xcode, no Python install needed.</p>
+  <p>One command handles everything &mdash; uv, git, config.<br>Just paste, restart, and go.</p>
 </div>
 
-<!-- ===== STEP 1: ONE-TIME UV INSTALL ===== -->
+<!-- ===== AUTOMATIC SETUP ===== -->
 
 <div class="block">
-  <div class="step-label step-one">Step 1 &mdash; One Time Only</div>
-  <h2>Install uv</h2>
+  <div class="step-label step-one">Recommended</div>
+  <h2>Automatic Setup</h2>
   <div class="block-where">Open <strong>Terminal</strong> and paste this:</div>
   <div class="code-wrap">
-    <button class="copy-btn" onclick="copyEl('uv-install', this)">Copy</button>
-    <pre class="code-block" id="uv-install">curl -LsSf https://astral.sh/uv/install.sh | sh</pre>
+    <button class="copy-btn" onclick="copyEl('auto-install', this)">Copy</button>
+    <pre class="code-block" id="auto-install">curl -LsSf https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/install.sh | bash</pre>
   </div>
-  <p class="note">~30 MB download. Bundles its own Python &mdash; no Xcode or system Python needed. Close and reopen Terminal after.</p>
+  <p class="note">Installs uv, git (Xcode CLT on Mac), configures Claude Desktop &amp; Cursor, and caches the server package. It will ask for your Mac password once (to make uvx visible to GUI apps).</p>
+  <div class="callout callout-green">After it finishes, <strong>restart Claude Desktop / Cursor</strong> (Cmd+Q and reopen).</div>
 </div>
 
 <hr class="divider">
 
-<!-- ===== STEP 2: CONFIG ===== -->
+<!-- ===== MANUAL CONFIG (ALTERNATIVE) ===== -->
 
 <div class="block">
-  <div class="step-label step-two">Step 2 &mdash; Add Server</div>
+  <div class="step-label step-two">Alternative &mdash; Manual Setup</div>
   <h2>Claude Desktop</h2>
   <div class="block-where"><strong>Settings</strong> &gt; <strong>Developer</strong> &gt; <strong>Edit Config</strong> &mdash; paste this:</div>
   <div class="code-wrap">
@@ -95,7 +96,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   }
 }</pre>
   </div>
-  <p class="note">Quit (<strong>Cmd+Q</strong>) and reopen Claude Desktop.</p>
+  <p class="note">Requires uv already installed. Quit (<strong>Cmd+Q</strong>) and reopen Claude Desktop.</p>
 </div>
 
 <div class="block">
@@ -191,7 +192,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 </div>
 
 <div class="footer">
-  JDS Design Systems Team &middot; v3.1.0
+  JDS Design Systems Team &middot; v3.2.0
 </div>
 
 </div>
