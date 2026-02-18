@@ -175,12 +175,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <div class="callout callout-amber" style="margin-top:8px">
     <div>
       <strong>Server disconnects or &ldquo;No such file or directory&rdquo;?</strong><br>
-      Claude Desktop can&rsquo;t find uvx in its PATH. Run this once in Terminal to fix it:
+      Claude Desktop can&rsquo;t find uv/uvx in its PATH. Run this once in Terminal to fix it:
     </div>
   </div>
   <div class="code-wrap" style="margin-top:8px">
     <button class="copy-btn" onclick="copyEl('fix-path', this)">Copy</button>
-    <pre class="code-block" id="fix-path">sudo ln -sf $(which uvx) /usr/local/bin/uvx</pre>
+    <pre class="code-block" id="fix-path">sudo ln -sf $(which uv) /usr/local/bin/uv && sudo ln -sf $(which uvx) /usr/local/bin/uvx</pre>
   </div>
   <p class="note">It will ask for your Mac password &mdash; that&rsquo;s normal. Then restart Claude Desktop (Cmd+Q and reopen).</p>
   <div class="callout callout-amber" style="margin-top:8px">
