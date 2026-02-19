@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>JioBharatIQ Tools</title>
+  <style>
+    @font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+    :root {
+      --surface:#ffffff; --surface-ghost:#f8f8f9; --surface-ghost-icon:#e7e9ff;
+      --surface-bold:#3900ad; --surface-minimal:#f5f5f6;
+      --text-high:#0c0d10; --text-medium:#191b1e; --text-low:rgba(25,27,30,0.65);
+      --icon-medium:#170054; --stroke-minimal:rgba(36,38,43,0.13);
+      --primary-50:#3535f3; --primary-20:#e8e8fc; --sparkle-50:#1eccb0;
+      --success:#25ab21; --warning:#f06d0f; --error:#fa2f40;
+      --shape-pill:999px; --shape-4xl:23px; --shape-large:16px; --shape-medium:12px; --shape-small:8px;
+      --purple:#5B21B6; --purple-light:#f3f0ff; --purple-border:rgba(91,33,182,0.3);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'JioType',sans-serif;background:#e8e8e8;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px 0}
+    .device{width:360px;height:800px;background:var(--surface);position:relative;overflow:hidden;border-radius:32px;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+    .screen{position:absolute;inset:0;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .35s ease;will-change:transform,opacity}
+    .screen.hidden{transform:translateX(100%);opacity:0;pointer-events:none}
+    .screen.hidden-left{transform:translateX(-30%);opacity:0;pointer-events:none}
+    .screen.active{transform:translateX(0);opacity:1}
+
+    /* Status Bar */
+    .status-bar{height:52px;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 24px;background:var(--surface);flex-shrink:0}
+    .status-bar .time{font-size:14px;font-weight:500;color:var(--text-high);opacity:.65}
+    .status-icons{display:flex;gap:6px;align-items:center}
+    .status-icons svg{width:17px;height:17px;fill:var(--text-high);opacity:.65}
+
+    /* Header */
+    .header{height:56px;display:flex;align-items:center;padding:0 12px;background:var(--surface);flex-shrink:0}
+    .header-start{display:flex;align-items:center;gap:4px;flex:1}
+    .header-end{display:flex;align-items:center;gap:8px}
+    .icon-btn{width:40px;height:40px;border-radius:var(--shape-pill);border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .icon-btn:active{background:rgba(0,0,0,.04)}
+    .icon-btn svg{width:24px;height:24px;fill:var(--text-high)}
+    .header-title{font-size:16px;font-weight:500;color:var(--text-high);line-height:1}
+
+    /* Bottom Input Widget */
+    .bottom-widget{padding:2px 12px 16px;background:var(--surface);flex-shrink:0}
+    .input-container{background:var(--surface-ghost);border-radius:24px;padding:8px;display:flex;flex-direction:column;gap:8px}
+    .input-text-area{padding:4px 8px;display:flex;align-items:center}
+    .input-text-area input{flex:1;font-family:'JioType',sans-serif;font-size:16px;font-weight:400;color:var(--text-medium);border:none;outline:none;background:transparent;line-height:1.3}
+    .input-text-area input::placeholder{color:var(--text-low)}
+    .input-actions{display:flex;justify-content:space-between;align-items:center;height:36px}
+    .input-actions-start{display:flex;gap:2px}
+    .input-actions-end{display:flex;gap:8px;align-items:center}
+    .action-btn{width:36px;height:36px;border-radius:var(--shape-pill);background:var(--surface-ghost-icon);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .action-btn svg{width:20px;height:20px;color:var(--icon-medium)}
+    .speak-btn{background:var(--surface-bold);border:none;border-radius:var(--shape-pill);padding:10px 20px;display:flex;align-items:center;gap:8px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .speak-btn svg{width:18px;height:18px}
+    .speak-btn span{font-family:'JioType',sans-serif;font-weight:700;font-size:14px;color:#fff}
+
+    /* Scrollable content area */
+    .scroll-content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 20px 12px}
+    .chat-content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 16px;display:flex;flex-direction:column;gap:16px}
+
+    /* Tool icon */
+    .tool-icon{width:40px;height:40px;border-radius:50px;background:var(--surface-minimal);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+    .tool-title{font-size:20px;font-weight:500;color:var(--text-high);line-height:1;margin-bottom:4px}
+    .tool-desc{font-size:12px;font-weight:400;color:var(--text-medium);opacity:.8;line-height:1.3;margin-bottom:16px}
+
+    /* Hub tool cards */
+    .hub-section-title{font-size:18px;font-weight:700;color:var(--text-high);margin:24px 0 12px}
+    .tool-card{display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--shape-large);border:1px solid var(--stroke-minimal);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s;margin-bottom:10px}
+    .tool-card:active{background:var(--surface-ghost)}
+    .tool-card-icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .tool-card-info{flex:1;min-width:0}
+    .tool-card-name{font-size:15px;font-weight:500;color:var(--text-high);line-height:1.1;margin-bottom:3px}
+    .tool-card-sub{font-size:12px;font-weight:400;color:var(--text-low);line-height:1.3}
+    .tool-card-arrow svg{width:20px;height:20px;fill:var(--text-low)}
+
+    /* Option cards (used in Edit Image, Write, Translate) */
+    .option-carousel{display:flex;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
+    .option-carousel::-webkit-scrollbar{display:none}
+    .option-card{flex-shrink:0;width:140px;padding:16px 14px;border-radius:var(--shape-large);border:1px solid var(--stroke-minimal);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+    .option-card:active{background:var(--purple-light);border-color:var(--purple-border)}
+    .option-card-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+    .option-card-icon svg{width:24px;height:24px}
+    .option-card-label{font-size:13px;font-weight:500;color:var(--text-high);line-height:1.2}
+    .option-card-sub{font-size:11px;font-weight:400;color:var(--text-low);line-height:1.3}
+
+    /* Grid options */
+    .option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .grid-option{padding:16px;border-radius:var(--shape-large);border:1px solid var(--stroke-minimal);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;display:flex;flex-direction:column;gap:8px}
+    .grid-option:active{background:var(--purple-light);border-color:var(--purple-border)}
+    .grid-option-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+    .grid-option-icon svg{width:22px;height:22px}
+    .grid-option-label{font-size:14px;font-weight:500;color:var(--text-high);line-height:1.1}
+    .grid-option-sub{font-size:11px;font-weight:400;color:var(--text-low);line-height:1.3}
+
+    /* Language pair cards for Translate */
+    .lang-pair{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:var(--shape-large);border:1px solid var(--stroke-minimal);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;margin-bottom:8px}
+    .lang-pair:active{background:var(--purple-light);border-color:var(--purple-border)}
+    .lang-flag{width:32px;height:32px;border-radius:50%;background:var(--surface-ghost);display:flex;align-items:center;justify-content:center;font-size:18px}
+    .lang-arrow{width:20px;display:flex;justify-content:center}
+    .lang-arrow svg{width:16px;height:16px;fill:var(--text-low)}
+    .lang-name{font-size:14px;font-weight:500;color:var(--text-high)}
+    .lang-sub{font-size:11px;color:var(--text-low)}
+
+    /* Chat */
+    .user-msg{align-self:flex-end;background:var(--surface-ghost);border-radius:24px 24px 0 24px;padding:12px 16px;max-width:270px}
+    .user-msg p{font-size:14px;font-weight:400;color:var(--text-high);line-height:1.3}
+    .ai-row{display:flex;gap:6px;align-items:flex-start;width:100%}
+    .bot-icon{width:32px;height:32px;flex-shrink:0;overflow:hidden}
+    .bot-dots{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:28px;height:28px;margin:2px}
+    .bot-dots .dot{border-radius:50%;background:var(--purple)}
+    .dot-static{animation:none!important;opacity:1!important}
+    @keyframes dotPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.85);opacity:.7}}
+    .bot-dots .dot{animation:dotPulse 1.5s ease-in-out infinite}
+    .bot-dots .dot:nth-child(2){animation-delay:.2s}
+    .bot-dots .dot:nth-child(3){animation-delay:.4s}
+    .bot-dots .dot:nth-child(4){animation-delay:.6s}
+    .ai-text{flex:1;font-size:14px;font-weight:400;color:var(--text-high);line-height:1.4}
+    .thinking-text{font-size:14px;font-weight:400;color:var(--text-low);line-height:1.3;display:flex;align-items:center;padding:8px 0}
+
+    /* Chips */
+    .chip{padding:10px 16px;border-radius:var(--shape-pill);border:1px solid var(--purple-border);background:transparent;font-family:'JioType',sans-serif;font-size:13px;font-weight:500;color:var(--purple);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;white-space:nowrap}
+    .chip:active{background:var(--purple-light)}
+
+    /* Action strip */
+    .action-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-top:4px;padding-bottom:2px}
+    .action-strip::-webkit-scrollbar{display:none}
+    .action-strip-btn{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:var(--shape-pill);border:1px solid var(--stroke-minimal);background:var(--surface);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;color:var(--text-high);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s;white-space:nowrap}
+    .action-strip-btn:active{background:var(--surface-ghost)}
+    .action-strip-btn svg{width:16px;height:16px;fill:var(--text-high);flex-shrink:0}
+    .action-strip-btn.primary{background:var(--surface-bold);color:#fff;border-color:transparent}
+    .action-strip-btn.primary:active{opacity:.9}
+    .action-strip-btn.primary svg{fill:#fff}
+
+    /* Upload prompt */
+    .upload-prompt-card{width:100%;border:1.5px dashed var(--purple-border);border-radius:var(--shape-large);padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s;background:rgba(91,33,182,.03)}
+    .upload-prompt-card:active{background:rgba(91,33,182,.07)}
+    .upload-icon-circle{width:48px;height:48px;border-radius:50%;background:var(--surface-ghost-icon);display:flex;align-items:center;justify-content:center}
+    .upload-icon-circle svg{width:24px;height:24px;fill:var(--purple)}
+    .upload-label{font-size:14px;font-weight:500;color:var(--purple)}
+    .upload-sublabel{font-size:12px;font-weight:400;color:var(--text-low);text-align:center}
+
+    /* Feedback row */
+    .feedback-row{display:flex;gap:4px;padding:4px 0}
+    .fb-btn{width:32px;height:32px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .fb-btn:active{background:var(--surface-ghost)}
+    .fb-btn svg{width:18px;height:18px;fill:var(--text-high);opacity:.55}
+
+    /* Generated image */
+    .generated-img-card{width:100%;border-radius:var(--shape-large);overflow:hidden;position:relative}
+    .generated-img-card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+    .img-style-badge{position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:var(--shape-pill);padding:6px 12px;font-size:12px;font-weight:500;color:#fff}
+
+    /* Generating animation */
+    .generating-card{width:100%;border-radius:var(--shape-large);overflow:hidden}
+    .generating-placeholder{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,#1a0033,#2d1b69,#0f0026);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative;overflow:hidden}
+    .generating-placeholder::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 30%,rgba(139,92,246,.15) 50%,transparent 70%);animation:shimmer 2s infinite}
+    @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+    .gen-spinner{width:48px;height:48px;border:3px solid rgba(255,255,255,.15);border-top-color:#a78bfa;border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .gen-label{font-size:14px;font-weight:500;color:rgba(255,255,255,.8);z-index:1}
+    .gen-progress{width:120px;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;z-index:1}
+    .gen-progress-fill{height:100%;background:#a78bfa;border-radius:2px;animation:progressFill 4s ease-out forwards}
+    @keyframes progressFill{0%{width:0}30%{width:40%}60%{width:65%}85%{width:80%}100%{width:95%}}
+
+    /* Document card */
+    .doc-card{width:100%;border:1px solid var(--stroke-minimal);border-radius:var(--shape-large);padding:16px;display:flex;gap:14px;align-items:center}
+    .doc-thumb{width:48px;height:56px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .doc-info{flex:1;min-width:0}
+    .doc-name{font-size:14px;font-weight:500;color:var(--text-high);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .doc-meta{font-size:12px;color:var(--text-low);margin-top:2px}
+
+    /* Summary card */
+    .summary-card{background:var(--surface-ghost);border-radius:var(--shape-large);padding:16px;margin-top:8px}
+    .summary-card h4{font-size:14px;font-weight:700;color:var(--text-high);margin-bottom:8px}
+    .summary-card ul{padding-left:18px;margin:0}
+    .summary-card li{font-size:13px;color:var(--text-high);line-height:1.5;margin-bottom:4px}
+
+    /* Write output card */
+    .write-output{background:var(--surface-ghost);border-radius:var(--shape-large);padding:16px;font-size:14px;color:var(--text-high);line-height:1.6;white-space:pre-wrap}
+
+    /* Translation card */
+    .translation-card{background:var(--surface-ghost);border-radius:var(--shape-large);padding:16px;display:flex;flex-direction:column;gap:12px}
+    .trans-section{display:flex;flex-direction:column;gap:4px}
+    .trans-lang-label{font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.5px}
+    .trans-text{font-size:14px;color:var(--text-high);line-height:1.5}
+
+    /* Toast */
+    .toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text-high);color:#fff;padding:12px 20px;border-radius:var(--shape-pill);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:all .3s ease;white-space:nowrap;z-index:100}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* Section label */
+    .section-label{font-size:13px;font-weight:500;color:var(--text-low);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+  </style>
+</head>
+<body>
+<div class="device" id="device">
+
+  <!-- ===== SCREEN: TOOL HUB ===== -->
+  <div class="screen active" id="screen-hub">
+    <div class="status-bar"><span class="time">9:30</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M12 21L1.5 9a13.09 13.09 0 0 1 21 0L12 21z" fill="none" stroke="currentColor" stroke-width="2"/></svg><svg viewBox="0 0 24 24"><path d="M2 20h2V10H2v10zm4 0h2V6H6v14zm4 0h2V2h-2v18zm4 0h2V8h-2v12zm4 0h2V4h-2v16z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+    <div class="header">
+      <div class="header-start">
+        <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+        <span class="header-title">Your Tools</span>
+      </div>
+      <div class="header-end">
+        <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+      </div>
+    </div>
+    <div class="scroll-content" style="padding-top:8px">
+      <p class="section-label">Creativity</p>
+
+      <div class="tool-card" onclick="navigateTo('screen-edit-image')">
+        <div class="tool-card-icon" style="background:#FFF3E0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" fill="#E65100"/></svg></div>
+        <div class="tool-card-info">
+          <div class="tool-card-name">Edit Image</div>
+          <div class="tool-card-sub">Remove background, colorize, swap backgrounds and more</div>
+        </div>
+        <div class="tool-card-arrow"><svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+      </div>
+
+      <p class="section-label" style="margin-top:20px">Productivity</p>
+
+      <div class="tool-card" onclick="navigateTo('screen-analyse-doc')">
+        <div class="tool-card-icon" style="background:#E8EAF6"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM9.03 15.71l1.06-2.37 2.37-1.06-2.37-1.06-1.06-2.37-1.06 2.37L5.6 12.28l2.37 1.06 1.06 2.37z" fill="#283593"/></svg></div>
+        <div class="tool-card-info">
+          <div class="tool-card-name">Analyse Docs</div>
+          <div class="tool-card-sub">Summarise, extract key insights and ask questions about documents</div>
+        </div>
+        <div class="tool-card-arrow"><svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+      </div>
+
+      <div class="tool-card" onclick="navigateTo('screen-write')">
+        <div class="tool-card-icon" style="background:#E0F2F1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#00695C"/></svg></div>
+        <div class="tool-card-info">
+          <div class="tool-card-name">Write</div>
+          <div class="tool-card-sub">Draft emails, journals, essays, stories and poems</div>
+        </div>
+        <div class="tool-card-arrow"><svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+      </div>
+
+      <p class="section-label" style="margin-top:20px">Language</p>
+
+      <div class="tool-card" onclick="navigateTo('screen-translate')">
+        <div class="tool-card-icon" style="background:#F3E5F5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" fill="#7B1FA2"/></svg></div>
+        <div class="tool-card-info">
+          <div class="tool-card-name">Translate</div>
+          <div class="tool-card-sub">Translate between English, Hindi, Gujarati, Marathi and more</div>
+        </div>
+        <div class="tool-card-arrow"><svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+      </div>
+    </div>
+    <div class="bottom-widget">
+      <div class="input-container">
+        <div class="input-text-area"><input type="text" placeholder="What would you like to do?" readonly></div>
+        <div class="input-actions">
+          <div class="input-actions-start"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#170054"/></svg></button></div>
+          <div class="input-actions-end">
+            <button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" fill="#170054"/></svg></button>
+            <button class="speak-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8.5v7a4.47 4.47 0 0 0 2.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" fill="#fff"/></svg><span>Speak</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: EDIT IMAGE ===== -->
+  <div class="screen hidden" id="screen-edit-image">
+    <div class="status-bar"><span class="time">9:30</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M12 21L1.5 9a13.09 13.09 0 0 1 21 0L12 21z" fill="none" stroke="currentColor" stroke-width="2"/></svg><svg viewBox="0 0 24 24"><path d="M2 20h2V10H2v10zm4 0h2V6H6v14zm4 0h2V2h-2v18zm4 0h2V8h-2v12zm4 0h2V4h-2v16z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+    <div class="header"><div class="header-start"><button class="icon-btn" onclick="navigateTo('screen-hub')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><span class="header-title">Creativity</span></div><div class="header-end"><button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div></div>
+    <div class="scroll-content">
+      <div style="height:24px"></div>
+      <div class="tool-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" fill="#E65100"/></svg></div>
+      <h1 class="tool-title">Edit Image</h1>
+      <p class="tool-desc">Enhance, transform, and fix your photos with AI-powered editing tools.</p>
+      <div class="option-grid">
+        <div class="grid-option" onclick="startEditFlow('Remove Background')">
+          <div class="grid-option-icon" style="background:#FFF3E0"><svg viewBox="0 0 24 24" fill="none"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" fill="#E65100"/><line x1="3" y1="3" x2="21" y2="21" stroke="#E65100" stroke-width="2"/></svg></div>
+          <div class="grid-option-label">Remove Background</div>
+          <div class="grid-option-sub">Isolate subjects from any background</div>
+        </div>
+        <div class="grid-option" onclick="startEditFlow('B&W to Color')">
+          <div class="grid-option-icon" style="background:#E8EAF6"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10c1.38 0 2.5-1.12 2.5-2.5 0-.61-.23-1.2-.64-1.67a.528.528 0 0 1-.13-.33c0-.29.24-.5.5-.5H16c3.31 0 6-2.69 6-6 0-4.96-4.49-9-10-9zM6 13a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" fill="#283593"/></svg></div>
+          <div class="grid-option-label">B&W to Color</div>
+          <div class="grid-option-sub">Bring old photos to life with AI colour</div>
+        </div>
+        <div class="grid-option" onclick="startEditFlow('Change Background')">
+          <div class="grid-option-icon" style="background:#E0F2F1"><svg viewBox="0 0 24 24" fill="none"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" fill="#00695C"/></svg></div>
+          <div class="grid-option-label">Change Background</div>
+          <div class="grid-option-sub">Replace your photo background with any scene</div>
+        </div>
+        <div class="grid-option" onclick="startEditFlow('Upscale & Enhance')">
+          <div class="grid-option-icon" style="background:#FCE4EC"><svg viewBox="0 0 24 24" fill="none"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="#C62828"/></svg></div>
+          <div class="grid-option-label">Upscale & Enhance</div>
+          <div class="grid-option-sub">Sharpen and increase resolution of blurry photos</div>
+        </div>
+        <div class="grid-option" onclick="startEditFlow('Remove Object')">
+          <div class="grid-option-icon" style="background:#F3E5F5"><svg viewBox="0 0 24 24" fill="none"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#7B1FA2"/></svg></div>
+          <div class="grid-option-label">Remove Object</div>
+          <div class="grid-option-sub">Erase unwanted people or objects from photos</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-widget">
+      <div class="input-container">
+        <div class="input-text-area"><input type="text" placeholder="Describe what to edit" id="edit-input" onkeydown="if(event.key==='Enter')sendEditCustom()"></div>
+        <div class="input-actions"><div class="input-actions-start"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#170054"/></svg></button></div><div class="input-actions-end"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" fill="#170054"/></svg></button><button class="speak-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8.5v7a4.47 4.47 0 0 0 2.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" fill="#fff"/></svg><span>Speak</span></button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: ANALYSE DOC ===== -->
+  <div class="screen hidden" id="screen-analyse-doc">
+    <div class="status-bar"><span class="time">9:30</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M12 21L1.5 9a13.09 13.09 0 0 1 21 0L12 21z" fill="none" stroke="currentColor" stroke-width="2"/></svg><svg viewBox="0 0 24 24"><path d="M2 20h2V10H2v10zm4 0h2V6H6v14zm4 0h2V2h-2v18zm4 0h2V8h-2v12zm4 0h2V4h-2v16z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+    <div class="header"><div class="header-start"><button class="icon-btn" onclick="navigateTo('screen-hub')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><span class="header-title">Productivity</span></div><div class="header-end"><button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div></div>
+    <div class="scroll-content">
+      <div style="height:24px"></div>
+      <div class="tool-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" fill="#283593"/></svg></div>
+      <h1 class="tool-title">Analyse Docs</h1>
+      <p class="tool-desc">Upload a document and get summaries, insights, and answers to your questions.</p>
+      <div class="upload-prompt-card" onclick="startDocFlow()">
+        <div class="upload-icon-circle"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" fill="#5B21B6"/></svg></div>
+        <span class="upload-label">Tap to upload a document</span>
+        <span class="upload-sublabel">PDF, Word, Images or Photos of documents</span>
+      </div>
+      <div style="height:20px"></div>
+      <p class="section-label">Or try with a sample</p>
+      <div class="doc-card" style="cursor:pointer" onclick="startDocFlow()">
+        <div class="doc-thumb" style="background:#FEF3C7"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" fill="#D97706"/></svg></div>
+        <div class="doc-info">
+          <div class="doc-name">Quarterly_Report_Q3.pdf</div>
+          <div class="doc-meta">PDF  ·  2.4 MB  ·  24 pages</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-widget">
+      <div class="input-container">
+        <div class="input-text-area"><input type="text" placeholder="Ask about a document" id="doc-input" onkeydown="if(event.key==='Enter')sendDocCustom()"></div>
+        <div class="input-actions"><div class="input-actions-start"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#170054"/></svg></button></div><div class="input-actions-end"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" fill="#170054"/></svg></button><button class="speak-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8.5v7a4.47 4.47 0 0 0 2.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" fill="#fff"/></svg><span>Speak</span></button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: WRITE ===== -->
+  <div class="screen hidden" id="screen-write">
+    <div class="status-bar"><span class="time">9:30</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M12 21L1.5 9a13.09 13.09 0 0 1 21 0L12 21z" fill="none" stroke="currentColor" stroke-width="2"/></svg><svg viewBox="0 0 24 24"><path d="M2 20h2V10H2v10zm4 0h2V6H6v14zm4 0h2V2h-2v18zm4 0h2V8h-2v12zm4 0h2V4h-2v16z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+    <div class="header"><div class="header-start"><button class="icon-btn" onclick="navigateTo('screen-hub')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><span class="header-title">Productivity</span></div><div class="header-end"><button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div></div>
+    <div class="scroll-content">
+      <div style="height:24px"></div>
+      <div class="tool-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#00695C"/></svg></div>
+      <h1 class="tool-title">Write</h1>
+      <p class="tool-desc">Draft anything from emails and essays to stories and poems with AI assistance.</p>
+      <div class="option-grid">
+        <div class="grid-option" onclick="startWriteFlow('Email')">
+          <div class="grid-option-icon" style="background:#E8EAF6"><svg viewBox="0 0 24 24" fill="none"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="#283593"/></svg></div>
+          <div class="grid-option-label">Email</div>
+          <div class="grid-option-sub">Professional or personal emails</div>
+        </div>
+        <div class="grid-option" onclick="startWriteFlow('Journal')">
+          <div class="grid-option-icon" style="background:#FFF3E0"><svg viewBox="0 0 24 24" fill="none"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" fill="#E65100"/></svg></div>
+          <div class="grid-option-label">Journal</div>
+          <div class="grid-option-sub">Daily reflections and thoughts</div>
+        </div>
+        <div class="grid-option" onclick="startWriteFlow('Essay')">
+          <div class="grid-option-icon" style="background:#E0F2F1"><svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="#00695C"/></svg></div>
+          <div class="grid-option-label">Essay</div>
+          <div class="grid-option-sub">Structured academic or opinion pieces</div>
+        </div>
+        <div class="grid-option" onclick="startWriteFlow('Story')">
+          <div class="grid-option-icon" style="background:#FCE4EC"><svg viewBox="0 0 24 24" fill="none"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1z" fill="#C62828"/></svg></div>
+          <div class="grid-option-label">Story</div>
+          <div class="grid-option-sub">Creative fiction and narratives</div>
+        </div>
+        <div class="grid-option" onclick="startWriteFlow('Poem')">
+          <div class="grid-option-icon" style="background:#F3E5F5"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" fill="#7B1FA2"/></svg></div>
+          <div class="grid-option-label">Poem</div>
+          <div class="grid-option-sub">Verses, rhymes and lyrical expression</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-widget">
+      <div class="input-container">
+        <div class="input-text-area"><input type="text" placeholder="Tell me what to write" id="write-input" onkeydown="if(event.key==='Enter')sendWriteCustom()"></div>
+        <div class="input-actions"><div class="input-actions-start"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#170054"/></svg></button></div><div class="input-actions-end"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" fill="#170054"/></svg></button><button class="speak-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8.5v7a4.47 4.47 0 0 0 2.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" fill="#fff"/></svg><span>Speak</span></button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: TRANSLATE ===== -->
+  <div class="screen hidden" id="screen-translate">
+    <div class="status-bar"><span class="time">9:30</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M12 21L1.5 9a13.09 13.09 0 0 1 21 0L12 21z" fill="none" stroke="currentColor" stroke-width="2"/></svg><svg viewBox="0 0 24 24"><path d="M2 20h2V10H2v10zm4 0h2V6H6v14zm4 0h2V2h-2v18zm4 0h2V8h-2v12zm4 0h2V4h-2v16z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+    <div class="header"><div class="header-start"><button class="icon-btn" onclick="navigateTo('screen-hub')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><span class="header-title">Language</span></div><div class="header-end"><button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div></div>
+    <div class="scroll-content">
+      <div style="height:24px"></div>
+      <div class="tool-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" fill="#7B1FA2"/></svg></div>
+      <h1 class="tool-title">Translate</h1>
+      <p class="tool-desc">Quick and accurate translations between Indian and global languages.</p>
+      <p class="section-label">Popular pairs</p>
+      <div class="lang-pair" onclick="startTranslateFlow('English','Hindi')">
+        <div class="lang-flag">EN</div>
+        <div class="lang-arrow"><svg viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></div>
+        <div class="lang-flag">HI</div>
+        <div style="flex:1;margin-left:8px"><div class="lang-name">English to Hindi</div><div class="lang-sub">Most popular</div></div>
+      </div>
+      <div class="lang-pair" onclick="startTranslateFlow('Hindi','Gujarati')">
+        <div class="lang-flag">HI</div>
+        <div class="lang-arrow"><svg viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></div>
+        <div class="lang-flag">GU</div>
+        <div style="flex:1;margin-left:8px"><div class="lang-name">Hindi to Gujarati</div><div class="lang-sub">Regional</div></div>
+      </div>
+      <div class="lang-pair" onclick="startTranslateFlow('English','Marathi')">
+        <div class="lang-flag">EN</div>
+        <div class="lang-arrow"><svg viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></div>
+        <div class="lang-flag">MR</div>
+        <div style="flex:1;margin-left:8px"><div class="lang-name">English to Marathi</div><div class="lang-sub">Regional</div></div>
+      </div>
+      <div class="lang-pair" onclick="startTranslateFlow('English','Tamil')">
+        <div class="lang-flag">EN</div>
+        <div class="lang-arrow"><svg viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></div>
+        <div class="lang-flag">TA</div>
+        <div style="flex:1;margin-left:8px"><div class="lang-name">English to Tamil</div><div class="lang-sub">Regional</div></div>
+      </div>
+      <div class="lang-pair" onclick="startTranslateFlow('Hindi','English')">
+        <div class="lang-flag">HI</div>
+        <div class="lang-arrow"><svg viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></div>
+        <div class="lang-flag">EN</div>
+        <div style="flex:1;margin-left:8px"><div class="lang-name">Hindi to English</div><div class="lang-sub">Popular</div></div>
+      </div>
+      <div class="lang-pair" onclick="startTranslateFlow('English','Bengali')">
+        <div class="lang-flag">EN</div>
+        <div class="lang-arrow"><svg viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></div>
+        <div class="lang-flag">BN</div>
+        <div style="flex:1;margin-left:8px"><div class="lang-name">English to Bengali</div><div class="lang-sub">Regional</div></div>
+      </div>
+    </div>
+    <div class="bottom-widget">
+      <div class="input-container">
+        <div class="input-text-area"><input type="text" placeholder="Type or paste text to translate" id="translate-input" onkeydown="if(event.key==='Enter')sendTranslateCustom()"></div>
+        <div class="input-actions"><div class="input-actions-start"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#170054"/></svg></button></div><div class="input-actions-end"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" fill="#170054"/></svg></button><button class="speak-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8.5v7a4.47 4.47 0 0 0 2.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" fill="#fff"/></svg><span>Speak</span></button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: CHAT (shared for all tools) ===== -->
+  <div class="screen hidden" id="screen-chat">
+    <div class="status-bar"><span class="time">9:30</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M12 21L1.5 9a13.09 13.09 0 0 1 21 0L12 21z" fill="none" stroke="currentColor" stroke-width="2"/></svg><svg viewBox="0 0 24 24"><path d="M2 20h2V10H2v10zm4 0h2V6H6v14zm4 0h2V2h-2v18zm4 0h2V8h-2v12zm4 0h2V4h-2v16z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+    <div class="header"><div class="header-start"><button class="icon-btn" onclick="goBackFromChat()"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div><span class="header-title" id="chat-header-title">New chat</span><div style="font-size:11px;color:var(--text-low)" id="chat-header-sub"></div></div></div><div class="header-end"><button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div></div>
+    <div class="chat-content" id="chat-messages"></div>
+    <div class="bottom-widget">
+      <div class="input-container">
+        <div class="input-text-area"><input type="text" placeholder="Type a message" id="chat-input" onkeydown="if(event.key==='Enter')sendChatMessage()"></div>
+        <div class="input-actions"><div class="input-actions-start"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#170054"/></svg></button></div><div class="input-actions-end"><button class="action-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" fill="#170054"/></svg></button><button class="speak-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8.5v7a4.47 4.47 0 0 0 2.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" fill="#fff"/></svg><span>Speak</span></button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Saved</div>
+</div>
+
+<script>
+let activeTool = '';
+let activeSubTool = '';
+let chatReturnScreen = 'screen-hub';
+
+const IMG_PORTRAIT = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop&crop=face&q=85';
+const IMG_BEFORE = 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&h=500&fit=crop&crop=face&q=85';
+
+function navigateTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => {
+    if (s.id === screenId) s.className = 'screen active';
+    else if (s.classList.contains('active')) s.className = 'screen hidden-left';
+    else s.className = 'screen hidden';
+  });
+}
+
+function goBackFromChat() {
+  document.getElementById('screen-chat').className = 'screen hidden';
+  document.getElementById(chatReturnScreen).className = 'screen active';
+}
+
+function openChat(title, sub, returnScreen, placeholder) {
+  chatReturnScreen = returnScreen;
+  document.getElementById('chat-header-title').textContent = title;
+  document.getElementById('chat-header-sub').textContent = sub || '';
+  document.getElementById('chat-messages').innerHTML = '';
+  document.getElementById('chat-input').placeholder = placeholder || 'Type a message';
+  navigateTo('screen-chat');
+}
+
+function addUserMsg(text) {
+  const c = document.getElementById('chat-messages');
+  const m = document.createElement('div');
+  m.className = 'user-msg';
+  m.innerHTML = `<p>${text}</p>`;
+  m.style.opacity = '0'; m.style.transform = 'translateY(10px)';
+  c.appendChild(m);
+  requestAnimationFrame(() => { m.style.transition = 'opacity .3s,transform .3s'; m.style.opacity = '1'; m.style.transform = 'translateY(0)'; });
+  c.scrollTop = c.scrollHeight;
+}
+
+function addAIMsg(html) {
+  const c = document.getElementById('chat-messages');
+  const r = document.createElement('div');
+  r.style.display = 'flex'; r.style.flexDirection = 'column'; r.style.gap = '12px'; r.style.width = '100%';
+  r.innerHTML = `<div class="ai-row" style="gap:6px;align-items:flex-start"><div class="bot-icon"><div class="bot-dots"><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div></div></div><span class="ai-text">${html}</span></div>`;
+  r.style.opacity = '0'; r.style.transform = 'translateY(8px)';
+  c.appendChild(r);
+  requestAnimationFrame(() => { r.style.transition = 'opacity .3s,transform .3s'; r.style.opacity = '1'; r.style.transform = 'translateY(0)'; });
+  c.scrollTop = c.scrollHeight;
+}
+
+function addBlock(html) {
+  const c = document.getElementById('chat-messages');
+  const r = document.createElement('div');
+  r.style.width = '100%'; r.style.opacity = '0'; r.style.transform = 'translateY(8px)';
+  r.innerHTML = html;
+  c.appendChild(r);
+  requestAnimationFrame(() => { r.style.transition = 'opacity .4s,transform .4s'; r.style.opacity = '1'; r.style.transform = 'translateY(0)'; });
+  setTimeout(() => { c.scrollTop = c.scrollHeight; }, 100);
+}
+
+function addThinking() {
+  const c = document.getElementById('chat-messages');
+  const r = document.createElement('div');
+  r.className = 'ai-row'; r.id = 'thinking-row';
+  r.innerHTML = `<div class="bot-icon"><div class="bot-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div><span class="thinking-text">Thinking...</span>`;
+  r.style.opacity = '0'; c.appendChild(r);
+  requestAnimationFrame(() => { r.style.transition = 'opacity .3s'; r.style.opacity = '1'; });
+  c.scrollTop = c.scrollHeight;
+}
+
+function removeThinking() { const e = document.getElementById('thinking-row'); if (e) e.remove(); }
+
+function addFeedbackRow() {
+  return `<div class="feedback-row"><button class="fb-btn" onclick="this.querySelector('svg').style.fill='#5B21B6';this.querySelector('svg').style.opacity='1'"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></button><button class="fb-btn"><svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button><button class="fb-btn" onclick="showToast('Copied!')"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button><button class="fb-btn" onclick="showToast('Link copied!')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg></button></div>`;
+}
+
+function addGenerating(label) {
+  const c = document.getElementById('chat-messages');
+  const r = document.createElement('div'); r.id = 'generating-row'; r.style.width = '100%';
+  r.innerHTML = `<div class="generating-card"><div class="generating-placeholder"><div class="gen-spinner"></div><span class="gen-label">${label || 'Processing...'}</span><div class="gen-progress"><div class="gen-progress-fill"></div></div></div></div>`;
+  r.style.opacity = '0'; c.appendChild(r);
+  requestAnimationFrame(() => { r.style.transition = 'opacity .4s'; r.style.opacity = '1'; });
+  c.scrollTop = c.scrollHeight;
+}
+
+function removeGenerating() { const e = document.getElementById('generating-row'); if (e) e.remove(); }
+
+function showToast(text) {
+  const t = document.getElementById('toast');
+  t.textContent = text; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addUserMsg(text);
+  setTimeout(() => addThinking(), 500);
+  setTimeout(() => { removeThinking(); addAIMsg("Got it. Let me work on that for you..."); }, 1800);
+}
+
+// ===== 1. EDIT IMAGE FLOW =====
+function startEditFlow(tool) {
+  activeTool = 'edit-image'; activeSubTool = tool;
+  openChat('New chat', 'Edit Image', 'screen-edit-image', 'Describe your edit');
+  setTimeout(() => addUserMsg(`${tool} — edit my photo`), 300);
+  setTimeout(() => addThinking(), 900);
+  setTimeout(() => {
+    removeThinking();
+    addAIMsg(`Upload your photo and I'll ${tool.toLowerCase()} for you.`);
+  }, 2000);
+  setTimeout(() => {
+    addBlock(`
+      <div class="upload-prompt-card" onclick="handleEditUpload()">
+        <div class="upload-icon-circle"><svg viewBox="0 0 24 24"><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z" fill="#5B21B6"/></svg></div>
+        <span class="upload-label">Tap to upload your photo</span>
+        <span class="upload-sublabel">JPG, PNG or HEIC</span>
+      </div>
+    `);
+  }, 2400);
+}
+
+function handleEditUpload() {
+  addUserMsg('Photo uploaded');
+  setTimeout(() => addThinking(), 400);
+  setTimeout(() => { removeThinking(); addAIMsg(`Applying ${activeSubTool}...`); }, 1200);
+  setTimeout(() => addGenerating(`Applying ${activeSubTool}...`), 1800);
+  setTimeout(() => {
+    removeGenerating();
+    addBlock(`
+      <div class="ai-row" style="gap:6px;align-items:flex-start"><div class="bot-icon"><div class="bot-dots"><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div></div></div><span class="ai-text">Done! Here's your edited image:</span></div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;border-radius:12px;overflow:hidden;position:relative">
+          <img src="${IMG_BEFORE}" style="width:100%;aspect-ratio:1;object-fit:cover;filter:grayscale(100%)" alt="Before">
+          <div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;padding:3px 8px;border-radius:99px;font-size:10px;font-weight:500">Before</div>
+        </div>
+        <div style="flex:1;border-radius:12px;overflow:hidden;position:relative">
+          <img src="${IMG_BEFORE}" style="width:100%;aspect-ratio:1;object-fit:cover" alt="After">
+          <div style="position:absolute;bottom:6px;left:6px;background:rgba(91,33,182,.8);color:#fff;padding:3px 8px;border-radius:99px;font-size:10px;font-weight:500">After</div>
+        </div>
+      </div>
+      <div class="action-strip">
+        <button class="action-strip-btn primary" onclick="showToast('Saved!')"><svg viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/></svg>Save</button>
+        <button class="action-strip-btn" onclick="showToast('Shared!')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>Share</button>
+        <button class="action-strip-btn">Redo</button>
+        <button class="action-strip-btn">Try another style</button>
+      </div>
+      ${addFeedbackRow()}
+      <span class="ai-text" style="font-size:13px;color:var(--text-low);line-height:1.4">Want to tweak anything? Describe the change or try a different edit.</span>
+    `);
+  }, 5000);
+}
+
+function sendEditCustom() {
+  const input = document.getElementById('edit-input');
+  const text = input.value.trim();
+  if (!text) return; input.value = '';
+  startEditFlow(text);
+}
+
+// ===== 2. ANALYSE DOC FLOW =====
+function startDocFlow() {
+  activeTool = 'analyse-doc';
+  openChat('New chat', 'Analyse Docs', 'screen-analyse-doc', 'Ask about this document');
+  setTimeout(() => addUserMsg('Analyse Quarterly_Report_Q3.pdf'), 300);
+  setTimeout(() => {
+    addBlock(`
+      <div class="doc-card">
+        <div class="doc-thumb" style="background:#FEF3C7"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" fill="#D97706"/></svg></div>
+        <div class="doc-info"><div class="doc-name">Quarterly_Report_Q3.pdf</div><div class="doc-meta">PDF  ·  2.4 MB  ·  24 pages</div></div>
+      </div>
+    `);
+  }, 600);
+  setTimeout(() => addThinking(), 1200);
+  setTimeout(() => {
+    removeThinking();
+    addAIMsg("I've read through all 24 pages. Here's a summary:");
+  }, 3000);
+  setTimeout(() => {
+    addBlock(`
+      <div class="summary-card">
+        <h4>Key Highlights</h4>
+        <ul>
+          <li>Revenue grew 18% YoY to ₹4,230 Cr, driven by digital services</li>
+          <li>Customer base expanded to 12.8M active users (+2.1M from Q2)</li>
+          <li>Operating margin improved from 22% to 25.3%</li>
+          <li>New product launches contributed 15% of total revenue</li>
+          <li>Employee headcount: 8,400 (net addition of 320)</li>
+        </ul>
+      </div>
+      <div class="action-strip" style="margin-top:8px">
+        <button class="chip" onclick="askDocQuestion('What were the main risks mentioned?')">Key risks</button>
+        <button class="chip" onclick="askDocQuestion('Compare Q3 with Q2 performance')">Q2 vs Q3</button>
+        <button class="chip" onclick="askDocQuestion('What is the outlook for Q4?')">Q4 outlook</button>
+        <button class="chip" onclick="askDocQuestion('Summarise financials in a table')">Financial table</button>
+      </div>
+      ${addFeedbackRow()}
+    `);
+  }, 3800);
+}
+
+function askDocQuestion(q) {
+  addUserMsg(q);
+  setTimeout(() => addThinking(), 400);
+  setTimeout(() => {
+    removeThinking();
+    addAIMsg("Based on the document, here's what I found:");
+  }, 2000);
+  setTimeout(() => {
+    addBlock(`
+      <div class="summary-card">
+        <h4>Answer</h4>
+        <ul>
+          <li>The report highlights market volatility and regulatory changes as primary risks</li>
+          <li>Supply chain disruptions remain a concern for hardware segments</li>
+          <li>Competition intensifying in the digital payments space</li>
+          <li>Currency fluctuations could impact export revenue by 3-5%</li>
+        </ul>
+      </div>
+      <div class="action-strip" style="margin-top:8px">
+        <button class="chip" onclick="askDocQuestion('Tell me more about competition')">More on competition</button>
+        <button class="chip" onclick="askDocQuestion('What mitigation strategies are proposed?')">Mitigation plans</button>
+      </div>
+      ${addFeedbackRow()}
+    `);
+  }, 2800);
+}
+
+function sendDocCustom() {
+  const input = document.getElementById('doc-input');
+  const text = input.value.trim();
+  if (!text) return; input.value = '';
+  startDocFlow();
+}
+
+// ===== 3. WRITE FLOW =====
+const writeContent = {
+  Email: {subject:'Re: Project Timeline Update', body:`Hi Priya,\n\nThank you for sharing the updated timeline. I've reviewed the milestones and have a few thoughts:\n\n1. The Phase 2 deadline looks tight — could we add a 3-day buffer?\n2. I'd suggest we schedule a mid-sprint review for Week 3.\n3. Resource allocation for the QA team needs confirmation.\n\nCould we discuss this in our Thursday sync? Happy to jump on a quick call before that if needed.\n\nBest regards,\nDeepak`},
+  Journal: {subject:'Thursday, 19 Feb 2026', body:`Today felt like a turning point.\n\nThe morning started rushed — alarm didn't go off, spilt chai on my shirt. But then the team meeting went surprisingly well. The client loved our pitch and the energy in the room was electric.\n\nI realised something: the setbacks in the morning didn't define my day. I chose to reset, take a breath, and show up fully.\n\nGrateful for: the team's support, evening walk with Asha, and that perfect cup of filter coffee at 4pm.\n\nTomorrow: focus on the proposal draft and call Papa.`},
+  Essay: {subject:'The Digital Divide in Rural India', body:`India's digital transformation has been remarkable, yet a significant divide persists between urban and rural populations.\n\nWhile cities enjoy 5G connectivity and instant digital payments, nearly 40% of rural India still relies on 2G networks. This gap isn't merely technological — it's economic, educational, and social.\n\nThree key factors perpetuate this divide:\n\nFirst, infrastructure investment remains concentrated in metro areas. Second, digital literacy programmes haven't reached the last mile. Third, affordable devices remain out of reach for many families.\n\nThe solution requires a multi-pronged approach combining public-private partnerships, vernacular content creation, and community-led digital training centres.`},
+  Story: {subject:'The Last Train from Mathura', body:`The platform was empty except for one woman in a white sari, holding a brass lamp.\n\nRohan checked his watch — 11:47 PM. The last train was supposed to arrive at 11:30. He looked at the dusty announcement board; it hadn't updated in hours.\n\n"It always comes," the woman said without turning around. "You just have to believe it will."\n\nRohan wanted to laugh, but something in her voice stopped him. She sounded like his grandmother — the same quiet certainty, the same melodic Braj dialect.\n\n"Where are you headed?" he asked.\n\n"Home," she said simply. "Aren't we all?"\n\nThat's when he heard it — the distant whistle.`},
+  Poem: {subject:'Mumbai Rain', body:`Steel and glass dissolve in grey,\nthe city sheds its hurried way.\nRickshaw horns become a song,\nchappal-feet splash along.\n\nChai steam curls from every stall,\nvada pav warms through the squall.\nChildren dance in every lane,\nMumbai comes alive in rain.\n\nPuddles mirror neon lights,\nlocal trains stream through the night.\nEvery drop, a small refrain —\nwe are washed, we start again.`}
+};
+
+function startWriteFlow(type) {
+  activeTool = 'write'; activeSubTool = type;
+  openChat('New chat', 'Write · ' + type, 'screen-write', 'Describe what to write');
+  const prompts = {
+    Email: 'Write a professional email about project timeline update to Priya',
+    Journal: 'Write today\'s journal entry — it was an eventful day',
+    Essay: 'Write an essay about the digital divide in rural India',
+    Story: 'Write a short story set at a train station in Mathura at night',
+    Poem: 'Write a poem about Mumbai rain'
+  };
+  setTimeout(() => addUserMsg(prompts[type] || `Write a ${type.toLowerCase()}`), 300);
+  setTimeout(() => addThinking(), 900);
+  setTimeout(() => { removeThinking(); addAIMsg(`Writing your ${type.toLowerCase()}...`); }, 2000);
+  setTimeout(() => addGenerating(`Drafting ${type.toLowerCase()}...`), 2600);
+  setTimeout(() => {
+    removeGenerating();
+    const content = writeContent[type] || writeContent.Email;
+    addBlock(`
+      <div class="ai-row" style="gap:6px;align-items:flex-start"><div class="bot-icon"><div class="bot-dots"><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div></div></div><span class="ai-text">Here's your ${type.toLowerCase()}:</span></div>
+      <div style="font-size:13px;font-weight:600;color:var(--purple);margin-bottom:2px">${content.subject}</div>
+      <div class="write-output">${content.body}</div>
+      <div class="action-strip">
+        <button class="action-strip-btn primary" onclick="showToast('Copied!')"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>Copy</button>
+        <button class="action-strip-btn" onclick="showToast('Shared!')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>Share</button>
+        <button class="action-strip-btn" onclick="rewriteContent('Make it shorter')">Shorter</button>
+        <button class="action-strip-btn" onclick="rewriteContent('Make it more formal')">More formal</button>
+        <button class="action-strip-btn" onclick="rewriteContent('Make it friendlier')">Friendlier</button>
+        <button class="action-strip-btn" onclick="rewriteContent('Translate to Hindi')">Hindi version</button>
+      </div>
+      ${addFeedbackRow()}
+      <span class="ai-text" style="font-size:13px;color:var(--text-low);line-height:1.4">Feel free to ask me to adjust the tone, length, or add anything specific.</span>
+    `);
+  }, 5500);
+}
+
+function rewriteContent(instruction) {
+  addUserMsg(instruction);
+  setTimeout(() => addThinking(), 400);
+  setTimeout(() => { removeThinking(); addAIMsg("On it — rewriting..."); }, 1500);
+  setTimeout(() => addGenerating('Rewriting...'), 2100);
+  setTimeout(() => {
+    removeGenerating();
+    addBlock(`
+      <div class="ai-row" style="gap:6px;align-items:flex-start"><div class="bot-icon"><div class="bot-dots"><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div></div></div><span class="ai-text">Here's the updated version:</span></div>
+      <div class="write-output" style="font-size:13px">Updated draft incorporating your feedback: "${instruction}". The tone and structure have been adjusted accordingly.\n\nThis is a simulated rewrite — in the live version, the full rewritten content would appear here with the requested changes applied.</div>
+      <div class="action-strip">
+        <button class="action-strip-btn primary" onclick="showToast('Copied!')"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>Copy</button>
+        <button class="action-strip-btn" onclick="showToast('Shared!')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>Share</button>
+      </div>
+      ${addFeedbackRow()}
+    `);
+  }, 4500);
+}
+
+function sendWriteCustom() {
+  const input = document.getElementById('write-input');
+  const text = input.value.trim();
+  if (!text) return; input.value = '';
+  startWriteFlow('Email');
+}
+
+// ===== 4. TRANSLATE FLOW =====
+const translations = {
+  'English-Hindi': { sample:'Good morning! How are you today? I hope your day is going well.', result:'शुभ प्रभात! आज आप कैसे हैं? मुझे उम्मीद है कि आपका दिन अच्छा जा रहा है।' },
+  'Hindi-Gujarati': { sample:'नमस्ते, आपका दिन शुभ हो। क्या आप आज शाम मिल सकते हैं?', result:'નમસ્તે, તમારો દિવસ શુભ હો. શું તમે આજે સાંજે મળી શકો છો?' },
+  'English-Marathi': { sample:'The weather is beautiful today. Let\'s go for a walk in the garden.', result:'आज हवामान खूप सुंदर आहे. चला बागेत फिरायला जाऊया.' },
+  'English-Tamil': { sample:'Thank you for your help. I really appreciate your kindness.', result:'உங்கள் உதவிக்கு நன்றி. உங்கள் கருணையை நான் மிகவும் பாராட்டுகிறேன்.' },
+  'Hindi-English': { sample:'मेरा नाम दीपक है और मैं मुंबई में रहता हूँ। मुझे खाना बनाना पसंद है।', result:'My name is Deepak and I live in Mumbai. I enjoy cooking.' },
+  'English-Bengali': { sample:'I love reading books. My favourite author is Rabindranath Tagore.', result:'আমি বই পড়তে ভালোবাসি। আমার প্রিয় লেখক রবীন্দ্রনাথ ঠাকুর।' }
+};
+
+function startTranslateFlow(from, to) {
+  activeTool = 'translate';
+  const key = `${from}-${to}`;
+  openChat('New chat', `${from} → ${to}`, 'screen-translate', `Type in ${from} to translate`);
+  const data = translations[key] || translations['English-Hindi'];
+  setTimeout(() => addUserMsg(data.sample), 300);
+  setTimeout(() => addThinking(), 900);
+  setTimeout(() => {
+    removeThinking();
+    addBlock(`
+      <div class="ai-row" style="gap:6px;align-items:flex-start"><div class="bot-icon"><div class="bot-dots"><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div><div class="dot dot-static"></div></div></div><span class="ai-text">Here's your translation:</span></div>
+      <div class="translation-card">
+        <div class="trans-section">
+          <span class="trans-lang-label">${from}</span>
+          <span class="trans-text">${data.sample}</span>
+        </div>
+        <div style="height:1px;background:var(--stroke-minimal)"></div>
+        <div class="trans-section">
+          <span class="trans-lang-label">${to}</span>
+          <span class="trans-text" style="font-size:15px;font-weight:500">${data.result}</span>
+        </div>
+      </div>
+      <div class="action-strip">
+        <button class="action-strip-btn primary" onclick="showToast('Copied!')"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>Copy translation</button>
+        <button class="action-strip-btn" onclick="showToast('Playing audio...')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8.5v7a4.47 4.47 0 0 0 2.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z"/></svg>Listen</button>
+        <button class="action-strip-btn" onclick="showToast('Shared!')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>Share</button>
+        <button class="action-strip-btn" onclick="swapAndRetranslate('${to}','${from}')">Swap languages</button>
+      </div>
+      ${addFeedbackRow()}
+      <span class="ai-text" style="font-size:13px;color:var(--text-low);line-height:1.4">Type or paste more text to translate. You can also ask me to adjust formality or tone.</span>
+    `);
+  }, 2200);
+}
+
+function swapAndRetranslate(from, to) {
+  addUserMsg(`Switch to ${from} → ${to}`);
+  setTimeout(() => addThinking(), 400);
+  setTimeout(() => {
+    removeThinking();
+    addAIMsg(`Switched! Now translating from ${from} to ${to}. Send me text to translate.`);
+  }, 1500);
+}
+
+function sendTranslateCustom() {
+  const input = document.getElementById('translate-input');
+  const text = input.value.trim();
+  if (!text) return; input.value = '';
+  startTranslateFlow('English', 'Hindi');
+}
+</script>
+</body>
+</html>
