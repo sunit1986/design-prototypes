@@ -3,197 +3,876 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JDS Server Setup Guide</title>
+<title>JBIQ MCP — Setup Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#FAFAF9;--surface:#fff;--border:#E7E5E4;
-  --text:#1C1917;--text2:#57534E;--text3:#A8A29E;
-  --purple:#7C3AED;--purple-light:#EDE9FE;
-  --green:#059669;--green-light:#D1FAE5;
-  --blue:#2563EB;--blue-light:#DBEAFE;
-  --amber:#D97706;--amber-light:#FEF3C7;
-  --radius:12px;--font:'Outfit',system-ui,sans-serif;
-  --mono:'JetBrains Mono',monospace;
+@font-face {
+  font-family: 'JioType';
+  font-weight: 400;
+  font-style: normal;
+  src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2');
 }
-body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
-.container{max-width:640px;margin:0 auto;padding:40px 24px 60px}
-.header{text-align:center;padding:32px 0 28px}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:var(--purple-light);color:var(--purple);font-size:12px;font-weight:600;margin-bottom:10px}
-.header h1{font-size:26px;font-weight:800;letter-spacing:-0.5px}
-.header h1 span{color:var(--purple)}
-.header p{font-size:14px;color:var(--text2);margin-top:4px}
-.step-label{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:16px;font-size:11px;font-weight:600;margin-bottom:8px}
-.step-one{background:var(--amber-light);color:var(--amber)}
-.step-two{background:var(--blue-light);color:var(--blue)}
-.block{margin-top:28px}
-.block h2{font-size:15px;font-weight:700;margin-bottom:6px}
-.block-where{font-size:13px;color:var(--text2);margin-bottom:8px}
-.block-where strong{color:var(--text)}
-.code-wrap{position:relative}
-.code-block{background:#1C1917;color:#E7E5E4;padding:16px 18px;border-radius:10px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto;white-space:pre}
-.code-block .k{color:#34D399}
-.code-block .s{color:#A78BFA}
-.code-block .c{color:#78716C}
-.copy-btn{position:absolute;top:8px;right:8px;padding:7px 13px;border-radius:7px;background:rgba(255,255,255,.1);color:#A8A29E;border:none;font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .15s}
-.copy-btn:hover{background:rgba(255,255,255,.2);color:#fff}
-.copy-btn.copied{background:rgba(5,150,105,.3);color:#34D399}
-.callout{display:flex;gap:8px;padding:12px 14px;border-radius:10px;margin-top:12px;font-size:13px}
-.callout-green{background:var(--green-light);color:#065F46}
-.callout-amber{background:var(--amber-light);color:#92400E}
-.divider{border:none;border-top:1px solid var(--border);margin:28px 0}
-.footer{text-align:center;color:var(--text3);font-size:12px;margin-top:20px}
-.note{font-size:12px;color:var(--text3);margin-top:6px}
-.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--purple);text-decoration:none;padding:8px 0;transition:opacity .15s}
-.back-link:hover{opacity:.7}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.info-card{padding:10px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border);font-size:12px}
-.info-card strong{display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+@font-face {
+  font-family: 'JioType';
+  font-weight: 500;
+  font-style: normal;
+  src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JioType';
+  font-weight: 700;
+  font-style: normal;
+  src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JioType';
+  font-weight: 900;
+  font-style: normal;
+  src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2');
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:      'JioType', 'Outfit', system-ui, sans-serif;
+  --mono:      'JetBrains Mono', monospace;
+  --bg:        #fafaf9;
+  --surface:   #ffffff;
+  --border:    #e8e5e1;
+  --border2:   #f0ece8;
+  --text:      #141414;
+  --text2:     #5c5651;
+  --text3:     #a09890;
+  --purple:    #3535f3;
+  --purple-d:  #0000a0;
+  --purple-l:  #eeeeff;
+  --purple-xl: #f5f5ff;
+  --teal:      #1eccb0;
+  --teal-l:    #e8faf7;
+  --gold:      #f7ab20;
+  --gold-l:    #fff9ed;
+  --error:     #fa2f40;
+  --error-l:   #fff0f1;
+  --radius:    16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 12px 40px rgba(0,0,0,0.06);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── LAYOUT ── */
+.page { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ── NAV ── */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 0;
+  margin-bottom: 56px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.nav-dot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  width: 22px;
+  height: 22px;
+}
+.nav-dot {
+  border-radius: 2px;
+}
+.nav-dot:nth-child(1) { background: #3535f3; }
+.nav-dot:nth-child(2) { background: #f7ab20; }
+.nav-dot:nth-child(3) { background: #6464ff; }
+.nav-dot:nth-child(4) { background: #1eccb0; }
+.nav-wordmark {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.nav-back {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--purple);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+.nav-back:hover { opacity: 1; }
+
+/* ── HERO ── */
+.hero {
+  padding: 0 0 64px;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--purple-l);
+  color: var(--purple);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+.hero-eyebrow-dot {
+  width: 6px; height: 6px;
+  background: var(--purple);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.hero h1 {
+  font-size: clamp(36px, 7vw, 56px);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.hero h1 .accent { color: var(--purple); }
+.hero-sub {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text2);
+  max-width: 520px;
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+.hero-stats {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.hero-stat-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-purple { background: var(--purple); }
+.dot-teal { background: var(--teal); }
+.dot-gold { background: var(--gold); }
+.hero-stat strong { color: var(--text); font-weight: 600; }
+
+/* ── FEATURE GRID ── */
+.features-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 56px;
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.feature-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.feature-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.fi-purple { background: var(--purple-l); }
+.fi-teal { background: var(--teal-l); }
+.fi-gold { background: var(--gold-l); }
+.fi-grey { background: #f2f0ee; }
+.feature-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: -0.2px;
+}
+.feature-card p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+/* ── SECTION HEADER ── */
+.section-header {
+  margin-bottom: 28px;
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--purple);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+  display: block;
+}
+.section-header h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.section-header p {
+  font-size: 14px;
+  color: var(--text2);
+}
+
+/* ── INSTALL STEP ── */
+.install-step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  animation: fadeUp 0.6s ease 0.15s both;
+}
+.step-head {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  align-items: center;
+  padding: 20px 24px;
+  gap: 16px;
+  border-bottom: 1px solid var(--border2);
+}
+.step-n {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--purple-l);
+  letter-spacing: -1px;
+  line-height: 1;
+  background: var(--purple);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+.step-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+  margin-bottom: 2px;
+}
+.step-desc {
+  font-size: 13px;
+  color: var(--text2);
+}
+.step-body { padding: 20px 24px; }
+.step-where {
+  font-size: 13px;
+  color: var(--text2);
+  margin-bottom: 10px;
+}
+.step-where strong { color: var(--text); }
+
+/* ── CODE BLOCK ── */
+.code-wrap { position: relative; }
+.code-block {
+  background: #141412;
+  color: #e8e5df;
+  padding: 18px 20px;
+  border-radius: var(--radius-sm);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.75;
+  overflow-x: auto;
+  white-space: pre;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+.code-block .k { color: #5ddb99; }   /* key */
+.code-block .s { color: #b09dff; }   /* string */
+.code-block .c { color: #5c5650; }   /* comment */
+.code-block .h { color: #f7ab20; }   /* highlight */
+.copy-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.08);
+  color: #7a7570;
+  border: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+.copy-btn:hover { background: rgba(255,255,255,0.15); color: #e8e5df; }
+.copy-btn.copied { background: rgba(29,204,176,0.15); color: #1eccb0; }
+
+/* ── CALLOUT ── */
+.callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.callout-green { background: var(--teal-l); color: #0e5c4f; }
+.callout-amber { background: var(--gold-l); color: #7f4b10; }
+.callout-purple { background: var(--purple-xl); color: var(--purple-d); }
+.callout strong { font-weight: 700; }
+
+/* ── TOOLS TABLE ── */
+.tools-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 8px 0;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.tools-table th {
+  background: #f5f3f0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.tools-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border2);
+  color: var(--text2);
+  vertical-align: middle;
+}
+.tools-table tr:last-child td { border-bottom: none; }
+.tools-table td:first-child {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--purple);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── INFO GRID ── */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 16px 0;
+}
+.info-card {
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+.info-card strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+/* ── SECTION ── */
+.section { animation: fadeUp 0.6s ease 0.2s both; margin-bottom: 48px; }
+
+/* ── ACCORDION (Troubleshooting) ── */
+.accordion-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 8px;
+  background: var(--surface);
+}
+.accordion-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.accordion-head:hover { background: #faf8f6; }
+.accordion-q { font-size: 14px; font-weight: 600; color: var(--text); }
+.accordion-chevron {
+  color: var(--text3);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.accordion-item.open .accordion-chevron { transform: rotate(180deg); }
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.accordion-item.open .accordion-body { max-height: 400px; }
+.accordion-content {
+  padding: 0 18px 16px;
+  font-size: 13.5px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+/* ── FOOTER ── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.footer-logo { opacity: 0.7; }
+.footer-text {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+.footer-tagline {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 1px;
+}
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.version-chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--purple);
+  background: var(--purple-l);
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+.footer-heart {
+  font-size: 16px;
+  animation: heartbeat 1.8s ease infinite;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.2); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.15); }
+  70% { transform: scale(1); }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d0ccc8; border-radius: 3px; }
 </style>
 </head>
 <body>
-<div class="container">
-<a href="index.html" class="back-link">&larr; Back to Prototypes</a>
+<div class="page">
 
-<div class="header">
-  <div class="badge">1 Command</div>
-  <h1>JDS Knowledge <span>Server</span></h1>
-  <p>One command handles everything &mdash; uv, git, config.<br>Just paste, restart, and go.</p>
-</div>
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="nav-dot-grid">
+        <div class="nav-dot"></div>
+        <div class="nav-dot"></div>
+        <div class="nav-dot"></div>
+        <div class="nav-dot"></div>
+      </div>
+      <span class="nav-wordmark">JBIQ</span>
+    </a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Prototypes
+    </a>
+  </nav>
 
-<!-- ===== AUTOMATIC SETUP ===== -->
-
-<div class="block">
-  <div class="step-label step-one">Recommended</div>
-  <h2>Automatic Setup</h2>
-  <div class="block-where">Open <strong>Terminal</strong> and paste this:</div>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyEl('auto-install', this)">Copy</button>
-    <pre class="code-block" id="auto-install">curl -LsSf https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/install.sh | bash</pre>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      JDS Knowledge Server
+    </div>
+    <h1>Your AI knows<br><span class="accent">every design token.</span></h1>
+    <p class="hero-sub">
+      One command gives Claude and Cursor instant access to the full Jio Design System — components, tokens, icons, fonts, and animations. Ask naturally, get exact specs back.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-dot dot-purple"></div>
+        <span><strong>21</strong> components</span>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-dot dot-gold"></div>
+        <span><strong>1301</strong> icons with SVG paths</span>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-dot dot-teal"></div>
+        <span><strong>Auto-updates</strong> on startup</span>
+      </div>
+    </div>
   </div>
-  <p class="note">Installs uv, git (Xcode CLT on Mac), configures Claude Desktop &amp; Cursor, and caches the server package. It will ask for your Mac password once (to make uvx visible to GUI apps).</p>
-  <div class="callout callout-green">After it finishes, <strong>restart Claude Desktop / Cursor</strong> (Cmd+Q and reopen).</div>
-</div>
 
-<hr class="divider">
+  <!-- WHAT YOU GET -->
+  <div class="section">
+    <div class="features-label">What you get</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon fi-purple">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" fill="#3535f3"/><rect x="14" y="3" width="7" height="7" rx="2" fill="#3535f3" opacity="0.4"/><rect x="3" y="14" width="7" height="7" rx="2" fill="#3535f3" opacity="0.4"/><rect x="14" y="14" width="7" height="7" rx="2" fill="#3535f3" opacity="0.2"/></svg>
+        </div>
+        <h3>Component specs</h3>
+        <p>Exact props, variants, sizing, tokens, and code examples for every JDS component.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-gold">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="#f7ab20"/><circle cx="12" cy="12" r="9" stroke="#f7ab20" stroke-width="2" fill="none" opacity="0.4"/></svg>
+        </div>
+        <h3>Design tokens</h3>
+        <p>Primary, secondary, sparkle colors. Full grey scale. Typography scale. Spacing system. Opacity values.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-teal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3L13.5 9h6l-5 3.5 2 6L12 15l-4.5 3.5 2-6L4.5 9h6L12 3z" fill="#1eccb0"/></svg>
+        </div>
+        <h3>Icons with paths</h3>
+        <p>1301 JDS icons — search any name or keyword and get the inline SVG path, ready to paste.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-grey">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 10h16M4 14h10M4 18h7" stroke="#5c5651" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Figma references</h3>
+        <p>File keys, node IDs, and URLs for every major JBIQ Figma file — homepage, chat input, widgets.</p>
+      </div>
+    </div>
+  </div>
 
-<!-- ===== MANUAL CONFIG (ALTERNATIVE) ===== -->
+  <!-- TOOLS TABLE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">5 Tools available</span>
+      <h2>Ask Claude anything about JDS</h2>
+      <p>The server responds with exact design system specs, never hallucinated values.</p>
+    </div>
+    <table class="tools-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Ask Claude...</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>lookup_component</td><td>How do I use the BottomSheet component?</td></tr>
+        <tr><td>resolve_token</td><td>What's the exact hex for sparkle-50?</td></tr>
+        <tr><td>find_icon</td><td>Get the SVG path for a microphone icon</td></tr>
+        <tr><td>get_figma_reference</td><td>What's the node ID for the homepage Figma?</td></tr>
+        <tr><td>get_assets</td><td>Give me CDN URLs for JioType fonts</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-<div class="block">
-  <div class="step-label step-two">Alternative &mdash; Manual Setup</div>
-  <h2>Claude Desktop</h2>
-  <div class="block-where"><strong>Settings</strong> &gt; <strong>Developer</strong> &gt; <strong>Edit Config</strong> &mdash; paste this:</div>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyEl('code-claude', this)">Copy</button>
-    <pre class="code-block" id="code-claude">{
+  <hr class="divider">
+
+  <!-- SETUP -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">Installation</span>
+      <h2>Set up in one minute</h2>
+      <p>Choose your tool. Paste the config. Restart. Done.</p>
+    </div>
+
+    <!-- Step 1: Automatic -->
+    <div class="install-step">
+      <div class="step-head">
+        <div class="step-n">01</div>
+        <div>
+          <div class="step-title">Automatic setup <span style="background:#f7ab20;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:2px;">Recommended</span></div>
+          <div class="step-desc">One command handles everything — uv, config, and PATH fix.</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="step-where">Open <strong>Terminal</strong> and paste:</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyEl('auto-install', this)">Copy</button>
+          <pre class="code-block" id="auto-install">curl -LsSf https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/install.sh | bash</pre>
+        </div>
+        <div class="callout callout-green">
+          <span class="callout-icon">✓</span>
+          <div>After it finishes, <strong>restart Claude Desktop / Cursor</strong> (Cmd+Q and reopen). Installs uv, configures both Claude Desktop and Cursor automatically.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Manual -->
+    <div class="install-step">
+      <div class="step-head">
+        <div class="step-n">02</div>
+        <div>
+          <div class="step-title">Manual setup — Claude Desktop</div>
+          <div class="step-desc">Settings → Developer → Edit Config</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyEl('code-claude', this)">Copy</button>
+          <pre class="code-block" id="code-claude">{
   <span class="s">"mcpServers"</span>: {
     <span class="s">"JioBharatIQ"</span>: {
       <span class="s">"command"</span>: <span class="k">"uvx"</span>,
-      <span class="s">"args"</span>: [<span class="k">"--from"</span>, <span class="k">"git+https://github.com/sunit1986/JioBharatIQ_Server.git"</span>, <span class="k">"jiobharatiq-server"</span>]
+      <span class="s">"args"</span>: [
+        <span class="k">"--from"</span>,
+        <span class="k">"git+https://github.com/sunit1986/JioBharatIQ_Server.git"</span>,
+        <span class="k">"jiobharatiq-server"</span>
+      ]
     }
   }
 }</pre>
-  </div>
-  <p class="note">Requires uv already installed. Quit (<strong>Cmd+Q</strong>) and reopen Claude Desktop.</p>
-</div>
+        </div>
+        <p style="font-size:12px;color:var(--text3);margin-top:10px;">Requires uv already installed. Quit (Cmd+Q) and reopen.</p>
+      </div>
+    </div>
 
-<div class="block">
-  <h2>Cursor</h2>
-  <div class="block-where"><strong>Settings</strong> &gt; <strong>MCP</strong> &gt; <strong>Add Server</strong> &mdash; paste this:</div>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyEl('code-cursor', this)">Copy</button>
-    <pre class="code-block" id="code-cursor">{
+    <!-- Step 3: Cursor -->
+    <div class="install-step">
+      <div class="step-head">
+        <div class="step-n">03</div>
+        <div>
+          <div class="step-title">Cursor</div>
+          <div class="step-desc">Settings → MCP → Add Server</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyEl('code-cursor', this)">Copy</button>
+          <pre class="code-block" id="code-cursor">{
   <span class="s">"mcpServers"</span>: {
     <span class="s">"JioBharatIQ"</span>: {
       <span class="s">"command"</span>: <span class="k">"uvx"</span>,
-      <span class="s">"args"</span>: [<span class="k">"--from"</span>, <span class="k">"git+https://github.com/sunit1986/JioBharatIQ_Server.git"</span>, <span class="k">"jiobharatiq-server"</span>]
+      <span class="s">"args"</span>: [
+        <span class="k">"--from"</span>,
+        <span class="k">"git+https://github.com/sunit1986/JioBharatIQ_Server.git"</span>,
+        <span class="k">"jiobharatiq-server"</span>
+      ]
     }
   }
 }</pre>
-  </div>
-  <p class="note">Restart Cursor.</p>
-</div>
-
-<div class="block">
-  <h2>Claude Code (CLI)</h2>
-  <div class="block-where">Paste in terminal:</div>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyEl('code-cli', this)">Copy</button>
-    <pre class="code-block" id="code-cli">claude mcp add JioBharatIQ -- uvx --from "git+https://github.com/sunit1986/JioBharatIQ_Server.git" jiobharatiq-server</pre>
-  </div>
-  <div class="callout callout-green">Test it &mdash; ask Claude: <em>"What JDS button variants are available?"</em></div>
-</div>
-
-<hr class="divider">
-
-<!-- ===== HOW IT WORKS ===== -->
-
-<div class="block">
-  <h2>How it works</h2>
-  <div class="info-grid">
-    <div class="info-card">
-      <strong>Auto-updates</strong>
-      Knowledge base fetches latest from GitHub on every startup. No action needed.
+        </div>
+      </div>
     </div>
-    <div class="info-card">
-      <strong>Assets</strong>
-      Fonts, icons, animations served from GitHub CDN. No local files.
-    </div>
-    <div class="info-card">
-      <strong>Requirements</strong>
-      uv only (~30 MB). Bundles its own Python runtime.
-    </div>
-    <div class="info-card">
-      <strong>First launch</strong>
-      ~10 sec to download package. Cached after that &mdash; instant starts.
+
+    <!-- Step 4: Claude Code CLI -->
+    <div class="install-step">
+      <div class="step-head">
+        <div class="step-n">04</div>
+        <div>
+          <div class="step-title">Claude Code (CLI)</div>
+          <div class="step-desc">Paste in terminal — no config file needed.</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyEl('code-cli', this)">Copy</button>
+          <pre class="code-block" id="code-cli">claude mcp add JioBharatIQ -- uvx --from "git+https://github.com/sunit1986/JioBharatIQ_Server.git" jiobharatiq-server</pre>
+        </div>
+        <div class="callout callout-purple">
+          <span class="callout-icon">→</span>
+          <div>Test it — ask Claude: <em>"What JDS button variants are available and what are the exact token values?"</em></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="block">
-  <h2>Force update</h2>
-  <div class="block-where">If you need the latest server code immediately:</div>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyEl('code-upgrade', this)">Copy</button>
-    <pre class="code-block" id="code-upgrade">uvx --reinstall --from "git+https://github.com/sunit1986/JioBharatIQ_Server.git" jiobharatiq-server</pre>
-  </div>
-  <p class="note">Knowledge base updates automatically. This command is only needed for server code changes.</p>
-</div>
+  <hr class="divider">
 
-<hr class="divider">
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">Under the hood</span>
+      <h2>How it stays current</h2>
+    </div>
+    <div class="info-grid">
+      <div class="info-card">
+        <strong>Auto-updates</strong>
+        Design system data fetches the latest version from GitHub on every startup. No action needed.
+      </div>
+      <div class="info-card">
+        <strong>Assets via CDN</strong>
+        JioType fonts, HelloJio animations, and SVG icons are all served directly from GitHub — no local files.
+      </div>
+      <div class="info-card">
+        <strong>Requirements</strong>
+        uv only (~30 MB). Bundles its own Python runtime. No separate Python install needed.
+      </div>
+      <div class="info-card">
+        <strong>First launch</strong>
+        ~10 sec to download the package. Cached after that — instant starts every time.
+      </div>
+    </div>
 
-<div class="block">
-  <h2>Troubleshooting</h2>
-  <div class="callout callout-amber">
-    <div>
-      <strong>uvx: command not found?</strong><br>
-      Close and reopen Terminal after installing uv. Then try the config again.
+    <div style="margin-top:16px;">
+      <div class="step-where" style="margin-bottom:10px;">Need the latest server code immediately?</div>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyEl('code-upgrade', this)">Copy</button>
+        <pre class="code-block" id="code-upgrade">uvx --reinstall --from "git+https://github.com/sunit1986/JioBharatIQ_Server.git" jiobharatiq-server</pre>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-top:8px;">Knowledge base updates automatically. Use this only when server code itself changes.</p>
     </div>
   </div>
-  <div class="callout callout-amber" style="margin-top:8px">
-    <div>
-      <strong>Server disconnects or &ldquo;No such file or directory&rdquo;?</strong><br>
-      Claude Desktop can&rsquo;t find uv/uvx in its PATH. Run this once in Terminal to fix it:
-    </div>
-  </div>
-  <div class="code-wrap" style="margin-top:8px">
-    <button class="copy-btn" onclick="copyEl('fix-path', this)">Copy</button>
-    <pre class="code-block" id="fix-path">sudo ln -sf $(which uv) /usr/local/bin/uv && sudo ln -sf $(which uvx) /usr/local/bin/uvx</pre>
-  </div>
-  <p class="note">It will ask for your Mac password &mdash; that&rsquo;s normal. Then restart Claude Desktop (Cmd+Q and reopen).</p>
-  <div class="callout callout-amber" style="margin-top:8px">
-    <div>
-      <strong>Tools not showing up?</strong><br>
-      Fully quit the app (Cmd+Q on Mac) and reopen. Just closing the window isn't enough.
-    </div>
-  </div>
-</div>
 
-<div class="footer">
-  JDS Design Systems Team &middot; v3.2.0
-</div>
+  <hr class="divider">
+
+  <!-- TROUBLESHOOTING -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">Help</span>
+      <h2>Troubleshooting</h2>
+    </div>
+
+    <div class="accordion-item open">
+      <div class="accordion-head" onclick="toggleAccordion(this)">
+        <span class="accordion-q">uvx: command not found</span>
+        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          Close and reopen Terminal after installing uv — it updates your shell's PATH. If Claude Desktop still can't find it, run the symlink fix below.
+          <div class="code-wrap" style="margin-top:10px;">
+            <button class="copy-btn" onclick="copyEl('fix-path', this)">Copy</button>
+            <pre class="code-block" id="fix-path">sudo ln -sf $(which uv) /usr/local/bin/uv && sudo ln -sf $(which uvx) /usr/local/bin/uvx</pre>
+          </div>
+          <p style="font-size:12px;color:var(--text3);margin-top:8px;">Enter your Mac password when prompted — normal. Then restart Claude Desktop (Cmd+Q).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-head" onclick="toggleAccordion(this)">
+        <span class="accordion-q">Tools not showing up in Claude or Cursor</span>
+        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          Fully quit the app (Cmd+Q on Mac) — just closing the window isn't enough. Reopen after a complete quit. The tools appear in the MCP panel after a clean restart.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-head" onclick="toggleAccordion(this)">
+        <span class="accordion-q">Server disconnects or "No such file or directory"</span>
+        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          Claude Desktop launches in a restricted environment where your shell PATH isn't loaded. uv/uvx are installed in your user directory but not in <code style="font-family:var(--mono);font-size:12px;">/usr/local/bin/</code>. The symlink fix above solves this permanently.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-head" onclick="toggleAccordion(this)">
+        <span class="accordion-q">Slow first launch</span>
+        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          Expected — uvx downloads the package and a minimal Python runtime the first time (~10 seconds). Everything is cached locally after that. Subsequent starts are instant.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="nav-dot-grid footer-logo" style="width:18px;height:18px;gap:2px;">
+        <div class="nav-dot" style="border-radius:1.5px;"></div>
+        <div class="nav-dot" style="border-radius:1.5px;"></div>
+        <div class="nav-dot" style="border-radius:1.5px;"></div>
+        <div class="nav-dot" style="border-radius:1.5px;"></div>
+      </div>
+      <div>
+        <div class="footer-text">Designed at <strong>RCP</strong> with love and support.</div>
+        <div class="footer-tagline">Built by the team, for the team — ship faster, ship right. ✦</div>
+      </div>
+    </div>
+    <div class="footer-right">
+      <span class="footer-heart">💜</span>
+      <span class="version-chip">v3.2.0</span>
+    </div>
+  </footer>
 
 </div>
 
@@ -201,14 +880,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 function copyEl(id, btn) {
   const el = document.getElementById(id);
   const text = el.textContent || el.innerText;
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(text.trim()).then(() => {
     btn.textContent = 'Copied!';
     btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = 'Copy';
-      btn.classList.remove('copied');
-    }, 2000);
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
   });
+}
+
+function toggleAccordion(head) {
+  const item = head.parentElement;
+  item.classList.toggle('open');
 }
 </script>
 </body>

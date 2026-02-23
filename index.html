@@ -7,203 +7,452 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.json">
-  <title>Jio Omni AI — Chat Prototypes</title>
+  <title>JBIQ — Design Explorations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; } html, body { overscroll-behavior: none; touch-action: manipulation; }
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 400;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 700;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 900;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overscroll-behavior: none; touch-action: manipulation; }
+
+    :root {
+      --font: 'JioType', 'Outfit', system-ui, sans-serif;
+      --bg: #f8f7f5;
+      --surface: #ffffff;
+      --border: #e8e5e1;
+      --text: #141414;
+      --text2: #5c5651;
+      --text3: #a09890;
+      --purple: #3535f3;
+      --purple-l: #eeeeff;
+      --teal: #1eccb0;
+      --gold: #f7ab20;
+      --radius: 20px;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f5f5;
+      font-family: var(--font);
+      background: var(--bg);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      margin-bottom: 48px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .header-brand {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      gap: 10px;
     }
-    .container {
-      max-width: 400px;
-      width: 100%;
+    .dot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      width: 28px;
+      height: 28px;
     }
-    h1 {
-      font-size: 24px;
-      font-weight: 700;
-      color: #141414;
-      margin-bottom: 8px;
-      text-align: center;
+    .dot { border-radius: 3px; }
+    .dot:nth-child(1) { background: #3535f3; }
+    .dot:nth-child(2) { background: #f7ab20; }
+    .dot:nth-child(3) { background: #6464ff; }
+    .dot:nth-child(4) { background: #1eccb0; }
+    .brand-name {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      color: var(--text);
+      line-height: 1;
     }
-    .subtitle {
-      font-size: 14px;
-      color: #666;
-      text-align: center;
-      margin-bottom: 32px;
+    .header-meta {
+      text-align: right;
     }
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 12px;
-      text-decoration: none;
-      display: block;
-      transition: box-shadow 0.2s ease, transform 0.15s ease;
-      border: 1px solid #e0e0e0;
-    }
-    .card:hover {
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-      transform: translateY(-2px);
-    }
-    .card-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #141414;
-      margin-bottom: 6px;
-    }
-    .card-desc {
-      font-size: 13px;
-      color: #666;
-      line-height: 1.4;
-    }
-    .badge {
-      display: inline-block;
-      background: #e8e8fc;
-      color: #3535f3;
+    .updated-label {
       font-size: 11px;
       font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 999px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 2px;
+    }
+    .updated-date {
+      font-size: 12px;
+      color: var(--text2);
+    }
+    .header-title {
+      font-size: clamp(32px, 6vw, 52px);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+      color: var(--text);
       margin-bottom: 10px;
     }
-    .card-install {
-      background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
-      border: none;
-      padding: 22px 20px;
-      margin-bottom: 20px;
+    .header-title .line2 { color: var(--purple); }
+    .header-sub {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text2);
+      max-width: 520px;
+      line-height: 1.5;
+    }
+
+    /* ── INSTALL CTA ── */
+    .install-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, var(--purple) 0%, #1a00e6 100%);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      text-decoration: none;
+      margin-bottom: 36px;
       position: relative;
       overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(53,53,243,0.3);
+      animation: fadeUp 0.5s ease 0.1s both;
     }
-    .card-install::before {
+    .install-cta::before {
       content: '';
       position: absolute;
-      top: -40%;
-      right: -20%;
-      width: 200px;
-      height: 200px;
-      background: rgba(255,255,255,0.08);
+      top: -30%; right: -10%;
+      width: 180px; height: 180px;
+      background: rgba(255,255,255,0.06);
       border-radius: 50%;
     }
-    .card-install::after {
-      content: '';
-      position: absolute;
-      bottom: -30%;
-      left: -10%;
-      width: 150px;
-      height: 150px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 50%;
-    }
-    .card-install .badge-install {
+    .install-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 44px rgba(53,53,243,0.35); }
+    .install-cta-left {}
+    .install-chip {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-      font-size: 11px;
+      background: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.9);
+      font-size: 10px;
       font-weight: 700;
-      padding: 4px 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
       border-radius: 999px;
       margin-bottom: 10px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
       backdrop-filter: blur(4px);
     }
-    .card-install .card-title {
+    .install-chip-dot {
+      width: 5px; height: 5px;
+      background: #1eccb0;
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .install-cta-title {
+      font-size: 20px;
+      font-weight: 800;
       color: #fff;
-      font-size: 18px;
-      font-weight: 700;
+      letter-spacing: -0.4px;
+      margin-bottom: 4px;
     }
-    .card-install .card-desc {
-      color: rgba(255,255,255,0.85);
+    .install-cta-desc {
       font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      max-width: 320px;
+      line-height: 1.4;
     }
-    .card-install .arrow-hint {
+    .install-cta-arrow {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      font-weight: 500;
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+    .install-cta:hover .install-cta-arrow { color: #fff; }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      animation: fadeUp 0.5s ease 0.15s both;
+    }
+    .label-text {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+    .label-count {
+      font-size: 11px;
+      color: var(--text3);
+      background: var(--border);
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+
+    /* ── PROTOTYPE GRID ── */
+    .proto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      animation: fadeUp 0.5s ease 0.2s both;
+    }
+
+    .proto-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 22px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1.5px solid var(--border);
+      transition: box-shadow 0.2s ease, transform 0.15s ease, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .proto-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--purple));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+    .proto-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+      border-color: #d8d4d0;
+    }
+    .proto-card:hover::before { transform: scaleX(1); }
+
+    /* Category accent colors (all JDS) */
+    .cat-entertainment { --card-accent: #3535f3; }
+    .cat-audio { --card-accent: #f7ab20; }
+    .cat-news { --card-accent: #1eccb0; }
+    .cat-tools { --card-accent: #6464ff; }
+
+    .proto-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      margin-top: 10px;
-      color: rgba(255,255,255,0.7);
-      font-size: 12px;
-      font-weight: 500;
-    }
-    .card-install:hover {
-      box-shadow: 0 8px 28px rgba(124,58,237,0.4);
-      transform: translateY(-3px);
-    }
-    .card-install:hover .arrow-hint { color: #fff; }
-    .divider {
-      border: none;
-      border-top: 1px solid #e0e0e0;
-      margin: 4px 0 16px;
-    }
-    .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: #999;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      align-self: flex-start;
     }
-    .footer {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 12px;
-      color: #999;
+    .badge-ent { background: #eeeeff; color: #3535f3; }
+    .badge-audio { background: #fff9ed; color: #ac660c; }
+    .badge-news { background: #e8faf7; color: #0e5c4f; }
+    .badge-tools { background: #f5f0ff; color: #6464ff; }
+
+    .proto-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .proto-desc {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.5;
+      flex: 1;
+    }
+    .proto-arrow {
+      align-self: flex-end;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      transition: background 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .proto-card:hover .proto-arrow {
+      background: var(--purple);
+      color: #fff;
+    }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      margin-top: 48px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      animation: fadeUp 0.5s ease 0.25s both;
+    }
+    .footer-note { font-size: 12px; color: var(--text3); }
+    .footer-note strong { color: var(--text2); font-weight: 600; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Jio Omni AI</h1>
-    <p class="subtitle">Chat Interface Prototypes</p>
+  <div class="page">
 
-    <a class="card card-install" href="jds-install-guide.html">
-      <span class="badge-install">&#9889; Setup Guide</span>
-      <div class="card-title">JDS Knowledge Server</div>
-      <div class="card-desc">Paste the MCP config into Claude or Cursor. One step — no installs needed.</div>
-      <span class="arrow-hint">Open guide &#8594;</span>
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-top">
+        <div class="header-brand">
+          <div class="dot-grid">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <span class="brand-name">JBIQ</span>
+        </div>
+        <div class="header-meta">
+          <div class="updated-label">Last updated</div>
+          <div class="updated-date" id="updated-date">Feb 2026</div>
+        </div>
+      </div>
+      <h1 class="header-title">
+        AI Feature<br>
+        <span class="line2">Prototypes</span>
+      </h1>
+      <p class="header-sub">Interactive explorations for JBIQ — built with the JDS design system, mobile-first at 360×800.</p>
+    </header>
+
+    <!-- INSTALL CTA -->
+    <a class="install-cta" href="jds-install-guide.html">
+      <div class="install-cta-left">
+        <div class="install-chip">
+          <span class="install-chip-dot"></span>
+          JDS Knowledge Server
+        </div>
+        <div class="install-cta-title">Set up the MCP server</div>
+        <div class="install-cta-desc">One command gives Claude and Cursor access to every JDS token, component spec, and icon.</div>
+      </div>
+      <div class="install-cta-arrow">
+        View setup guide
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
     </a>
 
-    <hr class="divider">
-    <div class="section-label">Prototypes</div>
+    <!-- PROTOTYPE GRID -->
+    <div class="section-label">
+      <span class="label-text">Prototypes</span>
+      <span class="label-count">5 explorations</span>
+    </div>
 
-    <a class="card" href="live-cricket-companion-chat.html">
-      <span class="badge">Entertainment</span>
-      <div class="card-title">Live Cricket Companion</div>
-      <div class="card-desc">Real-time cricket match updates with AI-powered commentary and insights.</div>
-    </a>
+    <div class="proto-grid">
 
-    <a class="card" href="participatory-cinema-chat.html">
-      <span class="badge">Entertainment</span>
-      <div class="card-title">Meme Factory</div>
-      <div class="card-desc">AI-powered meme creation and participatory cinema experience.</div>
-    </a>
+      <a class="proto-card cat-entertainment" href="live-cricket-companion-chat.html">
+        <span class="proto-badge badge-ent">Entertainment</span>
+        <div class="proto-title">Live Cricket Companion</div>
+        <div class="proto-desc">Real-time match AI with prediction engine, celebration overlays, and social leaderboard.</div>
+        <div class="proto-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
 
-    <a class="card" href="ai-powered-audio-chat.html">
-      <span class="badge">Audio</span>
-      <div class="card-title">AI-Powered Audio</div>
-      <div class="card-desc">Voice-driven AI assistant for audio content and conversations.</div>
-    </a>
+      <a class="proto-card cat-entertainment" href="participatory-cinema-chat.html">
+        <span class="proto-badge badge-ent">Entertainment</span>
+        <div class="proto-title">Meme Factory</div>
+        <div class="proto-desc">7-step Bollywood meme creation with karaoke recording, waveform visualization, and share flow.</div>
+        <div class="proto-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
 
-    <a class="card" href="news-brief-prototype.html">
-      <span class="badge">News</span>
-      <div class="card-title">Personalized Evening News Brief</div>
-      <div class="card-desc">Voice-driven personalized news briefing with Hindi/English support, topic preferences, and offline playback.</div>
-    </a>
+      <a class="proto-card cat-audio" href="ai-powered-audio-chat.html">
+        <span class="proto-badge badge-audio">Audio</span>
+        <div class="proto-title">AI-Powered Audio</div>
+        <div class="proto-desc">AI Personal RJ + Podcast Factory with 3 RJ personas, music player, and 12 podcasts in 4 languages.</div>
+        <div class="proto-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
 
-    <a class="card" href="tools-prototype.html">
-      <span class="badge" style="background:#F3E5F5;color:#7B1FA2">Tools</span>
-      <div class="card-title">AI Tools Suite</div>
-      <div class="card-desc">Edit images, analyse documents, write content, and translate languages — 4 interactive tool flows.</div>
-    </a>
+      <a class="proto-card cat-news" href="news-brief-prototype.html">
+        <span class="proto-badge badge-news">News</span>
+        <div class="proto-title">Evening News Brief</div>
+        <div class="proto-desc">Voice-driven personalized news with Hindi/English bilingual support, topic prefs, and offline playback.</div>
+        <div class="proto-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
 
-    <p class="footer">Mobile prototypes — best viewed at 360×800</p>
+      <a class="proto-card cat-tools" href="tools-prototype.html">
+        <span class="proto-badge badge-tools">Tools</span>
+        <div class="proto-title">AI Tools Suite</div>
+        <div class="proto-desc">Edit images, analyse documents, write content, and translate — 4 interactive tool flows.</div>
+        <div class="proto-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="page-footer">
+      <div class="footer-note">Mobile-first prototypes — best at <strong>360×800</strong></div>
+      <div class="footer-note">Built at <strong>RCP</strong> · JDS v3.2.0</div>
+    </footer>
+
   </div>
+
+  <script>
+    // Set last updated timestamp dynamically
+    const d = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('updated-date').textContent =
+      months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  </script>
 </body>
 </html>
