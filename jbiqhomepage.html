@@ -918,6 +918,7 @@ async function processVoice(audioBlob){
       throw new Error('Speech recognition failed: '+(sttErr.message||sttResp.status));
     }
     const sttData=await sttResp.json();
+    console.log('STT result:',JSON.stringify(sttData));
     const transcript=(sttData.transcript||'').trim();
     const detectedLang=sttData.language_code||'en';
 
@@ -963,8 +964,18 @@ async function processVoice(audioBlob){
 }
 
 async function speakWithSarvam(text,lang){
-  const ttsLang=(lang&&lang.startsWith('hi'))?'hi':'en';
-  const shortText=text.replace(/[#*_`>\[\]]/g,'').substring(0,2500);
+  const ttsLang=(lang&&lang.startsWith('hi'))?'hi-IN':'en-IN';
+  const cleaned=text
+    .replace(/[#*_`>\[\](){}|~]/g,'')
+    .replace(/\bhttps?:\/\/\S+/g,'')
+    .replace(/[^\w\s.,!?;:'"₹%\-\n\u0900-\u097F]/g,'')
+    .replace(/\n{2,}/g,'. ')
+    .replace(/\n/g,' ')
+    .replace(/\s{2,}/g,' ')
+    .trim();
+  const shortText=cleaned.substring(0,500);
+  if(!shortText){console.log('TTS: nothing to speak');return;}
+  console.log('TTS sending:',ttsLang,shortText.length+'chars');
   try{
     const ttsResp=await fetch('https://api.sarvam.ai/text-to-speech',{
       method:'POST',
@@ -976,11 +987,12 @@ async function speakWithSarvam(text,lang){
         model:'bulbul:v2'
       })
     });
+    const ttsData=await ttsResp.json();
     if(!ttsResp.ok){
-      console.error('TTS error:',ttsResp.status);
+      console.error('TTS API error:',ttsResp.status,ttsData);
       return;
     }
-    const ttsData=await ttsResp.json();
+    console.log('TTS response keys:',Object.keys(ttsData));
     if(ttsData.audios&&ttsData.audios[0]){
       const audio=new Audio('data:audio/wav;base64,'+ttsData.audios[0]);
       currentAudio=audio;
@@ -989,9 +1001,11 @@ async function speakWithSarvam(text,lang){
           document.getElementById('voiceDots').className='v-dots v-dots--idle';
         }
       };
-      audio.play().catch(()=>{});
+      audio.play().catch(e=>console.error('Audio play error:',e));
+    }else{
+      console.error('TTS: no audio in response',ttsData);
     }
-  }catch(e){console.error('TTS error:',e)}
+  }catch(e){console.error('TTS fetch error:',e)}
 }
 
 async function convertToWav(webmBlob){
