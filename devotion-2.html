@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>JioBharatIQ — Devotion AI</title>
+  <style>
+    @font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+    :root {
+      --surface:#ffffff;--surface-ghost:#eeeeef;--surface-ghost-icon:#e7e9ff;--surface-bold:#3900ad;
+      --surface-minimal:#f5f5f6;--text-high:#0c0d10;--text-medium:#191b1e;--text-low:rgba(25,27,30,0.65);
+      --icon-medium:#170054;--stroke-minimal:rgba(36,38,43,0.13);--stroke-subtle:rgba(36,38,43,0.12);
+      --primary-50:#3535f3;--primary-20:#e8e8fc;--primary-60:#000093;--secondary-50:#f7ab20;
+      --sparkle-50:#1eccb0;--sparkle-20:#e8faf7;--error:#fa2f40;--success:#25ab21;--warning:#f06d0f;
+      --grey-100:#141414;--grey-80:rgba(0,0,0,0.66);--grey-60:#b5b5b5;--grey-40:#e0e0e0;--grey-20:#f5f5f5;
+      --shape-pill:999px;--shape-4xl:23px;--shape-large:16px;--shape-medium:12px;--shape-small:8px;
+      --faith-hindu:#ff6b35;--faith-muslim:#2d8a4e;--faith-sikh:#1a5fb4;--faith-jain:#a855a0;--faith-christian:#8b6914;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'JioType',sans-serif;background:#1a1a2e;display:flex;min-height:100vh;color:var(--text-high);}
+
+    .sidebar{width:220px;background:#12122a;padding:20px 0;overflow-y:auto;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.08);}
+    .sidebar h2{color:#fff;font-size:13px;font-weight:700;padding:0 16px 12px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.5;}
+    .sidebar-group{margin-bottom:16px;}
+    .sidebar-group-title{color:rgba(255,255,255,0.4);font-size:11px;font-weight:500;padding:4px 16px;text-transform:uppercase;letter-spacing:1px;}
+    .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 16px;color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
+    .sidebar-item:hover{background:rgba(255,255,255,0.05);color:#fff;}
+    .sidebar-item.active{background:rgba(53,53,243,0.15);color:#fff;border-left-color:var(--primary-50);}
+    .sidebar-item .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+    .phone-container{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+    .phone-frame{width:380px;height:820px;background:#1a1a2e;border-radius:44px;padding:10px;box-shadow:0 0 60px rgba(0,0,0,0.5);position:relative;}
+    .phone-frame::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#1a1a2e;border-radius:0 0 16px 16px;z-index:100;}
+    .device{width:360px;height:800px;background:var(--surface);border-radius:36px;overflow:hidden;position:relative;}
+
+    .screen{display:none;width:100%;height:100%;position:absolute;top:0;left:0;flex-direction:column;overflow:hidden;}
+    .screen.active{display:flex;}
+    .screen-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+    .screen-scroll::-webkit-scrollbar{display:none;}
+
+    .status-bar{height:52px;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 24px;flex-shrink:0;}
+    .status-bar .time{font-size:14px;font-weight:600;}
+    .header-nav{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;border-bottom:1px solid var(--stroke-minimal);}
+    .header-nav .title{font-size:16px;font-weight:700;}
+    .header-nav .subtitle{font-size:12px;color:var(--text-low);}
+    .icon-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--icon-medium);}
+    .icon-btn:hover{background:var(--grey-20);}
+    .icon-btn:active{transform:scale(0.95);}
+    .icon-btn svg{width:24px;height:24px;}
+
+    .btn-primary{background:var(--primary-50);color:#fff;border:none;border-radius:var(--shape-pill);padding:14px 28px;font-family:'JioType';font-weight:700;font-size:16px;cursor:pointer;width:100%;text-align:center;transition:opacity 0.2s;}
+    .btn-primary:hover{opacity:0.9;}
+    .btn-primary:active{opacity:0.8;transform:scale(0.98);}
+    .btn-secondary{background:transparent;color:var(--primary-50);border:1.5px solid var(--primary-50);border-radius:var(--shape-pill);padding:12px 24px;font-family:'JioType';font-weight:700;font-size:14px;cursor:pointer;text-align:center;width:100%;}
+    .btn-secondary:active{opacity:0.8;}
+    .btn-tertiary{background:transparent;color:var(--primary-50);border:none;padding:8px 0;font-family:'JioType';font-weight:700;font-size:14px;cursor:pointer;}
+
+    .card{background:var(--surface);border:1px solid var(--stroke-minimal);border-radius:var(--shape-large);padding:16px;margin-bottom:12px;}
+    .card:active{transform:scale(0.99);}
+    .card-shadow{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--shape-pill);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;border:1.5px solid var(--stroke-minimal);background:var(--surface);}
+    .chip.selected{background:var(--primary-50);color:#fff;border-color:var(--primary-50);}
+    .chip:hover{border-color:var(--primary-50);}
+    .chip:active{transform:scale(0.97);}
+
+    .progress-dot{width:8px;height:8px;border-radius:50%;background:var(--grey-40);transition:all 0.3s;}
+    .progress-dot.active{background:var(--primary-50);width:24px;border-radius:4px;}
+    .progress-dot.completed{background:var(--primary-50);}
+
+    .toggle{width:48px;height:28px;border-radius:14px;background:var(--grey-40);position:relative;cursor:pointer;transition:background 0.3s;}
+    .toggle.on{background:var(--primary-50);}
+    .toggle::after{content:'';position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+    .toggle.on::after{transform:translateX(20px);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+    @keyframes typing{0%,100%{opacity:0.3}50%{opacity:1}}
+    .fade-up{animation:fadeUp 0.4s ease-out both;}
+    .fade-up-1{animation-delay:0.1s;}.fade-up-2{animation-delay:0.15s;}.fade-up-3{animation-delay:0.2s;}.fade-up-4{animation-delay:0.25s;}
+
+    .sacred-mode{background:linear-gradient(180deg,#0a0a1a 0%,#141428 100%);color:#fff;}
+    .sacred-lyrics{font-size:20px;font-weight:500;line-height:1.8;text-align:center;color:rgba(255,255,255,0.85);}
+    .sacred-lyrics .highlight{color:var(--secondary-50);font-weight:700;}
+
+    .seasonal-strip{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--sparkle-20);border-radius:var(--shape-medium);}
+    .seasonal-dot{width:10px;height:10px;border-radius:50%;}
+    .seasonal-dot.filled{background:var(--sparkle-50);}
+    .seasonal-dot.empty{background:var(--grey-40);}
+
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
+    .calendar-grid .day-header{font-size:11px;font-weight:700;color:var(--text-low);padding:8px 0;}
+    .calendar-grid .day-cell{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;border-radius:50%;cursor:pointer;position:relative;}
+    .calendar-grid .day-cell:hover{background:var(--grey-20);}
+    .calendar-grid .day-cell.today{background:var(--primary-50);color:#fff;font-weight:700;}
+    .calendar-grid .day-cell.festival{color:var(--faith-hindu);}
+    .calendar-grid .day-cell.festival::after{content:'';position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--faith-hindu);}
+    .calendar-grid .day-cell.ekadashi{color:var(--primary-50);}
+    .calendar-grid .day-cell.ekadashi::after{content:'';position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--primary-50);}
+
+    .devi-card{display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--stroke-minimal);border-radius:var(--shape-large);}
+    .devi-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+
+    .track-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--stroke-minimal);cursor:pointer;}
+    .track-item:last-child{border-bottom:none;}
+    .track-item:active{opacity:0.8;}
+    .track-num{width:24px;height:24px;border-radius:50%;background:var(--primary-20);color:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+    .track-info{flex:1;min-width:0;}
+    .track-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .track-artist{font-size:12px;color:var(--text-low);margin-top:2px;}
+    .track-dur{font-size:12px;color:var(--text-low);flex-shrink:0;}
+    .track-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--shape-pill);background:var(--sparkle-20);color:#0e5c4f;display:inline-block;margin-top:4px;}
+    .track-pin{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--shape-pill);background:var(--primary-20);color:var(--primary-50);display:inline-block;margin-top:4px;}
+
+    /* FLOATING CHAT BAR */
+    .floating-chat{position:absolute;bottom:0;left:0;right:0;padding:10px 12px 20px;background:linear-gradient(to top,#fff 75%,transparent);z-index:50;}
+    .chat-input-row{display:flex;align-items:center;gap:6px;background:var(--surface);border:1.5px solid var(--stroke-minimal);border-radius:var(--shape-pill);padding:6px 6px 6px 16px;box-shadow:0 2px 16px rgba(0,0,0,0.08);}
+    .chat-input-row input{flex:1;border:none;outline:none;font-family:'JioType',sans-serif;font-size:14px;color:var(--text-high);background:transparent;min-width:0;}
+    .chat-input-row input::placeholder{color:var(--text-low);}
+    .chat-divider{width:1px;height:20px;background:var(--stroke-minimal);flex-shrink:0;}
+    .chat-icon-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-low);flex-shrink:0;}
+    .chat-icon-btn:active{background:var(--grey-20);}
+    .chat-send-btn{width:40px;height:40px;border-radius:50%;background:var(--primary-50);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;flex-shrink:0;}
+    .chat-send-btn:active{opacity:0.85;transform:scale(0.95);}
+
+    /* JBIQ HEADER */
+    .jbiq-header{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;border-bottom:1px solid var(--stroke-minimal);}
+    .jbiq-dots{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+    .jbiq-title{font-size:16px;font-weight:700;line-height:1;}
+    .jbiq-subtitle{font-size:11px;color:var(--text-low);display:flex;align-items:center;gap:4px;margin-top:1px;}
+    .online-dot{width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;}
+
+    /* GREETING CARD */
+    .greeting-card{background:linear-gradient(135deg,#3535f3 0%,#5b5bf7 60%,#7b7bff 100%);border-radius:var(--shape-large);padding:20px;margin-bottom:14px;color:#fff;cursor:pointer;}
+
+    /* SECTION LABEL */
+    .section-label{font-size:13px;font-weight:700;color:var(--text-low);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+
+    /* RITUAL MINI */
+    .ritual-mini{background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.15);border-radius:var(--shape-large);padding:14px 16px;margin-bottom:10px;}
+    .ritual-mini-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+    .ritual-mini-icon{width:48px;height:48px;border-radius:var(--shape-small);background:var(--secondary-50);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+    .ritual-play-btn{width:40px;height:40px;border-radius:50%;background:var(--primary-50);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;flex-shrink:0;}
+    .ritual-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;}
+    .ritual-chips::-webkit-scrollbar{display:none;}
+    .ritual-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:var(--shape-pill);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--stroke-minimal);white-space:nowrap;cursor:pointer;flex-shrink:0;}
+    .ritual-chip.highlight{border-color:var(--faith-hindu);color:var(--faith-hindu);}
+    .ritual-chip:active{transform:scale(0.96);}
+
+    /* PANCHANG CARD */
+    .panchang-card{background:var(--surface);border:1px solid var(--stroke-minimal);border-radius:var(--shape-large);padding:14px 16px;margin-bottom:10px;}
+    .panchang-big{font-size:20px;font-weight:900;color:var(--primary-50);}
+    .panchang-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+    .tag-blue{padding:4px 10px;border-radius:var(--shape-pill);font-size:11px;font-weight:600;background:var(--primary-20);color:var(--primary-50);}
+    .tag-orange{padding:4px 10px;border-radius:var(--shape-pill);font-size:11px;font-weight:600;background:rgba(240,109,15,0.1);color:var(--warning);}
+    .tag-green{padding:4px 10px;border-radius:var(--shape-pill);font-size:11px;font-weight:600;background:var(--sparkle-20);color:#0e5c4f;}
+
+    /* SUGGESTION CHIPS */
+    .suggest-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;}
+    .suggest-row::-webkit-scrollbar{display:none;}
+    .suggest-chip{display:inline-flex;align-items:center;padding:8px 14px;border-radius:var(--shape-pill);font-size:13px;font-weight:600;background:var(--primary-20);color:var(--primary-50);white-space:nowrap;cursor:pointer;border:none;flex-shrink:0;font-family:'JioType';}
+    .suggest-chip:active{opacity:0.8;transform:scale(0.97);}
+
+    /* FESTIVAL NUDGE */
+    .festival-nudge{background:linear-gradient(135deg,#fff5e0 0%,#fff 100%);border:1px solid rgba(247,171,32,0.3);border-radius:var(--shape-large);padding:14px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:12px;}
+    .festival-nudge:active{opacity:0.9;}
+
+    /* CHAT */
+    .chat-area{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px;}
+    .chat-area::-webkit-scrollbar{display:none;}
+    .msg-row{display:flex;gap:8px;align-items:flex-end;}
+    .msg-row.user{justify-content:flex-end;}
+    .msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--primary-20);}
+    .ai-bubble{background:var(--grey-20);border-radius:18px 18px 18px 4px;padding:12px 14px;max-width:78%;font-size:14px;line-height:1.5;}
+    .user-bubble{background:var(--primary-50);color:#fff;border-radius:18px 18px 4px 18px;padding:12px 14px;max-width:78%;font-size:14px;line-height:1.5;}
+
+    /* PHOTO ANALYSIS */
+    .analysis-card{background:var(--surface);border:1px solid var(--stroke-minimal);border-radius:var(--shape-large);padding:14px;margin-top:8px;max-width:96%;}
+    .analysis-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:var(--shape-pill);background:var(--primary-20);margin-bottom:10px;}
+    .analysis-badge-label{font-size:9px;font-weight:700;color:var(--primary-50);letter-spacing:0.5px;text-transform:uppercase;}
+    .analysis-badge-title{font-size:12px;font-weight:700;color:var(--text-high);}
+    .analysis-section{font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-low);margin-bottom:8px;}
+    .check-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;font-weight:500;}
+    .miss-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;font-weight:500;color:var(--text-low);}
+    .miss-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--grey-40);flex-shrink:0;}
+    .analysis-actions{display:flex;gap:8px;margin-top:12px;}
+    .abtn-p{flex:1;background:var(--primary-50);color:#fff;border:none;border-radius:var(--shape-pill);padding:10px 0;font-family:'JioType';font-size:12px;font-weight:700;cursor:pointer;text-align:center;}
+    .abtn-s{flex:1;background:transparent;color:var(--primary-50);border:1.5px solid var(--primary-50);border-radius:var(--shape-pill);padding:10px 0;font-family:'JioType';font-size:12px;font-weight:700;cursor:pointer;text-align:center;}
+    .abtn-p:active,.abtn-s:active{opacity:0.8;}
+    .msg-actions{display:flex;gap:4px;margin-top:4px;}
+    .msg-action-btn{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;color:var(--text-low);}
+    .msg-action-btn:active{background:var(--grey-20);}
+
+    /* PUJA VIDHI */
+    .puja-step{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--stroke-minimal);}
+    .puja-step:last-child{border-bottom:none;}
+    .step-num{width:32px;height:32px;border-radius:50%;background:var(--primary-20);color:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+    .step-num.done{background:var(--sparkle-20);color:#0e5c4f;}
+    .step-content{flex:1;}
+    .step-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+    .step-desc{font-size:13px;color:var(--text-low);line-height:1.5;}
+    .step-mantra{font-size:13px;font-style:italic;color:var(--primary-50);margin-top:6px;line-height:1.6;}
+    .audio-mini{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--grey-20);border-radius:var(--shape-medium);margin-top:8px;cursor:pointer;}
+
+    /* CHECKLIST */
+    .checklist-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--stroke-minimal);cursor:pointer;}
+    .checklist-item:last-child{border-bottom:none;}
+    .checklist-item:active{opacity:0.8;}
+    .check-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--stroke-minimal);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
+    .check-box.checked{background:var(--success);border-color:var(--success);}
+    .item-name{font-size:14px;font-weight:500;flex:1;}
+    .item-qty{font-size:12px;color:var(--text-low);}
+
+    /* FESTIVAL HERO */
+    .festival-hero{padding:24px 16px 20px;background:linear-gradient(135deg,#ff6b35 0%,#ff8f65 100%);flex-shrink:0;}
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>JioBharatIQ</h2>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">✨ AI Chat</div>
+    <div class="sidebar-item active" onclick="showScreen('jbiq-home')"><div class="dot" style="background:var(--primary-50)"></div>JBIQ Home</div>
+    <div class="sidebar-item" onclick="showScreen('jbiq-chat')"><div class="dot" style="background:var(--sparkle-50)"></div>AI Conversation</div>
+    <div class="sidebar-item" onclick="showScreen('jbiq-puja-vidhi')"><div class="dot" style="background:var(--secondary-50)"></div>Puja Vidhi</div>
+    <div class="sidebar-item" onclick="showScreen('jbiq-festival')"><div class="dot" style="background:var(--faith-hindu)"></div>Festival Companion</div>
+    <div class="sidebar-item" onclick="showScreen('jbiq-samagri')"><div class="dot" style="background:var(--faith-sikh)"></div>Samagri Checklist</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Onboarding</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-faith')"><div class="dot" style="background:var(--primary-50)"></div>Faith Selection</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-language')"><div class="dot" style="background:var(--secondary-50)"></div>Language</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-deity')"><div class="dot" style="background:var(--sparkle-50)"></div>Deity &amp; Sect</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-duration')"><div class="dot" style="background:var(--faith-hindu)"></div>Duration</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-ritual')"><div class="dot" style="background:var(--faith-muslim)"></div>Ritual Preview</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Daily Use</div>
+    <div class="sidebar-item" onclick="showScreen('home')"><div class="dot" style="background:var(--primary-50)"></div>Devotion Home</div>
+    <div class="sidebar-item" onclick="showScreen('sacred-mode')"><div class="dot" style="background:var(--surface-bold)"></div>Sacred Mode</div>
+    <div class="sidebar-item" onclick="showScreen('completion')"><div class="dot" style="background:var(--success)"></div>Completion</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Explore</div>
+    <div class="sidebar-item" onclick="showScreen('calendar')"><div class="dot" style="background:var(--secondary-50)"></div>Calendar</div>
+    <div class="sidebar-item" onclick="showScreen('seasonal')"><div class="dot" style="background:var(--sparkle-50)"></div>Navratri Companion</div>
+    <div class="sidebar-item" onclick="showScreen('ritual-builder')"><div class="dot" style="background:var(--faith-sikh)"></div>Ritual Builder</div>
+  </div>
+</div>
+
+<div class="phone-container">
+  <div class="phone-frame">
+    <div class="device">
+
+<!-- SVG icons reused inline -->
+<svg style="display:none"><defs>
+  <symbol id="ico-back" viewBox="0 0 24 24"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></symbol>
+  <symbol id="ico-fwd" viewBox="0 0 24 24"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></symbol>
+  <symbol id="ico-mic" viewBox="0 0 24 24"><path d="M12 15c.8 0 1.56-.32 2.12-.88C14.68 13.56 15 12.8 15 12V5c0-.8-.32-1.56-.88-2.12A3 3 0 0012 2c-.8 0-1.56.32-2.12.88A3 3 0 009 5v7c0 .8.32 1.56.88 2.12C10.44 14.68 11.2 15 12 15zm6-5c-.27 0-.52.1-.7.29a1 1 0 00-.3.71v1c0 1.33-.47 2.6-1.34 3.54A4.99 4.99 0 0112 17c-1.33 0-2.6-.47-3.54-1.34A4.99 4.99 0 017 12v-1c0-.27-.1-.52-.29-.7a1 1 0 00-1.42 0A1 1 0 005 11v1c0 1.86.74 3.64 2.05 4.95C8.36 18.26 10.14 19 12 19c1.86 0 3.64-.74 4.95-2.05A6.99 6.99 0 0019 12v-1c0-.27-.1-.52-.29-.7A1 1 0 0018 10zm-9 10H6a1 1 0 000 2h3a1 1 0 000-2zm6 0h-3a1 1 0 000 2h3a1 1 0 000-2z"/></symbol>
+  <symbol id="ico-cam" viewBox="0 0 24 24"><path d="M11.12 14H12.88L12 12.24zM19 7h-.9a1.7 1.7 0 01-1.44-.8l-1-1.6A2.5 2.5 0 0014.56 4H9.44A2.5 2.5 0 007.34 5.6l-1 1.6A1.7 1.7 0 014.9 7H4a3 3 0 00-3 3v8a3 3 0 003 3h15a3 3 0 003-3v-8a3 3 0 00-3-3zm-3.55 9.89A2 2 0 0115 17h-5l-.25-.5-1.1.45a2 2 0 01-2.5-1.22 2 2 0 01.07-1.28L9.11 9.55A2 2 0 0111 8.4a2 2 0 011.89 1.15l3 6a2 2 0 01-.44 2.34z"/></symbol>
+  <symbol id="ico-send" viewBox="0 0 24 24"><path d="M10 17a1 1 0 01-.71-.29l-3.3-3.29 3.3-3.29a1 1 0 011.42 1.42L9.41 13l3.3 3.29a1 1 0 01-1.42 1.42l-4-4a1 1 0 010-1.42l4-4a1 1 0 011.42 1.42L9.41 11l3.3 3.29A1 1 0 0110 17z" transform="rotate(180,12,12)"/></symbol>
+  <symbol id="ico-wifi" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></symbol>
+  <symbol id="ico-batt" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></symbol>
+  <symbol id="ico-play" viewBox="0 0 24 24"><path d="M19.15 10.36l-10-7A2 2 0 006 5v14a2 2 0 001.08 1.77c.28.15.6.23.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/></symbol>
+  <symbol id="ico-check" viewBox="0 0 24 24"><path d="M9 19a1 1 0 01-.71-.29l-5-5a1 1 0 111.42-1.42L9 16.59l10.29-10.3a1 1 0 111.42 1.42l-11 11A1 1 0 019 19z"/></symbol>
+  <symbol id="ico-close" viewBox="0 0 24 24"><path d="M13.41 12l6.3-6.29a1 1 0 00-1.42-1.42L12 10.59l-6.29-6.3a1 1 0 10-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 000 1.42 1 1 0 001.42 0l6.29-6.3 6.29 6.3a1 1 0 001.64-.32 1 1 0 00-.22-1.1L13.41 12z"/></symbol>
+  <symbol id="ico-bell" viewBox="0 0 24 24"><path d="M12 22a2 2 0 002-2H10a2 2 0 002 2zm6-6V11c0-3.07-1.64-5.64-4.5-6.32V4a1.5 1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></symbol>
+  <symbol id="ico-user" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></symbol>
+  <symbol id="ico-cal" viewBox="0 0 24 24"><path d="M18 3h-1a1 1 0 00-2 0H9a1 1 0 00-2 0H6a3 3 0 00-3 3v12a3 3 0 003 3h12a3 3 0 003-3V6a3 3 0 00-3-3zm-4.5 14a1 1 0 01-2 0v-3.59l-.29.3a1 1 0 11-1.42-1.42l2-2a1 1 0 011.09-.21 1 1 0 01.62.92v6zM19 7H5V6a1 1 0 011-1h1a1 1 0 002 0h6a1 1 0 002 0h1a1 1 0 011 1v1z"/></symbol>
+</defs></svg>
+
+<!-- Reusable status bar HTML injected via JS -->
+
+<!-- ══════════════════════════════════
+     A: JBIQ HOME
+══════════════════════════════════ -->
+<div class="screen active" id="jbiq-home">
+  <div class="status-bar"><span class="time">9:41</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div class="jbiq-header">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="jbiq-dots" style="width:24px;height:24px;">
+        <span style="background:#3535f3;width:10px;height:10px;border-radius:50%;display:block;"></span>
+        <span style="background:#f7ab20;width:10px;height:10px;border-radius:50%;display:block;"></span>
+        <span style="background:#1eccb0;width:10px;height:10px;border-radius:50%;display:block;"></span>
+        <span style="background:#fa2f40;width:10px;height:10px;border-radius:50%;display:block;"></span>
+      </div>
+      <div><div class="jbiq-title">JioBharatIQ</div><div class="jbiq-subtitle"><span class="online-dot"></span> Devotion AI · Online</div></div>
+    </div>
+    <div style="display:flex;gap:4px;">
+      <button class="icon-btn" style="background:var(--grey-20);" onclick="showScreen('jbiq-chat')"><svg width="22" height="22" fill="var(--icon-medium)"><use href="#ico-user"/></svg></button>
+      <button class="icon-btn" style="background:var(--grey-20);"><svg width="22" height="22" fill="var(--icon-medium)"><use href="#ico-bell"/></svg></button>
+    </div>
+  </div>
+  <div class="screen-scroll" style="padding:16px 16px 100px;">
+    <div class="greeting-card fade-up" onclick="showScreen('calendar')">
+      <div style="font-size:13px;font-weight:500;opacity:0.85;margin-bottom:4px;">Shubh Pratham, Priya Anjali 🙏</div>
+      <div style="font-size:22px;font-weight:900;line-height:1.1;margin-bottom:6px;">Shukla Panchami · Margashirsha</div>
+      <div style="font-size:13px;opacity:0.8;line-height:1.4;">Aaj Ganesh Chaturthi ke baad pehla mangal din hai. Puja ka shubh samay hai.</div>
+    </div>
+
+    <div class="section-label fade-up fade-up-1">Aaj Ka Ritual</div>
+    <div class="ritual-mini fade-up fade-up-1">
+      <div class="ritual-mini-top">
+        <div class="ritual-mini-icon">🪔</div>
+        <div style="flex:1;"><div style="font-size:15px;font-weight:700;">Ganesh Vandana · 15 min</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">4 tracks · Sacred Mode ready</div></div>
+        <button class="ritual-play-btn" onclick="showScreen('sacred-mode')"><svg width="18" height="18" fill="#fff"><use href="#ico-play"/></svg></button>
+      </div>
+      <div class="ritual-chips">
+        <div class="ritual-chip" onclick="showScreen('sacred-mode')">Ganesh Vandana</div>
+        <div class="ritual-chip highlight" onclick="showScreen('sacred-mode')">★ Hanuman Chalisa</div>
+        <div class="ritual-chip" onclick="showScreen('sacred-mode')">Om Namah Shivaya</div>
+        <div class="ritual-chip" onclick="showScreen('sacred-mode')">Ganesh Aarti</div>
+      </div>
+    </div>
+
+    <div class="section-label fade-up fade-up-2">Aaj Ka Panchang</div>
+    <div class="panchang-card fade-up fade-up-2" onclick="showScreen('calendar')" style="cursor:pointer;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div class="panchang-big">Shukla Panchami</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">4 March 2026 · Margashirsha</div></div>
+        <span style="font-size:13px;font-weight:700;color:var(--primary-50);cursor:pointer;">Poora Dekhen</span>
+      </div>
+      <div class="panchang-tags"><span class="tag-blue">ℹ Ekadashi 6 din mein</span><span class="tag-orange">Rahu Kaal 3:00–4:30 PM</span></div>
+    </div>
+
+    <div class="festival-nudge fade-up fade-up-3" onclick="showScreen('jbiq-festival')">
+      <div style="font-size:28px;">🎨</div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:700;">Holi ki tayari karein</div><div style="font-size:12px;color:var(--text-low);margin-top:1px;">Holika Dahan 12 March · Holi 13 March</div></div>
+      <div style="background:var(--secondary-50);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--shape-pill);">9 din</div>
+    </div>
+
+    <div class="section-label fade-up fade-up-3">JBIQ se Poochhein</div>
+    <div class="suggest-row fade-up fade-up-4">
+      <button class="suggest-chip" onclick="sendQuery('Ritual customize karein')">Ritual customize karein</button>
+      <button class="suggest-chip" onclick="sendQuery('Aaj ka tithi')">Aaj ka tithi</button>
+      <button class="suggest-chip" onclick="sendQuery('Navratri ki tayari')">Navratri ki tayari</button>
+      <button class="suggest-chip" onclick="sendQuery('Holi pooja vidhi')">Holi pooja vidhi</button>
+      <button class="suggest-chip" onclick="sendQuery('Ganesh puja kaise karein')">Ganesh puja kaise karein</button>
+    </div>
+    <div style="height:8px;"></div>
+  </div>
+  <div class="floating-chat">
+    <div class="chat-input-row">
+      <input type="text" id="home-input" placeholder="JBIQ se kuch bhi poochhein..." onkeydown="if(event.key==='Enter'){sendQuery(this.value);}">
+      <div class="chat-divider"></div>
+      <button class="chat-icon-btn"><svg width="20" height="20" fill="currentColor"><use href="#ico-mic"/></svg></button>
+      <button class="chat-icon-btn" onclick="showScreen('jbiq-chat')"><svg width="20" height="20" fill="currentColor"><use href="#ico-cam"/></svg></button>
+      <button class="chat-send-btn" onclick="sendQuery(document.getElementById('home-input').value)"><svg width="18" height="18" fill="#fff" viewBox="0 0 24 24"><path d="M10 17a1 1 0 01-.71-.29l-3.3-3.29a1 1 0 011.42-1.42L10 14.59l7.29-7.3a1 1 0 011.42 1.42l-8 8A1 1 0 0110 17z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     B: AI CHAT CONVERSATION
+══════════════════════════════════ -->
+<div class="screen" id="jbiq-chat">
+  <div class="status-bar"><span class="time">9:41</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div class="jbiq-header">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="icon-btn" onclick="showScreen('jbiq-home')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button>
+      <div class="jbiq-dots" style="width:20px;height:20px;">
+        <span style="background:#3535f3;width:8px;height:8px;border-radius:50%;display:block;"></span>
+        <span style="background:#f7ab20;width:8px;height:8px;border-radius:50%;display:block;"></span>
+        <span style="background:#1eccb0;width:8px;height:8px;border-radius:50%;display:block;"></span>
+        <span style="background:#fa2f40;width:8px;height:8px;border-radius:50%;display:block;"></span>
+      </div>
+      <div><div class="jbiq-title">JioBharatIQ</div><div class="jbiq-subtitle"><span class="online-dot"></span> Devotion AI · Online</div></div>
+    </div>
+    <button class="icon-btn"><svg width="22" height="22" fill="var(--icon-medium)" viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18A9 9 0 0012 3zm1 13h-2v-6h2v6zm0-8h-2V6h2v2z"/></svg></button>
+  </div>
+  <div class="chat-area" id="chat-messages">
+    <!-- User photo + message -->
+    <div class="msg-row user">
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;max-width:78%;">
+        <div style="width:160px;height:110px;border-radius:14px;background:linear-gradient(135deg,#ff6b35,#ffa060);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="showScreen('jbiq-chat')">
+          <div style="text-align:center;color:#fff;"><div style="font-size:28px;">🥛🌸🪔</div><div style="font-size:11px;font-weight:600;margin-top:4px;opacity:0.9;">Puja Thali Photo</div></div>
+        </div>
+        <div class="user-bubble">Meri puja thali check karo aaj ki puja ke liye</div>
+      </div>
+    </div>
+    <!-- AI response -->
+    <div class="msg-row">
+      <div class="msg-avatar"><div class="jbiq-dots" style="width:16px;height:16px;"><span style="background:#3535f3;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#f7ab20;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#1eccb0;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#fa2f40;width:6px;height:6px;border-radius:50%;display:block;"></span></div></div>
+      <div style="flex:1;">
+        <div class="ai-bubble">Aapki puja thali mein Ganesh ji ke liye zaruri samagri dikh rahi hai — diya, supari, aur phool hain. Lekin kuch cheezein add karni chahiye. Aaj Shukla Panchami hai jo Ganesh puja ke liye vishesh shubh hai 🙏</div>
+        <!-- Photo Analysis Card -->
+        <div class="analysis-card">
+          <div class="analysis-badge"><span class="analysis-badge-label">PHOTO ANALYSIS</span><span class="analysis-badge-title">Ganesh Puja Samagri Check</span></div>
+          <div class="analysis-section">Thali mein hai ✓</div>
+          <div class="check-item"><svg width="18" height="18" fill="var(--success)"><use href="#ico-check"/></svg> Diya (ghee wala)</div>
+          <div class="check-item"><svg width="18" height="18" fill="var(--success)"><use href="#ico-check"/></svg> Supari aur laung</div>
+          <div class="check-item"><svg width="18" height="18" fill="var(--success)"><use href="#ico-check"/></svg> Phool (marigold)</div>
+          <div style="height:8px;"></div>
+          <div class="analysis-section" style="color:var(--faith-hindu);">Chahiye lekin nahi dikh raha</div>
+          <div class="miss-item"><div class="miss-dot"></div>Modak ya laddoo (prasad)</div>
+          <div class="miss-item"><div class="miss-dot"></div>Durva ghaas (3 patte)</div>
+          <div class="miss-item"><div class="miss-dot"></div>Sindoor ya Kumkum</div>
+          <div class="analysis-actions">
+            <button class="abtn-p" onclick="showScreen('jbiq-puja-vidhi')">Puja Vidhi Dekhein</button>
+            <button class="abtn-s" onclick="showScreen('jbiq-samagri')">JioMart Order</button>
+          </div>
+        </div>
+        <div class="msg-actions">
+          <button class="msg-action-btn" title="Like"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M21 8h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V10c0-1.1-.9-2-2-2zM3 21h2V9H3v12z"/></svg></button>
+          <button class="msg-action-btn" title="Dislike"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73V14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button>
+          <button class="msg-action-btn" title="Copy"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+          <button class="msg-action-btn" title="Share"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <!-- Festival tip -->
+    <div class="msg-row">
+      <div class="msg-avatar"><div class="jbiq-dots" style="width:16px;height:16px;"><span style="background:#3535f3;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#f7ab20;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#1eccb0;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#fa2f40;width:6px;height:6px;border-radius:50%;display:block;"></span></div></div>
+      <div style="flex:1;">
+        <div class="ai-bubble">💡 Aaj Panchami hai — Ganesh ji ko Durva aur modak bahut priya hain. Agla bada parv <strong>Holi 13 March ko</strong> — kya Holika Dahan ki puja vidhi chahiye?</div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+          <button class="suggest-chip" style="font-size:12px;padding:6px 10px;" onclick="showScreen('jbiq-festival')">Holi Puja Vidhi</button>
+          <button class="suggest-chip" style="font-size:12px;padding:6px 10px;" onclick="showScreen('jbiq-puja-vidhi')">Ganesh Puja Steps</button>
+          <button class="suggest-chip" style="font-size:12px;padding:6px 10px;" onclick="showScreen('jbiq-samagri')">Samagri List</button>
+        </div>
+      </div>
+    </div>
+    <div style="height:80px;" data-spacer="true"></div>
+  </div>
+  <div class="floating-chat">
+    <div class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="Aur kuch poochhein..." onkeydown="if(event.key==='Enter'){addChatMsg(this.value);}">
+      <div class="chat-divider"></div>
+      <button class="chat-icon-btn"><svg width="20" height="20" fill="currentColor"><use href="#ico-mic"/></svg></button>
+      <button class="chat-icon-btn"><svg width="20" height="20" fill="currentColor"><use href="#ico-cam"/></svg></button>
+      <button class="chat-send-btn" onclick="addChatMsg(document.getElementById('chat-input').value)"><svg width="18" height="18" fill="#fff" viewBox="0 0 24 24"><path d="M10 17a1 1 0 01-.71-.29l-3.3-3.29a1 1 0 011.42-1.42L10 14.59l7.29-7.3a1 1 0 011.42 1.42l-8 8A1 1 0 0110 17z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     C: PUJA VIDHI
+══════════════════════════════════ -->
+<div class="screen" id="jbiq-puja-vidhi">
+  <div class="status-bar"><span class="time">9:45</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div class="header-nav">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="icon-btn" onclick="showScreen('jbiq-chat')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button>
+      <div><div class="title">Ganesh Puja Vidhi</div><div class="subtitle">Shukla Panchami · 8 steps</div></div>
+    </div>
+    <div style="display:flex;gap:4px;">
+      <button class="icon-btn" onclick="showScreen('jbiq-samagri')"><svg width="22" height="22" fill="var(--icon-medium)" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H9v2h6v-2h-2v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
+      <button class="icon-btn"><svg width="22" height="22" fill="var(--icon-medium)" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
+    </div>
+  </div>
+  <div class="screen-scroll" style="padding:0 16px 24px;">
+    <div style="text-align:center;padding:20px 0 16px;">
+      <div style="font-size:48px;margin-bottom:8px;">🙏</div>
+      <div style="font-size:18px;font-weight:900;color:var(--faith-hindu);">Ganesh Puja Vidhi</div>
+      <div style="font-size:13px;color:var(--text-low);margin-top:4px;">Shukla Panchami ke liye vishesh vidhi</div>
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;"><span class="tag-blue">20–30 min</span><span class="tag-green">Aaj shubh muhurat</span></div>
+    </div>
+    <div style="background:linear-gradient(135deg,var(--primary-20) 0%,var(--sparkle-20) 100%);border-radius:var(--shape-large);padding:14px 16px;margin-bottom:20px;cursor:pointer;" onclick="showScreen('sacred-mode')">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button style="width:40px;height:40px;border-radius:50%;background:var(--primary-50);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" fill="#fff"><use href="#ico-play"/></svg></button>
+        <div><div style="font-size:13px;font-weight:700;">Ganesh Vandana — Guided Audio</div><div style="font-size:11px;color:var(--text-low);">Shankar Mahadevan · Follow along with puja</div></div>
+      </div>
+    </div>
+    <div class="card" style="padding:16px 16px 0;">
+      <div class="puja-step"><div class="step-num done">✓</div><div class="step-content"><div class="step-title">Shuchita — Shuddhi</div><div class="step-desc">Snaan karke saaf kapde pahnen. Puja sthal ko Gangajal se pavitr karein.</div></div></div>
+      <div class="puja-step"><div class="step-num done">✓</div><div class="step-content"><div class="step-title">Samagri Rakhein</div><div class="step-desc">Thali mein diya, supari, laung, phool, durva, modak aur sindoor rakhein.</div><div style="margin-top:8px;"><button style="font-size:12px;font-weight:700;color:var(--primary-50);background:none;border:none;cursor:pointer;padding:0;font-family:'JioType';" onclick="showScreen('jbiq-samagri')">→ Checklist dekhein</button></div></div></div>
+      <div class="puja-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Ganesh Sthapna</div><div class="step-desc">Murti ya photo ko uchit sthan par rakhein. Akshat se panchamrit se abhishek karein.</div><div class="step-mantra">ॐ गणेशाय नमः</div><div class="audio-mini" onclick="showScreen('sacred-mode')"><svg width="16" height="16" fill="var(--primary-50)"><use href="#ico-play"/></svg><span style="font-size:12px;font-weight:500;">Mantra sunein</span></div></div></div>
+      <div class="puja-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Shodashopachara Puja</div><div class="step-desc">16 upacharon se puja karein — avahan, asana, padya, arghya, achamana, madhuparka...</div><div class="step-mantra">ॐ श्री गणेशाय नमः</div></div></div>
+      <div class="puja-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Durva Arpan</div><div class="step-desc">21 ya 3 durva daal Ganesh ji ko charhayein. Ek ek karke naam bolte huye arpan karein.</div><div class="step-mantra">ॐ एकदन्ताय नमः</div></div></div>
+      <div class="puja-step"><div class="step-num">6</div><div class="step-content"><div class="step-title">Modak Prasad</div><div class="step-desc">Modak ya laddoo prasad ke roop mein charhayein. Yeh Ganesh ji ka priya prasad hai.</div></div></div>
+      <div class="puja-step"><div class="step-num">7</div><div class="step-content"><div class="step-title">Ganesh Vandana</div><div class="step-desc">Ganesh Vandana aur Ganesh Aarti karein. Diya jalate rahein poori puja ke dauran.</div><div class="step-mantra">वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा।।</div><div class="audio-mini" onclick="showScreen('sacred-mode')"><svg width="16" height="16" fill="var(--primary-50)"><use href="#ico-play"/></svg><span style="font-size:12px;font-weight:500;">Vandana sunein</span></div></div></div>
+      <div class="puja-step"><div class="step-num">8</div><div class="step-content"><div class="step-title">Prasad Vitaran</div><div class="step-desc">Parivaar ko prasad baantein. Mannat ho to 5 din tak puja karein, phir visarjan karein.</div></div></div>
+    </div>
+    <div style="height:16px;"></div>
+    <button class="btn-primary" onclick="showScreen('sacred-mode')">▶ Guided Puja Shuru Karein</button>
+    <div style="height:12px;"></div>
+    <button class="btn-secondary" onclick="showScreen('jbiq-samagri')">Samagri Checklist Dekhein</button>
+    <div style="height:24px;"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     D: FESTIVAL COMPANION
+══════════════════════════════════ -->
+<div class="screen" id="jbiq-festival">
+  <div class="status-bar" style="background:var(--faith-hindu);"><span class="time" style="color:#fff;">9:41</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="#fff"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="#fff"><use href="#ico-batt"/></svg></div></div>
+  <div class="festival-hero">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <button class="icon-btn" style="color:#fff;background:rgba(255,255,255,0.2);" onclick="showScreen('jbiq-home')"><svg width="24" height="24" fill="currentColor"><use href="#ico-back"/></svg></button>
+      <div style="display:flex;gap:6px;">
+        <button style="padding:6px 14px;border-radius:var(--shape-pill);background:rgba(255,255,255,0.9);border:none;font-size:12px;font-weight:700;color:var(--faith-hindu);cursor:pointer;font-family:'JioType';">🎨 Holi</button>
+        <button style="padding:6px 14px;border-radius:var(--shape-pill);background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:'JioType';" onclick="showScreen('seasonal')">🌺 Navratri</button>
+        <button style="padding:6px 14px;border-radius:var(--shape-pill);background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:'JioType';">🌙 Eid</button>
+      </div>
+    </div>
+    <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:4px;">🎨 Holi Festival Guide</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.85);margin-bottom:12px;">13 March 2026 · Purnima</div>
+    <div style="background:rgba(255,255,255,0.15);border-radius:var(--shape-medium);padding:10px 14px;">
+      <div style="font-size:12px;color:rgba(255,255,255,0.8);">Countdown</div>
+      <div style="font-size:20px;font-weight:900;color:#fff;">9 din baaqi · Holika Dahan 12 March</div>
+    </div>
+  </div>
+  <div style="display:flex;border-bottom:1px solid var(--stroke-minimal);flex-shrink:0;">
+    <button style="flex:1;padding:12px 0;font-size:13px;font-weight:700;color:var(--faith-hindu);background:none;border:none;border-bottom:2px solid var(--faith-hindu);cursor:pointer;font-family:'JioType';">Tayari</button>
+    <button style="flex:1;padding:12px 0;font-size:13px;font-weight:500;color:var(--text-low);background:none;border:none;cursor:pointer;font-family:'JioType';" onclick="showScreen('jbiq-puja-vidhi')">Puja Vidhi</button>
+    <button style="flex:1;padding:12px 0;font-size:13px;font-weight:500;color:var(--text-low);background:none;border:none;cursor:pointer;font-family:'JioType';" onclick="showScreen('jbiq-samagri')">Samagri</button>
+    <button style="flex:1;padding:12px 0;font-size:13px;font-weight:500;color:var(--text-low);background:none;border:none;cursor:pointer;font-family:'JioType';" onclick="showScreen('jbiq-chat')">JBIQ</button>
+  </div>
+  <div class="screen-scroll" style="padding:16px 16px 90px;">
+    <div class="section-label">Holi ka Karyakram</div>
+    <div class="card card-shadow" style="margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:44px;height:44px;border-radius:var(--shape-small);background:rgba(247,171,32,0.15);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🔥</div>
+        <div><div style="font-size:15px;font-weight:700;">Holika Dahan</div><div style="font-size:12px;color:var(--text-low);">12 March 2026 · Pradosh kaal</div></div>
+        <span class="tag-orange" style="margin-left:auto;">10 din</span>
+      </div>
+      <div style="font-size:13px;color:var(--text-low);line-height:1.5;margin-bottom:10px;">Holika Dahan pradosh kaal mein karna chahiye. Parikrama lagayein, gehu ki baali, coconut aur haldi arpan karein.</div>
+      <div style="display:flex;gap:8px;"><button class="abtn-p" onclick="showScreen('jbiq-puja-vidhi')">Puja Vidhi</button><button class="abtn-s" onclick="showScreen('jbiq-samagri')">Samagri List</button></div>
+    </div>
+    <div class="card card-shadow" style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:44px;height:44px;border-radius:var(--shape-small);background:rgba(255,107,53,0.12);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🎨</div>
+        <div><div style="font-size:15px;font-weight:700;">Holi</div><div style="font-size:12px;color:var(--text-low);">13 March 2026 · Subah se</div></div>
+        <span class="tag-blue" style="margin-left:auto;">11 din</span>
+      </div>
+      <div style="font-size:13px;color:var(--text-low);line-height:1.5;margin-bottom:10px;">Praatahkal snan, Radha-Krishna puja, gulal arpan. Dopahar mein Holi milan aur thandai.</div>
+      <div style="display:flex;gap:8px;"><button class="abtn-p" onclick="showScreen('jbiq-chat')">JBIQ se Poochhein</button><button class="abtn-s">Recipes Dekhein</button></div>
+    </div>
+
+    <div class="section-label">Navratri ki Tayari</div>
+    <div class="card" style="margin-bottom:10px;">
+      <div style="font-size:14px;font-weight:700;margin-bottom:10px;">9 Din ki Tayari Checklist</div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box checked"><svg width="12" height="12" fill="#fff"><use href="#ico-check"/></svg></div><span class="item-name">Navratri calendar download karo</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Vrat ka samaan (sabudana, kuttu)</span><span class="item-qty">JioMart →</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">9 rang ke kapde tay karo</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Devi Sthapna ki jagah tay karo</span></div>
+      <div style="margin-top:10px;"><button class="abtn-p" onclick="showScreen('jbiq-samagri')">Poori Checklist Dekhein</button></div>
+    </div>
+
+    <!-- Upcoming Navratri -->
+    <div class="card" style="cursor:pointer;" onclick="showScreen('seasonal')">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="font-size:32px;">🌺</div>
+        <div style="flex:1;"><div style="font-size:14px;font-weight:700;">Chaitra Navratri 2026</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">30 March – 7 April · 9 din</div><div class="panchang-tags"><span class="tag-green">Ghatasthapana 30 March</span></div></div>
+        <svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg>
+      </div>
+    </div>
+
+    <!-- JBIQ nudge -->
+    <div style="background:var(--primary-20);border-radius:var(--shape-large);padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:4px;" onclick="showScreen('jbiq-chat')">
+      <div class="jbiq-dots" style="width:20px;height:20px;"><span style="background:#3535f3;width:8px;height:8px;border-radius:50%;display:block;"></span><span style="background:#f7ab20;width:8px;height:8px;border-radius:50%;display:block;"></span><span style="background:#1eccb0;width:8px;height:8px;border-radius:50%;display:block;"></span><span style="background:#fa2f40;width:8px;height:8px;border-radius:50%;display:block;"></span></div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--primary-50);">JBIQ se poochhein</div><div style="font-size:12px;color:var(--text-low);">Navratri tayari, vrat recipes, pooja vidhi...</div></div>
+      <svg width="20" height="20" fill="var(--primary-50)"><use href="#ico-fwd"/></svg>
+    </div>
+  </div>
+  <div class="floating-chat">
+    <div class="chat-input-row">
+      <input type="text" placeholder="Festival ke baare mein poochhein..." onkeydown="if(event.key==='Enter'){showScreen('jbiq-chat');}">
+      <div class="chat-divider"></div>
+      <button class="chat-icon-btn"><svg width="20" height="20" fill="currentColor"><use href="#ico-mic"/></svg></button>
+      <button class="chat-icon-btn" onclick="showScreen('jbiq-chat')"><svg width="20" height="20" fill="currentColor"><use href="#ico-cam"/></svg></button>
+      <button class="chat-send-btn" onclick="showScreen('jbiq-chat')"><svg width="18" height="18" fill="#fff" viewBox="0 0 24 24"><path d="M10 17a1 1 0 01-.71-.29l-3.3-3.29a1 1 0 011.42-1.42L10 14.59l7.29-7.3a1 1 0 011.42 1.42l-8 8A1 1 0 0110 17z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     E: SAMAGRI CHECKLIST
+══════════════════════════════════ -->
+<div class="screen" id="jbiq-samagri">
+  <div class="status-bar"><span class="time">9:43</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div class="header-nav">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="icon-btn" onclick="showScreen('jbiq-puja-vidhi')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button>
+      <div><div class="title">Puja Samagri</div><div class="subtitle">Ganesh Puja · Shukla Panchami</div></div>
+    </div>
+    <button class="icon-btn"><svg width="22" height="22" fill="var(--icon-medium)" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
+  </div>
+  <!-- Progress -->
+  <div style="padding:12px 16px;background:var(--grey-20);flex-shrink:0;">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;font-weight:600;color:var(--text-low);">3 / 9 items tayar hain</span><span style="font-size:12px;font-weight:700;color:var(--success);">33%</span></div>
+    <div style="height:6px;background:var(--grey-40);border-radius:3px;"><div style="width:33%;height:100%;background:var(--success);border-radius:3px;"></div></div>
+  </div>
+  <div class="screen-scroll" style="padding:0 16px 100px;">
+    <div style="padding:14px 0 6px;"><div style="font-size:12px;font-weight:700;color:var(--faith-hindu);text-transform:uppercase;letter-spacing:0.5px;">Zaruri Samagri 🔴</div></div>
+    <div class="card" style="padding:4px 16px;">
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box checked"><svg width="12" height="12" fill="#fff"><use href="#ico-check"/></svg></div><span class="item-name">Ghee ka diya</span><span class="item-qty">1–3</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box checked"><svg width="12" height="12" fill="#fff"><use href="#ico-check"/></svg></div><span class="item-name">Supari aur laung</span><span class="item-qty">5–11 each</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box checked"><svg width="12" height="12" fill="#fff"><use href="#ico-check"/></svg></div><span class="item-name">Marigold phool</span><span class="item-qty">1 bunch</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name" style="color:var(--faith-hindu);">Modak ya laddoo 🔴</span><span class="item-qty">5–21</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name" style="color:var(--faith-hindu);">Durva ghaas 🔴</span><span class="item-qty">3–21 patte</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name" style="color:var(--faith-hindu);">Sindoor / Kumkum 🔴</span><span class="item-qty">1 pack</span></div>
+    </div>
+    <div style="padding:14px 0 6px;"><div style="font-size:12px;font-weight:700;color:var(--primary-50);text-transform:uppercase;letter-spacing:0.5px;">Puja Thali</div></div>
+    <div class="card" style="padding:4px 16px;">
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Panchpatra (tamba)</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Kalash</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Agarbatti / Dhoop</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Nariyal (sabutiya)</span></div>
+    </div>
+    <div style="padding:14px 0 6px;"><div style="font-size:12px;font-weight:700;color:var(--text-low);text-transform:uppercase;letter-spacing:0.5px;">Optional (Shubh)</div></div>
+    <div class="card" style="padding:4px 16px;">
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Panchamrit (milk, curd, honey, ghee, sugar)</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Chameli ya mogra phool</span></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="item-name">Akshat (chawal)</span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <!-- JioMart CTA -->
+    <div style="background:linear-gradient(135deg,#003087 0%,#0057d9 100%);border-radius:var(--shape-large);padding:16px;cursor:pointer;" onclick="showScreen('jbiq-chat')">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-size:28px;">🛒</div>
+        <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#fff;">JioMart pe order karein</div><div style="font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px;">6 missing items · 2hr delivery available</div></div>
+        <svg width="20" height="20" fill="#fff"><use href="#ico-fwd"/></svg>
+      </div>
+    </div>
+    <div style="height:12px;"></div>
+    <button class="btn-secondary" onclick="showScreen('jbiq-chat')">📸 Thali Ka Photo Share Karein</button>
+    <div style="height:24px;"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     ORIGINAL SCREENS
+══════════════════════════════════ -->
+
+<!-- ONBOARD 1: Faith -->
+<div class="screen" id="onboard-faith">
+  <div class="status-bar"><span class="time">5:30</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+    <div style="padding:32px 0 8px;">
+      <div style="display:flex;gap:6px;margin-bottom:32px"><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div></div>
+      <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">Choose your<br>faith</h1>
+      <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">We'll curate your daily devotional ritual based on your tradition.</p>
+    </div>
+    <div class="screen-scroll" style="padding-top:24px;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card card-shadow fade-up fade-up-1" style="display:flex;align-items:center;gap:16px;cursor:pointer;border:2px solid var(--faith-hindu);background:rgba(255,107,53,0.04);" onclick="showScreen('onboard-language')"><div style="width:48px;height:48px;border-radius:50%;background:rgba(255,107,53,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">🕉️</div><div style="flex:1"><div style="font-size:16px;font-weight:700;">Hindu</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Vaishnav · Shaiv · Shakta · Smarta</div></div><svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg></div>
+        <div class="card card-shadow fade-up fade-up-2" style="display:flex;align-items:center;gap:16px;cursor:pointer;" onclick="showScreen('onboard-language')"><div style="width:48px;height:48px;border-radius:50%;background:rgba(45,138,78,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">☪️</div><div style="flex:1"><div style="font-size:16px;font-weight:700;">Muslim</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Sunni · Shia</div></div><svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg></div>
+        <div class="card card-shadow fade-up fade-up-3" style="display:flex;align-items:center;gap:16px;cursor:pointer;" onclick="showScreen('onboard-language')"><div style="width:48px;height:48px;border-radius:50%;background:rgba(26,95,180,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">☬</div><div style="flex:1"><div style="font-size:16px;font-weight:700;">Sikh</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Classical Raag · Contemporary Kirtan</div></div><svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg></div>
+        <div class="card card-shadow fade-up fade-up-4" style="display:flex;align-items:center;gap:16px;cursor:pointer;" onclick="showScreen('onboard-language')"><div style="width:48px;height:48px;border-radius:50%;background:rgba(168,85,160,0.12);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🙏</div><div style="flex:1"><div style="font-size:16px;font-weight:700;">Jain</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Shvetambar · Digambar</div></div><svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg></div>
+        <div class="card card-shadow fade-up fade-up-4" style="display:flex;align-items:center;gap:16px;cursor:pointer;" onclick="showScreen('onboard-language')"><div style="width:48px;height:48px;border-radius:50%;background:rgba(139,105,20,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">✝️</div><div style="flex:1"><div style="font-size:16px;font-weight:700;">Christian</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Catholic · Protestant · Orthodox</div></div><svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg></div>
+      </div>
+      <div style="height:24px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARD 2: Language -->
+<div class="screen" id="onboard-language">
+  <div class="status-bar"><span class="time">5:30</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+    <div style="padding:32px 0 8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;"><button class="icon-btn" onclick="showScreen('onboard-faith')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button><div style="display:flex;gap:6px"><div class="progress-dot completed"></div><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div></div></div>
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:var(--shape-pill);background:rgba(255,107,53,0.1);margin-bottom:16px;"><span style="font-size:14px;">🕉️</span><span style="font-size:12px;font-weight:600;color:var(--faith-hindu);">Hindu</span></div>
+      <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">Select region<br>&amp; language</h1>
+      <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">This helps us use the right Panchang variant and content language.</p>
+    </div>
+    <div class="screen-scroll" style="padding-top:16px;">
+      <div style="margin-bottom:20px;"><div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Region</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><div class="chip selected">North India</div><div class="chip">South India</div><div class="chip">West India</div><div class="chip">East India</div></div></div>
+      <div style="margin-bottom:20px;"><div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Primary Language</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><div class="chip selected">Hindi</div><div class="chip">English</div><div class="chip">Sanskrit</div><div class="chip">Gujarati</div><div class="chip">Marathi</div><div class="chip">Tamil</div><div class="chip">Telugu</div><div class="chip">Kannada</div><div class="chip">Bengali</div><div class="chip">Punjabi</div></div></div>
+      <div style="margin-bottom:24px;"><div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Secondary (Optional)</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><div class="chip">English</div><div class="chip">Sanskrit</div><div class="chip">None</div></div></div>
+      <button class="btn-primary" onclick="showScreen('onboard-deity')" style="margin-bottom:24px;">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARD 3: Deity -->
+<div class="screen" id="onboard-deity">
+  <div class="status-bar"><span class="time">5:31</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+    <div style="padding:32px 0 8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;"><button class="icon-btn" onclick="showScreen('onboard-language')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button><div style="display:flex;gap:6px"><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div></div></div>
+      <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">Your family<br>deity</h1>
+      <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">We'll build your ritual around the deity closest to your heart.</p>
+    </div>
+    <div class="screen-scroll" style="padding-top:12px;">
+      <div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Sect</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;"><div class="chip selected">Vaishnav</div><div class="chip">Shaiv</div><div class="chip">Shakta</div><div class="chip">Smarta</div></div>
+      <div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Family Deity</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;" id="deity-grid">
+        <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid var(--primary-50);background:var(--primary-20);" onclick="selectDeity(this)"><div style="font-size:32px;margin-bottom:6px;">🙏</div><div style="font-size:13px;font-weight:700;color:var(--primary-50);">Ganesh</div></div>
+        <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;" onclick="selectDeity(this)"><div style="font-size:32px;margin-bottom:6px;">💪</div><div style="font-size:13px;font-weight:600;">Hanuman</div></div>
+        <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;" onclick="selectDeity(this)"><div style="font-size:32px;margin-bottom:6px;">🔱</div><div style="font-size:13px;font-weight:600;">Shiva</div></div>
+        <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;" onclick="selectDeity(this)"><div style="font-size:32px;margin-bottom:6px;">🪈</div><div style="font-size:13px;font-weight:600;">Krishna</div></div>
+        <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;" onclick="selectDeity(this)"><div style="font-size:32px;margin-bottom:6px;">🔆</div><div style="font-size:13px;font-weight:600;">Vishnu</div></div>
+        <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;" onclick="selectDeity(this)"><div style="font-size:32px;margin-bottom:6px;">🌺</div><div style="font-size:13px;font-weight:600;">Devi</div></div>
+      </div>
+      <button class="btn-primary" onclick="showScreen('onboard-duration')" style="margin-bottom:24px;">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARD 4: Duration -->
+<div class="screen" id="onboard-duration">
+  <div class="status-bar"><span class="time">5:31</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+    <div style="padding:32px 0 8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;"><button class="icon-btn" onclick="showScreen('onboard-deity')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button><div style="display:flex;gap:6px"><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot active"></div><div class="progress-dot"></div></div></div>
+      <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">How long is<br>your ritual?</h1>
+      <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">Pick a duration that fits your morning.</p>
+    </div>
+    <div class="screen-scroll" style="padding-top:16px;">
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+        <div class="card" style="cursor:pointer;border:2px solid transparent;" onclick="selectDuration(this)"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:16px;font-weight:700;">Quick</div><div style="font-size:13px;color:var(--text-low);margin-top:2px;">5–8 minutes</div></div><div class="dur-radio" style="width:20px;height:20px;border-radius:50%;border:2px solid var(--grey-40);"></div></div></div>
+        <div class="card" style="cursor:pointer;border:2px solid var(--primary-50);background:rgba(53,53,243,0.03);" onclick="selectDuration(this)"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:16px;font-weight:700;">Regular</div><div style="font-size:13px;color:var(--text-low);margin-top:2px;">10–18 minutes</div></div><div class="dur-radio" style="width:20px;height:20px;border-radius:50%;border:2px solid var(--primary-50);background:var(--primary-50);display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" fill="#fff"><use href="#ico-check"/></svg></div></div></div>
+        <div class="card" style="cursor:pointer;border:2px solid transparent;" onclick="selectDuration(this)"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:16px;font-weight:700;">Extended</div><div style="font-size:13px;color:var(--text-low);margin-top:2px;">20–30 minutes</div></div><div class="dur-radio" style="width:20px;height:20px;border-radius:50%;border:2px solid var(--grey-40);"></div></div></div>
+      </div>
+      <div class="card" style="background:var(--grey-20);border:none;"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:600;">Longer on weekends?</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Extended ritual on Sat &amp; Sun</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div></div>
+      <div style="height:16px;"></div>
+      <button class="btn-primary" onclick="showScreen('onboard-ritual')" style="margin-bottom:24px;">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARD 5: Ritual Preview -->
+<div class="screen" id="onboard-ritual">
+  <div class="status-bar"><span class="time">5:32</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+    <div style="padding:32px 0 8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;"><button class="icon-btn" onclick="showScreen('onboard-duration')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button><div style="display:flex;gap:6px"><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot active"></div></div></div>
+      <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">Your ritual<br>is ready</h1>
+      <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">Here's what we've curated for you. You can customize anytime.</p>
+    </div>
+    <div class="screen-scroll" style="padding-top:12px;">
+      <div class="card card-shadow" style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div style="font-size:14px;font-weight:700;">Daily Ritual · 15 min</div><div style="font-size:12px;color:var(--primary-50);font-weight:700;cursor:pointer;" onclick="showScreen('ritual-builder')">Customize</div></div>
+        <div class="track-item" onclick="showScreen('sacred-mode')"><div class="track-num">1</div><div class="track-info"><div class="track-title">Ganesh Vandana</div><div class="track-artist">Opener · Shankar Mahadevan</div></div><div class="track-dur">3:20</div></div>
+        <div class="track-item" onclick="showScreen('sacred-mode')"><div class="track-num">2</div><div class="track-info"><div class="track-title">Shri Ganesh Stuti</div><div class="track-artist">Mantra · Anuradha Paudwal</div><div class="track-badge">Seasonal Slot</div></div><div class="track-dur">4:15</div></div>
+        <div class="track-item" onclick="showScreen('sacred-mode')"><div class="track-num">3</div><div class="track-info"><div class="track-title">Hanuman Chalisa</div><div class="track-artist">Bhajan · Hariharan</div><div class="track-pin">Pinned</div></div><div class="track-dur">4:30</div></div>
+        <div class="track-item" onclick="showScreen('sacred-mode')"><div class="track-num">4</div><div class="track-info"><div class="track-title">Ganesh Aarti</div><div class="track-artist">Closer · Lata Mangeshkar</div></div><div class="track-dur">3:10</div></div>
+      </div>
+      <button class="btn-primary" onclick="showScreen('jbiq-home')" style="margin-bottom:12px;">Start my devotion</button>
+      <button class="btn-tertiary" onclick="showScreen('ritual-builder')" style="display:block;text-align:center;width:100%;margin-bottom:24px;">Customize my ritual</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="screen" id="home">
+  <div class="status-bar"><span class="time">5:45</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div class="header-nav" style="border:none;">
+    <div><div class="title">Devotion</div></div>
+    <div style="display:flex;gap:4px;">
+      <button class="icon-btn" onclick="showScreen('jbiq-home')"><div class="jbiq-dots" style="width:18px;height:18px;"><span style="background:#3535f3;width:7px;height:7px;border-radius:50%;display:block;"></span><span style="background:#f7ab20;width:7px;height:7px;border-radius:50%;display:block;"></span><span style="background:#1eccb0;width:7px;height:7px;border-radius:50%;display:block;"></span><span style="background:#fa2f40;width:7px;height:7px;border-radius:50%;display:block;"></span></div></button>
+      <button class="icon-btn" onclick="showScreen('calendar')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-cal"/></svg></button>
+    </div>
+  </div>
+  <div class="screen-scroll" style="padding:0 16px 100px;">
+    <div class="card card-shadow fade-up" style="background:linear-gradient(135deg,#fff5ed 0%,#fff 50%);border:none;margin-top:8px;padding:24px;cursor:pointer;" onclick="showScreen('sacred-mode')">
+      <div style="text-align:center;">
+        <div style="font-size:12px;font-weight:500;color:var(--faith-hindu);margin-bottom:4px;">शुक्ल पंचमी · Tuesday</div>
+        <div style="font-size:20px;font-weight:900;margin-bottom:4px;">Morning Ritual</div>
+        <div style="font-size:13px;color:var(--text-low);margin-bottom:20px;">Ganesh Aarti · 4 tracks · 15 min</div>
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--faith-hindu);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 4px 20px rgba(255,107,53,0.3);"><svg width="32" height="32" fill="#fff"><use href="#ico-play"/></svg></div>
+        <div style="font-size:14px;font-weight:700;color:var(--faith-hindu);">Tap to begin</div>
+      </div>
+    </div>
+    <div class="seasonal-strip fade-up fade-up-1" style="margin-bottom:12px;cursor:pointer;" onclick="showScreen('seasonal')">
+      <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#0e5c4f;">Day 5 of 9 · Skandamata</div><div style="display:flex;gap:4px;margin-top:6px;"><div class="seasonal-dot filled"></div><div class="seasonal-dot filled"></div><div class="seasonal-dot filled"></div><div class="seasonal-dot filled"></div><div class="seasonal-dot filled"></div><div class="seasonal-dot empty"></div><div class="seasonal-dot empty"></div><div class="seasonal-dot empty"></div><div class="seasonal-dot empty"></div></div></div>
+      <svg width="20" height="20" fill="#0e5c4f"><use href="#ico-fwd"/></svg>
+    </div>
+    <div class="card fade-up fade-up-2" style="cursor:pointer;" onclick="showScreen('calendar')"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:11px;font-weight:700;color:var(--text-low);text-transform:uppercase;letter-spacing:0.5px;">Today</div><div style="font-size:14px;font-weight:700;margin-top:2px;">14 Margashirsha, Shukla Panchami</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">4 March 2026 · Ekadashi in 6 days</div></div><svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg></div></div>
+    <div class="festival-nudge fade-up fade-up-3" onclick="showScreen('jbiq-festival')"><div style="font-size:24px;">🎨</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">Holi ki tayari — 9 din mein</div><div style="font-size:12px;color:var(--text-low);">Holika Dahan vidhi aur samagri</div></div><svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg></div>
+    <div class="devi-card fade-up fade-up-3" style="cursor:pointer;margin-bottom:12px;" onclick="showScreen('seasonal')"><div class="devi-avatar" style="background:rgba(255,107,53,0.12);">🙏</div><div style="flex:1;"><div style="font-size:15px;font-weight:700;">Skandamata</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Mother of Skanda (Kartikeya)</div></div><svg width="20" height="20" fill="var(--text-low)"><use href="#ico-fwd"/></svg></div>
+  </div>
+  <div class="floating-chat">
+    <div class="chat-input-row" onclick="showScreen('jbiq-home')" style="cursor:pointer;">
+      <span style="flex:1;font-size:14px;color:var(--text-low);">JBIQ se kuch bhi poochhein...</span>
+      <div class="chat-divider"></div>
+      <div class="chat-icon-btn"><svg width="20" height="20" fill="currentColor"><use href="#ico-mic"/></svg></div>
+      <div class="chat-icon-btn" onclick="event.stopPropagation();showScreen('jbiq-chat')"><svg width="20" height="20" fill="currentColor"><use href="#ico-cam"/></svg></div>
+      <div class="chat-send-btn"><svg width="18" height="18" fill="#fff" viewBox="0 0 24 24"><path d="M10 17a1 1 0 01-.71-.29l-3.3-3.29a1 1 0 011.42-1.42L10 14.59l7.29-7.3a1 1 0 011.42 1.42l-8 8A1 1 0 0110 17z"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- SACRED MODE -->
+<div class="screen sacred-mode" id="sacred-mode">
+  <div style="padding:16px 24px;display:flex;justify-content:flex-end;"><button class="icon-btn" style="color:rgba(255,255,255,0.6);" onclick="showScreen('home')"><svg width="24" height="24" fill="currentColor"><use href="#ico-close"/></svg></button></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;text-align:center;">
+    <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:24px;">Sacred Mode</div>
+    <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,107,53,0.15);display:flex;align-items:center;justify-content:center;margin-bottom:24px;"><div style="font-size:40px;">🙏</div></div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:4px;">Track 3 of 4</div>
+    <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:4px;">Hanuman Chalisa</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:32px;">Hariharan</div>
+    <div class="sacred-lyrics" style="margin-bottom:32px;">श्री गुरु चरन सरोज रज<br><span class="highlight">निज मनु मुकुरु सुधारि</span><br>बरनऊँ रघुबर बिमल जसु<br>जो दायकु फल चारि</div>
+    <div style="width:100%;margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;"><span>1:42</span><span>4:30</span></div>
+      <div style="width:100%;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;"><div style="width:38%;height:100%;background:var(--secondary-50);border-radius:2px;"></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:32px;">
+      <button class="icon-btn" style="color:rgba(255,255,255,0.6);"><svg width="24" height="24" fill="currentColor"><use href="#ico-back"/></svg></button>
+      <div id="play-pause-btn" style="width:64px;height:64px;border-radius:50%;background:var(--secondary-50);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="togglePlayPause()">
+        <svg id="play-icon" width="28" height="28" fill="#fff" viewBox="0 0 24 24"><path d="M8.5 4A1.5 1.5 0 007 5.5v13a1.5 1.5 0 003 0v-13A1.5 1.5 0 008.5 4zm7 0A1.5 1.5 0 0014 5.5v13a1.5 1.5 0 103 0v-13A1.5 1.5 0 0015.5 4z"/></svg>
+      </div>
+      <button class="icon-btn" style="color:rgba(255,255,255,0.6);" onclick="showScreen('completion')"><svg width="24" height="24" fill="currentColor"><use href="#ico-fwd"/></svg></button>
+    </div>
+  </div>
+  <div style="padding:16px 24px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,0.3);">Lyrics · scrolling</div></div>
+</div>
+
+<!-- COMPLETION -->
+<div class="screen" id="completion">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;text-align:center;">
+    <div style="width:100px;height:100px;border-radius:50%;background:rgba(37,171,33,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:24px;" class="fade-up"><svg width="48" height="48" fill="var(--success)"><use href="#ico-check"/></svg></div>
+    <div style="font-size:28px;font-weight:900;margin-bottom:8px;color:var(--faith-hindu);" class="fade-up fade-up-1">शुभ पंचमी</div>
+    <div style="font-size:16px;font-weight:500;color:var(--text-low);line-height:1.5;margin-bottom:32px;" class="fade-up fade-up-2">"The mind is everything. What you think, you become."<br><span style="font-size:13px;font-weight:700;color:var(--text-high);">— Swami Vivekananda</span></div>
+    <div class="card fade-up fade-up-3" style="width:100%;text-align:left;cursor:pointer;" onclick="showScreen('calendar')"><div style="display:flex;align-items:center;gap:8px;"><svg width="18" height="18" fill="var(--primary-50)"><use href="#ico-cal"/></svg><span style="font-size:13px;font-weight:500;color:var(--text-low);">Ekadashi in 6 days · Holi in 9 days 🎨</span></div></div>
+    <div style="height:24px;"></div>
+    <button class="btn-secondary" onclick="showScreen('sacred-mode')">Continue listening</button>
+    <div style="height:12px;"></div>
+    <button class="btn-primary" onclick="showScreen('jbiq-home')" style="margin-bottom:24px;">Done</button>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="screen" id="calendar">
+  <div class="status-bar"><span class="time">5:50</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div class="header-nav"><div style="display:flex;align-items:center;gap:8px;"><button class="icon-btn" onclick="showScreen('home')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button><div class="title">Calendar</div></div><button class="icon-btn"><svg width="24" height="24" fill="var(--icon-medium)" viewBox="0 0 24 24"><path d="M20.43 13.4L19 12.58v-1.16l1.43-.82a2 2 0 00.73-2.73l-1-1.74a2 2 0 00-2.73-.73l-1.18.68-.25.15-1-.58V4a2 2 0 00-2-2h-2a2 2 0 00-2 2v1.65l-.25.14-.75.44-.25-.15-1.18-.68a2 2 0 00-2.73.73l-1 1.74a2 2 0 00.73 2.73l1.43.82v1.16l-1.43.82a2 2 0 00-.73 2.73l1 1.74a2 2 0 002.73.73L8 17.77l1 .58V20a2 2 0 002 2h2a2 2 0 002-2v-1.65l1-.58 1.43.83a2 2 0 002.73-.73l1-1.74a2 2 0 00-.73-2.73zM12 15a3 3 0 110-6 3 3 0 010 6z"/></svg></button></div>
+  <div class="screen-scroll" style="padding:16px;">
+    <div class="card card-shadow" style="background:linear-gradient(135deg,#fff5ed 0%,#fff 50%);border:none;margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:700;color:var(--faith-hindu);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Today · शुक्ल पंचमी</div>
+      <div style="font-size:18px;font-weight:900;margin-bottom:4px;">14 Margashirsha</div>
+      <div style="font-size:13px;color:var(--text-low);margin-bottom:12px;">4 March 2026 · Tuesday</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="padding:8px;background:rgba(255,107,53,0.06);border-radius:var(--shape-small);"><div style="font-size:11px;color:var(--text-low);font-weight:500;">Tithi</div><div style="font-size:13px;font-weight:700;">Panchami</div></div>
+        <div style="padding:8px;background:rgba(255,107,53,0.06);border-radius:var(--shape-small);"><div style="font-size:11px;color:var(--text-low);font-weight:500;">Nakshatra</div><div style="font-size:13px;font-weight:700;">Pushya</div></div>
+        <div style="padding:8px;background:rgba(255,107,53,0.06);border-radius:var(--shape-small);"><div style="font-size:11px;color:var(--text-low);font-weight:500;">Sunrise</div><div style="font-size:13px;font-weight:700;">6:32 AM</div></div>
+        <div style="padding:8px;background:rgba(255,107,53,0.06);border-radius:var(--shape-small);"><div style="font-size:11px;color:var(--text-low);font-weight:500;">Rahu Kaal</div><div style="font-size:13px;font-weight:700;">3:00 – 4:30 PM</div></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <button class="icon-btn" style="width:32px;height:32px;"><svg width="20" height="20" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button>
+      <div style="font-size:16px;font-weight:700;">March 2026</div>
+      <button class="icon-btn" style="width:32px;height:32px;"><svg width="20" height="20" fill="var(--icon-medium)"><use href="#ico-fwd"/></svg></button>
+    </div>
+    <div class="calendar-grid" style="margin-bottom:16px;">
+      <div class="day-header">Su</div><div class="day-header">Mo</div><div class="day-header">Tu</div><div class="day-header">We</div><div class="day-header">Th</div><div class="day-header">Fr</div><div class="day-header">Sa</div>
+      <div class="day-cell">1</div><div class="day-cell">2</div><div class="day-cell">3</div><div class="day-cell today" onclick="showScreen('jbiq-home')">4</div><div class="day-cell">5</div><div class="day-cell">6</div><div class="day-cell">7</div>
+      <div class="day-cell">8</div><div class="day-cell">9</div><div class="day-cell ekadashi" onclick="showScreen('jbiq-home')">10</div><div class="day-cell">11</div><div class="day-cell festival" onclick="showScreen('jbiq-festival')">12</div><div class="day-cell festival" onclick="showScreen('jbiq-festival')">13</div><div class="day-cell">14</div>
+      <div class="day-cell">15</div><div class="day-cell">16</div><div class="day-cell">17</div><div class="day-cell">18</div><div class="day-cell">19</div><div class="day-cell">20</div><div class="day-cell">21</div>
+      <div class="day-cell">22</div><div class="day-cell">23</div><div class="day-cell">24</div><div class="day-cell ekadashi">25</div><div class="day-cell">26</div><div class="day-cell">27</div><div class="day-cell festival">28</div>
+      <div class="day-cell">29</div><div class="day-cell">30</div><div class="day-cell">31</div>
+    </div>
+    <div style="display:flex;gap:16px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--primary-50);"></div><span style="font-size:11px;color:var(--text-low);">Ekadashi</span></div>
+      <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--faith-hindu);"></div><span style="font-size:11px;color:var(--text-low);">Festival</span></div>
+    </div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Upcoming</div>
+    <div class="card" style="padding:12px 16px;margin-bottom:8px;cursor:pointer;" onclick="showScreen('jbiq-home')"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:600;">Ekadashi</div><div style="font-size:12px;color:var(--text-low);">10 March · Shukla Ekadashi</div></div><div style="font-size:12px;font-weight:700;color:var(--primary-50);">In 6 days</div></div></div>
+    <div class="card" style="padding:12px 16px;margin-bottom:8px;cursor:pointer;" onclick="showScreen('jbiq-festival')"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:600;">Holi 🎨</div><div style="font-size:12px;color:var(--text-low);">13 March · Purnima</div></div><div style="font-size:12px;font-weight:700;color:var(--faith-hindu);">In 9 days</div></div></div>
+    <div class="card" style="padding:12px 16px;margin-bottom:8px;cursor:pointer;" onclick="showScreen('seasonal')"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:600;">Chaitra Navratri 🌺</div><div style="font-size:12px;color:var(--text-low);">30 March · Ghatasthapana</div></div><div style="font-size:12px;font-weight:700;color:var(--sparkle-50);">In 26 days</div></div></div>
+    <div style="height:24px;"></div>
+  </div>
+</div>
+
+<!-- SEASONAL -->
+<div class="screen" id="seasonal">
+  <div class="status-bar"><span class="time">6:00</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div class="header-nav">
+    <div style="display:flex;align-items:center;gap:8px;"><button class="icon-btn" onclick="showScreen('home')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button><div><div class="title">Navratri</div><div class="subtitle">Day 5 of 9</div></div></div>
+    <button class="icon-btn" onclick="showScreen('jbiq-chat')"><div class="jbiq-dots" style="width:16px;height:16px;"><span style="background:#3535f3;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#f7ab20;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#1eccb0;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#fa2f40;width:6px;height:6px;border-radius:50%;display:block;"></span></div></button>
+  </div>
+  <div class="screen-scroll" style="padding:16px;">
+    <div style="display:flex;gap:4px;margin-bottom:20px;"><div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div><div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div><div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div><div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div><div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div><div style="flex:1;height:6px;border-radius:3px;background:var(--grey-40);"></div><div style="flex:1;height:6px;border-radius:3px;background:var(--grey-40);"></div><div style="flex:1;height:6px;border-radius:3px;background:var(--grey-40);"></div><div style="flex:1;height:6px;border-radius:3px;background:var(--grey-40);"></div></div>
+    <div class="card card-shadow fade-up" style="background:linear-gradient(135deg,var(--sparkle-20) 0%,#fff 50%);border:none;text-align:center;padding:24px;">
+      <div style="font-size:48px;margin-bottom:12px;">🙏</div>
+      <div style="font-size:20px;font-weight:900;">Skandamata</div>
+      <div style="font-size:13px;color:var(--text-low);margin-top:4px;line-height:1.5;">Mother of Skanda (Kartikeya). She blesses devotees with wisdom and salvation.</div>
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:16px;">
+        <div style="text-align:center;"><div style="font-size:11px;color:var(--text-low);">Colour</div><div style="width:32px;height:32px;border-radius:50%;background:#808080;margin:4px auto 0;border:2px solid var(--stroke-minimal);"></div></div>
+        <div style="text-align:center;"><div style="font-size:11px;color:var(--text-low);">Bhog</div><div style="font-size:13px;font-weight:700;margin-top:8px;">Banana</div></div>
+        <div style="text-align:center;"><div style="font-size:11px;color:var(--text-low);">Mantra</div><div style="font-size:13px;font-weight:700;margin-top:8px;">Om Aim</div></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+      <div class="card fade-up fade-up-1" style="cursor:pointer;text-align:center;padding:16px 12px;" onclick="showScreen('jbiq-puja-vidhi')"><div style="font-size:24px;margin-bottom:6px;">📿</div><div style="font-size:13px;font-weight:700;">Puja Steps</div><div style="font-size:11px;color:var(--text-low);margin-top:2px;">Samagri &amp; vidhi</div></div>
+      <div class="card fade-up fade-up-2" style="cursor:pointer;text-align:center;padding:16px 12px;" onclick="showScreen('jbiq-samagri')"><div style="font-size:24px;margin-bottom:6px;">🥗</div><div style="font-size:13px;font-weight:700;">Vrat Rules</div><div style="font-size:11px;color:var(--text-low);margin-top:2px;">What to eat today</div></div>
+      <div class="card fade-up fade-up-3" style="cursor:pointer;text-align:center;padding:16px 12px;" onclick="showScreen('jbiq-chat')"><div style="font-size:24px;margin-bottom:6px;">💃</div><div style="font-size:13px;font-weight:700;">Garba Events</div><div style="font-size:11px;color:var(--text-low);margin-top:2px;">Near Mumbai</div></div>
+      <div class="card fade-up fade-up-4" style="cursor:pointer;text-align:center;padding:16px 12px;" onclick="showScreen('sacred-mode')"><div style="font-size:24px;margin-bottom:6px;">🎵</div><div style="font-size:13px;font-weight:700;">Day 5 Bhajan</div><div style="font-size:11px;color:var(--text-low);margin-top:2px;">Listen now</div></div>
+    </div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Today's Ritual</div>
+    <div class="card" style="margin-bottom:16px;">
+      <div class="track-item" onclick="showScreen('sacred-mode')"><div class="track-num">1</div><div class="track-info"><div class="track-title">Ganesh Vandana</div><div class="track-artist">Opener · Shankar Mahadevan</div></div><div class="track-dur">3:20</div></div>
+      <div class="track-item" onclick="showScreen('sacred-mode')"><div class="track-num" style="background:var(--sparkle-20);color:#0e5c4f;">2</div><div class="track-info"><div class="track-title">Skandamata Bhajan</div><div class="track-artist">Day 5 · Anuradha Paudwal</div><div class="track-badge">Seasonal</div></div><div class="track-dur">4:45</div></div>
+      <div class="track-item" onclick="showScreen('sacred-mode')"><div class="track-num">3</div><div class="track-info"><div class="track-title">Hanuman Chalisa</div><div class="track-artist">Bhajan · Hariharan</div><div class="track-pin">Pinned</div></div><div class="track-dur">4:30</div></div>
+      <div class="track-item" onclick="showScreen('sacred-mode')"><div class="track-num" style="background:var(--sparkle-20);color:#0e5c4f;">4</div><div class="track-info"><div class="track-title">Navratri Aarti</div><div class="track-artist">Seasonal Closer</div><div class="track-badge">Seasonal</div></div><div class="track-dur">3:40</div></div>
+    </div>
+    <div style="height:24px;"></div>
+  </div>
+</div>
+
+<!-- RITUAL BUILDER -->
+<div class="screen" id="ritual-builder">
+  <div class="status-bar"><span class="time">6:10</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-wifi"/></svg><svg width="16" height="16" fill="var(--text-high)"><use href="#ico-batt"/></svg></div></div>
+  <div class="header-nav">
+    <div style="display:flex;align-items:center;gap:8px;"><button class="icon-btn" onclick="showScreen('home')"><svg width="24" height="24" fill="var(--icon-medium)"><use href="#ico-back"/></svg></button><div><div class="title">My Daily Ritual</div><div class="subtitle">15 min · 4 tracks</div></div></div>
+    <div style="font-size:13px;font-weight:700;color:var(--primary-50);cursor:pointer;padding:8px;" onclick="showScreen('home')">Save</div>
+  </div>
+  <div class="screen-scroll" style="padding:16px;">
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--surface-ghost);border-radius:var(--shape-4xl);margin-bottom:16px;cursor:pointer;" onclick="showScreen('jbiq-chat')">
+      <svg width="20" height="20" fill="var(--text-low)" viewBox="0 0 24 24"><path d="M10 2a8 8 0 105.29 14.71l5 5a1 1 0 001.42-1.42l-5-5A8 8 0 0010 2zm0 14a6 6 0 110-12 6 6 0 010 12z"/></svg>
+      <span style="font-size:14px;color:var(--text-low);">Search bhajans, mantras, stotras...</span>
+    </div>
+    <div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;">
+      <div class="chip selected" style="white-space:nowrap;font-size:13px;">All</div>
+      <div class="chip" style="white-space:nowrap;font-size:13px;">Bhajan</div>
+      <div class="chip" style="white-space:nowrap;font-size:13px;">Mantra</div>
+      <div class="chip" style="white-space:nowrap;font-size:13px;">Stotra</div>
+      <div class="chip" style="white-space:nowrap;font-size:13px;">Aarti</div>
+    </div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Current Sequence</div>
+    <div style="margin-bottom:20px;">
+      <div class="track-item"><div style="color:var(--grey-60);cursor:grab;font-size:16px;">⋮⋮</div><div class="track-num">1</div><div class="track-info"><div class="track-title">Ganesh Vandana</div><div class="track-artist">Opener · Shankar Mahadevan</div></div><div style="font-size:11px;color:var(--text-low);background:var(--grey-20);padding:2px 8px;border-radius:var(--shape-pill);font-weight:600;">Opener</div></div>
+      <div class="track-item"><div style="color:var(--grey-60);cursor:grab;font-size:16px;">⋮⋮</div><div class="track-num">2</div><div class="track-info"><div class="track-title">Shri Ganesh Stuti</div><div class="track-artist">Mantra · Anuradha Paudwal · 4:15</div></div><svg width="20" height="20" fill="var(--error)" style="cursor:pointer;flex-shrink:0;" onclick="this.closest('.track-item').style.opacity='0.3'"><use href="#ico-close"/></svg></div>
+      <div class="track-item"><div style="color:var(--grey-60);cursor:grab;font-size:16px;">⋮⋮</div><div class="track-num">3</div><div class="track-info"><div class="track-title">Hanuman Chalisa</div><div class="track-artist">Bhajan · Hariharan · 4:30</div><div class="track-pin">Pinned (1/3)</div></div><svg width="20" height="20" fill="var(--primary-50)" style="cursor:pointer;flex-shrink:0;"><use href="#ico-check"/></svg></div>
+      <div class="track-item"><div style="color:var(--grey-60);cursor:grab;font-size:16px;">⋮⋮</div><div class="track-num">4</div><div class="track-info"><div class="track-title">Ganesh Aarti</div><div class="track-artist">Closer · Lata Mangeshkar</div></div><div style="font-size:11px;color:var(--text-low);background:var(--grey-20);padding:2px 8px;border-radius:var(--shape-pill);font-weight:600;">Closer</div></div>
+    </div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Add from Catalog</div>
+    <div class="card" style="display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px;"><div style="width:44px;height:44px;border-radius:var(--shape-small);background:var(--primary-20);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" fill="var(--primary-50)"><use href="#ico-play"/></svg></div><div style="flex:1;"><div style="font-size:14px;font-weight:600;">Vishnu Sahasranama</div><div style="font-size:12px;color:var(--text-low);">Stotra · M.S. Subbulakshmi · 8:20</div></div><svg width="24" height="24" fill="var(--primary-50)" style="cursor:pointer;" onclick="this.style.fill='var(--success)'" viewBox="0 0 24 24"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg></div>
+    <div class="card" style="display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px;"><div style="width:44px;height:44px;border-radius:var(--shape-small);background:var(--primary-20);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" fill="var(--primary-50)"><use href="#ico-play"/></svg></div><div style="flex:1;"><div style="font-size:14px;font-weight:600;">Om Jai Jagdish Hare</div><div style="font-size:12px;color:var(--text-low);">Aarti · Anup Jalota · 5:10</div></div><svg width="24" height="24" fill="var(--primary-50)" style="cursor:pointer;" onclick="this.style.fill='var(--success)'" viewBox="0 0 24 24"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg></div>
+    <div style="margin-top:16px;"><div style="font-size:14px;font-weight:700;margin-bottom:12px;">Festival Settings</div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:600;">Festival playlist merge</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Auto-include seasonal content</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div></div></div>
+    <button class="btn-tertiary" style="display:block;text-align:center;width:100%;margin-top:16px;color:var(--error);">Reset to recommended</button>
+    <div style="height:24px;"></div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const t = document.getElementById(id);
+  if (t) t.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(s => {
+    s.classList.remove('active');
+    const fn = s.getAttribute('onclick') || '';
+    if (fn.includes("'" + id + "'") || fn.includes('"' + id + '"')) s.classList.add('active');
+  });
+  if (id === 'jbiq-chat') {
+    setTimeout(() => { const ca = document.getElementById('chat-messages'); if (ca) ca.scrollTop = ca.scrollHeight; }, 100);
+  }
+}
+
+function sendQuery(q) {
+  if (!q || !q.trim()) { showScreen('jbiq-home'); return; }
+  showScreen('jbiq-chat');
+  const inp = document.getElementById('home-input');
+  if (inp) inp.value = '';
+  setTimeout(() => addUserMsg(q), 200);
+}
+
+function addChatMsg(text) {
+  if (!text || !text.trim()) return;
+  const inp = document.getElementById('chat-input');
+  if (inp) inp.value = '';
+  addUserMsg(text);
+}
+
+function addUserMsg(text) {
+  const ca = document.getElementById('chat-messages');
+  if (!ca) return;
+  const spacer = ca.querySelector('[data-spacer]');
+  const div = document.createElement('div');
+  div.className = 'msg-row user';
+  div.innerHTML = '<div class="user-bubble">' + text + '</div>';
+  ca.insertBefore(div, spacer || null);
+  ca.scrollTop = ca.scrollHeight;
+  const typing = document.createElement('div');
+  typing.className = 'msg-row';
+  typing.innerHTML = '<div class="msg-avatar"><div class="jbiq-dots" style="width:16px;height:16px;"><span style="background:#3535f3;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#f7ab20;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#1eccb0;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#fa2f40;width:6px;height:6px;border-radius:50%;display:block;"></span></div></div><div class="ai-bubble" style="display:flex;gap:5px;align-items:center;padding:14px 16px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--grey-60);animation:typing 1s infinite;display:inline-block;"></span><span style="width:7px;height:7px;border-radius:50%;background:var(--grey-60);animation:typing 1s 0.2s infinite;display:inline-block;"></span><span style="width:7px;height:7px;border-radius:50%;background:var(--grey-60);animation:typing 1s 0.4s infinite;display:inline-block;"></span></div>';
+  ca.insertBefore(typing, spacer || null);
+  ca.scrollTop = ca.scrollHeight;
+  setTimeout(() => {
+    typing.remove();
+    const ai = document.createElement('div');
+    ai.className = 'msg-row';
+    ai.innerHTML = '<div class="msg-avatar"><div class="jbiq-dots" style="width:16px;height:16px;"><span style="background:#3535f3;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#f7ab20;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#1eccb0;width:6px;height:6px;border-radius:50%;display:block;"></span><span style="background:#fa2f40;width:6px;height:6px;border-radius:50%;display:block;"></span></div></div><div style="flex:1;"><div class="ai-bubble">' + getAIResponse(text) + '</div></div>';
+    ca.insertBefore(ai, spacer || null);
+    ca.scrollTop = ca.scrollHeight;
+  }, 1200);
+}
+
+function getAIResponse(q) {
+  const l = q.toLowerCase();
+  if (l.includes('holi') || l.includes('holika')) return '🎨 Holika Dahan ki puja: gandha, akshat, phool, nariyal, gehu ki baali, haldi chahiye. Pradosh kaal (6:15 PM aaj) mein puja karein. Parikrama 3 ya 7 baar lagayein 🙏';
+  if (l.includes('navratri') || l.includes('navaratri')) return '🌺 Chaitra Navratri 30 March se shuru hogi! Ghatasthapana ke liye: mitti ka kalash, jau ke beej, aam ki patti, nariyal chahiye. Kya tayari checklist chahiye?';
+  if (l.includes('ganesh') || l.includes('puja') || l.includes('pooja')) return '🙏 Ganesh puja ke liye 8-step vidhi ready hai. Aaj Shukla Panchami — Durva aur modak zaroor charhayein. Puja Vidhi dekhein ya Samagri checklist?';
+  if (l.includes('tithi') || l.includes('aaj') || l.includes('panchang')) return '📅 Aaj <strong>Shukla Panchami, Margashirsha</strong> (4 March 2026). Nakshatra: Pushya. Sunrise: 6:32 AM. Rahu Kaal: 3:00–4:30 PM. Ekadashi 6 din mein.';
+  if (l.includes('ritual') || l.includes('customize')) return '⚙️ Aapka daily ritual: Ganesh Vandana, Shri Ganesh Stuti, Hanuman Chalisa, Ganesh Aarti — 15 min. Modify karne ke liye Ritual Builder use karein ya JBIQ se baat karein!';
+  if (l.includes('vrat') || l.includes('fast')) return '🥗 Shukla Panchami ke vrat mein: fruits, milk, sabudana, kuttu allowed. Grains, onion, garlic avoid karein. Ek samay ka khana khayein — preferably evening mein.';
+  return '🙏 Yeh achha sawaal hai! Main Devotion AI hoon — puja vidhi, festival guide, panchang, vrat rules, mantra, samagri list — sab mein madad kar sakta hoon. Kya specifically chahiye?';
+}
+
+function toggleCheck(item) {
+  const box = item.querySelector('.check-box');
+  if (!box) return;
+  if (box.classList.contains('checked')) {
+    box.classList.remove('checked');
+    box.innerHTML = '';
+  } else {
+    box.classList.add('checked');
+    box.innerHTML = '<svg width="12" height="12" fill="#fff" viewBox="0 0 24 24"><use href="#ico-check"/></svg>';
+  }
+}
+
+function selectDuration(card) {
+  card.parentElement.querySelectorAll('.card').forEach(c => {
+    c.style.border = '2px solid transparent';
+    c.style.background = '';
+    const r = c.querySelector('.dur-radio');
+    if (r) { r.style.background = ''; r.style.borderColor = 'var(--grey-40)'; r.innerHTML = ''; }
+  });
+  card.style.border = '2px solid var(--primary-50)';
+  card.style.background = 'rgba(53,53,243,0.03)';
+  const radio = card.querySelector('.dur-radio');
+  if (radio) {
+    radio.style.background = 'var(--primary-50)';
+    radio.style.borderColor = 'var(--primary-50)';
+    radio.innerHTML = '<svg width="12" height="12" fill="#fff" viewBox="0 0 24 24"><use href="#ico-check"/></svg>';
+  }
+}
+
+function selectDeity(el) {
+  el.parentElement.querySelectorAll('div').forEach(d => { d.style.border = '2px solid transparent'; d.style.background = ''; const t = d.querySelector('div:last-child'); if (t) t.style.color = ''; });
+  el.style.border = '2px solid var(--primary-50)';
+  el.style.background = 'var(--primary-20)';
+  const label = el.querySelector('div:last-child');
+  if (label) label.style.color = 'var(--primary-50)';
+}
+
+let playing = false;
+function togglePlayPause() {
+  playing = !playing;
+  const btn = document.getElementById('play-icon');
+  if (btn) btn.innerHTML = playing ? '<path d="M19.15 10.36l-10-7A2 2 0 006 5v14a2 2 0 001.08 1.77c.28.15.6.23.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/>' : '<path d="M8.5 4A1.5 1.5 0 007 5.5v13a1.5 1.5 0 003 0v-13A1.5 1.5 0 008.5 4zm7 0A1.5 1.5 0 0014 5.5v13a1.5 1.5 0 103 0v-13A1.5 1.5 0 0015.5 4z"/>';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const siblings = this.parentElement.querySelectorAll('.chip');
+      siblings.forEach(s => s.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+});
+</script>
+</body>
+</html>
