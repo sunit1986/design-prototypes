@@ -602,9 +602,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 <script>
 const _p=['sk','_8ajz','668k_','7FQZo','3QWwc','AQ8Sm','30SmT','t6L4'];
 const SARVAM_KEY=_p[0]+_p[1]+_p[2]+_p[3]+_p[4]+_p[5]+_p[6]+_p[7];
-const _q=['sk-a','nt-ap','i03-3','IAoD6','JK7zo','u7T7i','bECTh','7fkbe','xbfCj','7kyLP','BbAMB','SMNM4','FgTZU','jwQ0b','YetIo','WaSo4','7Zs9S','PtFCa','vopOE','9jmzQ','-8qdv','KQAA'];
-const ANTHROPIC_KEY=_q.join('');
-const ANTHROPIC_PROXY='https://api.anthropic.com/v1/messages';
+const CHAT_PROXY='https://jbiq-proxy.sunit3-sharma.workers.dev';
 
 let chatHistory=[];
 let mediaRecorder=null;
@@ -735,24 +733,14 @@ function formatMarkdown(text){
 
 async function callAnthropic(messages){
   try{
-    const resp=await fetch(ANTHROPIC_PROXY,{
+    const resp=await fetch(CHAT_PROXY,{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':ANTHROPIC_KEY,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1024,
-        system:'You are a helpful Jio AI assistant called JioBharatIQ. Keep responses concise and friendly. Use simple language. You are knowledgeable about Indian culture, Bollywood, cricket, travel, food, health, finance, and technology. Respond in the same language the user writes in.',
-        messages:messages
-      })
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:messages})
     });
     const data=await resp.json();
     if(!resp.ok){
-      console.error('Anthropic API error:',resp.status,data);
+      console.error('Chat API error:',resp.status,data);
       throw new Error(data.error?.message||'API error '+resp.status);
     }
     return data.content[0].text;
