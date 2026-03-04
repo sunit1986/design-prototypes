@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Devotion Vertical — JioBharatIQ</title>
+  <style>
+    @font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+    @font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+    :root {
+      --surface:#ffffff;--surface-ghost:#eeeeef;--surface-ghost-icon:#e7e9ff;--surface-bold:#3900ad;
+      --surface-minimal:#f5f5f6;--text-high:#0c0d10;--text-medium:#191b1e;--text-low:rgba(25,27,30,0.65);
+      --icon-medium:#170054;--stroke-minimal:rgba(36,38,43,0.13);--stroke-subtle:rgba(36,38,43,0.12);
+      --primary-50:#3535f3;--primary-20:#e8e8fc;--primary-60:#000093;--secondary-50:#f7ab20;
+      --sparkle-50:#1eccb0;--sparkle-20:#e8faf7;--error:#fa2f40;--success:#25ab21;--warning:#f06d0f;
+      --grey-100:#141414;--grey-80:rgba(0,0,0,0.66);--grey-60:#b5b5b5;--grey-40:#e0e0e0;--grey-20:#f5f5f5;
+      --shape-pill:999px;--shape-4xl:23px;--shape-large:16px;--shape-medium:12px;--shape-small:8px;
+      --faith-hindu:#ff6b35;--faith-muslim:#2d8a4e;--faith-sikh:#1a5fb4;--faith-jain:#a855a0;--faith-christian:#8b6914;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'JioType',sans-serif;background:#1a1a2e;display:flex;min-height:100vh;color:var(--text-high);}
+
+    .sidebar{width:220px;background:#12122a;padding:20px 0;overflow-y:auto;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.08);}
+    .sidebar h2{color:#fff;font-size:13px;font-weight:700;padding:0 16px 12px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.5;}
+    .sidebar-group{margin-bottom:16px;}
+    .sidebar-group-title{color:rgba(255,255,255,0.4);font-size:11px;font-weight:500;padding:4px 16px;text-transform:uppercase;letter-spacing:1px;}
+    .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 16px;color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
+    .sidebar-item:hover{background:rgba(255,255,255,0.05);color:#fff;}
+    .sidebar-item.active{background:rgba(53,53,243,0.15);color:#fff;border-left-color:var(--primary-50);}
+    .sidebar-item .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+    .phone-container{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+    .phone-frame{width:380px;height:820px;background:#1a1a2e;border-radius:44px;padding:10px;box-shadow:0 0 60px rgba(0,0,0,0.5);position:relative;}
+    .phone-frame::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#1a1a2e;border-radius:0 0 16px 16px;z-index:100;}
+    .device{width:360px;height:800px;background:var(--surface);border-radius:36px;overflow:hidden;position:relative;}
+
+    .screen{display:none;width:100%;height:100%;position:absolute;top:0;left:0;flex-direction:column;overflow:hidden;}
+    .screen.active{display:flex;}
+    .screen-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+    .screen-scroll::-webkit-scrollbar{display:none;}
+
+    .status-bar{height:52px;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 24px;flex-shrink:0;}
+    .status-bar .time{font-size:14px;font-weight:600;}
+
+    .header-nav{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;border-bottom:1px solid var(--stroke-minimal);}
+    .header-nav .title{font-size:16px;font-weight:700;}
+    .header-nav .subtitle{font-size:12px;color:var(--text-low);}
+    .icon-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--icon-medium);}
+    .icon-btn:hover{background:var(--grey-20);}
+    .icon-btn svg{width:24px;height:24px;}
+
+    .btn-primary{background:var(--primary-50);color:#fff;border:none;border-radius:var(--shape-pill);padding:14px 28px;font-family:'JioType';font-weight:700;font-size:16px;cursor:pointer;width:100%;text-align:center;transition:opacity 0.2s;}
+    .btn-primary:hover{opacity:0.9;}
+    .btn-secondary{background:transparent;color:var(--primary-50);border:1.5px solid var(--primary-50);border-radius:var(--shape-pill);padding:12px 24px;font-family:'JioType';font-weight:700;font-size:14px;cursor:pointer;text-align:center;}
+    .btn-tertiary{background:transparent;color:var(--primary-50);border:none;padding:8px 0;font-family:'JioType';font-weight:700;font-size:14px;cursor:pointer;}
+
+    .card{background:var(--surface);border:1px solid var(--stroke-minimal);border-radius:var(--shape-large);padding:16px;margin-bottom:12px;}
+    .card-shadow{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--shape-pill);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;border:1.5px solid var(--stroke-minimal);background:var(--surface);}
+    .chip.selected{background:var(--primary-50);color:#fff;border-color:var(--primary-50);}
+    .chip:hover{border-color:var(--primary-50);}
+
+    .progress-dot{width:8px;height:8px;border-radius:50%;background:var(--grey-40);transition:all 0.3s;}
+    .progress-dot.active{background:var(--primary-50);width:24px;border-radius:4px;}
+    .progress-dot.completed{background:var(--primary-50);}
+
+    .toggle{width:48px;height:28px;border-radius:14px;background:var(--grey-40);position:relative;cursor:pointer;transition:background 0.3s;}
+    .toggle.on{background:var(--primary-50);}
+    .toggle::after{content:'';position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+    .toggle.on::after{transform:translateX(20px);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+    .fade-up{animation:fadeUp 0.4s ease-out both;}
+    .fade-up-1{animation-delay:0.1s;}.fade-up-2{animation-delay:0.15s;}.fade-up-3{animation-delay:0.2s;}.fade-up-4{animation-delay:0.25s;}
+
+    .sacred-mode{background:linear-gradient(180deg,#0a0a1a 0%,#141428 100%);color:#fff;}
+    .sacred-lyrics{font-size:20px;font-weight:500;line-height:1.8;text-align:center;color:rgba(255,255,255,0.85);}
+    .sacred-lyrics .highlight{color:var(--secondary-50);font-weight:700;}
+
+    .seasonal-strip{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--sparkle-20);border-radius:var(--shape-medium);}
+    .seasonal-dot{width:10px;height:10px;border-radius:50%;}
+    .seasonal-dot.filled{background:var(--sparkle-50);}
+    .seasonal-dot.empty{background:var(--grey-40);}
+
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
+    .calendar-grid .day-header{font-size:11px;font-weight:700;color:var(--text-low);padding:8px 0;}
+    .calendar-grid .day-cell{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;border-radius:50%;cursor:pointer;position:relative;}
+    .calendar-grid .day-cell.today{background:var(--primary-50);color:#fff;font-weight:700;}
+    .calendar-grid .day-cell.festival{color:var(--faith-hindu);}
+    .calendar-grid .day-cell.festival::after{content:'';position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--faith-hindu);}
+    .calendar-grid .day-cell.ekadashi{color:var(--primary-50);}
+    .calendar-grid .day-cell.ekadashi::after{content:'';position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--primary-50);}
+
+    .devi-card{display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--stroke-minimal);border-radius:var(--shape-large);}
+    .devi-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+
+    .track-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--stroke-minimal);}
+    .track-item:last-child{border-bottom:none;}
+    .track-num{width:24px;height:24px;border-radius:50%;background:var(--primary-20);color:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+    .track-info{flex:1;min-width:0;}
+    .track-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .track-artist{font-size:12px;color:var(--text-low);margin-top:2px;}
+    .track-dur{font-size:12px;color:var(--text-low);flex-shrink:0;}
+    .track-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--shape-pill);background:var(--sparkle-20);color:#0e5c4f;display:inline-block;margin-top:4px;}
+    .track-pin{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--shape-pill);background:var(--primary-20);color:var(--primary-50);display:inline-block;margin-top:4px;}
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>Devotion Vertical</h2>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Onboarding</div>
+    <div class="sidebar-item active" onclick="showScreen('onboard-faith')"><div class="dot" style="background:var(--primary-50)"></div>Faith Selection</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-language')"><div class="dot" style="background:var(--secondary-50)"></div>Language</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-deity')"><div class="dot" style="background:var(--sparkle-50)"></div>Deity & Sect</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-duration')"><div class="dot" style="background:var(--faith-hindu)"></div>Duration</div>
+    <div class="sidebar-item" onclick="showScreen('onboard-ritual')"><div class="dot" style="background:var(--faith-muslim)"></div>Ritual Preview</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Daily Use</div>
+    <div class="sidebar-item" onclick="showScreen('home')"><div class="dot" style="background:var(--primary-50)"></div>Home</div>
+    <div class="sidebar-item" onclick="showScreen('sacred-mode')"><div class="dot" style="background:var(--surface-bold)"></div>Sacred Mode</div>
+    <div class="sidebar-item" onclick="showScreen('completion')"><div class="dot" style="background:var(--success)"></div>Completion</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Calendar</div>
+    <div class="sidebar-item" onclick="showScreen('calendar')"><div class="dot" style="background:var(--secondary-50)"></div>Calendar View</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Seasonal</div>
+    <div class="sidebar-item" onclick="showScreen('seasonal')"><div class="dot" style="background:var(--sparkle-50)"></div>Navratri Companion</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Customize</div>
+    <div class="sidebar-item" onclick="showScreen('ritual-builder')"><div class="dot" style="background:var(--faith-sikh)"></div>Ritual Builder</div>
+  </div>
+</div>
+
+<div class="phone-container">
+  <div class="phone-frame">
+    <div class="device">
+
+      <!-- SCREEN 1: Onboarding — Faith Selection -->
+      <div class="screen active" id="onboard-faith">
+        <div class="status-bar"><span class="time">5:30</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+          <div style="padding:32px 0 8px;">
+            <div style="display:flex;gap:6px;margin-bottom:32px">
+              <div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div>
+            </div>
+            <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">Choose your<br>faith</h1>
+            <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">We'll curate your daily devotional ritual based on your tradition.</p>
+          </div>
+          <div class="screen-scroll" style="padding-top:24px;">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="card card-shadow fade-up fade-up-1" style="display:flex;align-items:center;gap:16px;cursor:pointer;border:2px solid var(--faith-hindu);background:rgba(255,107,53,0.04);" onclick="showScreen('onboard-language')">
+                <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,107,53,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">🕉️</div>
+                <div style="flex:1"><div style="font-size:16px;font-weight:700;">Hindu</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Vaishnav · Shaiv · Shakta · Smarta</div></div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-low)"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg>
+              </div>
+              <div class="card card-shadow fade-up fade-up-2" style="display:flex;align-items:center;gap:16px;cursor:pointer;" onclick="showScreen('onboard-language')">
+                <div style="width:48px;height:48px;border-radius:50%;background:rgba(45,138,78,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">☪️</div>
+                <div style="flex:1"><div style="font-size:16px;font-weight:700;">Muslim</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Sunni · Shia</div></div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-low)"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg>
+              </div>
+              <div class="card card-shadow fade-up fade-up-3" style="display:flex;align-items:center;gap:16px;cursor:pointer;" onclick="showScreen('onboard-language')">
+                <div style="width:48px;height:48px;border-radius:50%;background:rgba(26,95,180,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">☬</div>
+                <div style="flex:1"><div style="font-size:16px;font-weight:700;">Sikh</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Classical Raag · Contemporary Kirtan</div></div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-low)"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg>
+              </div>
+              <div class="card card-shadow fade-up fade-up-4" style="display:flex;align-items:center;gap:16px;cursor:pointer;" onclick="showScreen('onboard-language')">
+                <div style="width:48px;height:48px;border-radius:50%;background:rgba(168,85,160,0.12);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🙏</div>
+                <div style="flex:1"><div style="font-size:16px;font-weight:700;">Jain</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Shvetambar · Digambar</div></div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-low)"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg>
+              </div>
+              <div class="card card-shadow fade-up fade-up-4" style="display:flex;align-items:center;gap:16px;cursor:pointer;" onclick="showScreen('onboard-language')">
+                <div style="width:48px;height:48px;border-radius:50%;background:rgba(139,105,20,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">✝️</div>
+                <div style="flex:1"><div style="font-size:16px;font-weight:700;">Christian</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Catholic · Protestant · Orthodox</div></div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-low)"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg>
+              </div>
+            </div>
+            <div style="height:24px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: Language Selection -->
+      <div class="screen" id="onboard-language">
+        <div class="status-bar"><span class="time">5:30</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+          <div style="padding:32px 0 8px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+              <button class="icon-btn" onclick="showScreen('onboard-faith')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+              <div style="display:flex;gap:6px">
+                <div class="progress-dot completed"></div><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div>
+              </div>
+            </div>
+            <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:var(--shape-pill);background:rgba(255,107,53,0.1);margin-bottom:16px;">
+              <span style="font-size:14px;">🕉️</span><span style="font-size:12px;font-weight:600;color:var(--faith-hindu);">Hindu</span>
+            </div>
+            <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">Select region<br>& language</h1>
+            <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">This helps us use the right Panchang variant and content language.</p>
+          </div>
+          <div class="screen-scroll" style="padding-top:16px;">
+            <div style="margin-bottom:20px;">
+              <div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Region</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <div class="chip selected">North India</div>
+                <div class="chip">South India</div>
+                <div class="chip">West India</div>
+                <div class="chip">East India</div>
+              </div>
+            </div>
+            <div style="margin-bottom:20px;">
+              <div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Primary Language</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <div class="chip selected">Hindi</div>
+                <div class="chip">English</div>
+                <div class="chip">Sanskrit</div>
+                <div class="chip">Gujarati</div>
+                <div class="chip">Marathi</div>
+                <div class="chip">Tamil</div>
+                <div class="chip">Telugu</div>
+                <div class="chip">Kannada</div>
+                <div class="chip">Bengali</div>
+                <div class="chip">Punjabi</div>
+                <div class="chip">Malayalam</div>
+              </div>
+            </div>
+            <div style="margin-bottom:24px;">
+              <div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Secondary Language (Optional)</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <div class="chip">English</div>
+                <div class="chip">Sanskrit</div>
+                <div class="chip">None</div>
+              </div>
+            </div>
+            <button class="btn-primary" onclick="showScreen('onboard-deity')" style="margin-bottom:24px;">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: Deity & Sect -->
+      <div class="screen" id="onboard-deity">
+        <div class="status-bar"><span class="time">5:31</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+          <div style="padding:32px 0 8px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+              <button class="icon-btn" onclick="showScreen('onboard-language')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+              <div style="display:flex;gap:6px">
+                <div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div>
+              </div>
+            </div>
+            <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">Your family<br>deity</h1>
+            <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">We'll build your ritual around the deity closest to your heart.</p>
+          </div>
+          <div class="screen-scroll" style="padding-top:12px;">
+            <div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Sect</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;">
+              <div class="chip selected">Vaishnav</div><div class="chip">Shaiv</div><div class="chip">Shakta</div><div class="chip">Smarta</div>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Family Deity</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;">
+              <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid var(--primary-50);background:var(--primary-20);">
+                <div style="font-size:32px;margin-bottom:6px;">🙏</div>
+                <div style="font-size:13px;font-weight:700;color:var(--primary-50);">Ganesh</div>
+              </div>
+              <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;">
+                <div style="font-size:32px;margin-bottom:6px;">💪</div>
+                <div style="font-size:13px;font-weight:600;">Hanuman</div>
+              </div>
+              <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;">
+                <div style="font-size:32px;margin-bottom:6px;">🔱</div>
+                <div style="font-size:13px;font-weight:600;">Shiva</div>
+              </div>
+              <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;">
+                <div style="font-size:32px;margin-bottom:6px;">🪈</div>
+                <div style="font-size:13px;font-weight:600;">Krishna</div>
+              </div>
+              <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;">
+                <div style="font-size:32px;margin-bottom:6px;">🔆</div>
+                <div style="font-size:13px;font-weight:600;">Vishnu</div>
+              </div>
+              <div style="text-align:center;cursor:pointer;padding:16px 8px;border-radius:var(--shape-large);border:2px solid transparent;">
+                <div style="font-size:32px;margin-bottom:6px;">🌺</div>
+                <div style="font-size:13px;font-weight:600;">Devi</div>
+              </div>
+            </div>
+            <button class="btn-primary" onclick="showScreen('onboard-duration')" style="margin-bottom:24px;">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: Duration -->
+      <div class="screen" id="onboard-duration">
+        <div class="status-bar"><span class="time">5:31</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+          <div style="padding:32px 0 8px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+              <button class="icon-btn" onclick="showScreen('onboard-deity')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+              <div style="display:flex;gap:6px">
+                <div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot active"></div><div class="progress-dot"></div>
+              </div>
+            </div>
+            <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">How long is<br>your ritual?</h1>
+            <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">Pick a duration that fits your morning. You can set different times for weekdays and weekends.</p>
+          </div>
+          <div class="screen-scroll" style="padding-top:16px;">
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+              <div class="card" style="cursor:pointer;border:2px solid transparent;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <div><div style="font-size:16px;font-weight:700;">Quick</div><div style="font-size:13px;color:var(--text-low);margin-top:2px;">5–8 minutes</div></div>
+                  <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--grey-40);"></div>
+                </div>
+              </div>
+              <div class="card" style="cursor:pointer;border:2px solid var(--primary-50);background:rgba(53,53,243,0.03);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <div><div style="font-size:16px;font-weight:700;">Regular</div><div style="font-size:13px;color:var(--text-low);margin-top:2px;">10–18 minutes</div></div>
+                  <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--primary-50);background:var(--primary-50);display:flex;align-items:center;justify-content:center;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="card" style="cursor:pointer;border:2px solid transparent;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <div><div style="font-size:16px;font-weight:700;">Extended</div><div style="font-size:13px;color:var(--text-low);margin-top:2px;">20–30 minutes</div></div>
+                  <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--grey-40);"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="background:var(--grey-20);border:none;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div><div style="font-size:14px;font-weight:600;">Longer on weekends?</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Extended ritual on Sat & Sun</div></div>
+                <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+            <div style="height:16px;"></div>
+            <button class="btn-primary" onclick="showScreen('onboard-ritual')" style="margin-bottom:24px;">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 5: Ritual Preview -->
+      <div class="screen" id="onboard-ritual">
+        <div class="status-bar"><span class="time">5:32</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:0 24px;">
+          <div style="padding:32px 0 8px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+              <button class="icon-btn" onclick="showScreen('onboard-duration')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+              <div style="display:flex;gap:6px">
+                <div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot completed"></div><div class="progress-dot active"></div>
+              </div>
+            </div>
+            <h1 style="font-size:28px;font-weight:900;line-height:1.2;margin-bottom:8px;" class="fade-up">Your ritual<br>is ready</h1>
+            <p style="font-size:14px;color:var(--text-low);line-height:1.5;" class="fade-up fade-up-1">Here's what we've curated for you. You can customize anytime.</p>
+          </div>
+          <div class="screen-scroll" style="padding-top:12px;">
+            <div class="card card-shadow" style="margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <div style="font-size:14px;font-weight:700;">Daily Ritual · 15 min</div>
+                <div style="font-size:12px;color:var(--primary-50);font-weight:700;cursor:pointer;">Customize</div>
+              </div>
+              <div class="track-item"><div class="track-num">1</div><div class="track-info"><div class="track-title">Ganesh Vandana</div><div class="track-artist">Opener · Shankar Mahadevan</div></div><div class="track-dur">3:20</div></div>
+              <div class="track-item"><div class="track-num">2</div><div class="track-info"><div class="track-title">Shri Ganesh Stuti</div><div class="track-artist">Mantra · Anuradha Paudwal</div><div class="track-badge">Seasonal Slot</div></div><div class="track-dur">4:15</div></div>
+              <div class="track-item"><div class="track-num">3</div><div class="track-info"><div class="track-title">Hanuman Chalisa</div><div class="track-artist">Bhajan · Hariharan</div><div class="track-pin">Pinned</div></div><div class="track-dur">4:30</div></div>
+              <div class="track-item"><div class="track-num">4</div><div class="track-info"><div class="track-title">Ganesh Aarti</div><div class="track-artist">Closer · Lata Mangeshkar</div></div><div class="track-dur">3:10</div></div>
+            </div>
+            <button class="btn-primary" onclick="showScreen('home')" style="margin-bottom:12px;">Start my devotion</button>
+            <button class="btn-tertiary" onclick="showScreen('ritual-builder')" style="display:block;text-align:center;width:100%;margin-bottom:24px;">Customize my ritual</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 6: Home -->
+      <div class="screen" id="home">
+        <div class="status-bar"><span class="time">5:45</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div class="header-nav" style="border:none;">
+          <div><div class="title">Devotion</div></div>
+          <div style="display:flex;gap:4px;">
+            <button class="icon-btn" onclick="showScreen('calendar')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M18 3h-1a1 1 0 00-2 0H9a1 1 0 00-2 0H6a3 3 0 00-3 3v12a3 3 0 003 3h12a3 3 0 003-3V6a3 3 0 00-3-3zm-4.5 14a1 1 0 01-2 0v-3.59l-.29.3a1.004 1.004 0 11-1.42-1.42l2-2a.999.999 0 011.09-.21 1 1 0 01.62.92v6zM19 7H5V6a1 1 0 011-1h1a1 1 0 002 0h6a1 1 0 002 0h1a1 1 0 011 1v1z"/></svg></button>
+            <button class="icon-btn" onclick="showScreen('ritual-builder')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M20.43 13.4L19 12.58v-1.16l1.43-.82a2 2 0 00.73-2.73l-1-1.74a2 2 0 00-2.73-.73l-1.18.68-.25.15-1-.58V4a2 2 0 00-2-2h-2a2 2 0 00-2 2v1.65l-.25.14-.75.44-.25-.15-1.18-.68a2 2 0 00-2.73.73l-1 1.74a2 2 0 00.73 2.73l1.43.82v1.16l-1.43.82a2 2 0 00-.73 2.73l1 1.74a2 2 0 002.73.73L8 17.77l1 .58V20a2 2 0 002 2h2a2 2 0 002-2v-1.65l1-.58 1.43.83a2 2 0 002.73-.73l1-1.74a2 2 0 00-.73-2.73zM12 15a3 3 0 110-6 3 3 0 010 6z"/></svg></button>
+          </div>
+        </div>
+        <div class="screen-scroll" style="padding:0 16px;">
+          <!-- Player Card -->
+          <div class="card card-shadow fade-up" style="background:linear-gradient(135deg,#fff5ed 0%,#fff 50%);border:none;margin-top:8px;padding:24px;" onclick="showScreen('sacred-mode')">
+            <div style="text-align:center;">
+              <div style="font-size:12px;font-weight:500;color:var(--faith-hindu);margin-bottom:4px;">शुक्ल पंचमी · Tuesday</div>
+              <div style="font-size:20px;font-weight:900;margin-bottom:4px;">Morning Ritual</div>
+              <div style="font-size:13px;color:var(--text-low);margin-bottom:20px;">Ganesh Aarti · 4 tracks · 15 min</div>
+              <div style="width:72px;height:72px;border-radius:50%;background:var(--faith-hindu);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;cursor:pointer;box-shadow:0 4px 20px rgba(255,107,53,0.3);">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/></svg>
+              </div>
+              <div style="font-size:14px;font-weight:700;color:var(--faith-hindu);">Tap to begin</div>
+            </div>
+          </div>
+
+          <!-- Seasonal Strip -->
+          <div class="seasonal-strip fade-up fade-up-1" style="margin-bottom:12px;cursor:pointer;" onclick="showScreen('seasonal')">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:#0e5c4f;">Day 5 of 9 · Skandamata</div>
+              <div style="display:flex;gap:4px;margin-top:6px;">
+                <div class="seasonal-dot filled"></div><div class="seasonal-dot filled"></div><div class="seasonal-dot filled"></div><div class="seasonal-dot filled"></div><div class="seasonal-dot filled"></div><div class="seasonal-dot empty"></div><div class="seasonal-dot empty"></div><div class="seasonal-dot empty"></div><div class="seasonal-dot empty"></div>
+              </div>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0e5c4f"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg>
+          </div>
+
+          <!-- Calendar Widget -->
+          <div class="card fade-up fade-up-2" style="cursor:pointer;" onclick="showScreen('calendar')">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--text-low);text-transform:uppercase;letter-spacing:0.5px;">Today</div>
+                <div style="font-size:14px;font-weight:700;margin-top:2px;">14 Margashirsha, Shukla Panchami</div>
+                <div style="font-size:12px;color:var(--text-low);margin-top:2px;">4 March 2026 · Ekadashi in 6 days</div>
+              </div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-low)"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg>
+            </div>
+          </div>
+
+          <!-- Today's Seasonal Content -->
+          <div style="margin-top:4px;">
+            <div style="font-size:16px;font-weight:700;margin-bottom:12px;">Navratri Day 5</div>
+            <div class="devi-card fade-up fade-up-3" style="margin-bottom:12px;">
+              <div class="devi-avatar" style="background:rgba(255,107,53,0.12);">🙏</div>
+              <div style="flex:1;">
+                <div style="font-size:15px;font-weight:700;">Skandamata</div>
+                <div style="font-size:12px;color:var(--text-low);margin-top:2px;">Mother of Skanda (Kartikeya)</div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                  <div style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--shape-pill);background:rgba(255,107,53,0.1);color:var(--faith-hindu);">Grey colour</div>
+                  <div style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--shape-pill);background:var(--sparkle-20);color:#0e5c4f;">Vrat active</div>
+                </div>
+              </div>
+            </div>
+            <div class="card fade-up fade-up-4">
+              <div style="font-size:13px;font-weight:700;margin-bottom:8px;">Vrat Rules</div>
+              <div style="font-size:13px;color:var(--text-low);line-height:1.6;">Sabudana, kuttu, singhara atta, fruits, milk products allowed. No grains, no onion, no garlic.</div>
+            </div>
+          </div>
+          <div style="height:24px;"></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 7: Sacred Mode -->
+      <div class="screen sacred-mode" id="sacred-mode">
+        <div style="padding:16px 24px;display:flex;justify-content:flex-end;"><button class="icon-btn" style="color:rgba(255,255,255,0.6);" onclick="showScreen('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M13.41 12l6.3-6.29a1.004 1.004 0 00-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 10-1.42 1.42l6.3 6.29-6.3 6.29a.999.999 0 000 1.42 1 1 0 001.42 0l6.29-6.3 6.29 6.3a1.001 1.001 0 001.639-.325 1 1 0 00-.22-1.095L13.41 12z"/></svg></button></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;text-align:center;">
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:24px;">Sacred Mode</div>
+          <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,107,53,0.15);display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+            <div style="font-size:40px;">🙏</div>
+          </div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:4px;">Track 3 of 4</div>
+          <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:4px;">Hanuman Chalisa</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:32px;">Hariharan</div>
+          <div class="sacred-lyrics" style="margin-bottom:32px;">
+            श्री गुरु चरन सरोज रज<br>
+            <span class="highlight">निज मनु मुकुरु सुधारि</span><br>
+            बरनऊँ रघुबर बिमल जसु<br>
+            जो दायकु फल चारि
+          </div>
+          <div style="width:100%;margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;">
+              <span>1:42</span><span>4:30</span>
+            </div>
+            <div style="width:100%;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;">
+              <div style="width:38%;height:100%;background:var(--secondary-50);border-radius:2px;"></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:32px;">
+            <button class="icon-btn" style="color:rgba(255,255,255,0.6);"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+            <div style="width:64px;height:64px;border-radius:50%;background:var(--secondary-50);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M8.5 4A1.5 1.5 0 007 5.5v13a1.5 1.5 0 003 0v-13A1.5 1.5 0 008.5 4zm7 0A1.5 1.5 0 0014 5.5v13a1.5 1.5 0 103 0v-13A1.5 1.5 0 0015.5 4z"/></svg>
+            </div>
+            <button class="icon-btn" style="color:rgba(255,255,255,0.6);" onclick="showScreen('completion')"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg></button>
+          </div>
+        </div>
+        <div style="padding:16px 24px;text-align:center;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.3);">Lyrics · scrolling</div>
+        </div>
+      </div>
+
+      <!-- SCREEN 8: Completion -->
+      <div class="screen" id="completion">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;text-align:center;">
+          <div style="width:100px;height:100px;border-radius:50%;background:rgba(37,171,33,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:24px;" class="fade-up">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--success)"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z"/></svg>
+          </div>
+          <div style="font-size:28px;font-weight:900;margin-bottom:8px;color:var(--faith-hindu);" class="fade-up fade-up-1">शुभ पंचमी</div>
+          <div style="font-size:16px;font-weight:500;color:var(--text-low);line-height:1.5;margin-bottom:32px;" class="fade-up fade-up-2">"The mind is everything. What you think, you become."<br><span style="font-size:13px;font-weight:700;color:var(--text-high);">— Swami Vivekananda</span></div>
+          <div class="card fade-up fade-up-3" style="width:100%;text-align:left;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M18 3h-1a1 1 0 00-2 0H9a1 1 0 00-2 0H6a3 3 0 00-3 3v12a3 3 0 003 3h12a3 3 0 003-3V6a3 3 0 00-3-3zm-4.5 14a1 1 0 01-2 0v-3.59l-.29.3a1.004 1.004 0 11-1.42-1.42l2-2a.999.999 0 011.09-.21 1 1 0 01.62.92v6zM19 7H5V6a1 1 0 011-1h1a1 1 0 002 0h6a1 1 0 002 0h1a1 1 0 011 1v1z"/></svg>
+              <span style="font-size:13px;font-weight:500;color:var(--text-low);">Ekadashi in 6 days</span>
+            </div>
+          </div>
+          <div style="height:24px;"></div>
+          <button class="btn-secondary" style="width:100%;margin-bottom:12px;">Continue listening</button>
+          <button class="btn-primary" onclick="showScreen('home')" style="margin-bottom:24px;">Done</button>
+        </div>
+      </div>
+
+      <!-- SCREEN 9: Calendar -->
+      <div class="screen" id="calendar">
+        <div class="status-bar"><span class="time">5:50</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div class="header-nav">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="icon-btn" onclick="showScreen('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+            <div class="title">Calendar</div>
+          </div>
+          <button class="icon-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M20.43 13.4L19 12.58v-1.16l1.43-.82a2 2 0 00.73-2.73l-1-1.74a2 2 0 00-2.73-.73l-1.18.68-.25.15-1-.58V4a2 2 0 00-2-2h-2a2 2 0 00-2 2v1.65l-.25.14-.75.44-.25-.15-1.18-.68a2 2 0 00-2.73.73l-1 1.74a2 2 0 00.73 2.73l1.43.82v1.16l-1.43.82a2 2 0 00-.73 2.73l1 1.74a2 2 0 002.73.73L8 17.77l1 .58V20a2 2 0 002 2h2a2 2 0 002-2v-1.65l1-.58 1.43.83a2 2 0 002.73-.73l1-1.74a2 2 0 00-.73-2.73zM12 15a3 3 0 110-6 3 3 0 010 6z"/></svg></button>
+        </div>
+        <div class="screen-scroll" style="padding:16px;">
+          <!-- Today Card -->
+          <div class="card card-shadow" style="background:linear-gradient(135deg,#fff5ed 0%,#fff 50%);border:none;margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:700;color:var(--faith-hindu);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Today · शुक्ल पंचमी</div>
+            <div style="font-size:18px;font-weight:900;margin-bottom:4px;">14 Margashirsha</div>
+            <div style="font-size:13px;color:var(--text-low);margin-bottom:12px;">4 March 2026 · Tuesday</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="padding:8px;background:rgba(255,107,53,0.06);border-radius:var(--shape-small);">
+                <div style="font-size:11px;color:var(--text-low);font-weight:500;">Tithi</div>
+                <div style="font-size:13px;font-weight:700;">Panchami</div>
+              </div>
+              <div style="padding:8px;background:rgba(255,107,53,0.06);border-radius:var(--shape-small);">
+                <div style="font-size:11px;color:var(--text-low);font-weight:500;">Nakshatra</div>
+                <div style="font-size:13px;font-weight:700;">Pushya</div>
+              </div>
+              <div style="padding:8px;background:rgba(255,107,53,0.06);border-radius:var(--shape-small);">
+                <div style="font-size:11px;color:var(--text-low);font-weight:500;">Sunrise</div>
+                <div style="font-size:13px;font-weight:700;">6:32 AM</div>
+              </div>
+              <div style="padding:8px;background:rgba(255,107,53,0.06);border-radius:var(--shape-small);">
+                <div style="font-size:11px;color:var(--text-low);font-weight:500;">Rahu Kaal</div>
+                <div style="font-size:13px;font-weight:700;">3:00 – 4:30 PM</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Month Grid -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <button class="icon-btn" style="width:32px;height:32px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M14 17a1.003 1.003 0 01-.71-.29l-4-4a1 1 0 010-1.42l4-4a1.005 1.005 0 011.42 1.42L11.41 12l3.3 3.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+            <div style="font-size:16px;font-weight:700;">March 2026</div>
+            <button class="icon-btn" style="width:32px;height:32px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M10 17a1.002 1.002 0 01-1.006-1 1 1 0 01.296-.71l3.3-3.29-3.3-3.29a1.004 1.004 0 011.42-1.42l4 4a.997.997 0 01.219 1.095.999.999 0 01-.22.325l-4 4A1 1 0 0110 17z"/></svg></button>
+          </div>
+          <div class="calendar-grid" style="margin-bottom:16px;">
+            <div class="day-header">Su</div><div class="day-header">Mo</div><div class="day-header">Tu</div><div class="day-header">We</div><div class="day-header">Th</div><div class="day-header">Fr</div><div class="day-header">Sa</div>
+            <div class="day-cell" style="grid-column:1;">1</div><div class="day-cell">2</div><div class="day-cell">3</div><div class="day-cell today">4</div><div class="day-cell">5</div><div class="day-cell">6</div><div class="day-cell">7</div>
+            <div class="day-cell">8</div><div class="day-cell">9</div><div class="day-cell ekadashi">10</div><div class="day-cell">11</div><div class="day-cell">12</div><div class="day-cell festival">13</div><div class="day-cell">14</div>
+            <div class="day-cell">15</div><div class="day-cell">16</div><div class="day-cell">17</div><div class="day-cell">18</div><div class="day-cell">19</div><div class="day-cell">20</div><div class="day-cell">21</div>
+            <div class="day-cell">22</div><div class="day-cell">23</div><div class="day-cell">24</div><div class="day-cell ekadashi">25</div><div class="day-cell">26</div><div class="day-cell">27</div><div class="day-cell festival">28</div>
+            <div class="day-cell">29</div><div class="day-cell">30</div><div class="day-cell">31</div>
+          </div>
+          <div style="display:flex;gap:16px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--primary-50);"></div><span style="font-size:11px;color:var(--text-low);">Ekadashi</span></div>
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--faith-hindu);"></div><span style="font-size:11px;color:var(--text-low);">Festival</span></div>
+          </div>
+
+          <!-- Upcoming -->
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Upcoming</div>
+          <div class="card" style="padding:12px 16px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div><div style="font-size:14px;font-weight:600;">Ekadashi</div><div style="font-size:12px;color:var(--text-low);">10 March · Shukla Ekadashi</div></div>
+              <div style="font-size:12px;font-weight:700;color:var(--primary-50);">In 6 days</div>
+            </div>
+          </div>
+          <div class="card" style="padding:12px 16px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div><div style="font-size:14px;font-weight:600;">Holi</div><div style="font-size:12px;color:var(--text-low);">13 March · Purnima</div></div>
+              <div style="font-size:12px;font-weight:700;color:var(--faith-hindu);">In 9 days</div>
+            </div>
+          </div>
+          <div class="card" style="padding:12px 16px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div><div style="font-size:14px;font-weight:600;">Ekadashi</div><div style="font-size:12px;color:var(--text-low);">25 March · Krishna Ekadashi</div></div>
+              <div style="font-size:12px;font-weight:700;color:var(--primary-50);">In 21 days</div>
+            </div>
+          </div>
+          <div style="height:24px;"></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 10: Seasonal Companion — Navratri -->
+      <div class="screen" id="seasonal">
+        <div class="status-bar"><span class="time">6:00</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div class="header-nav">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="icon-btn" onclick="showScreen('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+            <div><div class="title">Navratri</div><div class="subtitle">Day 5 of 9</div></div>
+          </div>
+        </div>
+        <div class="screen-scroll" style="padding:16px;">
+          <!-- Progress -->
+          <div style="display:flex;gap:4px;margin-bottom:20px;">
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div>
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div>
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div>
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div>
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--sparkle-50);"></div>
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--grey-40);"></div>
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--grey-40);"></div>
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--grey-40);"></div>
+            <div style="flex:1;height:6px;border-radius:3px;background:var(--grey-40);"></div>
+          </div>
+
+          <!-- Devi of the Day -->
+          <div class="card card-shadow fade-up" style="background:linear-gradient(135deg,var(--sparkle-20) 0%,#fff 50%);border:none;text-align:center;padding:24px;">
+            <div style="font-size:48px;margin-bottom:12px;">🙏</div>
+            <div style="font-size:20px;font-weight:900;">Skandamata</div>
+            <div style="font-size:13px;color:var(--text-low);margin-top:4px;line-height:1.5;">Mother of Skanda (Kartikeya). She blesses devotees with wisdom and salvation. Meditate on her seated on a lion, holding baby Skanda.</div>
+            <div style="display:flex;justify-content:center;gap:12px;margin-top:16px;">
+              <div style="text-align:center;"><div style="font-size:11px;color:var(--text-low);">Colour</div><div style="width:32px;height:32px;border-radius:50%;background:#808080;margin:4px auto 0;border:2px solid var(--stroke-minimal);"></div></div>
+              <div style="text-align:center;"><div style="font-size:11px;color:var(--text-low);">Bhog</div><div style="font-size:13px;font-weight:700;margin-top:8px;">Banana</div></div>
+              <div style="text-align:center;"><div style="font-size:11px;color:var(--text-low);">Mantra</div><div style="font-size:13px;font-weight:700;margin-top:8px;">Om Aim</div></div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+            <div class="card fade-up fade-up-1" style="cursor:pointer;text-align:center;padding:16px 12px;">
+              <div style="font-size:24px;margin-bottom:6px;">📿</div>
+              <div style="font-size:13px;font-weight:700;">Puja Steps</div>
+              <div style="font-size:11px;color:var(--text-low);margin-top:2px;">Samagri & vidhi</div>
+            </div>
+            <div class="card fade-up fade-up-2" style="cursor:pointer;text-align:center;padding:16px 12px;">
+              <div style="font-size:24px;margin-bottom:6px;">🥗</div>
+              <div style="font-size:13px;font-weight:700;">Vrat Rules</div>
+              <div style="font-size:11px;color:var(--text-low);margin-top:2px;">What to eat today</div>
+            </div>
+            <div class="card fade-up fade-up-3" style="cursor:pointer;text-align:center;padding:16px 12px;">
+              <div style="font-size:24px;margin-bottom:6px;">💃</div>
+              <div style="font-size:13px;font-weight:700;">Garba Events</div>
+              <div style="font-size:11px;color:var(--text-low);margin-top:2px;">Near Mumbai</div>
+            </div>
+            <div class="card fade-up fade-up-4" style="cursor:pointer;text-align:center;padding:16px 12px;">
+              <div style="font-size:24px;margin-bottom:6px;">🎵</div>
+              <div style="font-size:13px;font-weight:700;">Day 5 Bhajan</div>
+              <div style="font-size:11px;color:var(--text-low);margin-top:2px;">Listen now</div>
+            </div>
+          </div>
+
+          <!-- Merged Ritual Preview -->
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Today's Ritual</div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="track-item"><div class="track-num">1</div><div class="track-info"><div class="track-title">Ganesh Vandana</div><div class="track-artist">Opener · Shankar Mahadevan</div></div><div class="track-dur">3:20</div></div>
+            <div class="track-item"><div class="track-num" style="background:var(--sparkle-20);color:#0e5c4f;">2</div><div class="track-info"><div class="track-title">Skandamata Bhajan</div><div class="track-artist">Day 5 · Anuradha Paudwal</div><div class="track-badge">Seasonal</div></div><div class="track-dur">4:45</div></div>
+            <div class="track-item"><div class="track-num">3</div><div class="track-info"><div class="track-title">Hanuman Chalisa</div><div class="track-artist">Bhajan · Hariharan</div><div class="track-pin">Pinned</div></div><div class="track-dur">4:30</div></div>
+            <div class="track-item"><div class="track-num" style="background:var(--sparkle-20);color:#0e5c4f;">4</div><div class="track-info"><div class="track-title">Navratri Aarti</div><div class="track-artist">Seasonal Closer</div><div class="track-badge">Seasonal</div></div><div class="track-dur">3:40</div></div>
+          </div>
+          <div style="height:24px;"></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 11: Ritual Builder -->
+      <div class="screen" id="ritual-builder">
+        <div class="status-bar"><span class="time">6:10</span><div style="display:flex;gap:6px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-high)"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg></div></div>
+        <div class="header-nav">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="icon-btn" onclick="showScreen('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z"/></svg></button>
+            <div><div class="title">My Daily Ritual</div><div class="subtitle">15 min · 4 tracks</div></div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--primary-50);cursor:pointer;">Save</div>
+        </div>
+        <div class="screen-scroll" style="padding:16px;">
+          <!-- Search -->
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--surface-ghost);border-radius:var(--shape-4xl);margin-bottom:16px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-low)"><path d="M10.004 2a7 7 0 015.6 11.19l6.11 6.1a1.002 1.002 0 01-.325 1.639.999.999 0 01-1.095-.219l-6.1-6.11A7 7 0 1110.004 2zm0 12a5 5 0 100-10 5 5 0 000 10z"/></svg>
+            <span style="font-size:14px;color:var(--text-low);">Search bhajans, mantras, stotras...</span>
+          </div>
+
+          <!-- Category Chips -->
+          <div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;">
+            <div class="chip selected" style="white-space:nowrap;font-size:13px;">All</div>
+            <div class="chip" style="white-space:nowrap;font-size:13px;">Bhajan</div>
+            <div class="chip" style="white-space:nowrap;font-size:13px;">Mantra</div>
+            <div class="chip" style="white-space:nowrap;font-size:13px;">Stotra</div>
+            <div class="chip" style="white-space:nowrap;font-size:13px;">Aarti</div>
+          </div>
+
+          <!-- Current Ritual -->
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Current Sequence</div>
+          <div style="margin-bottom:20px;">
+            <div class="track-item">
+              <div style="display:flex;flex-direction:column;gap:2px;align-items:center;color:var(--grey-60);cursor:grab;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg></div>
+              <div class="track-num">1</div>
+              <div class="track-info"><div class="track-title">Ganesh Vandana</div><div class="track-artist">Opener · Shankar Mahadevan</div></div>
+              <div style="font-size:11px;color:var(--text-low);background:var(--grey-20);padding:2px 8px;border-radius:var(--shape-pill);font-weight:600;">Opener</div>
+            </div>
+            <div class="track-item">
+              <div style="display:flex;flex-direction:column;gap:2px;align-items:center;color:var(--grey-60);cursor:grab;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg></div>
+              <div class="track-num">2</div>
+              <div class="track-info"><div class="track-title">Shri Ganesh Stuti</div><div class="track-artist">Mantra · Anuradha Paudwal · 4:15</div></div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--error)" style="cursor:pointer;flex-shrink:0;"><path d="M13.41 12l6.3-6.29a1.004 1.004 0 00-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 10-1.42 1.42l6.3 6.29-6.3 6.29a.999.999 0 000 1.42 1 1 0 001.42 0l6.29-6.3 6.29 6.3a1.001 1.001 0 001.639-.325 1 1 0 00-.22-1.095L13.41 12z"/></svg>
+            </div>
+            <div class="track-item">
+              <div style="display:flex;flex-direction:column;gap:2px;align-items:center;color:var(--grey-60);cursor:grab;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg></div>
+              <div class="track-num">3</div>
+              <div class="track-info"><div class="track-title">Hanuman Chalisa</div><div class="track-artist">Bhajan · Hariharan · 4:30</div><div class="track-pin">Pinned (1/3)</div></div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary-50)" style="cursor:pointer;flex-shrink:0;"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z"/></svg>
+            </div>
+            <div class="track-item">
+              <div style="display:flex;flex-direction:column;gap:2px;align-items:center;color:var(--grey-60);cursor:grab;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg></div>
+              <div class="track-num">4</div>
+              <div class="track-info"><div class="track-title">Ganesh Aarti</div><div class="track-artist">Closer · Lata Mangeshkar</div></div>
+              <div style="font-size:11px;color:var(--text-low);background:var(--grey-20);padding:2px 8px;border-radius:var(--shape-pill);font-weight:600;">Closer</div>
+            </div>
+          </div>
+
+          <!-- Add Track -->
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Add from Catalog</div>
+          <div class="card" style="display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px;">
+            <div style="width:44px;height:44px;border-radius:var(--shape-small);background:var(--primary-20);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/></svg>
+            </div>
+            <div style="flex:1;"><div style="font-size:14px;font-weight:600;">Vishnu Sahasranama</div><div style="font-size:12px;color:var(--text-low);">Stotra · M.S. Subbulakshmi · 8:20</div></div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px;">
+            <div style="width:44px;height:44px;border-radius:var(--shape-small);background:var(--primary-20);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/></svg>
+            </div>
+            <div style="flex:1;"><div style="font-size:14px;font-weight:600;">Om Jai Jagdish Hare</div><div style="font-size:12px;color:var(--text-low);">Aarti · Anup Jalota · 5:10</div></div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px;">
+            <div style="width:44px;height:44px;border-radius:var(--shape-small);background:var(--primary-20);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/></svg>
+            </div>
+            <div style="flex:1;"><div style="font-size:14px;font-weight:600;">Gayatri Mantra</div><div style="font-size:12px;color:var(--text-low);">Mantra · Pandit Jasraj · 3:45</div></div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg>
+          </div>
+
+          <!-- Festival Merge Toggle -->
+          <div style="margin-top:16px;">
+            <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Festival Settings</div>
+            <div class="card">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div><div style="font-size:14px;font-weight:600;">Festival playlist merge</div><div style="font-size:12px;color:var(--text-low);margin-top:2px;">Auto-include seasonal content</div></div>
+                <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reset -->
+          <button class="btn-tertiary" style="display:block;text-align:center;width:100%;margin-top:16px;color:var(--error);">Reset to recommended</button>
+          <div style="height:24px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(id)) {
+      item.classList.add('active');
+    }
+  });
+}
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    const siblings = this.parentElement.querySelectorAll('.chip');
+    siblings.forEach(s => s.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>
