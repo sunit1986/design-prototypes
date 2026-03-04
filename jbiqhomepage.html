@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Jio AI — Home</title>
+<style>
+@font-face{font-family:'JioType';font-weight:400;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:500;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:700;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:900;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2')}
+
+:root{
+  --surface:#fff;--surface-ghost:#eeeeef;--surface-ghost-icon:#e7e9ff;--surface-bold:#3900ad;
+  --surface-subtle:#eeeeef;--surface-minimal:#f8f8f9;
+  --text-high:#0c0d10;--text-medium:#191b1e;--text-low:rgba(25,27,30,.65);
+  --icon-medium:#170054;--stroke-subtle:rgba(36,38,43,.12);
+  --primary-50:#3535f3;--primary-20:#e8e8fc;--sparkle-50:#1eccb0;
+  --error:#fa2f40;--success:#25ab21;--grey-100:#141414;--grey-60:#b5b5b5;--grey-20:#f5f5f5;
+  --shape-pill:999px;--shape-4xl:24px;--shape-l:16px;--shape-m:12px;--shape-s:8px;--shape-xs:4px;
+  --font:'JioType',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--surface);color:var(--text-high);display:flex;flex-direction:column}
+::-webkit-scrollbar{display:none}
+
+.header{
+  position:sticky;top:0;z-index:20;background:var(--surface);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;height:56px;flex-shrink:0;
+}
+.header-start{display:flex;align-items:center;gap:8px}
+.header-end{display:flex;align-items:center;gap:8px}
+.icon-btn-ghost{
+  width:40px;height:40px;border-radius:var(--shape-pill);border:none;
+  background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.icon-btn-ghost:active{background:var(--grey-20)}
+.icon-btn-ghost svg{width:24px;height:24px;color:var(--icon-medium)}
+.jio-logo{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.profile-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;position:relative;cursor:pointer}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.notif-badge{
+  position:absolute;top:-2px;right:-2px;width:20px;height:20px;border-radius:50%;
+  background:var(--primary-50);color:#fff;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;border:2px solid var(--surface);
+}
+
+.body-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:120px}
+
+.section-title{
+  font-size:20px;font-weight:900;line-height:1;letter-spacing:0;
+  padding:16px 18px 12px;color:var(--text-high);
+}
+
+/* ASSISTANTS */
+.assistants-row{display:flex;gap:16px;padding:0 18px;overflow-x:auto}
+.assistant-item{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;cursor:pointer}
+.assistant-avatar-wrap{width:74px;height:74px;position:relative;display:flex;align-items:center;justify-content:center}
+.assistant-ring{position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--primary-50)}
+.assistant-ring.grey{border-color:var(--grey-60)}
+.assistant-img{width:60px;height:60px;border-radius:50%;object-fit:cover;position:relative;z-index:1}
+.assistant-label{font-size:14px;font-weight:500;color:var(--text-medium);opacity:.8;text-align:center;white-space:nowrap}
+
+/* TOOLS */
+.tools-section{display:flex;flex-direction:column;gap:8px}
+.tools-row{display:flex;gap:8px;padding:0 18px;overflow-x:auto;flex-wrap:nowrap}
+.tool-chip{
+  flex-shrink:0;display:flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:var(--shape-pill);
+  background:var(--surface);border:1px solid var(--stroke-subtle);
+  font-family:var(--font);font-size:14px;font-weight:500;color:var(--text-medium);
+  cursor:pointer;white-space:nowrap;opacity:.8;transition:all .15s;
+}
+.tool-chip:active{background:var(--primary-20);border-color:var(--primary-50)}
+
+/* UPDATE CARDS */
+.updates-section{display:flex;flex-direction:column;gap:10px;padding:0 16px}
+.ucard{
+  background:var(--surface-subtle);border-radius:var(--shape-l);
+  padding:16px;display:flex;flex-direction:column;gap:6px;
+}
+.ucard-title{font-size:16px;font-weight:700;line-height:1.1;color:var(--text-high)}
+.ucard-row{display:flex;gap:10px;align-items:flex-start}
+.ucard-text{flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center;min-height:54px}
+.ucard-text .main{font-size:14px;font-weight:500;line-height:1.3;color:var(--text-high)}
+.ucard-text .sub{font-size:10px;font-weight:400;line-height:1.3;color:var(--text-low)}
+.ucard-img{width:54px;height:54px;border-radius:var(--shape-xs);overflow:hidden;flex-shrink:0}
+.ucard-img img{width:100%;height:100%;object-fit:cover}
+.ucard-action{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface-minimal);border-radius:var(--shape-4xl);
+  padding:4px 8px 4px 14px;
+}
+.ucard-action span{font-size:12px;font-weight:500;color:var(--text-high)}
+.ucard-action-btn{
+  width:32px;height:32px;border-radius:50%;border:none;
+  background:var(--primary-50);display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.ucard-action-btn svg{width:16px;height:16px;color:#fff}
+
+/* CRICKET */
+.cricket{background:var(--surface-subtle);border-radius:var(--shape-l);padding:16px;display:flex;flex-direction:column;gap:8px;align-items:center}
+.cricket-scores{display:flex;align-items:center;justify-content:space-between;width:100%}
+.cricket-team{display:flex;align-items:center;gap:7px;flex:1}
+.cricket-team.right{flex-direction:row-reverse;text-align:right;justify-content:flex-start}
+.cricket-flag{width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0}
+.cricket-flag img{width:100%;height:100%;object-fit:contain}
+.cricket-info{display:flex;flex-direction:column;gap:2px}
+.cricket-name{font-size:16px;font-weight:500;line-height:1.1}
+.cricket-score{font-size:16px;font-weight:700;line-height:1.1}
+.cricket-overs{font-size:14px;font-weight:400;line-height:1.2;color:rgba(12,13,16,.46)}
+.cricket-vs{width:30px;height:30px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-medium);background:var(--surface-minimal)}
+.cricket-divider{width:100%;height:1px;background:#e0e1e2}
+.cricket-live{display:flex;align-items:center;gap:4px;background:#fa2f40;border-radius:2px;padding:0 7px}
+.cricket-live-dot{width:6px;height:6px;border-radius:50%;background:#fff}
+.cricket-live span{font-size:10px;font-weight:500;color:#fff;line-height:1.3}
+.cricket-bottom{display:flex;gap:8px;align-items:center;justify-content:center}
+.cricket-status{font-size:12px;font-weight:400;color:rgba(12,13,16,.66)}
+
+/* NEWS */
+.news-item{display:flex;gap:10px;align-items:flex-start}
+.news-item .text-col{flex:1;display:flex;flex-direction:column;gap:4px;min-height:54px;justify-content:center}
+.news-item .title{font-size:14px;font-weight:500;line-height:1.3;color:var(--text-high);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news-item .source{font-size:10px;font-weight:400;color:var(--text-low)}
+.news-item .thumb{width:52px;height:52px;border-radius:var(--shape-s);overflow:hidden;flex-shrink:0}
+.news-item .thumb img{width:100%;height:100%;object-fit:cover}
+
+/* SONGS */
+.song-item{display:flex;gap:10px;align-items:center}
+.song-item .art{width:52px;height:52px;border-radius:var(--shape-s);overflow:hidden;flex-shrink:0}
+.song-item .art img{width:100%;height:100%;object-fit:cover}
+.song-item .meta{flex:1;display:flex;flex-direction:column;gap:2px;justify-content:center}
+.song-item .meta .name{font-size:14px;font-weight:500;line-height:1.3;color:var(--text-high)}
+.song-item .meta .artist{font-size:12px;font-weight:400;line-height:1.3;color:var(--text-low)}
+.song-play{width:20px;height:20px;opacity:.8;flex-shrink:0}
+
+/* WEEKEND */
+.day-pills{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto}
+.day-pill{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;flex-shrink:0}
+.day-pill.off{background:var(--surface-subtle);color:#535862}
+.day-pill.holiday{background:var(--success);color:#fff}
+.day-pill.current{background:#fbe6de;color:#953400}
+.weekend-body{display:flex;gap:10px;align-items:center}
+.weekend-img{width:106px;height:106px;border-radius:var(--shape-m);overflow:hidden;flex-shrink:0}
+.weekend-img img{width:100%;height:100%;object-fit:cover}
+.weekend-text{flex:1;display:flex;flex-direction:column;gap:10px}
+.weekend-text .bold{font-size:14px;font-weight:700;line-height:1.3;color:var(--text-high)}
+.weekend-text .desc{font-size:10px;font-weight:400;line-height:1.3;color:var(--text-high)}
+.dest-chips{display:flex;gap:4px;flex-wrap:wrap}
+.dest-chip{background:#00ad8b;color:#fff;font-size:10px;font-weight:500;padding:4px 12px;border-radius:var(--shape-pill);white-space:nowrap}
+
+/* WEATHER */
+.weather-top{display:flex;gap:10px;align-items:flex-start;position:relative}
+.weather-city{display:flex;align-items:center;gap:4px}
+.weather-city-name{font-size:16px;font-weight:700;line-height:1.1}
+.weather-city svg{width:16px;height:16px;opacity:.8}
+.weather-icon{width:103px;height:103px;position:absolute;top:-8px;right:0;border-radius:var(--shape-s)}
+.weather-icon img{width:100%;height:100%;object-fit:cover}
+.weather-temp{display:flex;align-items:flex-start}
+.weather-deg{font-size:36px;font-weight:900;line-height:1;letter-spacing:0}
+.weather-c{font-size:18px;font-weight:400;line-height:1.3;margin-top:2px}
+.weather-desc{font-size:12px;font-weight:400;color:var(--text-low)}
+.weather-stats{display:flex;gap:12px;margin-top:4px}
+.weather-stat{flex:1;display:flex;flex-direction:column;gap:0}
+.weather-stat .label{font-size:12px;font-weight:400;color:var(--text-low)}
+.weather-stat .val{font-size:16px;font-weight:700;line-height:1.3;color:var(--text-high)}
+
+/* FLOATING INPUT */
+.input-widget{
+  position:fixed;bottom:0;left:0;right:0;z-index:30;
+  padding:8px 16px 16px;
+  background:linear-gradient(transparent,var(--surface) 30%);
+}
+.input-field{
+  background:var(--surface-subtle);border-radius:var(--shape-4xl);
+  padding:8px;display:flex;flex-direction:column;gap:4px;
+  box-shadow:0 -2px 20px rgba(0,0,0,.06);border:1px solid #ededed;
+}
+.input-text{
+  padding:4px 8px;font-family:var(--font);font-size:16px;font-weight:400;
+  color:var(--text-low);opacity:.65;border:none;outline:none;background:none;width:100%;
+}
+.input-actions{display:flex;justify-content:space-between;align-items:center}
+.input-left{display:flex;gap:2px}
+.input-icon-btn{
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:var(--surface-ghost-icon);display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.input-icon-btn svg{width:20px;height:20px;color:var(--icon-medium)}
+.input-icon-btn:active{background:var(--primary-20)}
+.speak-btn{
+  background:var(--surface-bold);border:none;border-radius:var(--shape-pill);
+  padding:10px 20px;display:flex;align-items:center;gap:8px;cursor:pointer;
+}
+.speak-btn svg{width:16px;height:16px;color:#fff}
+.speak-btn span{font-family:var(--font);font-weight:700;font-size:14px;color:#fff;line-height:1.2}
+.speak-btn:active{opacity:.85;transform:scale(.97)}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.anim-1{animation:fadeDown .4s ease both;animation-delay:0s}
+.anim-2{animation:fadeDown .4s ease both;animation-delay:.1s}
+.anim-3{animation:fadeDown .4s ease both;animation-delay:.15s}
+.anim-4{animation:fadeDown .4s ease both;animation-delay:.2s}
+.anim-5{animation:fadeDown .4s ease both;animation-delay:.25s}
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<div class="header anim-1">
+  <div class="header-start">
+    <button class="icon-btn-ghost" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16a1 1 0 100-2H4a1 1 0 000 2zm16 10H4a1 1 0 000 2h16a1 1 0 000-2zm0-6H4a1 1 0 000 2h16a1 1 0 000-2z" fill="currentColor"/></svg>
+    </button>
+    <img class="jio-logo" src="Assets/jio-logo.png" alt="Jio">
+  </div>
+  <div class="header-end">
+    <div class="profile-avatar" style="background:linear-gradient(135deg,#f7ab20,#e8940a)">
+      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Profile">
+      <div class="notif-badge">9</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCROLLABLE BODY -->
+<div class="body-scroll">
+
+  <!-- YOUR ASSISTANTS -->
+  <div class="section-title anim-2">Your Assistants</div>
+  <div class="assistants-row anim-2">
+    <div class="assistant-item">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-astrology.png" alt="Astrology"></div>
+      <span class="assistant-label">Astrology</span>
+    </div>
+    <div class="assistant-item">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-bollywood.png" alt="Bollywood"></div>
+      <span class="assistant-label">Bollywood</span>
+    </div>
+    <div class="assistant-item">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-cricket.png" alt="Cricket"></div>
+      <span class="assistant-label">Cricket</span>
+    </div>
+    <div class="assistant-item">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-devotion.png" alt="Devotion"></div>
+      <span class="assistant-label">Devotion</span>
+    </div>
+    <div class="assistant-item">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-education.png" alt="Education"></div>
+      <span class="assistant-label">Education</span>
+    </div>
+    <div class="assistant-item">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-finance.png" alt="Finance"></div>
+      <span class="assistant-label">Finance</span>
+    </div>
+    <div class="assistant-item">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-govt.png" alt="Government"></div>
+      <span class="assistant-label">Government</span>
+    </div>
+    <div class="assistant-item">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-health.png" alt="Health"></div>
+      <span class="assistant-label">Health</span>
+    </div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="section-title anim-3">Tools</div>
+  <div class="tools-section anim-3">
+    <div class="tools-row">
+      <div class="tool-chip">💬 Quick Translate</div>
+      <div class="tool-chip">🎨 Create image</div>
+      <div class="tool-chip">🧑‍⚕️ Health Calculator</div>
+    </div>
+    <div class="tools-row">
+      <div class="tool-chip">🎬 Generate videos</div>
+      <div class="tool-chip">📑 Analyse docs</div>
+      <div class="tool-chip">🛍️ Smart Shopping</div>
+    </div>
+  </div>
+
+  <!-- UPDATES -->
+  <div class="section-title anim-4">Updates</div>
+  <div class="updates-section anim-4">
+
+    <!-- 1. JioMart Delivery -->
+    <div class="ucard">
+      <div class="ucard-title">JioMart</div>
+      <div class="ucard-row">
+        <div class="ucard-text">
+          <span class="main">Order arriving by 3PM today</span>
+          <span class="sub">Lakme foundation</span>
+        </div>
+        <div class="ucard-img"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=108&h=108&fit=crop" alt="Lakme"></div>
+      </div>
+      <div class="ucard-action">
+        <span>Mahesh kumar is on the way</span>
+        <button class="ucard-action-btn" aria-label="Call">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M19.44 13c-.22 0-.45-.07-.67-.12a9.44 9.44 0 01-1.31-.39 2 2 0 00-2.48 1l-.22.45a12.18 12.18 0 01-2.66-2 12.18 12.18 0 01-2-2.66l.42-.28a2 2 0 001-2.48 10.33 10.33 0 01-.39-1.31c-.05-.22-.09-.45-.12-.68a3 3 0 00-3-2.49h-3a3 3 0 00-3 3.41 19 19 0 0016.52 16.46h.38a3 3 0 002-.76 3 3 0 001-2.25v-3a3 3 0 00-2.47-2.9z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. Cricket Score -->
+    <div class="cricket">
+      <div class="cricket-scores">
+        <div class="cricket-team">
+          <div class="cricket-flag"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png" alt="IND"></div>
+          <div class="cricket-info">
+            <span class="cricket-name">IND</span>
+            <span class="cricket-score">227/4</span>
+            <span class="cricket-overs">20.0</span>
+          </div>
+        </div>
+        <div class="cricket-vs">vs</div>
+        <div class="cricket-team right">
+          <div class="cricket-info" style="align-items:flex-end">
+            <span class="cricket-name">AUS</span>
+            <span class="cricket-score">157/1</span>
+            <span class="cricket-overs">17.4</span>
+          </div>
+          <div class="cricket-flag"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/1200px-Flag_of_Australia_%28converted%29.svg.png" alt="AUS"></div>
+        </div>
+      </div>
+      <div class="cricket-divider"></div>
+      <div class="cricket-bottom">
+        <div class="cricket-live"><div class="cricket-live-dot"></div><span>Live</span></div>
+        <span class="cricket-status">AUS need more 70 runs to win</span>
+      </div>
+    </div>
+
+    <!-- 3. Breaking News -->
+    <div class="ucard" style="gap:20px">
+      <div class="ucard-title">Breaking news</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="news-item">
+          <div class="text-col">
+            <span class="title">Watch as Trump gives State of the Union speech 15 minutes ago</span>
+            <span class="source">BCC News</span>
+          </div>
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=104&h=104&fit=crop" alt="News"></div>
+        </div>
+        <div class="news-item">
+          <div class="text-col">
+            <span class="title">IDFC First Bank says returned Rs 583 crore to Haryana govt but len...</span>
+            <span class="source">Money Control</span>
+          </div>
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=104&h=104&fit=crop" alt="Finance News"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Trending Songs -->
+    <div class="ucard" style="gap:20px">
+      <div class="ucard-title">Trending songs</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="song-item">
+          <div class="art"><img src="Assets/song-rockstar.png" alt="Rockstar"></div>
+          <div class="meta">
+            <span class="name">Phir Se Ud Chala</span>
+            <span class="artist">Mohit Chauhan</span>
+          </div>
+          <svg class="song-play" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v14l11-7-11-7z" fill="currentColor" opacity=".8"/></svg>
+        </div>
+        <div class="song-item">
+          <div class="art"><img src="Assets/song-andhadhun.png" alt="Andhadhun"></div>
+          <div class="meta">
+            <span class="name">Naina Da Kya Kasoor</span>
+            <span class="artist">Amit Trivedi, Andhadhun</span>
+          </div>
+          <svg class="song-play" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v14l11-7-11-7z" fill="currentColor" opacity=".8"/></svg>
+        </div>
+        <div class="song-item">
+          <div class="art"><img src="Assets/song-border2.png" alt="Border 2"></div>
+          <div class="meta">
+            <span class="name">Mohabbat Ho Gayi Hai</span>
+            <span class="artist">Anu Malik</span>
+          </div>
+          <svg class="song-play" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v14l11-7-11-7z" fill="currentColor" opacity=".8"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Long Weekend Break -->
+    <div class="ucard" style="gap:20px;overflow:hidden">
+      <div class="ucard-title">Long weekend break</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="day-pills">
+          <div class="day-pill current">M</div>
+          <div class="day-pill off">T</div>
+          <div class="day-pill off">W</div>
+          <div class="day-pill off">T</div>
+          <div class="day-pill holiday">F</div>
+          <div class="day-pill holiday">S</div>
+          <div class="day-pill holiday">S</div>
+          <div class="day-pill off">M</div>
+        </div>
+        <div class="weekend-body">
+          <div class="weekend-img"><img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=212&h=212&fit=crop" alt="Beach"></div>
+          <div class="weekend-text">
+            <span class="bold">3 days. One getaway.</span>
+            <span class="desc">Discover upcoming long weekends and smart getaway ideas tailored to your location and budget.</span>
+            <div class="dest-chips">
+              <span class="dest-chip">Alibaug</span>
+              <span class="dest-chip">Lonavala</span>
+              <span class="dest-chip">Matheran</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Weather -->
+    <div class="ucard" style="gap:10px">
+      <div style="display:flex;flex-direction:column;gap:12px;position:relative">
+        <div class="weather-top">
+          <div style="display:flex;flex-direction:column;gap:0">
+            <div class="weather-city">
+              <span class="weather-city-name">Mumbai</span>
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5H7z" fill="currentColor"/></svg>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0;margin-top:4px">
+              <div class="weather-temp">
+                <span class="weather-deg">34°</span>
+                <span class="weather-c">C</span>
+              </div>
+              <span class="weather-desc">Sunny day</span>
+            </div>
+          </div>
+          <div class="weather-icon"><img src="Assets/weather-sunny.png" alt="Sunny"></div>
+        </div>
+        <div class="weather-stats">
+          <div class="weather-stat"><span class="label">Wind</span><span class="val">8 km/h</span></div>
+          <div class="weather-stat"><span class="label">Humidity</span><span class="val">23%</span></div>
+          <div class="weather-stat"><span class="label">AQI</span><span class="val">238</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div style="height:32px"></div>
+</div>
+
+<!-- FLOATING BOTTOM INPUT -->
+<div class="input-widget">
+  <div class="input-field">
+    <input class="input-text" type="text" placeholder="Hey Deepa, what's on your mind?" readonly>
+    <div class="input-actions">
+      <div class="input-left">
+        <button class="input-icon-btn" aria-label="Add">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z" fill="currentColor"/></svg>
+        </button>
+        <button class="input-icon-btn" aria-label="Mic">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z" fill="currentColor"/></svg>
+        </button>
+      </div>
+      <button class="speak-btn">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z" fill="currentColor"/></svg>
+        <span>Speak</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
