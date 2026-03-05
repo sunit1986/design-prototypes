@@ -221,6 +221,27 @@ body {
 .send-btn svg { width: 18px; height: 18px; fill: #fff; }
 .send-btn:active { opacity: 0.8; }
 
+/* ─── VOICE OVERLAY (BOTTOM-BAR-AND-VOICE-SPEC) ─── */
+@keyframes dotBreath{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(.92);opacity:.4}}
+@keyframes dotListen{0%,100%{transform:scale(1);opacity:1}25%{transform:scale(.7);opacity:.5}50%{transform:scale(1.08);opacity:1}75%{transform:scale(.8);opacity:.6}}
+@keyframes dotProcess{0%,100%{transform:scale(.8);opacity:.5}50%{transform:scale(1);opacity:1}}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(109,23,206,.4)}50%{box-shadow:0 0 0 16px rgba(109,23,206,0)}}
+.v-dots{width:148px;height:148px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v-dots div{border-radius:50%;background:#6d17ce;transition:background .3s}
+.v-dots--idle div{animation:dotBreath 2.5s ease-in-out infinite;opacity:.5}
+.v-dots--idle div:nth-child(2){animation-delay:.3s}.v-dots--idle div:nth-child(3){animation-delay:.6s}.v-dots--idle div:nth-child(4){animation-delay:.9s}
+.v-dots--listening div{animation:dotListen 1s ease-in-out infinite;background:#6d17ce}
+.v-dots--listening div:nth-child(2){animation-delay:.15s}.v-dots--listening div:nth-child(3){animation-delay:.3s}.v-dots--listening div:nth-child(4){animation-delay:.45s}
+.v-dots--processing div,.v-dots--thinking div{animation:dotProcess 1.2s ease-in-out infinite;background:#9966dd}
+.v-dots--processing div:nth-child(2),.v-dots--thinking div:nth-child(2){animation-delay:.2s}
+.v-dots--processing div:nth-child(3),.v-dots--thinking div:nth-child(3){animation-delay:.4s}
+.v-dots--processing div:nth-child(4),.v-dots--thinking div:nth-child(4){animation-delay:.6s}
+.v-dots--speaking div{animation:dotBreath 2s ease-in-out infinite}
+.v-mic-btn{width:64px;height:64px;border-radius:50%;border:none;background:#6d17ce;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(109,23,206,.35)}
+.v-mic-btn:active{transform:scale(.92)}.v-mic-btn.v-mic--pulse{animation:micPulse 1.5s ease-in-out infinite}
+.v-stop-btn{width:64px;height:64px;border-radius:50%;border:none;background:#fa2f40;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(250,47,64,.3)}
+.v-stop-btn:active{transform:scale(.92)}
+
 /* SCORE BANNER — full-width (360px edge-to-edge within chat padding) */
 .score-banner {
   background: var(--primary-70); padding: 16px 20px;
@@ -563,7 +584,56 @@ body {
   </div>
 </div>
 
+<!-- VOICE OVERLAY (BOTTOM-BAR-AND-VOICE-SPEC) -->
+<div id="voiceOverlay" style="display:none;position:fixed;inset:0;z-index:100;background:#fff;flex-direction:column;font-family:var(--font)">
+  <div style="display:flex;align-items:center;padding:10px 12px;height:56px;flex-shrink:0">
+    <button type="button" onclick="closeVoice()" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#170054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span style="font-size:16px;font-weight:500;color:var(--text-high);margin-left:4px">Voice</span>
+    <span style="flex:1"></span>
+  </div>
+  <div id="voiceBody" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;padding:0 24px">
+    <div id="voiceDots" class="v-dots v-dots--idle"><div></div><div></div><div></div><div></div></div>
+    <div id="voiceLabel" style="margin-top:28px;font-size:20px;font-weight:700;color:var(--text-high);text-align:center">Hey, Deepa</div>
+    <div id="voiceSub" style="margin-top:8px;font-size:15px;font-weight:400;color:var(--text-low);text-align:center">Tap the mic to start speaking</div>
+    <div id="voiceTranscript" style="display:none;margin-top:20px;font-size:15px;font-weight:500;color:var(--text-high);text-align:center;max-width:300px;line-height:1.5;background:#f5f5f5;padding:12px 16px;border-radius:16px"></div>
+    <div id="voiceResponse" style="display:none;margin-top:16px;text-align:left;width:100%;max-width:330px;max-height:240px;overflow-y:auto"></div>
+  </div>
+  <div style="padding:12px 24px 28px;display:flex;flex-direction:column;align-items:center;gap:12px">
+    <button type="button" id="vMicBtn" onclick="voiceTapMic()" class="v-mic-btn">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="#fff"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button type="button" id="vStopBtn" onclick="voiceTapStop()" class="v-stop-btn" style="display:none">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="#fff"/></svg>
+    </button>
+    <div id="vAgainHint" style="display:none;font-size:13px;color:var(--text-low);text-align:center">Tap mic to speak again</div>
+  </div>
+</div>
+
 <script>
+/* ─── VOICE OVERLAY (BOTTOM-BAR-AND-VOICE-SPEC) ─── */
+var vState='closed',voiceRecording=false,mediaRecorder=null,audioChunks=[];
+function openVoice(){ var el=document.getElementById('voiceOverlay'); if(el){ el.style.display='flex'; setVoiceState('idle'); } }
+function closeVoice(){ if(mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop(); voiceRecording=false; var el=document.getElementById('voiceOverlay'); if(el)el.style.display='none'; vState='closed'; }
+function setVoiceState(state){
+  vState=state;
+  var dots=document.getElementById('voiceDots'),label=document.getElementById('voiceLabel'),sub=document.getElementById('voiceSub');
+  var transcript=document.getElementById('voiceTranscript'),response=document.getElementById('voiceResponse'),micBtn=document.getElementById('vMicBtn'),stopBtn=document.getElementById('vStopBtn'),hint=document.getElementById('vAgainHint');
+  if(!dots)return; dots.className='v-dots v-dots--'+state;
+  if(state==='idle'){ if(label)label.textContent='Hey, Deepa'; if(sub){ sub.textContent='Tap the mic to start speaking'; sub.style.display=''; } if(transcript){ transcript.style.display='none'; transcript.textContent=''; } if(response){ response.style.display='none'; response.innerHTML=''; } if(micBtn){ micBtn.style.display='flex'; micBtn.classList.remove('v-mic--pulse'); } if(stopBtn)stopBtn.style.display='none'; if(hint)hint.style.display='none'; }
+  else if(state==='listening'){ if(label)label.textContent='Listening...'; if(sub){ sub.textContent='Tap the red button when done'; sub.style.display=''; } if(transcript)transcript.style.display='none'; if(response)response.style.display='none'; if(micBtn)micBtn.style.display='none'; if(stopBtn)stopBtn.style.display='flex'; if(hint)hint.style.display='none'; }
+  else if(state==='speaking'){ if(label)label.textContent=''; if(sub)sub.style.display='none'; if(micBtn){ micBtn.style.display='flex'; micBtn.classList.add('v-mic--pulse'); } if(stopBtn)stopBtn.style.display='none'; if(hint)hint.style.display='block'; }
+}
+async function voiceTapMic(){
+  if(voiceRecording)return;
+  try{ var stream=await navigator.mediaDevices.getUserMedia({audio:true}); audioChunks=[]; mediaRecorder=new MediaRecorder(stream,{mimeType:'audio/webm;codecs=opus'});
+    mediaRecorder.ondataavailable=function(e){if(e.data.size>0)audioChunks.push(e.data);}; mediaRecorder.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); setVoiceState('idle'); }; mediaRecorder.start(); voiceRecording=true; setVoiceState('listening'); }
+  catch(err){ console.error('Mic error:',err); var lbl=document.getElementById('voiceLabel'),s=document.getElementById('voiceSub'),m=document.getElementById('vMicBtn'); if(lbl)lbl.textContent='Mic access denied'; if(s){ s.textContent='Please allow microphone and try again'; s.style.display=''; } if(m)m.style.display='flex'; }
+}
+function voiceTapStop(){ if(voiceRecording&&mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop(); voiceRecording=false; setVoiceState('idle'); }
+document.getElementById('speakBtn').addEventListener('click',function(e){ e.preventDefault(); openVoice(); });
+
 /* ─── SVG ICONS (no emoji anywhere) ─── */
 const IC = {
   trophy: '<svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H8v2h8v-2h-3v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>',
