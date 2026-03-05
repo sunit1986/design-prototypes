@@ -67,6 +67,9 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 
 /* TOOLS */
 .tools-section{display:flex;flex-direction:column;gap:8px}
+.section-title-row{display:flex;align-items:baseline;gap:8px;padding:16px 18px 12px}
+.section-title-row .section-title{padding:0}
+.tools-coming-soon{font-size:11px;font-weight:500;color:var(--primary-50);text-transform:lowercase;letter-spacing:.02em;opacity:.9}
 .tools-row{display:flex;gap:8px;padding:0 18px;overflow-x:auto;flex-wrap:nowrap}
 .tool-chip{
   flex-shrink:0;display:flex;align-items:center;gap:6px;
@@ -77,10 +80,6 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
   position:relative;
 }
 .tool-chip:active{background:var(--primary-20);border-color:var(--primary-50)}
-.tool-chip-tag{
-  font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;
-  color:var(--primary-50);margin-left:2px;
-}
 
 /* UPDATE CARDS */
 .updates-section{display:flex;flex-direction:column;gap:10px;padding:0 16px}
@@ -287,22 +286,25 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
   </div>
 
   <!-- TOOLS -->
-  <div class="section-title anim-3">Tools</div>
   <div class="tools-section anim-3">
-    <div class="tools-row">
-      <div class="tool-chip">💬 Quick Translate<span class="tool-chip-tag">Coming Soon</span></div>
-      <div class="tool-chip">🎨 Create image<span class="tool-chip-tag">Coming Soon</span></div>
-      <div class="tool-chip">🧑‍⚕️ Health Calculator<span class="tool-chip-tag">Coming Soon</span></div>
+    <div class="section-title-row">
+      <div class="section-title">Tools</div>
+      <span class="tools-coming-soon">Coming soon</span>
     </div>
     <div class="tools-row">
-      <div class="tool-chip">🎬 Generate videos<span class="tool-chip-tag">Coming Soon</span></div>
-      <div class="tool-chip">📑 Analyse docs<span class="tool-chip-tag">Coming Soon</span></div>
-      <div class="tool-chip">🛍️ Smart Shopping<span class="tool-chip-tag">Coming Soon</span></div>
+      <div class="tool-chip">💬 Quick Translate</div>
+      <div class="tool-chip">🎨 Create image</div>
+      <div class="tool-chip">🧑‍⚕️ Health Calculator</div>
+    </div>
+    <div class="tools-row">
+      <div class="tool-chip">🎬 Generate videos</div>
+      <div class="tool-chip">📑 Analyse docs</div>
+      <div class="tool-chip">🛍️ Smart Shopping</div>
     </div>
   </div>
 
   <!-- UPDATES -->
-  <div class="section-title anim-4">Updates</div>
+  <div class="section-title anim-4" style="padding-top:4px">Updates</div>
   <div class="updates-section anim-4">
 
     <!-- 1. JioMart Delivery -->
