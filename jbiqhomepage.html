@@ -219,6 +219,39 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 .speak-btn span{font-family:var(--font);font-weight:700;font-size:14px;color:#fff;line-height:1}
 .speak-btn:active{opacity:.85;transform:scale(.97)}
 
+/* MENU DRAWER */
+.menu-backdrop{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.3);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.menu-backdrop.open{opacity:1;visibility:visible}
+.menu-drawer{
+  position:fixed;top:0;bottom:0;left:0;z-index:95;width:320px;max-width:88vw;
+  background:var(--surface);box-shadow:4px 0 24px rgba(0,0,0,.12);
+  transform:translateX(-100%);transition:transform .3s ease;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.menu-drawer.open{transform:translateX(0)}
+.menu-header{display:flex;align-items:center;padding:12px 16px;height:56px;flex-shrink:0;border-bottom:1px solid var(--stroke-subtle)}
+.menu-close{width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.menu-close svg{width:24px;height:24px;color:var(--icon-medium)}
+.menu-title{font-size:18px;font-weight:700;color:var(--text-high);margin-left:8px}
+.menu-body{flex:1;overflow-y:auto;padding:16px 0}
+.menu-nav{list-style:none;padding:0 16px;margin:0}
+.menu-nav li{margin:0}
+.menu-nav a{display:flex;align-items:center;gap:12px;padding:14px 0;font-size:16px;font-weight:500;color:var(--text-high);text-decoration:none;border-bottom:1px solid var(--surface-subtle);cursor:pointer}
+.menu-nav a:active{background:var(--grey-20);margin:0 -16px;padding-left:16px;padding-right:16px}
+.menu-nav-icon{width:24px;height:24px;flex-shrink:0;opacity:.8}
+.menu-section-title{padding:20px 18px 8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-low)}
+.menu-chat-list{padding:0 18px 24px}
+.menu-chat-item{display:block;padding:12px 0;border-bottom:1px solid var(--surface-subtle);text-decoration:none;color:inherit;cursor:pointer}
+.menu-chat-item:last-child{border-bottom:none}
+.menu-chat-title{font-size:15px;font-weight:600;color:var(--text-high);line-height:1.3}
+.menu-chat-domain{font-size:12px;font-weight:400;color:var(--text-low);margin-top:2px}
+.menu-page{display:none;flex-direction:column;height:100%}
+.menu-page.active{display:flex}
+.menu-page-back{display:flex;align-items:center;gap:8px;padding:12px 16px;border:none;background:transparent;font-family:var(--font);font-size:16px;font-weight:500;color:var(--icon-medium);cursor:pointer}
+.menu-page-back svg{width:24px;height:24px}
+.menu-page-title{padding:16px 18px;font-size:20px;font-weight:900;color:var(--text-high)}
+.menu-page-body{flex:1;overflow-y:auto;padding:0 18px 24px;font-size:14px;color:var(--text-medium);line-height:1.5}
+
 @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 .anim-1{animation:fadeDown .4s ease both;animation-delay:0s}
 .anim-2{animation:fadeDown .4s ease both;animation-delay:.1s}
@@ -232,7 +265,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 <!-- STICKY HEADER -->
 <div class="header anim-1">
   <div class="header-start">
-    <button class="icon-btn-ghost" aria-label="Menu">
+    <button class="icon-btn-ghost" aria-label="Menu" onclick="openMenu()">
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16a1 1 0 100-2H4a1 1 0 000 2zm16 10H4a1 1 0 000 2h16a1 1 0 000-2zm0-6H4a1 1 0 000 2h16a1 1 0 000-2z" fill="currentColor"/></svg>
     </button>
     <img class="jio-logo" src="Assets/jio-logo.png" alt="Jio">
@@ -242,6 +275,61 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
       <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Profile">
       <div class="notif-badge">9</div>
     </div>
+  </div>
+</div>
+
+<!-- MENU DRAWER (hamburger) -->
+<div id="menuBackdrop" class="menu-backdrop" onclick="closeMenu()"></div>
+<div id="menuDrawer" class="menu-drawer">
+  <!-- Main menu view: Conversation history -->
+  <div id="menuMain" class="menu-page active">
+    <div class="menu-header">
+      <button class="menu-close" onclick="closeMenu()" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="menu-title">Menu</span>
+    </div>
+    <div class="menu-body">
+      <ul class="menu-nav">
+        <li><a href="javascript:void(0)" onclick="showMenuPage('chats');return false"><span class="menu-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span> Chats</a></li>
+        <li><a href="javascript:void(0)" onclick="showMenuPage('assistants');return false"><span class="menu-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span> Assistants</a></li>
+        <li><a href="javascript:void(0)" onclick="showMenuPage('tools');return false"><span class="menu-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span> Tools</a></li>
+        <li><a href="javascript:void(0)" onclick="showMenuPage('media');return false"><span class="menu-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></span> Media</a></li>
+      </ul>
+      <div class="menu-section-title">Conversation history</div>
+      <div class="menu-chat-list">
+        <a class="menu-chat-item" href="javascript:void(0)" onclick="closeMenu()"><div class="menu-chat-title">Plan Goa trip</div><div class="menu-chat-domain">Travel</div></a>
+        <a class="menu-chat-item" href="javascript:void(0)" onclick="closeMenu()"><div class="menu-chat-title">IND vs AUS live score</div><div class="menu-chat-domain">Cricket</div></a>
+        <a class="menu-chat-item" href="javascript:void(0)" onclick="closeMenu()"><div class="menu-chat-title">Translate Hindi to English</div><div class="menu-chat-domain">General</div></a>
+        <a class="menu-chat-item" href="javascript:void(0)" onclick="closeMenu()"><div class="menu-chat-title">Diwali poster image</div><div class="menu-chat-domain">Create image</div></a>
+        <a class="menu-chat-item" href="javascript:void(0)" onclick="closeMenu()"><div class="menu-chat-title">December budget summary</div><div class="menu-chat-domain">Finance</div></a>
+        <a class="menu-chat-item" href="javascript:void(0)" onclick="closeMenu()"><div class="menu-chat-title">Cricket highlights today</div><div class="menu-chat-domain">Entertainment</div></a>
+      </div>
+    </div>
+  </div>
+  <!-- Chats page -->
+  <div id="menuPageChats" class="menu-page">
+    <button class="menu-page-back" onclick="showMenuPage('main')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <div class="menu-page-title">Chats</div>
+    <div class="menu-page-body">Your recent chats appear here. Tap a conversation from the list to continue.</div>
+  </div>
+  <!-- Assistants page -->
+  <div id="menuPageAssistants" class="menu-page">
+    <button class="menu-page-back" onclick="showMenuPage('main')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <div class="menu-page-title">Assistants</div>
+    <div class="menu-page-body">Career, Entertainment, Cricket, and more. Choose an assistant to get started.</div>
+  </div>
+  <!-- Tools page -->
+  <div id="menuPageTools" class="menu-page">
+    <button class="menu-page-back" onclick="showMenuPage('main')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <div class="menu-page-title">Tools</div>
+    <div class="menu-page-body">Quick Translate, Create image, Health Calculator, Generate videos, Analyse docs, Smart Shopping. Coming soon.</div>
+  </div>
+  <!-- Media page -->
+  <div id="menuPageMedia" class="menu-page">
+    <button class="menu-page-back" onclick="showMenuPage('main')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <div class="menu-page-title">Media</div>
+    <div class="menu-page-body">Your saved images, videos, and audio will appear here.</div>
   </div>
 </div>
 
@@ -304,7 +392,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
   </div>
 
   <!-- UPDATES -->
-  <div class="section-title anim-4" style="padding-top:4px">Updates</div>
+  <div class="section-title anim-4" style="padding-top:20px">Updates</div>
   <div class="updates-section anim-4">
 
     <!-- 1. JioMart Delivery -->
@@ -779,14 +867,20 @@ async function callAnthropic(messages){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({messages:messages})
     });
-    const data=await resp.json();
+    const data=await resp.json().catch(()=>({}));
     if(!resp.ok){
       console.error('Chat API error:',resp.status,data);
-      throw new Error(data.error?.message||'API error '+resp.status);
+      if(resp.status===401)
+        throw new Error('Chat proxy needs a valid Anthropic API key (set ANTHROPIC_API_KEY on your proxy).');
+      throw new Error(data.error?.message||data.message||'Chat API error '+resp.status);
     }
-    return data.content[0].text;
+    if(!data.content||!Array.isArray(data.content)||!data.content[0])
+      throw new Error('Invalid response from chat server.');
+    return data.content[0].text||'';
   }catch(err){
     console.error('callAnthropic failed:',err);
+    if(err.name==='TypeError'&&err.message&&(err.message.includes('fetch')||err.message.includes('Failed to fetch')))
+      throw new Error('Could not reach chat server. Check proxy URL, CORS, and that ANTHROPIC_API_KEY is set on the proxy.');
     throw err;
   }
 }
@@ -896,6 +990,22 @@ function voicePlayLastTts(){
   if(lastTtsBase64)playTtsViaContext(lastTtsBase64);
 }
 
+function openMenu(){
+  document.getElementById('menuBackdrop').classList.add('open');
+  document.getElementById('menuDrawer').classList.add('open');
+  showMenuPage('main');
+}
+function closeMenu(){
+  document.getElementById('menuBackdrop').classList.remove('open');
+  document.getElementById('menuDrawer').classList.remove('open');
+}
+function showMenuPage(page){
+  var pages=['menuMain','menuPageChats','menuPageAssistants','menuPageTools','menuPageMedia'];
+  var map={main:'menuMain',chats:'menuPageChats',assistants:'menuPageAssistants',tools:'menuPageTools',media:'menuPageMedia'};
+  var id=map[page]||'menuMain';
+  pages.forEach(function(p){var el=document.getElementById(p);if(el)el.classList.toggle('active',p===id);});
+}
+
 function openVoice(){
   unlockAudio();
   document.getElementById('voiceOverlay').style.display='flex';
@@ -972,7 +1082,9 @@ async function processVoice(audioBlob){
     if(!sttResp.ok){
       const sttErr=await sttResp.json().catch(()=>({}));
       console.error('STT error:',sttResp.status,sttErr);
-      throw new Error('Speech recognition failed: '+(sttErr.message||sttResp.status));
+      if(sttResp.status===401||sttResp.status===403)
+        throw new Error('Voice needs a valid Sarvam API key. Check your key at sarvam.ai.');
+      throw new Error('Speech recognition failed: '+(sttErr.message||sttErr.error||sttResp.status));
     }
     const sttData=await sttResp.json();
     console.log('STT result:',JSON.stringify(sttData));
@@ -1047,6 +1159,13 @@ async function speakWithSarvam(text,lang){
     const ttsData=await ttsResp.json();
     if(!ttsResp.ok){
       console.error('TTS API error:',ttsResp.status,ttsData);
+      const vSub=document.getElementById('voiceSub');
+      if(vSub){
+        vSub.textContent=(ttsResp.status===401||ttsResp.status===403)
+          ? 'Voice playback needs a valid Sarvam API key.'
+          : 'Voice playback failed. Try again.';
+        vSub.style.display='';
+      }
       return;
     }
     console.log('TTS response keys:',Object.keys(ttsData));
