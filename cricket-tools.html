@@ -326,9 +326,7 @@ a{text-decoration:none;color:inherit}
 
 <script>
 // BOTTOM BAR & VOICE (BOTTOM-BAR-AND-VOICE-SPEC)
-document.getElementById('homeInputText').addEventListener('click',function(){ openChat(); });
 document.getElementById('homeInputText').removeAttribute('readonly');
-document.getElementById('homeInputText').addEventListener('focus',function(e){ e.preventDefault(); this.blur(); openChat(); });
 document.getElementById('homeSpeakBtn').addEventListener('click',function(){ openVoice(); });
 var vState='closed',isRecording=false,mediaRecorder=null,audioChunks=[];
 function openVoice(){ document.getElementById('voiceOverlay').style.display='flex'; setVoiceState('idle'); }
@@ -349,7 +347,6 @@ async function voiceTapMic(){
   catch(err){ console.error('Mic error:',err); document.getElementById('voiceLabel').textContent='Mic access denied'; document.getElementById('voiceSub').textContent='Please allow microphone and try again'; document.getElementById('voiceSub').style.display=''; document.getElementById('vMicBtn').style.display='flex'; }
 }
 function voiceTapStop(){ if(isRecording&&mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop(); isRecording=false; setVoiceState('idle'); }
-function openChat(){ window.location.href='https://sunit1986.github.io/design-prototypes/jbiqhomepage.html'; }
 </script>
 
 </body>
