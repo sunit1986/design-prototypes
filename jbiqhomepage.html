@@ -74,8 +74,13 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
   background:var(--surface);border:1px solid var(--stroke-subtle);
   font-family:var(--font);font-size:14px;font-weight:500;color:var(--text-medium);
   cursor:pointer;white-space:nowrap;opacity:.8;transition:all .15s;
+  position:relative;
 }
 .tool-chip:active{background:var(--primary-20);border-color:var(--primary-50)}
+.tool-chip-tag{
+  font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;
+  color:var(--primary-50);margin-left:2px;
+}
 
 /* UPDATE CARDS */
 .updates-section{display:flex;flex-direction:column;gap:10px;padding:0 16px}
@@ -252,8 +257,8 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
       <span class="assistant-label">Career</span>
     </a>
     <a class="assistant-item" href="https://sunit1986.github.io/design-prototypes/bollywood-tools.html" style="text-decoration:none;color:inherit">
-      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-bollywood.png" alt="Bollywood"></div>
-      <span class="assistant-label">Bollywood</span>
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-bollywood.png" alt="Entertainment"></div>
+      <span class="assistant-label">Entertainment</span>
     </a>
     <div class="assistant-item">
       <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-cricket.png" alt="Cricket"></div>
@@ -285,14 +290,14 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
   <div class="section-title anim-3">Tools</div>
   <div class="tools-section anim-3">
     <div class="tools-row">
-      <div class="tool-chip">💬 Quick Translate</div>
-      <div class="tool-chip">🎨 Create image</div>
-      <div class="tool-chip">🧑‍⚕️ Health Calculator</div>
+      <div class="tool-chip">💬 Quick Translate<span class="tool-chip-tag">Coming Soon</span></div>
+      <div class="tool-chip">🎨 Create image<span class="tool-chip-tag">Coming Soon</span></div>
+      <div class="tool-chip">🧑‍⚕️ Health Calculator<span class="tool-chip-tag">Coming Soon</span></div>
     </div>
     <div class="tools-row">
-      <div class="tool-chip">🎬 Generate videos</div>
-      <div class="tool-chip">📑 Analyse docs</div>
-      <div class="tool-chip">🛍️ Smart Shopping</div>
+      <div class="tool-chip">🎬 Generate videos<span class="tool-chip-tag">Coming Soon</span></div>
+      <div class="tool-chip">📑 Analyse docs<span class="tool-chip-tag">Coming Soon</span></div>
+      <div class="tool-chip">🛍️ Smart Shopping<span class="tool-chip-tag">Coming Soon</span></div>
     </div>
   </div>
 
@@ -515,6 +520,8 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
     <button id="vStopBtn" onclick="voiceTapStop()" class="v-stop-btn" style="display:none">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="#fff"/></svg>
     </button>
+    <!-- Play TTS again (if autoplay was blocked) -->
+    <button id="vPlayBtn" onclick="voicePlayLastTts()" style="display:none;padding:10px 20px;border-radius:999px;border:none;background:var(--surface-bold);color:#fff;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer">Play response</button>
     <!-- Speak again (after AI responds) -->
     <div id="vAgainHint" style="display:none;font-family:var(--font);font-size:13px;color:var(--text-low);text-align:center">Tap mic to speak again</div>
   </div>
@@ -639,6 +646,8 @@ let mediaRecorder=null;
 let audioChunks=[];
 let isRecording=false;
 let currentAudio=null;
+let playbackCtx=null;
+let lastTtsBase64=null;
 
 // ── HOME INPUT HANDLERS ──
 document.getElementById('homeInputText').addEventListener('click',function(){openChat()});
@@ -792,6 +801,7 @@ function setVoiceState(state){
   const response=document.getElementById('voiceResponse');
   const micBtn=document.getElementById('vMicBtn');
   const stopBtn=document.getElementById('vStopBtn');
+  const playBtn=document.getElementById('vPlayBtn');
   const hint=document.getElementById('vAgainHint');
 
   dots.className='v-dots v-dots--'+state;
@@ -805,6 +815,7 @@ function setVoiceState(state){
       response.style.display='none';response.innerHTML='';
       micBtn.style.display='flex';micBtn.classList.remove('v-mic--pulse');
       stopBtn.style.display='none';
+      if(playBtn)playBtn.style.display='none';
       hint.style.display='none';
       break;
     case 'listening':
@@ -815,6 +826,7 @@ function setVoiceState(state){
       response.style.display='none';
       micBtn.style.display='none';
       stopBtn.style.display='flex';
+      if(playBtn)playBtn.style.display='none';
       hint.style.display='none';
       break;
     case 'processing':
@@ -823,6 +835,7 @@ function setVoiceState(state){
       sub.style.display='';
       micBtn.style.display='none';
       stopBtn.style.display='none';
+      if(playBtn)playBtn.style.display='none';
       hint.style.display='none';
       break;
     case 'thinking':
@@ -830,6 +843,7 @@ function setVoiceState(state){
       sub.style.display='none';
       micBtn.style.display='none';
       stopBtn.style.display='none';
+      if(playBtn)playBtn.style.display='none';
       hint.style.display='none';
       break;
     case 'speaking':
@@ -837,12 +851,51 @@ function setVoiceState(state){
       sub.style.display='none';
       micBtn.style.display='flex';micBtn.classList.add('v-mic--pulse');
       stopBtn.style.display='none';
+      if(playBtn)playBtn.style.display=lastTtsBase64?'block':'none';
       hint.style.display='block';
       break;
   }
 }
 
+function unlockAudio(){
+  if(playbackCtx)return;
+  try{
+    playbackCtx=new (window.AudioContext||window.webkitAudioContext)();
+    playbackCtx.resume();
+  }catch(e){console.warn('AudioContext:',e)}
+}
+
+function base64ToArrayBuffer(b64){
+  const bin=atob(b64);
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
+function playTtsViaContext(base64){
+  if(!playbackCtx||!base64)return;
+  try{
+    playbackCtx.resume();
+    const ab=base64ToArrayBuffer(base64);
+    playbackCtx.decodeAudioData(ab).then(buf=>{
+      const src=playbackCtx.createBufferSource();
+      src.buffer=buf;
+      src.connect(playbackCtx.destination);
+      src.onended=()=>{
+        if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle';
+      };
+      src.start(0);
+    }).catch(e=>console.error('decodeAudioData:',e));
+  }catch(e){console.error('playTtsViaContext:',e)}
+}
+
+function voicePlayLastTts(){
+  unlockAudio();
+  if(lastTtsBase64)playTtsViaContext(lastTtsBase64);
+}
+
 function openVoice(){
+  unlockAudio();
   document.getElementById('voiceOverlay').style.display='flex';
   setVoiceState('idle');
 }
@@ -855,6 +908,7 @@ function closeVoice(){
 }
 
 function voiceTapMic(){
+  unlockAudio();
   if(currentAudio){currentAudio.pause();currentAudio=null;}
   startVoiceRecording();
 }
@@ -995,14 +1049,19 @@ async function speakWithSarvam(text,lang){
     }
     console.log('TTS response keys:',Object.keys(ttsData));
     if(ttsData.audios&&ttsData.audios[0]){
-      const audio=new Audio('data:audio/wav;base64,'+ttsData.audios[0]);
-      currentAudio=audio;
-      audio.onended=()=>{
-        if(vState==='speaking'){
-          document.getElementById('voiceDots').className='v-dots v-dots--idle';
-        }
-      };
-      audio.play().catch(e=>console.error('Audio play error:',e));
+      lastTtsBase64=ttsData.audios[0];
+      const vPlay=document.getElementById('vPlayBtn');
+      if(vPlay)vPlay.style.display='block';
+      if(playbackCtx){
+        playTtsViaContext(lastTtsBase64);
+      }else{
+        const audio=new Audio('data:audio/wav;base64,'+lastTtsBase64);
+        currentAudio=audio;
+        audio.onended=()=>{
+          if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle';
+        };
+        audio.play().catch(e=>{console.error('Audio play error:',e);});
+      }
     }else{
       console.error('TTS: no audio in response',ttsData);
     }
