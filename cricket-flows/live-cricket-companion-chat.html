@@ -688,7 +688,7 @@ function iconBg(c) {
 function scrollBottom() { setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 60); }
 
 function botIconHTML() {
-  return `<div class="bot-icon"><video autoplay loop muted playsinline><source src="Assets/HelloJio_Listening_241.mp4" type="video/mp4"></video></div>`;
+  return `<div class="bot-icon"><video autoplay loop muted playsinline><source src="../Assets/HelloJio_Listening_241.mp4" type="video/mp4"></video></div>`;
 }
 
 function addMsg(type, html) {
@@ -714,7 +714,7 @@ function addWidget(html) {
 function addThinking() {
   const row = document.createElement('div');
   row.className = 'thinking-row'; row.id = 'thinkingRow';
-  row.innerHTML = `<div class="thinking-icon"><video autoplay loop muted playsinline><source src="Assets/HelloJio_Listening_241.mp4" type="video/mp4"></video></div><div class="thinking-dots"><span></span><span></span><span></span></div><div class="thinking-label">Thinking...</div>`;
+  row.innerHTML = `<div class="thinking-icon"><video autoplay loop muted playsinline><source src="../Assets/HelloJio_Listening_241.mp4" type="video/mp4"></video></div><div class="thinking-dots"><span></span><span></span><span></span></div><div class="thinking-label">Thinking...</div>`;
   chat.appendChild(row); scrollBottom();
 }
 function removeThinking() { const el = document.getElementById('thinkingRow'); if (el) el.remove(); }
