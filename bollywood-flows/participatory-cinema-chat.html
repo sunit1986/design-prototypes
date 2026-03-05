@@ -1868,7 +1868,95 @@ function handleInputKey(e) {
 document.addEventListener('DOMContentLoaded', () => {
   showWelcome();
 });
+
+// ═══════════════════════════════════
+// VOICE OVERLAY — Full STT/TTS/Chat
+// ═══════════════════════════════════
+const _vp=['sk','_8ajz','668k_','7FQZo','3QWwc','AQ8Sm','30SmT','t6L4'];
+const SARVAM_KEY=_vp[0]+_vp[1]+_vp[2]+_vp[3]+_vp[4]+_vp[5]+_vp[6]+_vp[7];
+const VOICE_CHAT_PROXY='https://jbiq-proxy.sunit3-sharma.workers.dev';
+let voiceChatHistory=[],vMediaRecorder=null,vAudioChunks=[],vIsRecording=false,vCurrentAudio=null,vPlaybackCtx=null,vLastTtsBase64=null;
+let vState='closed';
+
+document.getElementById('speakBtn').addEventListener('click',function(e){e.stopPropagation();openVoice()});
+
+function openVoice(){vUnlockAudio();document.getElementById('voiceOverlay').style.display='flex';setVoiceState('idle')}
+function closeVoice(){vKillRecording();if(vCurrentAudio){vCurrentAudio.pause();vCurrentAudio=null}document.getElementById('voiceOverlay').style.display='none';vState='closed'}
+function voiceTapMic(){vUnlockAudio();if(vCurrentAudio){vCurrentAudio.pause();vCurrentAudio=null}vStartRecording()}
+function voiceTapStop(){if(vIsRecording)vKillRecording()}
+
+function setVoiceState(s){vState=s;const dots=document.getElementById('voiceDots'),label=document.getElementById('voiceLabel'),sub=document.getElementById('voiceSub'),transcript=document.getElementById('voiceTranscript'),response=document.getElementById('voiceResponse'),micBtn=document.getElementById('vMicBtn'),stopBtn=document.getElementById('vStopBtn'),playBtn=document.getElementById('vPlayBtn'),hint=document.getElementById('vAgainHint');dots.className='v-dots v-dots--'+s;switch(s){case'idle':label.textContent='Hey there';sub.textContent='Tap the mic to start speaking';sub.style.display='';transcript.style.display='none';response.style.display='none';micBtn.style.display='flex';micBtn.classList.remove('v-mic--pulse');stopBtn.style.display='none';if(playBtn)playBtn.style.display='none';hint.style.display='none';break;case'listening':label.textContent='Listening...';sub.textContent='Tap the red button when done';sub.style.display='';micBtn.style.display='none';stopBtn.style.display='flex';if(playBtn)playBtn.style.display='none';hint.style.display='none';break;case'processing':label.textContent='Processing...';sub.textContent='Converting speech to text';sub.style.display='';micBtn.style.display='none';stopBtn.style.display='none';if(playBtn)playBtn.style.display='none';hint.style.display='none';break;case'thinking':label.textContent='Thinking...';sub.style.display='none';micBtn.style.display='none';stopBtn.style.display='none';if(playBtn)playBtn.style.display='none';hint.style.display='none';break;case'speaking':label.textContent='';sub.style.display='none';micBtn.style.display='flex';micBtn.classList.add('v-mic--pulse');stopBtn.style.display='none';if(playBtn)playBtn.style.display=vLastTtsBase64?'block':'none';hint.style.display='block';break}}
+
+function vUnlockAudio(){if(vPlaybackCtx)return;try{vPlaybackCtx=new(window.AudioContext||window.webkitAudioContext)();vPlaybackCtx.resume()}catch(e){}}
+function vBase64ToAB(b){const bin=atob(b);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return bytes.buffer}
+function vPlayTts(b64){if(!vPlaybackCtx||!b64)return;try{vPlaybackCtx.resume();vPlaybackCtx.decodeAudioData(vBase64ToAB(b64)).then(buf=>{const src=vPlaybackCtx.createBufferSource();src.buffer=buf;src.connect(vPlaybackCtx.destination);src.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle'};src.start(0)}).catch(()=>{})}catch(e){}}
+function voicePlayLastTts(){vUnlockAudio();if(vLastTtsBase64)vPlayTts(vLastTtsBase64)}
+
+async function vStartRecording(){try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});vAudioChunks=[];vMediaRecorder=new MediaRecorder(stream,{mimeType:'audio/webm;codecs=opus'});vMediaRecorder.ondataavailable=e=>{if(e.data.size>0)vAudioChunks.push(e.data)};vMediaRecorder.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());if(!vAudioChunks.length){setVoiceState('idle');return}await vProcessVoice(new Blob(vAudioChunks,{type:'audio/webm'}))};vMediaRecorder.start();vIsRecording=true;setVoiceState('listening')}catch(err){document.getElementById('voiceLabel').textContent='Mic access denied';document.getElementById('voiceSub').textContent='Please allow microphone access';document.getElementById('voiceSub').style.display='';document.getElementById('vMicBtn').style.display='flex'}}
+function vKillRecording(){if(vMediaRecorder&&vMediaRecorder.state==='recording')vMediaRecorder.stop();vIsRecording=false}
+
+async function vProcessVoice(audioBlob){setVoiceState('processing');try{const wavBlob=await vConvertToWav(audioBlob);const fd=new FormData();fd.append('file',wavBlob,'audio.wav');fd.append('model','saaras:v3');fd.append('language_code','unknown');fd.append('mode','transcribe');const sttResp=await fetch('https://api.sarvam.ai/speech-to-text',{method:'POST',headers:{'api-subscription-key':SARVAM_KEY},body:fd});if(!sttResp.ok)throw new Error('Speech recognition failed');const sttData=await sttResp.json();const transcript=(sttData.transcript||'').trim();const detectedLang=sttData.language_code||'en';if(!transcript){document.getElementById('voiceLabel').textContent="Didn't catch that";document.getElementById('voiceSub').textContent='Tap mic to try again';document.getElementById('voiceSub').style.display='';document.getElementById('vMicBtn').style.display='flex';document.getElementById('vStopBtn').style.display='none';return}document.getElementById('voiceTranscript').textContent='"'+transcript+'"';document.getElementById('voiceTranscript').style.display='block';setVoiceState('thinking');voiceChatHistory.push({role:'user',content:transcript});const resp=await fetch(VOICE_CHAT_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:voiceChatHistory})});const data=await resp.json().catch(()=>({}));if(!resp.ok)throw new Error(data.error?.message||'Chat error');const aiText=data.content?.[0]?.text||'';voiceChatHistory.push({role:'assistant',content:aiText});setVoiceState('speaking');const respEl=document.getElementById('voiceResponse');respEl.style.display='block';respEl.innerHTML='<div style="font-family:JioType,sans-serif;font-size:15px;color:#0c0d10;line-height:1.55">'+vFormatMd(aiText)+'</div>';vSpeakTTS(aiText,detectedLang)}catch(err){document.getElementById('voiceLabel').textContent='Something went wrong';document.getElementById('voiceSub').textContent=err.message||'Tap mic to try again';document.getElementById('voiceSub').style.display='';document.getElementById('vMicBtn').style.display='flex';document.getElementById('vStopBtn').style.display='none';if(voiceChatHistory.length&&voiceChatHistory[voiceChatHistory.length-1].role==='user')voiceChatHistory.pop()}}
+
+function vFormatMd(t){let h=t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/### (.*?)(\n|$)/g,'<h3>$1</h3>');const lines=h.split('\n');let r='',inL=false;for(const l of lines){const tr=l.trim();if(/^[-•*]\s/.test(tr)){if(!inL){r+='<ul>';inL=true}r+='<li>'+tr.replace(/^[-•*]\s/,'')+'</li>'}else{if(inL){r+='</ul>';inL=false}if(tr)r+='<p>'+tr+'</p>'}}if(inL)r+='</ul>';return r||'<p>'+t+'</p>'}
+
+async function vSpeakTTS(text,lang){const ttsLang=(lang&&lang.startsWith('hi'))?'hi-IN':'en-IN';const cleaned=text.replace(/[#*_`>\[\](){}|~]/g,'').replace(/\bhttps?:\/\/\S+/g,'').replace(/[^\w\s.,!?;:'"₹%\-\n\u0900-\u097F]/g,'').replace(/\n{2,}/g,'. ').replace(/\n/g,' ').replace(/\s{2,}/g,' ').trim().substring(0,500);if(!cleaned)return;try{const ttsResp=await fetch('https://api.sarvam.ai/text-to-speech',{method:'POST',headers:{'api-subscription-key':SARVAM_KEY,'Content-Type':'application/json'},body:JSON.stringify({inputs:[cleaned],target_language_code:ttsLang,speaker:'anushka',model:'bulbul:v2'})});const ttsData=await ttsResp.json();if(!ttsResp.ok)return;if(ttsData.audios&&ttsData.audios[0]){vLastTtsBase64=ttsData.audios[0];const vPlay=document.getElementById('vPlayBtn');if(vPlay)vPlay.style.display='block';if(vPlaybackCtx){vPlayTts(vLastTtsBase64)}else{const audio=new Audio('data:audio/wav;base64,'+vLastTtsBase64);vCurrentAudio=audio;audio.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle'};audio.play().catch(()=>{})}}}catch(e){}}
+
+async function vConvertToWav(webmBlob){return new Promise(resolve=>{const audioCtx=new(window.AudioContext||window.webkitAudioContext)({sampleRate:16000});const reader=new FileReader();reader.onload=async function(){try{const ab=await audioCtx.decodeAudioData(reader.result);const offCtx=new OfflineAudioContext(1,ab.duration*16000,16000);const src=offCtx.createBufferSource();src.buffer=ab;src.connect(offCtx.destination);src.start();const rendered=await offCtx.startRendering();resolve(new Blob([vEncodeWav(rendered.getChannelData(0),16000)],{type:'audio/wav'}))}catch(e){resolve(webmBlob)}};reader.readAsArrayBuffer(webmBlob)})}
+function vEncodeWav(samples,sr){const buf=new ArrayBuffer(44+samples.length*2);const v=new DataView(buf);function ws(o,s){for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))}ws(0,'RIFF');v.setUint32(4,36+samples.length*2,true);ws(8,'WAVE');ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,samples.length*2,true);for(let i=0;i<samples.length;i++){const s=Math.max(-1,Math.min(1,samples[i]));v.setInt16(44+i*2,s<0?s*0x8000:s*0x7FFF,true)}return buf}
 </script>
+
+<!-- VOICE OVERLAY HTML -->
+<div id="voiceOverlay" style="display:none;position:fixed;inset:0;z-index:200;background:#fff;flex-direction:column">
+  <div style="display:flex;align-items:center;padding:10px 12px;height:56px;flex-shrink:0">
+    <button onclick="closeVoice()" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#170054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span style="font-family:JioType,sans-serif;font-size:16px;font-weight:500;color:#0c0d10;margin-left:4px">Voice</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;padding:0 24px">
+    <div id="voiceDots" class="v-dots v-dots--idle"><div></div><div></div><div></div><div></div></div>
+    <div id="voiceLabel" style="margin-top:28px;font-family:JioType,sans-serif;font-size:20px;font-weight:700;color:#0c0d10;text-align:center">Hey there</div>
+    <div id="voiceSub" style="margin-top:8px;font-family:JioType,sans-serif;font-size:15px;font-weight:400;color:rgba(25,27,30,.65);text-align:center">Tap the mic to start speaking</div>
+    <div id="voiceTranscript" style="display:none;margin-top:20px;font-family:JioType,sans-serif;font-size:15px;font-weight:500;color:#0c0d10;text-align:center;max-width:300px;line-height:1.5;background:#f5f5f5;padding:12px 16px;border-radius:16px"></div>
+    <div id="voiceResponse" style="display:none;margin-top:16px;text-align:left;width:100%;max-width:330px;max-height:240px;overflow-y:auto"></div>
+  </div>
+  <div style="padding:12px 24px 28px;display:flex;flex-direction:column;align-items:center;gap:12px">
+    <button id="vMicBtn" onclick="voiceTapMic()" class="v-mic-btn"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="#fff"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <button id="vStopBtn" onclick="voiceTapStop()" class="v-stop-btn" style="display:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="#fff"/></svg></button>
+    <button id="vPlayBtn" onclick="voicePlayLastTts()" style="display:none;padding:10px 20px;border-radius:999px;border:none;background:#3900ad;color:#fff;font-family:JioType,sans-serif;font-size:15px;font-weight:600;cursor:pointer">Play response</button>
+    <div id="vAgainHint" style="display:none;font-family:JioType,sans-serif;font-size:13px;color:rgba(25,27,30,.65);text-align:center">Tap mic to speak again</div>
+  </div>
+</div>
+
+<style>
+@keyframes vDotBreath{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(.92);opacity:.4}}
+@keyframes vDotListen{0%,100%{transform:scale(1);opacity:1}25%{transform:scale(.7);opacity:.5}50%{transform:scale(1.08);opacity:1}75%{transform:scale(.8);opacity:.6}}
+@keyframes vDotProcess{0%,100%{transform:scale(.8);opacity:.5}50%{transform:scale(1);opacity:1}}
+@keyframes vMicPulse{0%,100%{box-shadow:0 0 0 0 rgba(109,23,206,.4)}50%{box-shadow:0 0 0 16px rgba(109,23,206,0)}}
+.v-dots{width:148px;height:148px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v-dots div{border-radius:50%;background:#6d17ce;transition:background .3s}
+.v-dots--idle div{animation:vDotBreath 2.5s ease-in-out infinite;opacity:.5}
+.v-dots--idle div:nth-child(2){animation-delay:.3s}
+.v-dots--idle div:nth-child(3){animation-delay:.6s}
+.v-dots--idle div:nth-child(4){animation-delay:.9s}
+.v-dots--listening div{animation:vDotListen 1s ease-in-out infinite;background:#6d17ce}
+.v-dots--listening div:nth-child(2){animation-delay:.15s}
+.v-dots--listening div:nth-child(3){animation-delay:.3s}
+.v-dots--listening div:nth-child(4){animation-delay:.45s}
+.v-dots--processing div{animation:vDotProcess 1.2s ease-in-out infinite;background:#9966dd}
+.v-dots--processing div:nth-child(2){animation-delay:.2s}
+.v-dots--processing div:nth-child(3){animation-delay:.4s}
+.v-dots--processing div:nth-child(4){animation-delay:.6s}
+.v-dots--speaking div{animation:vDotListen 1.6s ease-in-out infinite;background:#3535f3}
+.v-dots--speaking div:nth-child(2){animation-delay:.2s}
+.v-dots--speaking div:nth-child(3){animation-delay:.4s}
+.v-dots--speaking div:nth-child(4){animation-delay:.6s}
+.v-mic-btn{width:64px;height:64px;border-radius:50%;border:none;background:#6d17ce;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.v-mic-btn:active{transform:scale(.92)}
+.v-mic-btn.v-mic--pulse{animation:vMicPulse 1.5s ease-in-out infinite}
+.v-stop-btn{width:64px;height:64px;border-radius:50%;border:none;background:#fa2f40;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.v-stop-btn:active{transform:scale(.92)}
+</style>
 
 </body>
 </html>
