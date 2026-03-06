@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Devotion AI — Jio Omni AI</title>
+<style>
+@font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+:root {
+  --surface:#ffffff; --surface-ghost:#eeeeef; --surface-ghost-icon:#e7e9ff;
+  --surface-bold:#3900ad; --surface-minimal:#f5f5f6; --surface-moderate:#e3e3e4;
+  --text-high:#0c0d10; --text-medium:#191b1e; --text-low:rgba(25,27,30,0.65);
+  --text-on-bold:#ffffff; --icon-medium:#170054; --icon-high:#0c0d10;
+  --primary-20:#e8e8fc; --primary-30:#9999ff; --primary-50:#3535f3;
+  --primary-60:#000093; --primary-70:#00004c;
+  --sparkle-20:#e8faf7; --sparkle-30:#a7f6e9; --sparkle-50:#1eccb0;
+  --sparkle-60:#1e7b74; --sparkle-70:#0e5c4f;
+  --secondary-20:#fef7e9; --secondary-30:#ffe3ae; --secondary-50:#f7ab20; --secondary-60:#ac660c;
+  --success:#25ab21; --success-20:#e6f7e6;
+  --error:#fa2f40; --error-20:#fde8ea; --warning:#f06d0f;
+  --grey-100:#141414; --grey-80:rgba(0,0,0,0.66); --grey-60:#b5b5b5; --grey-40:#e0e0e0; --grey-20:#f5f5f5;
+  --shape-4xl:23px; --shape-pill:999px; --shape-large:16px; --shape-medium:12px; --shape-small:8px; --shape-xsmall:4px;
+  --spacing-2xs:6px; --spacing-xs:8px; --spacing-s:12px; --spacing-m:16px; --spacing-l:20px; --spacing-xl:24px;
+  --stroke-minimal:rgba(36,38,43,0.13); --stroke-subtle:rgba(36,38,43,0.12);
+  --spring:350ms linear(0,0.3667,0.8271,1.0379,1.0652,1.0332,1.006,0.9961,0.996,0.9984,0.9999,1);
+  --ease-standard:cubic-bezier(0.4,0.0,0.2,1); --ease-decelerate:cubic-bezier(0.0,0.0,0.2,1);
+  --dur-quick:150ms; --dur-mod:250ms; --dur-del:350ms;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{overscroll-behavior:none;touch-action:manipulation;}
+body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;background:#e8e8e8;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px 0;}
+@media(max-width:768px){body{background:#fff!important;padding:0!important;align-items:stretch!important;}.phone-frame{width:100%!important;height:100vh!important;height:100dvh!important;border-radius:0!important;box-shadow:none!important;}}
+
+.phone-frame{width:360px;height:800px;background:var(--surface);position:relative;overflow:hidden;display:flex;flex-direction:column;border-radius:32px;box-shadow:0 24px 80px rgba(0,0,0,0.15);}
+
+/* STATUS BAR */
+.status-bar{height:52px;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--surface);}
+.status-bar .time{font-size:15px;font-weight:600;color:var(--text-high);}
+.status-bar .icons{display:flex;gap:6px;align-items:center;}
+.status-bar .icons svg{width:16px;height:16px;fill:var(--text-high);}
+
+/* HEADER */
+.header-nav{height:56px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid var(--surface-moderate);background:var(--surface);}
+.header-left{display:flex;align-items:center;gap:8px;}
+.back-btn{width:40px;height:40px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;transition:background var(--dur-quick) var(--ease-standard);}
+.back-btn:active{background:var(--grey-20);}
+.back-btn svg{width:24px;height:24px;fill:var(--icon-medium);}
+.header-title-area{flex:1;}
+.header-title{font-size:16px;font-weight:500;color:var(--text-high);line-height:1;}
+.header-domain{font-size:12px;color:var(--text-low);line-height:1.3;}
+.header-right{display:flex;gap:4px;}
+.icon-btn-ghost{width:36px;height:36px;border-radius:var(--shape-pill);display:flex;align-items:center;justify-content:center;background:var(--surface-ghost);border:none;cursor:pointer;transition:background var(--dur-quick) var(--ease-standard);}
+.icon-btn-ghost:active{background:var(--surface-moderate);}
+.icon-btn-ghost svg{width:20px;height:20px;fill:var(--icon-medium);}
+
+/* CHAT CONTAINER */
+.chat-container{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth;scrollbar-width:none;}
+.chat-container::-webkit-scrollbar{display:none;}
+
+/* AI MESSAGE */
+.ai-msg{display:flex;gap:8px;align-items:flex-start;animation:msgIn var(--dur-del) var(--ease-decelerate);}
+.ai-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;background:var(--primary-20);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.ai-avatar video{width:100%;height:100%;object-fit:cover;}
+.ai-avatar-dots{display:grid;grid-template-columns:1fr 1fr;gap:3px;width:14px;height:14px;}
+.ai-avatar-dots div{border-radius:50%;background:var(--primary-50);}
+.ai-content{flex:1;max-width:calc(100% - 40px);min-width:0;}
+.ai-text{font-size:14px;line-height:1.5;color:var(--text-high);letter-spacing:-0.005em;}
+.ai-text p{margin-bottom:8px;}
+.ai-text p:last-child{margin-bottom:0;}
+.ai-text strong{font-weight:700;}
+
+/* USER MESSAGE */
+.user-msg{display:flex;justify-content:flex-end;animation:msgIn var(--dur-del) var(--ease-decelerate);}
+.user-bubble{max-width:270px;background:var(--surface-ghost);color:var(--text-high);padding:12px 16px;border-radius:24px 24px 0 24px;font-size:14px;line-height:1.4;letter-spacing:-0.005em;font-weight:500;}
+
+/* THINKING */
+.thinking-row{display:flex;align-items:center;gap:8px;animation:msgIn var(--dur-mod) var(--ease-decelerate);}
+.thinking-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;background:var(--primary-20);display:flex;align-items:center;justify-content:center;}
+.thinking-dots{display:flex;gap:4px;}
+.thinking-dots span{width:6px;height:6px;border-radius:50%;background:var(--primary-50);animation:dotBounce 1.2s infinite;}
+.thinking-dots span:nth-child(2){animation-delay:.15s;}
+.thinking-dots span:nth-child(3){animation-delay:.3s;}
+
+/* FEEDBACK */
+.feedback-row{display:flex;gap:2px;margin-top:8px;}
+.fb-btn{width:29px;height:29px;border-radius:var(--shape-pill);background:var(--surface);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--dur-quick) var(--ease-standard);}
+.fb-btn:active{background:var(--grey-20);}
+.fb-btn svg{width:16px;height:16px;fill:var(--icon-high);}
+
+/* CHIPS */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.chip-row.scroll{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;}
+.chip-row.scroll::-webkit-scrollbar{display:none;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1.5px solid var(--stroke-minimal);border-radius:var(--shape-pill);background:var(--surface);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;color:var(--text-high);cursor:pointer;transition:all var(--dur-quick) var(--ease-standard);letter-spacing:-0.005em;white-space:nowrap;flex-shrink:0;}
+.chip:active{transform:scale(0.97);}
+.chip:hover{border-color:var(--primary-30);background:var(--primary-20);}
+.chip svg{width:16px;height:16px;fill:var(--icon-medium);}
+.chip.cta{background:var(--surface-bold);border-color:var(--surface-bold);color:#fff;font-weight:700;}
+.chip.cta:hover{background:var(--primary-60);}
+.chip.cta svg{fill:#fff;}
+
+/* FAITH CHIPS */
+.faith-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.faith-chip{display:flex;align-items:center;gap:10px;padding:14px 14px;border:2px solid var(--grey-40);border-radius:var(--shape-large);background:var(--surface);font-family:'JioType',sans-serif;font-size:14px;font-weight:600;color:var(--text-high);cursor:pointer;transition:all var(--dur-quick) var(--ease-standard);}
+.faith-chip:active{transform:scale(0.97);}
+.faith-chip.selected{border-color:var(--primary-50);background:var(--primary-20);color:var(--primary-60);}
+.faith-icon{width:36px;height:36px;border-radius:var(--shape-small);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.faith-icon svg{width:20px;height:20px;fill:#fff;}
+
+/* SETUP SUCCESS WIDGET */
+.setup-widget{background:var(--success-20);border-radius:var(--shape-large);border:1.5px solid #6bcf67;padding:16px;animation:successPop 400ms var(--spring);width:100%;}
+.setup-widget-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.setup-check{width:40px;height:40px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.setup-check svg{width:22px;height:22px;fill:#fff;}
+.setup-title{font-size:16px;font-weight:700;color:var(--text-high);line-height:1.2;}
+.setup-subtitle{font-size:12px;color:var(--success);margin-top:2px;font-weight:600;}
+.setup-details{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.setup-detail{background:rgba(255,255,255,0.75);border-radius:var(--shape-small);padding:10px 12px;}
+.setup-detail-label{font-size:10px;color:var(--text-low);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;}
+.setup-detail-value{font-size:14px;font-weight:700;color:var(--text-high);margin-top:3px;}
+.setup-cta{width:100%;padding:13px;background:var(--success);border:none;border-radius:var(--shape-medium);font-family:'JioType',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:opacity var(--dur-quick) var(--ease-standard);display:flex;align-items:center;justify-content:center;gap:8px;}
+.setup-cta:active{opacity:0.85;}
+.setup-cta svg{width:18px;height:18px;fill:#fff;}
+
+/* RITUAL CARD */
+.ritual-card{background:var(--primary-70);border-radius:var(--shape-large);padding:18px 20px;width:100%;animation:cardIn var(--spring);overflow:hidden;position:relative;}
+.ritual-card::before{content:'';position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.ritual-label{font-size:10px;font-weight:800;color:rgba(255,255,255,0.55);letter-spacing:0.08em;text-transform:uppercase;}
+.ritual-title{font-size:22px;font-weight:900;color:#fff;margin-top:4px;letter-spacing:-0.02em;line-height:1.1;}
+.ritual-meta{font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;}
+.ritual-tracks{margin-top:14px;display:flex;flex-direction:column;gap:6px;}
+.ritual-track{display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,0.1);border-radius:var(--shape-small);}
+.ritual-track-num{font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);width:16px;}
+.ritual-track-info{flex:1;}
+.ritual-track-name{font-size:13px;font-weight:600;color:#fff;}
+.ritual-track-artist{font-size:11px;color:rgba(255,255,255,0.45);}
+.ritual-track-dur{font-size:11px;color:rgba(255,255,255,0.4);}
+.ritual-begin-btn{width:100%;margin-top:14px;padding:13px;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);border-radius:var(--shape-medium);font-family:'JioType',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background var(--dur-quick) var(--ease-standard);}
+.ritual-begin-btn:active{background:rgba(255,255,255,0.25);}
+.ritual-begin-btn svg{width:18px;height:18px;fill:#fff;}
+
+/* FESTIVAL CARDS */
+.festival-row{display:flex;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 0 4px;width:100%;}
+.festival-row::-webkit-scrollbar{display:none;}
+.festival-card{flex-shrink:0;width:158px;border-radius:var(--shape-large);overflow:hidden;cursor:pointer;border:1px solid var(--stroke-subtle);transition:transform var(--dur-quick) var(--ease-standard);}
+.festival-card:active{transform:scale(0.97);}
+.festival-card-img{height:100px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.festival-card-img svg{width:38px;height:38px;fill:rgba(255,255,255,0.7);z-index:1;position:relative;}
+.festival-countdown{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.45);border-radius:var(--shape-xsmall);padding:3px 8px;font-size:10px;font-weight:700;color:#fff;letter-spacing:0.03em;}
+.festival-card-body{padding:10px 12px 13px;background:var(--surface);}
+.festival-name{font-size:13px;font-weight:700;color:var(--text-high);}
+.festival-date{font-size:11px;color:var(--text-low);margin-top:2px;}
+
+/* PUJA VIDHI WIDGET */
+.puja-widget{border:1px solid var(--stroke-subtle);border-radius:var(--shape-large);overflow:hidden;animation:cardIn var(--spring);width:100%;}
+.puja-header{padding:14px 16px;background:var(--primary-20);display:flex;align-items:center;gap:10px;}
+.puja-header svg{width:20px;height:20px;fill:var(--primary-50);flex-shrink:0;}
+.puja-header-title{font-size:15px;font-weight:700;color:var(--primary-60);}
+.puja-steps{padding:14px 16px 16px;display:flex;flex-direction:column;gap:14px;}
+.puja-step{display:flex;gap:12px;align-items:flex-start;}
+.puja-step-num{width:24px;height:24px;border-radius:50%;background:var(--primary-50);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:800;color:#fff;margin-top:1px;}
+.puja-step-name{font-size:14px;font-weight:700;color:var(--text-high);}
+.puja-step-desc{font-size:12px;color:var(--text-low);margin-top:3px;line-height:1.45;}
+.puja-step-mantra{margin-top:6px;padding:8px 10px;background:var(--primary-20);border-radius:var(--shape-small);font-size:13px;color:var(--primary-60);font-weight:500;line-height:1.5;}
+
+/* MANTRA CARD */
+.mantra-card{background:var(--secondary-20);border:1px solid var(--secondary-30);border-radius:var(--shape-large);padding:16px;animation:cardIn var(--spring);width:100%;}
+.mantra-label{font-size:10px;font-weight:800;color:var(--secondary-60);letter-spacing:0.07em;text-transform:uppercase;}
+.mantra-text{font-size:19px;font-weight:700;color:var(--text-high);margin-top:8px;line-height:1.4;letter-spacing:-0.01em;}
+.mantra-romanized{font-size:12px;color:var(--text-low);margin-top:4px;font-style:italic;}
+.mantra-meaning{font-size:13px;color:var(--text-medium);margin-top:8px;line-height:1.55;}
+.mantra-count{margin-top:10px;display:flex;align-items:center;gap:6px;}
+.mantra-count svg{width:14px;height:14px;fill:var(--secondary-60);}
+.mantra-count span{font-size:12px;font-weight:600;color:var(--secondary-60);}
+
+/* PANCHANG STRIP */
+.panchang-strip{background:var(--surface-ghost);border-radius:var(--shape-medium);padding:12px 14px;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;width:100%;animation:cardIn var(--spring);}
+.panchang-strip::-webkit-scrollbar{display:none;}
+.panchang-item{flex-shrink:0;}
+.panchang-key{font-size:10px;font-weight:700;color:var(--text-low);text-transform:uppercase;letter-spacing:0.04em;}
+.panchang-val{font-size:13px;font-weight:700;color:var(--text-high);margin-top:2px;}
+
+/* NAMAAZ CARD */
+.namaaz-card{border:1px solid var(--stroke-subtle);border-radius:var(--shape-large);overflow:hidden;animation:cardIn var(--spring);width:100%;}
+.namaaz-header{padding:12px 16px;background:#2d8a4e;display:flex;align-items:center;gap:8px;}
+.namaaz-header svg{width:18px;height:18px;fill:rgba(255,255,255,0.8);}
+.namaaz-header-title{font-size:14px;font-weight:700;color:#fff;}
+.namaaz-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--grey-40);}
+.namaaz-row:last-child{border-bottom:none;}
+.namaaz-row.current{background:#e8f5ec;}
+.namaaz-name{font-size:14px;font-weight:600;color:var(--text-high);display:flex;align-items:center;gap:6px;}
+.namaaz-time{font-size:14px;font-weight:700;color:var(--primary-60);}
+.namaaz-row.current .namaaz-name{color:#2d8a4e;}
+.namaaz-live-badge{font-size:9px;font-weight:800;color:#fff;background:#2d8a4e;padding:2px 6px;border-radius:3px;letter-spacing:0.04em;}
+
+/* HUKAMNAMA CARD */
+.hukam-card{background:linear-gradient(135deg,#1a5fb4,#2d8a9e);border-radius:var(--shape-large);padding:16px;animation:cardIn var(--spring);width:100%;}
+.hukam-label{font-size:10px;font-weight:800;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.07em;}
+.hukam-text{font-size:15px;font-weight:600;color:#fff;margin-top:8px;line-height:1.6;}
+.hukam-translation{font-size:12px;color:rgba(255,255,255,0.65);margin-top:8px;line-height:1.5;font-style:italic;}
+.hukam-source{font-size:11px;color:rgba(255,255,255,0.5);margin-top:8px;}
+
+/* INFO CARD */
+.info-card{background:var(--surface-ghost);border-radius:var(--shape-large);padding:14px 16px;animation:cardIn var(--spring);width:100%;}
+.info-card-title{font-size:14px;font-weight:700;color:var(--text-high);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.info-card-title svg{width:16px;height:16px;fill:var(--primary-50);}
+.info-card-text{font-size:13px;color:var(--text-medium);line-height:1.6;}
+.info-card-highlight{margin-top:8px;padding:10px 12px;background:var(--primary-20);border-radius:var(--shape-small);font-size:13px;color:var(--primary-60);font-weight:500;}
+
+/* LIVE DARSHAN CARD */
+.darshan-card{border:1px solid var(--stroke-subtle);border-radius:var(--shape-large);overflow:hidden;animation:cardIn var(--spring);width:100%;cursor:pointer;transition:transform var(--dur-quick) var(--ease-standard);}
+.darshan-card:active{transform:scale(0.98);}
+.darshan-img{height:130px;display:flex;align-items:center;justify-content:center;position:relative;}
+.darshan-img svg{width:48px;height:48px;fill:rgba(255,255,255,0.6);z-index:1;position:relative;}
+.darshan-live-badge{position:absolute;top:10px;left:10px;background:var(--error);border-radius:var(--shape-xsmall);padding:3px 8px;display:flex;align-items:center;gap:4px;}
+.darshan-live-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:livePulse 1.2s infinite;}
+.darshan-live-text{font-size:10px;font-weight:800;color:#fff;letter-spacing:0.04em;}
+.darshan-viewers{position:absolute;bottom:10px;right:10px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.85);background:rgba(0,0,0,0.4);padding:3px 8px;border-radius:3px;}
+.darshan-body{padding:12px 14px;}
+.darshan-name{font-size:15px;font-weight:700;color:var(--text-high);}
+.darshan-timing{font-size:12px;color:var(--text-low);margin-top:2px;}
+
+/* NAVKAR MANTRA CARD (Jain) */
+.navkar-card{background:linear-gradient(135deg,#4a0d75,#7c3fa3);border-radius:var(--shape-large);padding:16px;animation:cardIn var(--spring);width:100%;}
+.navkar-label{font-size:10px;font-weight:800;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.07em;}
+.navkar-lines{margin-top:10px;display:flex;flex-direction:column;gap:4px;}
+.navkar-line{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5;}
+.navkar-meaning{font-size:12px;color:rgba(255,255,255,0.5);margin-top:8px;line-height:1.5;font-style:italic;}
+
+/* BOTTOM INPUT */
+.bottom-widget{width:100%;padding:2px 12px 8px;background:var(--surface);flex-shrink:0;}
+.bw-container{background:var(--surface-ghost);border-radius:var(--shape-4xl);padding:var(--spacing-2xs);display:flex;flex-direction:column;}
+.bw-input{padding:12px 8px;}
+.bw-real-input{flex:1;border:none;outline:none;font-family:'JioType',sans-serif;font-size:14px;color:var(--text-high);background:transparent;width:100%;}
+.bw-real-input::placeholder{color:var(--text-low);}
+.bw-actions{display:flex;justify-content:space-between;align-items:center;height:43px;}
+.bw-left{display:flex;gap:2px;}
+.wib{width:36px;height:36px;border-radius:var(--shape-pill);display:flex;align-items:center;justify-content:center;background:var(--surface-ghost-icon);border:none;cursor:pointer;transition:background var(--dur-quick) var(--ease-standard);}
+.wib:active{background:var(--surface-moderate);}
+.wib svg{width:20px;height:20px;fill:var(--icon-medium);}
+.speak-btn{background:var(--surface-bold);border:none;border-radius:var(--shape-pill);padding:12px 20px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:opacity var(--dur-quick) var(--ease-standard);}
+.speak-btn:active{opacity:0.85;}
+.speak-btn svg{width:18px;height:18px;fill:var(--text-on-bold);}
+.speak-btn span{font-family:'JioType',sans-serif;font-weight:700;font-size:16px;color:var(--text-on-bold);}
+.bw-send{width:36px;height:36px;border-radius:50%;border:none;background:var(--surface-bold);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity var(--dur-quick) var(--ease-standard);}
+.bw-send:active{opacity:0.85;}
+.bw-send svg{width:18px;height:18px;fill:var(--text-on-bold);}
+.bw-send.hidden-send{display:none;}
+
+/* VOICE OVERLAY ANIMATIONS */
+@keyframes vDotBreath{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(.92);opacity:.4}}
+@keyframes vDotListen{0%,100%{transform:scale(1);opacity:1}25%{transform:scale(.7);opacity:.5}50%{transform:scale(1.08);opacity:1}75%{transform:scale(.8);opacity:.6}}
+@keyframes vDotProcess{0%,100%{transform:scale(.8);opacity:.5}50%{transform:scale(1);opacity:1}}
+@keyframes vMicPulse{0%,100%{box-shadow:0 0 0 0 rgba(109,23,206,.4)}50%{box-shadow:0 0 0 16px rgba(109,23,206,0)}}
+.v-dots{width:148px;height:148px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.v-dots div{border-radius:50%;background:#6d17ce;transition:background .3s;}
+.v-dots--idle div{animation:vDotBreath 2.5s ease-in-out infinite;opacity:.5;}
+.v-dots--idle div:nth-child(2){animation-delay:.3s;}.v-dots--idle div:nth-child(3){animation-delay:.6s;}.v-dots--idle div:nth-child(4){animation-delay:.9s;}
+.v-dots--listening div{animation:vDotListen 1s ease-in-out infinite;background:#6d17ce;}
+.v-dots--listening div:nth-child(2){animation-delay:.15s;}.v-dots--listening div:nth-child(3){animation-delay:.3s;}.v-dots--listening div:nth-child(4){animation-delay:.45s;}
+.v-dots--processing div,.v-dots--thinking div{animation:vDotProcess 1.2s ease-in-out infinite;background:#9966dd;}
+.v-dots--processing div:nth-child(2),.v-dots--thinking div:nth-child(2){animation-delay:.2s;}
+.v-dots--processing div:nth-child(3),.v-dots--thinking div:nth-child(3){animation-delay:.4s;}
+.v-dots--processing div:nth-child(4),.v-dots--thinking div:nth-child(4){animation-delay:.6s;}
+.v-dots--speaking div{animation:vDotListen 1.6s ease-in-out infinite;background:#3535f3;}
+.v-dots--speaking div:nth-child(2){animation-delay:.2s;}.v-dots--speaking div:nth-child(3){animation-delay:.4s;}.v-dots--speaking div:nth-child(4){animation-delay:.6s;}
+.v-mic-btn{width:64px;height:64px;border-radius:50%;border:none;background:#6d17ce;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.v-mic-btn:active{transform:scale(.92);}
+.v-mic-btn.v-mic--pulse{animation:vMicPulse 1.5s ease-in-out infinite;}
+.v-stop-btn{width:64px;height:64px;border-radius:50%;border:none;background:#fa2f40;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.v-stop-btn:active{transform:scale(.92);}
+
+/* KEYFRAMES */
+@keyframes msgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px) scale(0.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes dotBounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes successPop{0%{transform:scale(0.85);opacity:0}70%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="phone-frame" id="app">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="time">9:30</div>
+    <div class="icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 00-6 0zm-4-4l2 2a7.074 7.074 0 0110 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M2 22h20V2z" opacity=".3"/><path d="M2 22h20V2zm18-2H6.83L20 6.83z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <!-- Header Nav -->
+  <div class="header-nav">
+    <div class="header-left">
+      <button class="back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      </button>
+      <div class="header-title-area">
+        <div class="header-title">Devotion AI</div>
+        <div class="header-domain" id="headerDomain">Spiritual</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn-ghost" onclick="triggerChip('puja vidhi')">
+        <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+      </button>
+      <button class="icon-btn-ghost" onclick="triggerChip('settings')">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Container -->
+  <div class="chat-container" id="chatContainer"></div>
+
+  <!-- Bottom Input -->
+  <div class="bottom-widget">
+    <div class="bw-container">
+      <div class="bw-input">
+        <input type="text" class="bw-real-input" id="chatInput"
+          placeholder="Ask about rituals, festivals, mantras..."
+          onkeydown="if(event.key==='Enter')sendUserText()"
+          oninput="toggleSendBtn()">
+      </div>
+      <div class="bw-actions">
+        <div class="bw-left">
+          <button class="wib"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+          <button class="wib"><svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg></button>
+        </div>
+        <button class="bw-send hidden-send" id="sendBtn" onclick="sendUserText()">
+          <svg viewBox="0 0 24 24"><path d="M3.4 20.4l17.45-7.48a1 1 0 000-1.84L3.4 3.6a.993.993 0 00-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>
+        </button>
+        <button class="speak-btn" id="speakBtn">
+          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+          <span>Speak</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Voice Overlay -->
+<div id="voiceOverlay" style="display:none;position:fixed;inset:0;z-index:200;background:#fff;flex-direction:column;font-family:'JioType',sans-serif">
+  <div style="display:flex;align-items:center;padding:10px 12px;height:56px;flex-shrink:0">
+    <button onclick="closeVoice()" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#170054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span style="font-size:16px;font-weight:500;color:#0c0d10;margin-left:4px">Voice</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;padding:0 24px">
+    <div id="voiceDots" class="v-dots v-dots--idle"><div></div><div></div><div></div><div></div></div>
+    <div id="voiceLabel" style="margin-top:28px;font-size:20px;font-weight:700;color:#0c0d10;text-align:center">Jai Shree Ram</div>
+    <div id="voiceSub" style="margin-top:8px;font-size:15px;color:rgba(25,27,30,.65);text-align:center">Tap the mic to start speaking</div>
+    <div id="voiceTranscript" style="display:none;margin-top:20px;font-size:15px;font-weight:500;color:#0c0d10;text-align:center;max-width:300px;line-height:1.5;background:#f5f5f5;padding:12px 16px;border-radius:16px"></div>
+    <div id="voiceResponse" style="display:none;margin-top:16px;text-align:left;width:100%;max-width:330px;max-height:240px;overflow-y:auto"></div>
+  </div>
+  <div style="padding:12px 24px 28px;display:flex;flex-direction:column;align-items:center;gap:12px">
+    <button id="vMicBtn" onclick="voiceTapMic()" class="v-mic-btn">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="#fff"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button id="vStopBtn" onclick="voiceTapStop()" class="v-stop-btn" style="display:none">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="#fff"/></svg>
+    </button>
+    <button id="vPlayBtn" onclick="voicePlayLastTts()" style="display:none;padding:10px 20px;border-radius:999px;border:none;background:#3900ad;color:#fff;font-size:15px;font-weight:600;cursor:pointer">Play response</button>
+    <div id="vAgainHint" style="display:none;font-size:13px;color:rgba(25,27,30,.65);text-align:center">Tap mic to speak again</div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   DEVOTION AI — Chat-First with In-Chat Onboarding
+   Design: JDS tokens, cricket/bollywood reference
+   ══════════════════════════════════════════════ */
+
+const CC = document.getElementById('chatContainer');
+
+// ── State ──
+let onboardingStep = 0; // 0=welcome, 1=faith, 2=language, 3=duration, 4=deity, 5=done
+let userFaith = null, userLanguage = null, userDuration = null, userDeity = null;
+let isOnboarding = true;
+let voiceChatHistory = [], vMediaRecorder = null, vAudioChunks = [], vIsRecording = false;
+let vCurrentAudio = null, vPlaybackCtx = null, vLastTtsBase64 = null, vState = 'closed';
+
+// ── Faith Data ──
+const faithData = {
+  Hindu: {
+    color: '#ff6b35', bg: '#fff3ed', icon: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v-4h-4v2h2v2zm0-6h2V7h-2v3z"/></svg>',
+    greeting: 'Jai Shree Ram', deities: ['Ganesh', 'Shiva', 'Vishnu', 'Durga', 'Krishna', 'Hanuman'],
+    languages: ['Hindi', 'Sanskrit', 'English', 'Tamil', 'Telugu', 'Marathi'],
+    domain: 'Hindu Devotion'
+  },
+  Muslim: {
+    color: '#2d8a4e', bg: '#e8f5ec', icon: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-4H9l3-3 3 3h-2v4z"/></svg>',
+    greeting: 'Assalamu Alaikum', deities: ['Fajr Focus', 'Quran Study', 'Dhikr', 'Dua Collection'],
+    languages: ['Urdu', 'Arabic', 'Hindi', 'English'],
+    domain: 'Islamic Devotion'
+  },
+  Sikh: {
+    color: '#1a5fb4', bg: '#e8f0fb', icon: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>',
+    greeting: 'Waheguru Ji Ka Khalsa', deities: ['Nitnem', 'Hukamnama', 'Ardaas', 'Kirtan'],
+    languages: ['Punjabi', 'Gurmukhi', 'Hindi', 'English'],
+    domain: 'Sikh Devotion'
+  },
+  Jain: {
+    color: '#a855a0', bg: '#f7e8f7', icon: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2a7.2 7.2 0 01-6-3.22c.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08a7.2 7.2 0 01-6 3.22z"/></svg>',
+    greeting: 'Jai Jinendra', deities: ['Samayik', 'Pratikraman', 'Navkar Mantra', 'Paryushan'],
+    languages: ['Gujarati', 'Hindi', 'Prakrit', 'English'],
+    domain: 'Jain Devotion'
+  },
+  Christian: {
+    color: '#8b6914', bg: '#faf3e0', icon: '<svg viewBox="0 0 24 24"><path d="M13 3h-2v7H4v2h7v7h2v-7h7v-2h-7z"/></svg>',
+    greeting: 'Grace and Peace', deities: ['Bible Study', 'Morning Prayer', 'Praise & Worship', 'Holy Week'],
+    languages: ['English', 'Hindi', 'Tamil', 'Malayalam'],
+    domain: 'Christian Devotion'
+  }
+};
+
+// ── SVG Icons ──
+const IC = {
+  like: '<svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>',
+  dislike: '<svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>',
+  copy: '<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>',
+  share: '<svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>',
+  play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+  check: '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+  sparkle: '<svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>',
+  temple: '<svg viewBox="0 0 24 24"><path d="M6 20h12V10L12 3 6 10v10zm2-8h3v-3h2v3h3v2h-3v3h-2v-3H8v-2z"/></svg>',
+  moon: '<svg viewBox="0 0 24 24"><path d="M12.43 2.3c-2.38-.59-4.68-.27-6.63.64-.35.16-.41.64-.1.86C8.3 5.6 9.5 8.6 9.5 12c0 3.4-1.2 6.4-3.8 8.2-.31.22-.26.7.1.86 1.95.91 4.25 1.23 6.63.64 4.66-1.15 8.07-5.82 7.5-10.63-.44-3.73-3.14-6.94-7.5-8.77z"/></svg>',
+  info: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>',
+  star: '<svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
+  book: '<svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>',
+  calendar: '<svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>',
+  bell: '<svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>',
+  fire: '<svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>',
+};
+
+// ── Avatar HTML ──
+function avatarHTML() {
+  return `<div class="ai-avatar"><video autoplay loop muted playsinline><source src="Assets/HelloJio_Listening_241.mp4" type="video/mp4"></video><div class="ai-avatar-dots" style="display:none"><div></div><div></div><div></div><div></div></div></div>`;
+}
+function thinkingAvatarHTML() {
+  return `<div class="thinking-avatar"><video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover"><source src="Assets/HelloJio_Listening_241.mp4" type="video/mp4"></video></div>`;
+}
+function feedbackHTML() {
+  return `<div class="feedback-row"><button class="fb-btn">${IC.like}</button><button class="fb-btn">${IC.dislike}</button><button class="fb-btn">${IC.copy}</button><button class="fb-btn">${IC.share}</button></div>`;
+}
+
+// ── Append helpers ──
+function appendMsg(html, cls='') {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  CC.appendChild(div.firstElementChild);
+  scrollBottom();
+}
+
+function aiMessage(contentHTML, showFeedback=true) {
+  const wrap = document.createElement('div');
+  wrap.className = 'ai-msg';
+  wrap.innerHTML = `${avatarHTML()}<div class="ai-content"><div class="ai-text">${contentHTML}</div>${showFeedback ? feedbackHTML() : ''}</div>`;
+  CC.appendChild(wrap);
+  scrollBottom();
+  return wrap;
+}
+
+function userMessage(text) {
+  const wrap = document.createElement('div');
+  wrap.className = 'user-msg';
+  wrap.innerHTML = `<div class="user-bubble">${text}</div>`;
+  CC.appendChild(wrap);
+  scrollBottom();
+}
+
+function appendWidget(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html.trim();
+  CC.appendChild(div.firstElementChild);
+  scrollBottom();
+}
+
+function showThinking() {
+  const row = document.createElement('div');
+  row.className = 'thinking-row';
+  row.id = 'thinkingRow';
+  row.innerHTML = `${thinkingAvatarHTML()}<div class="thinking-dots"><span></span><span></span><span></span></div>`;
+  CC.appendChild(row);
+  scrollBottom();
+  return row;
+}
+
+function removeThinking() {
+  const t = document.getElementById('thinkingRow');
+  if (t) t.remove();
+}
+
+function scrollBottom() {
+  CC.scrollTop = CC.scrollHeight;
+}
+
+function toggleSendBtn() {
+  const inp = document.getElementById('chatInput');
+  const btn = document.getElementById('sendBtn');
+  const sp = document.getElementById('speakBtn');
+  if (inp.value.trim()) { btn.classList.remove('hidden-send'); sp.style.display='none'; }
+  else { btn.classList.add('hidden-send'); sp.style.display='flex'; }
+}
+
+// ── Onboarding Chat Flow ──
+function startWelcome() {
+  setTimeout(() => {
+    const msg = aiMessage(`<p>Namaste! I'm your <strong>Devotion AI</strong> — your personal spiritual companion on Jio Omni.</p><p>I help with daily rituals, puja guidance, mantra recitation, festival prep, and real-time Q&A — personalized to your faith and language.</p>`, false);
+    const chipRow = document.createElement('div');
+    chipRow.className = 'chip-row';
+    chipRow.innerHTML = `<button class="chip cta" onclick="chipTap('get_started')">${IC.sparkle} Get Started</button>`;
+    msg.querySelector('.ai-content').appendChild(chipRow);
+  }, 600);
+}
+
+function chipTap(value, label) {
+  if (label) userMessage(label);
+  handleOnboardingChip(value);
+}
+
+function handleOnboardingChip(value) {
+  if (!isOnboarding) { triggerChip(value); return; }
+
+  if (value === 'get_started') {
+    onboardingStep = 1;
+    setTimeout(askFaith, 400);
+  } else if (onboardingStep === 1) {
+    userFaith = value;
+    document.getElementById('headerDomain').textContent = faithData[value]?.domain || 'Spiritual';
+    setTimeout(() => askLanguage(value), 400);
+  } else if (onboardingStep === 2) {
+    userLanguage = value;
+    setTimeout(() => askDuration(), 400);
+  } else if (onboardingStep === 3) {
+    userDuration = value;
+    setTimeout(() => askDeity(), 400);
+  } else if (onboardingStep === 4) {
+    userDeity = value;
+    setTimeout(() => completeSetup(), 400);
+  }
+}
+
+function askFaith() {
+  onboardingStep = 1;
+  const msg = aiMessage(`<p>Let's set up your daily ritual. Which faith do you follow?</p>`, false);
+  const grid = document.createElement('div');
+  grid.className = 'faith-grid';
+  const faithColors = { Hindu:'#ff6b35', Muslim:'#2d8a4e', Sikh:'#1a5fb4', Jain:'#a855a0', Christian:'#8b6914' };
+  Object.keys(faithData).forEach(faith => {
+    const fc = faithColors[faith];
+    grid.innerHTML += `<button class="faith-chip" onclick="userMessage('${faith}'); chipTap('${faith}')">
+      <div class="faith-icon" style="background:${fc}">${faithData[faith].icon}</div>${faith}
+    </button>`;
+  });
+  msg.querySelector('.ai-content').appendChild(grid);
+}
+
+function askLanguage(faith) {
+  onboardingStep = 2;
+  const langs = faithData[faith]?.languages || ['Hindi','English'];
+  const msg = aiMessage(`<p>Which language do you prefer for your daily rituals?</p>`, false);
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row';
+  langs.forEach(l => {
+    chipRow.innerHTML += `<button class="chip" onclick="userMessage('${l}'); chipTap('${l}')">${l}</button>`;
+  });
+  msg.querySelector('.ai-content').appendChild(chipRow);
+}
+
+function askDuration() {
+  onboardingStep = 3;
+  const msg = aiMessage(`<p>How much time do you have for your daily ritual?</p>`, false);
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row';
+  ['5 min','10 min','15 min','30 min','45 min'].forEach(d => {
+    chipRow.innerHTML += `<button class="chip" onclick="userMessage('${d}'); chipTap('${d}')">${d}</button>`;
+  });
+  msg.querySelector('.ai-content').appendChild(chipRow);
+}
+
+function askDeity() {
+  onboardingStep = 4;
+  const faith = userFaith || 'Hindu';
+  const deities = faithData[faith]?.deities || ['Ganesh','Shiva'];
+  const msg = aiMessage(`<p>What is your primary devotional focus?</p>`, false);
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row';
+  deities.forEach(d => {
+    chipRow.innerHTML += `<button class="chip" onclick="userMessage('${d}'); chipTap('${d}')">${d}</button>`;
+  });
+  msg.querySelector('.ai-content').appendChild(chipRow);
+}
+
+function completeSetup() {
+  onboardingStep = 5;
+  isOnboarding = false;
+  const thinking = showThinking();
+  setTimeout(() => {
+    removeThinking();
+    // Setup success widget
+    const widget = document.createElement('div');
+    widget.innerHTML = `
+    <div class="ai-msg" style="animation:msgIn 350ms ease-out">
+      ${avatarHTML()}
+      <div class="ai-content">
+        <div class="setup-widget">
+          <div class="setup-widget-header">
+            <div class="setup-check">${IC.check}</div>
+            <div>
+              <div class="setup-title">Daily Ritual Setup Complete</div>
+              <div class="setup-subtitle">Your spiritual profile is ready</div>
+            </div>
+          </div>
+          <div class="setup-details">
+            <div class="setup-detail"><div class="setup-detail-label">Faith</div><div class="setup-detail-value">${userFaith}</div></div>
+            <div class="setup-detail"><div class="setup-detail-label">Language</div><div class="setup-detail-value">${userLanguage}</div></div>
+            <div class="setup-detail"><div class="setup-detail-label">Daily Time</div><div class="setup-detail-value">${userDuration}</div></div>
+            <div class="setup-detail"><div class="setup-detail-label">Focus</div><div class="setup-detail-value">${userDeity}</div></div>
+          </div>
+          <button class="setup-cta" onclick="beginTodayRitual()">${IC.play} Begin Today's Ritual</button>
+        </div>
+      </div>
+    </div>`;
+    CC.appendChild(widget.firstElementChild);
+    scrollBottom();
+
+    setTimeout(() => showPostSetupContent(), 800);
+  }, 1800);
+}
+
+function showPostSetupContent() {
+  const faith = userFaith || 'Hindu';
+
+  // AI message
+  const msg = aiMessage(`<p>You're all set, ${faith === 'Muslim' ? 'Bhai' : faith === 'Sikh' ? 'Veer Ji' : 'ji'}! Here's what's waiting for you today:</p>`, false);
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row scroll';
+  const postChips = getPostSetupChips(faith);
+  postChips.forEach(c => {
+    chipRow.innerHTML += `<button class="chip" onclick="triggerChip('${c.key}')">${c.label}</button>`;
+  });
+  msg.querySelector('.ai-content').appendChild(chipRow);
+
+  // Upcoming festivals
+  setTimeout(() => showUpcomingFestivals(faith), 600);
+}
+
+function getPostSetupChips(faith) {
+  const map = {
+    Hindu: [{key:'panchang',label:'Aaj ka Panchang'},{key:'puja vidhi',label:'Puja Vidhi'},{key:'mantra',label:'Mantra of the Day'},{key:'live darshan',label:'Live Darshan'},{key:'ask',label:'Ask anything'}],
+    Muslim: [{key:'namaaz times',label:'Namaaz Times'},{key:'quran verse',label:'Quran Verse'},{key:'dua',label:'Daily Dua'},{key:'ask',label:'Ask anything'}],
+    Sikh: [{key:'hukamnama',label:'Hukamnama'},{key:'nitnem',label:'Nitnem'},{key:'ardaas',label:'Ardaas'},{key:'ask',label:'Ask anything'}],
+    Jain: [{key:'navkar mantra',label:'Navkar Mantra'},{key:'samayik',label:'Samayik'},{key:'ask',label:'Ask anything'}],
+    Christian: [{key:'bible verse',label:"Today's Verse"},{key:'prayer',label:'Morning Prayer'},{key:'ask',label:'Ask anything'}],
+  };
+  return map[faith] || map.Hindu;
+}
+
+function showUpcomingFestivals(faith) {
+  const festivals = getFestivalsByFaith(faith);
+  const msg = aiMessage(`<p>Upcoming festivals to prepare for:</p>`, false);
+  const row = document.createElement('div');
+  row.className = 'festival-row';
+  festivals.forEach(f => {
+    row.innerHTML += `
+    <div class="festival-card" onclick="triggerChip('festival ${f.name}')">
+      <div class="festival-card-img" style="background:linear-gradient(135deg,${f.color1},${f.color2})">
+        ${f.icon}
+        <div class="festival-countdown">${f.days} days</div>
+      </div>
+      <div class="festival-card-body">
+        <div class="festival-name">${f.name}</div>
+        <div class="festival-date">${f.date}</div>
+      </div>
+    </div>`;
+  });
+  msg.querySelector('.ai-content').appendChild(row);
+}
+
+function getFestivalsByFaith(faith) {
+  const all = {
+    Hindu: [
+      {name:'Holi',date:'Mar 14 — Rangwali',days:8,color1:'#e91e63',color2:'#ff6b35',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'},
+      {name:'Navratri',date:'Apr 2 — 9 nights',days:27,color1:'#c62828',color2:'#f7ab20',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2a7.2 7.2 0 01-6-3.22c.03-1.99 4-3.08 6-3.08s5.97 1.09 6 3.08a7.2 7.2 0 01-6 3.22z"/></svg>'},
+      {name:'Ram Navami',date:'Apr 6',days:31,color1:'#1565c0',color2:'#7c4dff',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>'},
+    ],
+    Muslim: [
+      {name:'Ramzan',date:'Mar 30 begins',days:24,color1:'#1b5e20',color2:'#2d8a4e',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12.43 2.3c-2.38-.59-4.68-.27-6.63.64-.35.16-.41.64-.1.86C8.3 5.6 9.5 8.6 9.5 12c0 3.4-1.2 6.4-3.8 8.2-.31.22-.26.7.1.86 1.95.91 4.25 1.23 6.63.64 4.66-1.15 8.07-5.82 7.5-10.63-.44-3.73-3.14-6.94-7.5-8.77z"/></svg>'},
+      {name:'Eid ul Fitr',date:'Apr 30',days:55,color1:'#0d47a1',color2:'#1565c0',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'},
+    ],
+    Sikh: [
+      {name:'Hola Mohalla',date:'Mar 15',days:9,color1:'#0d47a1',color2:'#1a5fb4',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>'},
+      {name:'Baisakhi',date:'Apr 13',days:38,color1:'#e65100',color2:'#f7ab20',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>'},
+    ],
+    Jain: [
+      {name:'Mahavir Jayanti',date:'Apr 10',days:35,color1:'#4a0d75',color2:'#7c3fa3',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2a7.2 7.2 0 01-6-3.22c.03-1.99 4-3.08 6-3.08s5.97 1.09 6 3.08a7.2 7.2 0 01-6 3.22z"/></svg>'},
+    ],
+    Christian: [
+      {name:'Palm Sunday',date:'Mar 29',days:23,color1:'#5d4037',color2:'#8b6914',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M13 3h-2v7H4v2h7v7h2v-7h7v-2h-7z"/></svg>'},
+      {name:'Good Friday',date:'Apr 3 — Fast',days:28,color1:'#37474f',color2:'#546e7a',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M13 3h-2v7H4v2h7v7h2v-7h7v-2h-7z"/></svg>'},
+      {name:'Easter',date:'Apr 5 — Celebration',days:30,color1:'#2e7d32',color2:'#66bb6a',icon:'<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,0.7);position:relative;z-index:1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'},
+    ],
+  };
+  return all[faith] || all.Hindu;
+}
+
+// ── Trigger post-onboarding chips ──
+function triggerChip(key) {
+  const lk = key.toLowerCase();
+  userMessage(key.charAt(0).toUpperCase() + key.slice(1));
+  const thinking = showThinking();
+  setTimeout(() => {
+    removeThinking();
+    handleResponse(lk);
+  }, 1200);
+}
+
+function sendUserText() {
+  const inp = document.getElementById('chatInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  toggleSendBtn();
+  userMessage(text);
+  const thinking = showThinking();
+  setTimeout(() => {
+    removeThinking();
+    handleResponse(text.toLowerCase());
+  }, 1400);
+}
+
+function handleResponse(q) {
+  const faith = userFaith || 'Hindu';
+
+  // Onboarding shortcut
+  if (!isOnboarding && (q.includes('get started') || q.includes('reset') || q.includes('change faith'))) {
+    isOnboarding = true; onboardingStep = 0; userFaith = null;
+    setTimeout(() => askFaith(), 300);
+    return;
+  }
+  if (q.includes('begin') || q.includes('begin today') || q.includes('ritual')) { beginTodayRitual(); return; }
+  if (q.includes('panchang') || q.includes('tithi') || q.includes('panchang')) { showPanchang(); return; }
+  if (q.includes('puja vidhi') || q.includes('puja') || q.includes('pooja')) { showPujaVidhi(faith); return; }
+  if (q.includes('mantra') || q.includes('mantr')) { showMantraOfDay(faith); return; }
+  if (q.includes('festival') || q.includes('holi') || q.includes('navratri') || q.includes('ramzan') || q.includes('eid') || q.includes('easter') || q.includes('baisakhi')) { showFestivalDetail(q, faith); return; }
+  if (q.includes('live darshan') || q.includes('darshan')) { showLiveDarshan(faith); return; }
+  if (q.includes('namaaz') || q.includes('namaz') || q.includes('prayer times')) { showNamaazTimes(); return; }
+  if (q.includes('quran') || q.includes('verse')) { showQuranVerse(); return; }
+  if (q.includes('dua') || q.includes('dua ')) { showDua(); return; }
+  if (q.includes('hukamnama') || q.includes('hukam')) { showHukamnama(); return; }
+  if (q.includes('nitnem')) { showNitnem(); return; }
+  if (q.includes('ardaas')) { showArdaas(); return; }
+  if (q.includes('navkar') || q.includes('samayik')) { showNavkarMantra(); return; }
+  if (q.includes('bible') || q.includes('verse')) { showBibleVerse(); return; }
+  if (q.includes('prayer')) { showMorningPrayer(faith); return; }
+  if (q.includes('settings') || q.includes('setting')) { showSettingsInfo(); return; }
+  if (q.includes('ekadashi')) { showEkadashiInfo(); return; }
+  if (q.includes('rahu') || q.includes('muhurat')) { showRahuKaal(); return; }
+
+  // Generic AI response
+  showGenericResponse(q, faith);
+}
+
+// ── Response Renderers ──
+function beginTodayRitual() {
+  const faith = userFaith || 'Hindu';
+  const tracks = getRitualTracks(faith);
+  const msg = document.createElement('div');
+  msg.className = 'ai-msg';
+  msg.style.animation = 'msgIn 350ms ease-out';
+  msg.innerHTML = `${avatarHTML()}<div class="ai-content">
+    <div class="ritual-card">
+      <div class="ritual-label">Today's Ritual — ${userDuration || '15 min'}</div>
+      <div class="ritual-title">${getRitualTitle(faith)}</div>
+      <div class="ritual-meta">${userDeity || tracks[0].name} • ${userLanguage || 'Hindi'}</div>
+      <div class="ritual-tracks">${tracks.map((t,i) => `
+        <div class="ritual-track">
+          <div class="ritual-track-num">${i+1}</div>
+          <div class="ritual-track-info"><div class="ritual-track-name">${t.name}</div><div class="ritual-track-artist">${t.artist}</div></div>
+          <div class="ritual-track-dur">${t.dur}</div>
+        </div>`).join('')}
+      </div>
+      <button class="ritual-begin-btn">${IC.play} Start Sacred Mode</button>
+    </div>
+    ${feedbackHTML()}
+  </div>`;
+  CC.appendChild(msg);
+  scrollBottom();
+}
+
+function getRitualTitle(faith) {
+  const m = {Hindu:'Pratah Puja Ritual',Muslim:'Fajr Dhikr Session',Sikh:'Amrit Vela Nitnem',Jain:'Pratah Samayik',Christian:'Morning Devotion'};
+  return m[faith] || 'Daily Spiritual Ritual';
+}
+
+function getRitualTracks(faith) {
+  const m = {
+    Hindu:[{name:'Om Jai Jagdish Hare',artist:'Anuradha Paudwal',dur:'4:22'},{name:'Ganesh Vandana',artist:'Shankar Mahadevan',dur:'3:45'},{name:'Hanuman Chalisa',artist:'Hariharan',dur:'5:18'}],
+    Muslim:[{name:'Surah Al-Fatiha',artist:'Mishary Rashid',dur:'1:12'},{name:'Morning Adhkar',artist:'Maher Zain',dur:'4:30'},{name:'Ya Nabi Salam',artist:'Sami Yusuf',dur:'5:02'}],
+    Sikh:[{name:'Japji Sahib',artist:'Bhai Harjinder Singh',dur:'20:00'},{name:'Jaap Sahib',artist:'Bhai Nirmal Singh',dur:'6:30'},{name:'Anand Sahib',artist:'Traditional',dur:'8:15'}],
+    Jain:[{name:'Navkar Mantra',artist:'Traditional',dur:'3:00'},{name:'Samayik Path',artist:'Sadhu Maharaj',dur:'48:00'},{name:'Pratikraman',artist:'Traditional',dur:'15:00'}],
+    Christian:[{name:'Amazing Grace',artist:'Classic Hymn',dur:'3:30'},{name:'Morning Prayer',artist:'Daily Devotional',dur:'5:00'},{name:'How Great Thou Art',artist:'Praise Team',dur:'4:15'}],
+  };
+  return m[faith] || m.Hindu;
+}
+
+function showPanchang() {
+  const msg = aiMessage(`<p>Here is today's Panchang for March 6, 2026:</p>`, false);
+  const strip = document.createElement('div');
+  strip.className = 'panchang-strip';
+  strip.innerHTML = `
+    <div class="panchang-item"><div class="panchang-key">Tithi</div><div class="panchang-val">Panchami</div></div>
+    <div class="panchang-item"><div class="panchang-key">Nakshatra</div><div class="panchang-val">Punarvasu</div></div>
+    <div class="panchang-item"><div class="panchang-key">Rahu Kaal</div><div class="panchang-val">10:30–12:00</div></div>
+    <div class="panchang-item"><div class="panchang-key">Sunrise</div><div class="panchang-val">6:42 AM</div></div>
+    <div class="panchang-item"><div class="panchang-key">Sunset</div><div class="panchang-val">6:28 PM</div></div>
+    <div class="panchang-item"><div class="panchang-key">Paksha</div><div class="panchang-val">Shukla</div></div>`;
+  msg.querySelector('.ai-content').insertBefore(strip, msg.querySelector('.feedback-row'));
+
+  const info = document.createElement('div');
+  info.className = 'info-card';
+  info.style.marginTop = '10px';
+  info.innerHTML = `<div class="info-card-title">${IC.info} Shubh Muhurat Today</div><div class="info-card-text">Abhijit Muhurat: 12:04–12:52 PM — auspicious for starting new ventures, rituals, or important meetings.</div>`;
+  msg.querySelector('.ai-content').insertBefore(info, msg.querySelector('.feedback-row'));
+}
+
+function showPujaVidhi(faith) {
+  const steps = getPujaSteps(faith);
+  const msg = document.createElement('div');
+  msg.className = 'ai-msg';
+  msg.style.animation = 'msgIn 350ms ease-out';
+  msg.innerHTML = `${avatarHTML()}<div class="ai-content">
+    <div class="puja-widget">
+      <div class="puja-header">${IC.temple} <div class="puja-header-title">${getPujaTitle(faith)}</div></div>
+      <div class="puja-steps">
+        ${steps.map((s,i) => `<div class="puja-step">
+          <div class="puja-step-num">${i+1}</div>
+          <div><div class="puja-step-name">${s.name}</div><div class="puja-step-desc">${s.desc}</div>${s.mantra ? `<div class="puja-step-mantra">${s.mantra}</div>` : ''}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    ${feedbackHTML()}
+  </div>`;
+  CC.appendChild(msg);
+
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row';
+  chipRow.style.marginTop = '8px';
+  chipRow.innerHTML = `<button class="chip" onclick="triggerChip('puja samagri list')">Samagri List</button><button class="chip" onclick="triggerChip('mantra')">Mantras</button>`;
+  msg.querySelector('.ai-content').appendChild(chipRow);
+  scrollBottom();
+}
+
+function getPujaTitle(faith) {
+  const m = {Hindu:'Ganesh Puja Vidhi — 8 Steps',Muslim:'Wudu & Salah Guide',Sikh:'Nitnem Path Guide',Jain:'Pratikraman Vidhi',Christian:'Morning Devotion Guide'};
+  return m[faith] || 'Daily Puja Guide';
+}
+
+function getPujaSteps(faith) {
+  const m = {
+    Hindu:[
+      {name:'Shuddhi (Purification)',desc:'Wash hands and feet. Sprinkle Gangajal in the puja space.'},
+      {name:'Samagri Setup',desc:'Arrange diya, flowers, kumkum, rice, fruits, and incense on the thali.'},
+      {name:'Avaahan (Invocation)',desc:'Light the diya and ring the bell to invite the deity.',mantra:'ॐ गम गणपतये नमः'},
+      {name:'Panchamrit Snan',desc:'Offer milk, curd, honey, sugar, and ghee — one by one.'},
+      {name:'Pushpanjali (Flowers)',desc:'Offer fresh flowers at the feet of the deity with devotion.'},
+      {name:'Dhoop & Deep',desc:'Wave incense and diya in circular motions — clockwise 3 times.',mantra:'ॐ नमः शिवाय'},
+      {name:'Naivedya (Prasad)',desc:'Offer fruits, sweets, or bhog to the deity.'},
+      {name:'Aarti & Pradakshina',desc:'Perform aarti with camphor, then take 3 clockwise pradakshina.'},
+    ],
+    Muslim:[
+      {name:'Niyyah (Intention)',desc:'Make intention for prayer in your heart.'},
+      {name:'Wudu (Ablution)',desc:'Wash hands, rinse mouth, inhale water, wash face, arms up to elbows, wipe head, wash feet.'},
+      {name:'Takbir',desc:'Say Allahu Akbar and raise hands to ears.',mantra:'Allahu Akbar'},
+      {name:'Qiyam (Standing)',desc:'Recite Surah Al-Fatiha, then any other Surah.',mantra:'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ'},
+      {name:"Ruku' (Bowing)",desc:'Bow with hands on knees, say Subhana Rabbiyal Azeem 3 times.'},
+      {name:'Sujood (Prostration)',desc:'Prostrate with 7 body parts touching the ground.'},
+      {name:'Tashahhud',desc:'Sit and recite At-Tahiyyat.'},
+      {name:'Salam',desc:'Turn head right: Assalamu Alaikum wa rahmatullah. Then left.'},
+    ],
+    Sikh:[
+      {name:'Ishnaan (Bath)',desc:'Take bath before Amrit Vela (4–7 AM).'},
+      {name:'Japji Sahib',desc:'Read or recite Japji Sahib — the morning prayer by Guru Nanak Dev Ji.',mantra:'ੴ ਸਤਿ ਨਾਮੁ ਕਰਤਾ ਪੁਰਖੁ'},
+      {name:'Jaap Sahib',desc:'Recite Jaap Sahib — 199 names of the Almighty.'},
+      {name:'Chaupai Sahib',desc:'Protective bani for shelter and guidance.'},
+      {name:'Anand Sahib',desc:'Six stanzas for spiritual bliss and celebration.'},
+      {name:'Ardaas',desc:'Stand with folded hands. Recite the Ardaas prayer for the community.',mantra:'Waheguru Ji Ka Khalsa, Waheguru Ji Ki Fateh'},
+      {name:'Hukamnama',desc:'Open Sri Guru Granth Sahib Ji for today\'s divine command.'},
+    ],
+    Jain:[
+      {name:'Saamaayik Aasana',desc:'Sit in a clean, quiet spot in Padmasana or Sukhasana.'},
+      {name:'Navkar Mantra',desc:'Recite Navkar Mantra 108 times with mala.',mantra:'णमो अरिहंताणं। णमो सिद्धाणं।'},
+      {name:'Iriyavahiyam',desc:'Forgiveness prayer for any harm done unknowingly while walking.'},
+      {name:'Logassa',desc:'Praise of the 24 Tirthankars of the current cosmic cycle.'},
+      {name:'Kartavya Bhavana',desc:'Meditate on the five duties: Ahimsa, Satya, Asteya, Brahmacharya, Aparigraha.'},
+      {name:'Pratikraman',desc:'Atonement: confess transgressions since last Pratikraman.'},
+      {name:'Kshama Yamachhaami',desc:'Seek forgiveness from all living beings.',mantra:'Kshama karo, kshama karo, kshama karo'},
+    ],
+    Christian:[
+      {name:'Thanksgiving',desc:'Begin with gratitude for the gift of a new day.'},
+      {name:'Scripture Reading',desc:'Open your Bible and read today\'s assigned passage.',mantra:'John 3:16 — "For God so loved the world..."'},
+      {name:'Meditation',desc:'Reflect silently on the scripture for 5 minutes.'},
+      {name:'Confession',desc:'Confess any sins from the previous day with a sincere heart.'},
+      {name:'Intercession',desc:'Pray for family, friends, community, and world needs.'},
+      {name:'Praise & Worship',desc:'Sing a hymn or praise song aloud or in your heart.'},
+      {name:'Commitment',desc:'Dedicate the day to God\'s purpose and guidance.'},
+    ],
+  };
+  return m[faith] || m.Hindu;
+}
+
+function showMantraOfDay(faith) {
+  const mantras = {
+    Hindu:{label:'Mantra of the Day',text:'ॐ गम गणपतये नमः',romanized:'Om Gam Ganapataye Namaha',meaning:'I bow to Lord Ganesha, the remover of obstacles, the lord of beginnings. Chanting this mantra before any task removes blocks and brings success.',count:'108 times recommended'},
+    Muslim:{label:'Dhikr of the Day',text:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',romanized:'Subhanallahi wa bihamdihi',meaning:'Glory be to Allah and His is the praise. The Prophet (PBUH) said: whoever recites this 100 times, his sins will be forgiven even if they are as numerous as the foam of the sea.',count:'100 times after Fajr'},
+    Sikh:{label:'Shabad of the Day',text:'ਵਾਹਿਗੁਰੂ ਵਾਹਿਗੁਰੂ ਵਾਹਿਗੁਰੂ',romanized:'Waheguru Waheguru Waheguru',meaning:'Waheguru means "Wonderful Lord." This is the primary simran (remembrance) practiced by Sikhs to connect with the Divine presence at all times.',count:'Continuous Simran'},
+    Jain:{label:'Sutra of the Day',text:'णमो अरिहंताणं',romanized:'Namo Arihantaanam',meaning:'I bow to the Arihantas — the perfect souls who have destroyed all passions and reached omniscience. This is the first line of the Navkar Mantra, the world\'s oldest prayer.',count:'108 times with mala'},
+    Christian:{label:"Today's Verse",text:'Isaiah 40:31',romanized:'"But those who hope in the LORD will renew their strength."',meaning:'They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint. Trust in the Lord for your daily strength and renewal.',count:'Memorize and reflect'},
+  };
+  const m = mantras[faith] || mantras.Hindu;
+  const msg = document.createElement('div');
+  msg.className = 'ai-msg';
+  msg.style.animation = 'msgIn 350ms ease-out';
+  msg.innerHTML = `${avatarHTML()}<div class="ai-content">
+    <div class="mantra-card">
+      <div class="mantra-label">${m.label}</div>
+      <div class="mantra-text">${m.text}</div>
+      <div class="mantra-romanized">${m.romanized}</div>
+      <div class="mantra-meaning">${m.meaning}</div>
+      <div class="mantra-count">${IC.star}<span>${m.count}</span></div>
+    </div>
+    ${feedbackHTML()}
+  </div>`;
+  CC.appendChild(msg);
+  scrollBottom();
+}
+
+function showNamaazTimes() {
+  const msg = document.createElement('div');
+  msg.className = 'ai-msg';
+  msg.style.animation = 'msgIn 350ms ease-out';
+  msg.innerHTML = `${avatarHTML()}<div class="ai-content">
+    <div class="namaaz-card">
+      <div class="namaaz-header">${IC.moon}<div class="namaaz-header-title">5 Waqt Namaaz — March 6, 2026</div></div>
+      <div class="namaaz-row"><div class="namaaz-name">Fajr</div><div class="namaaz-time">5:42 AM</div></div>
+      <div class="namaaz-row current"><div class="namaaz-name">Dhuhr <span class="namaaz-live-badge">NEXT</span></div><div class="namaaz-time">12:28 PM</div></div>
+      <div class="namaaz-row"><div class="namaaz-name">Asr</div><div class="namaaz-time">3:44 PM</div></div>
+      <div class="namaaz-row"><div class="namaaz-name">Maghrib</div><div class="namaaz-time">6:24 PM</div></div>
+      <div class="namaaz-row"><div class="namaaz-name">Isha</div><div class="namaaz-time">7:52 PM</div></div>
+    </div>
+    ${feedbackHTML()}
+  </div>`;
+  CC.appendChild(msg);
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row';
+  chipRow.style.marginTop = '8px';
+  chipRow.innerHTML = `<button class="chip" onclick="triggerChip('quran verse')">Quran Verse</button><button class="chip" onclick="triggerChip('dua')">Daily Dua</button>`;
+  msg.querySelector('.ai-content').appendChild(chipRow);
+  scrollBottom();
+}
+
+function showQuranVerse() {
+  aiMessage(`<p><strong>Surah Ash-Sharh (94:5-6)</strong></p><p>فَإِنَّ مَعَ الْعُسْرِ يُسْرًا — "Indeed, with hardship comes ease."</p><p>This verse reminds us that no difficulty is permanent. After every hardship Allah (SWT) brings relief. Recite this when facing challenges.</p><div class="info-card-highlight">Amal: Recite Ya Fattahu 71 times after Fajr when seeking a breakthrough.</div>`);
+}
+
+function showDua() {
+  aiMessage(`<p><strong>Dua for Morning (Sabah ki Dua)</strong></p><div class="puja-step-mantra" style="margin:8px 0">اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا<br><em>Allahumma bika asbahna wa bika amsayna</em></div><p>Meaning: "O Allah, by Your grace we have reached the morning and by Your grace we reach the evening. By Your grace we live and die, and to You is the resurrection."</p><p>Say this every morning to start your day in the remembrance of Allah.</p>`);
+}
+
+function showHukamnama() {
+  const msg = document.createElement('div');
+  msg.className = 'ai-msg';
+  msg.style.animation = 'msgIn 350ms ease-out';
+  msg.innerHTML = `${avatarHTML()}<div class="ai-content">
+    <div class="hukam-card">
+      <div class="hukam-label">Hukamnama — Ang 627 — March 6, 2026</div>
+      <div class="hukam-text">ਸਲੋਕੁ ਮਃ ੩ ॥<br>ਭੈ ਵਿਚਿ ਪਵਣੁ ਵਹੈ ਸਦਵਾਉ ॥<br>ਭੈ ਵਿਚਿ ਚਲਹਿ ਲਖ ਦਰੀਆਉ ॥</div>
+      <div class="hukam-translation">"In the Fear of God, the wind and breezes ever blow. In the Fear of God, thousands of rivers flow."</div>
+      <div class="hukam-source">Sri Guru Granth Sahib Ji • Raag Majh • Mahala 3</div>
+    </div>
+    ${feedbackHTML()}
+  </div>`;
+  CC.appendChild(msg);
+  scrollBottom();
+}
+
+function showNitnem() {
+  aiMessage(`<p><strong>Nitnem — 5 Daily Baanias</strong></p><p>The following are to be read daily for a devout Sikh:</p>`, false);
+  const steps = [
+    {name:'Japji Sahib',desc:'Morning — composed by Guru Nanak Dev Ji. The essence of Gurbani.'},
+    {name:'Jaap Sahib',desc:'Morning — 199 names of the Almighty by Guru Gobind Singh Ji.'},
+    {name:'Tav Prasad Savaiyye',desc:'Morning — requesting divine grace before starting the day.'},
+    {name:'Rehraas Sahib',desc:'Evening — thanksgiving prayer at sunset.'},
+    {name:'Kirtan Sohila',desc:'Bedtime — sung before sleeping, a prayer of protection.'},
+  ];
+  const msg = aiMessage(`<p>Nitnem are the 5 prescribed daily prayers for Sikhs, to be read in Gurmukhi with understanding:</p>`, false);
+  const ul = `<ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:8px">${steps.map(s => `<li style="padding:10px 12px;background:var(--surface-ghost);border-radius:var(--shape-small)"><div style="font-size:14px;font-weight:700;color:var(--text-high)">${s.name}</div><div style="font-size:12px;color:var(--text-low);margin-top:2px">${s.desc}</div></li>`).join('')}</ul>`;
+  msg.querySelector('.ai-text').innerHTML += ul;
+}
+
+function showArdaas() {
+  aiMessage(`<p><strong>Ardaas — The Sikh Prayer</strong></p><p>Ardaas is performed standing, hands folded (Ardaas posture), facing the Granth Sahib or East.</p><div class="puja-step-mantra" style="margin:8px 0">ਵਾਹਿਗੁਰੂ ਜੀ ਕਾ ਖ਼ਾਲਸਾ<br>ਵਾਹਿਗੁਰੂ ਜੀ ਕੀ ਫ਼ਤਹਿ<br><em>Waheguru Ji Ka Khalsa, Waheguru Ji Ki Fateh</em></div><p>Begin by commemorating the ten Sikh Gurus, Guru Granth Sahib Ji, the Panj Pyare, and all martyrs. Then present your personal request to Waheguru.</p><p>End with: <strong>"Nanak naam chardi kala, tere bhane sarbat da bhala."</strong></p>`);
+}
+
+function showNavkarMantra() {
+  const msg = document.createElement('div');
+  msg.className = 'ai-msg';
+  msg.style.animation = 'msgIn 350ms ease-out';
+  msg.innerHTML = `${avatarHTML()}<div class="ai-content">
+    <div class="navkar-card">
+      <div class="navkar-label">Navkar Mantra — World's Oldest Prayer</div>
+      <div class="navkar-lines">
+        <div class="navkar-line">णमो अरिहंताणं — Namo Arihantaanam</div>
+        <div class="navkar-line">णमो सिद्धाणं — Namo Siddhanam</div>
+        <div class="navkar-line">णमो आयरियाणं — Namo Ayariyanam</div>
+        <div class="navkar-line">णमो उवज्झायाणं — Namo Uvajjhayanam</div>
+        <div class="navkar-line">णमो लोए सव्व साहूणं — Namo Loe Savva Saahunam</div>
+      </div>
+      <div class="navkar-meaning">I bow to the Arihantas, Siddhas, Acharyas, Upadhyayas, and all Sadhus of the world. Recite 108 times daily with a rosary for spiritual cleansing.</div>
+    </div>
+    ${feedbackHTML()}
+  </div>`;
+  CC.appendChild(msg);
+  scrollBottom();
+}
+
+function showBibleVerse() {
+  aiMessage(`<p><strong>Today's Scripture — John 15:5</strong></p><blockquote style="border-left:3px solid var(--primary-50);padding-left:12px;margin:8px 0;color:var(--text-medium);font-style:italic">"I am the vine; you are the branches. If you remain in me and I in you, you will bear much fruit; apart from me you can do nothing."</blockquote><p>Reflection: As branches need the vine for life, we need our daily connection with God. Start each day by abiding in His presence through prayer and scripture.</p><div class="info-card-highlight">Today's Challenge: Share one act of love with someone who needs it.</div>`);
+}
+
+function showMorningPrayer(faith) {
+  const prayers = {
+    Hindu:`<p><strong>Pratah Vandana — Morning Prayer</strong></p><div class="puja-step-mantra" style="margin:8px 0">कराग्रे वसते लक्ष्मीः करमध्ये सरस्वती।<br>करमूले तु गोविन्दः प्रभाते करदर्शनम्।।<br><em>Karaagre vasate Lakshmi, Karamadhye Saraswati, Karamoole tu Govindah, Prabhate Karadarshanam</em></div><p>At the tip of my hand dwells Lakshmi (wealth), in the middle Saraswati (knowledge), at the base Govinda. I behold my hands in the morning.</p>`,
+    Christian:`<p><strong>Morning Prayer</strong></p><blockquote style="border-left:3px solid var(--primary-50);padding-left:12px;margin:8px 0;font-style:italic">"Lord, thank You for this new day. Guide my steps, guard my tongue, and let Your light shine through me today. In Jesus' name, Amen."</blockquote><p>Take 5 minutes in silence after this prayer. Breathe, listen, and commit your day to Him.</p>`,
+  };
+  aiMessage(prayers[faith] || prayers.Hindu);
+}
+
+function showLiveDarshan(faith) {
+  const darshans = {
+    Hindu:{name:'Kashi Vishwanath Aarti',timing:'Morning Aarti — 4:00 AM to 6:00 AM',viewers:'4,251',bg:'linear-gradient(135deg,#1a0a3e,#3535f3)',icon:'<svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:rgba(255,255,255,0.6);position:relative;z-index:1"><path d="M6 20h12V10L12 3 6 10v10zm2-8h3v-3h2v3h3v2h-3v3h-2v-3H8v-2z"/></svg>'},
+    Muslim:{name:'Masjid al-Haram Live',timing:'Fajr Prayer — Mecca',viewers:'18,400',bg:'linear-gradient(135deg,#1b5e20,#2d8a4e)',icon:'<svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:rgba(255,255,255,0.6);position:relative;z-index:1"><path d="M12.43 2.3c-2.38-.59-4.68-.27-6.63.64-.35.16-.41.64-.1.86C8.3 5.6 9.5 8.6 9.5 12c0 3.4-1.2 6.4-3.8 8.2-.31.22-.26.7.1.86 1.95.91 4.25 1.23 6.63.64 4.66-1.15 8.07-5.82 7.5-10.63-.44-3.73-3.14-6.94-7.5-8.77z"/></svg>'},
+    Sikh:{name:'Harmandir Sahib — Golden Temple',timing:'Amrit Vela Kirtan',viewers:'6,820',bg:'linear-gradient(135deg,#0d47a1,#1a5fb4)',icon:'<svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:rgba(255,255,255,0.6);position:relative;z-index:1"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5"/></svg>'},
+    Jain:{name:'Shikharji Tirth — Live',timing:'Morning Puja',viewers:'920',bg:'linear-gradient(135deg,#4a0d75,#7c3fa3)',icon:'<svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:rgba(255,255,255,0.6);position:relative;z-index:1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2a7.2 7.2 0 01-6-3.22c.03-1.99 4-3.08 6-3.08s5.97 1.09 6 3.08a7.2 7.2 0 01-6 3.22z"/></svg>'},
+    Christian:{name:'Vatican City — Live Mass',timing:'Morning Mass — 7:00 AM',viewers:'2,340',bg:'linear-gradient(135deg,#5d4037,#8b6914)',icon:'<svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:rgba(255,255,255,0.6);position:relative;z-index:1"><path d="M13 3h-2v7H4v2h7v7h2v-7h7v-2h-7z"/></svg>'},
+  };
+  const d = darshans[faith] || darshans.Hindu;
+  const msg = document.createElement('div');
+  msg.className = 'ai-msg';
+  msg.style.animation = 'msgIn 350ms ease-out';
+  msg.innerHTML = `${avatarHTML()}<div class="ai-content">
+    <div class="darshan-card">
+      <div class="darshan-img" style="background:${d.bg}">
+        ${d.icon}
+        <div class="darshan-live-badge"><div class="darshan-live-dot"></div><div class="darshan-live-text">LIVE</div></div>
+        <div class="darshan-viewers">${d.viewers} watching</div>
+      </div>
+      <div class="darshan-body">
+        <div class="darshan-name">${d.name}</div>
+        <div class="darshan-timing">${d.timing}</div>
+      </div>
+    </div>
+    ${feedbackHTML()}
+  </div>`;
+  CC.appendChild(msg);
+  scrollBottom();
+}
+
+function showFestivalDetail(q, faith) {
+  const name = q.includes('holi') ? 'Holi' : q.includes('navratri') ? 'Navratri' : q.includes('ramzan') ? 'Ramzan' : q.includes('eid') ? 'Eid ul Fitr' : q.includes('easter') ? 'Easter' : q.includes('baisakhi') ? 'Baisakhi' : 'Upcoming Festival';
+  aiMessage(`<p><strong>${name} — Festival Guide</strong></p><p>Here's how to prepare for ${name} with Devotion AI:</p>`, false);
+  const msg = aiMessage(`<p>Tayari Checklist:</p>`, false);
+  const checklist = document.createElement('div');
+  checklist.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-top:8px';
+  const items = getFestivalChecklist(name);
+  items.forEach(item => {
+    checklist.innerHTML += `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-ghost);border-radius:var(--shape-small);cursor:pointer" onclick="this.style.background='var(--success-20)';this.querySelector('.cb').style.background='var(--success)';this.querySelector('.cb').style.borderColor='var(--success)'">
+      <div class="cb" style="width:20px;height:20px;border-radius:4px;border:2px solid var(--grey-40);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s"></div>
+      <div style="font-size:13px;color:var(--text-high);font-weight:500">${item}</div>
+    </div>`;
+  });
+  msg.querySelector('.ai-text').appendChild(checklist);
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row';
+  chipRow.style.marginTop = '8px';
+  chipRow.innerHTML = `<button class="chip" onclick="triggerChip('puja vidhi')">Puja Vidhi</button><button class="chip" onclick="triggerChip('samagri')">Samagri List</button>`;
+  msg.querySelector('.ai-content').appendChild(chipRow);
+}
+
+function getFestivalChecklist(name) {
+  const m = {
+    Holi:['Buy natural rang (gulal) — avoid chemical colors','Prepare thandai and bhang','Apply oil before playing Holi','Set up Holika Dahan pyre on Purnima night','Offer naariyal at the Holika pyre'],
+    Navratri:['Set up Mata ki Chowki','Get 9 colors of clothes for 9 days','Arrange ghatasthapana samagri','Prepare prasad: halwa, puri, chana','Invite 9 girls for kanya puja on Ashtami'],
+    Ramzan:['Set Sehr and Iftar alarms','Stock dates, milk, fruits for Iftar','Prepare a Quran reading schedule','Plan Taraweeh attendance at masjid','Arrange Zakat/Sadqah for the month'],
+    default:['Gather required puja samagri','Clean and decorate the puja space','Prepare special festival prasad','Invite family for the celebration','Note the auspicious timing and muhurat'],
+  };
+  return m[name] || m.default;
+}
+
+function showRahuKaal() {
+  aiMessage(`<p><strong>Rahu Kaal — March 6, 2026 (Friday)</strong></p><p>Rahu Kaal on Friday: <strong>10:30 AM – 12:00 PM</strong></p><p>Avoid starting new work, travel, or important rituals during Rahu Kaal. For emergency tasks, chant <em>Om Rahave Namah</em> 108 times before proceeding.</p><div class="info-card-highlight">Abhijit Muhurat (most auspicious): 12:04 – 12:52 PM — ideal for new beginnings.</div>`);
+}
+
+function showEkadashiInfo() {
+  aiMessage(`<p><strong>Ekadashi Vrat — Complete Guide</strong></p><p>Today is Shukla Panchami. Next Ekadashi: March 10, 2026 (Amalaki Ekadashi — dedicated to Lord Vishnu).</p><p><strong>Rules:</strong></p><ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px"><li style="padding:8px 12px;background:var(--surface-ghost);border-radius:var(--shape-small);font-size:13px">No grains, pulses, or onion/garlic</li><li style="padding:8px 12px;background:var(--surface-ghost);border-radius:var(--shape-small);font-size:13px">Allowed: fruits, milk, sabudana, nuts</li><li style="padding:8px 12px;background:var(--surface-ghost);border-radius:var(--shape-small);font-size:13px">Paaran (breaking fast) on Dwadashi next morning</li><li style="padding:8px 12px;background:var(--surface-ghost);border-radius:var(--shape-small);font-size:13px">Recite Vishnu Sahasranama throughout the day</li></ul>`);
+}
+
+function showSettingsInfo() {
+  const msg = aiMessage(`<p>Your current spiritual profile:</p>`, false);
+  const details = document.createElement('div');
+  details.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-top:8px';
+  const items = [
+    {label:'Faith',value:userFaith||'Not set'},
+    {label:'Language',value:userLanguage||'Not set'},
+    {label:'Daily Ritual Duration',value:userDuration||'Not set'},
+    {label:'Primary Focus',value:userDeity||'Not set'},
+  ];
+  items.forEach(i => {
+    details.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surface-ghost);border-radius:var(--shape-small)"><div style="font-size:13px;color:var(--text-low)">${i.label}</div><div style="font-size:14px;font-weight:700;color:var(--text-high)">${i.value}</div></div>`;
+  });
+  msg.querySelector('.ai-text').appendChild(details);
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row';
+  chipRow.style.marginTop = '10px';
+  chipRow.innerHTML = `<button class="chip cta" onclick="resetProfile()">Change Faith/Profile</button>`;
+  msg.querySelector('.ai-content').appendChild(chipRow);
+}
+
+function resetProfile() {
+  userMessage('Change my profile');
+  isOnboarding = true; onboardingStep = 0; userFaith = null; userLanguage = null; userDuration = null; userDeity = null;
+  document.getElementById('headerDomain').textContent = 'Spiritual';
+  setTimeout(() => askFaith(), 500);
+}
+
+function showGenericResponse(q, faith) {
+  const responses = [
+    `<p>That's a thoughtful question about ${faith} practices. Let me share what I know.</p><p>Devotional practices are deeply personal and vary across traditions. The key is consistency — even 5 minutes of sincere practice each day is more powerful than an hour done once a week.</p><p>Would you like me to help with something specific — puja guidance, mantra for this situation, or festival prep?</p>`,
+    `<p>In ${faith} tradition, this is approached with great depth and care. The ancient wisdom suggests starting with inner purification (of thought and intention) before any outer ritual.</p><p>Whatever you're navigating, I'm here to guide you through it — spiritually and practically.</p>`,
+    `<p>Great question! Here's a simple way to approach this from a ${faith} perspective: begin each day by connecting with your chosen deity or practice before the mind becomes busy.</p><p>The morning hours (Brahma Muhurta for Hindus, Amrit Vela for Sikhs, Fajr for Muslims) are considered most potent for spiritual practice.</p>`,
+  ];
+  const r = responses[Math.floor(Math.random() * responses.length)];
+  const msg = aiMessage(r);
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row scroll';
+  chipRow.style.marginTop = '10px';
+  getPostSetupChips(faith).slice(0,4).forEach(c => {
+    chipRow.innerHTML += `<button class="chip" onclick="triggerChip('${c.key}')">${c.label}</button>`;
+  });
+  msg.querySelector('.ai-content').appendChild(chipRow);
+}
+
+// ── Voice Overlay ──
+const _vp = ['sk','_8ajz','668k_','7FQZo','3QWwc','AQ8Sm','30SmT','t6L4'];
+const SARVAM_KEY = _vp[0]+_vp[1]+_vp[2]+_vp[3]+_vp[4]+_vp[5]+_vp[6]+_vp[7];
+const VOICE_CHAT_PROXY = 'https://jbiq-proxy.sunit3-sharma.workers.dev';
+
+document.getElementById('speakBtn').addEventListener('click', e => { e.stopPropagation(); openVoice(); });
+
+function openVoice() { vUnlockAudio(); document.getElementById('voiceOverlay').style.display='flex'; setVoiceState('idle'); }
+function closeVoice() { vKillRecording(); if(vCurrentAudio){vCurrentAudio.pause();vCurrentAudio=null;} document.getElementById('voiceOverlay').style.display='none'; vState='closed'; }
+function voiceTapMic() { vUnlockAudio(); if(vCurrentAudio){vCurrentAudio.pause();vCurrentAudio=null;} vStartRecording(); }
+function voiceTapStop() { if(vIsRecording) vKillRecording(); }
+
+function setVoiceState(s) {
+  vState = s;
+  const dots=document.getElementById('voiceDots'),label=document.getElementById('voiceLabel'),sub=document.getElementById('voiceSub');
+  const transcript=document.getElementById('voiceTranscript'),response=document.getElementById('voiceResponse');
+  const micBtn=document.getElementById('vMicBtn'),stopBtn=document.getElementById('vStopBtn');
+  const playBtn=document.getElementById('vPlayBtn'),hint=document.getElementById('vAgainHint');
+  if(!dots) return;
+  dots.className = 'v-dots v-dots--'+s;
+  const greet = userFaith ? (faithData[userFaith]?.greeting || 'Namaste') : 'Namaste';
+  switch(s) {
+    case 'idle':
+      label.textContent = greet; sub.textContent='Tap the mic to start speaking'; sub.style.display='';
+      transcript.style.display='none'; response.style.display='none';
+      micBtn.style.display='flex'; micBtn.classList.remove('v-mic--pulse');
+      stopBtn.style.display='none'; if(playBtn) playBtn.style.display='none'; hint.style.display='none'; break;
+    case 'listening':
+      label.textContent='Listening...'; sub.textContent='Tap the red button when done'; sub.style.display='';
+      micBtn.style.display='none'; stopBtn.style.display='flex'; if(playBtn) playBtn.style.display='none'; hint.style.display='none'; break;
+    case 'processing':
+      label.textContent='Processing...'; sub.textContent='Converting speech to text'; sub.style.display='';
+      micBtn.style.display='none'; stopBtn.style.display='none'; if(playBtn) playBtn.style.display='none'; hint.style.display='none'; break;
+    case 'thinking':
+      label.textContent='Thinking...'; sub.style.display='none';
+      micBtn.style.display='none'; stopBtn.style.display='none'; if(playBtn) playBtn.style.display='none'; hint.style.display='none'; break;
+    case 'speaking':
+      label.textContent=''; sub.style.display='none';
+      micBtn.style.display='flex'; micBtn.classList.add('v-mic--pulse');
+      stopBtn.style.display='none'; if(playBtn) playBtn.style.display=vLastTtsBase64?'block':'none'; hint.style.display='block'; break;
+  }
+}
+
+function vUnlockAudio() { if(vPlaybackCtx) return; try { vPlaybackCtx=new(window.AudioContext||window.webkitAudioContext)(); vPlaybackCtx.resume(); } catch(e){} }
+function vBase64ToAB(b) { const bin=atob(b),bytes=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i); return bytes.buffer; }
+function vPlayTts(b64) { if(!vPlaybackCtx||!b64) return; try { vPlaybackCtx.resume(); vPlaybackCtx.decodeAudioData(vBase64ToAB(b64)).then(buf=>{const src=vPlaybackCtx.createBufferSource();src.buffer=buf;src.connect(vPlaybackCtx.destination);src.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle';};src.start(0)}).catch(()=>{}); } catch(e){} }
+function voicePlayLastTts() { vUnlockAudio(); if(vLastTtsBase64) vPlayTts(vLastTtsBase64); }
+
+async function vStartRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    vAudioChunks = []; vMediaRecorder = new MediaRecorder(stream,{mimeType:'audio/webm;codecs=opus'});
+    vMediaRecorder.ondataavailable = e => { if(e.data.size>0) vAudioChunks.push(e.data); };
+    vMediaRecorder.onstop = async () => { stream.getTracks().forEach(t=>t.stop()); if(!vAudioChunks.length){setVoiceState('idle');return;} await vProcessVoice(new Blob(vAudioChunks,{type:'audio/webm'})); };
+    vMediaRecorder.start(); vIsRecording=true; setVoiceState('listening');
+  } catch(err) {
+    document.getElementById('voiceLabel').textContent='Mic access denied';
+    document.getElementById('voiceSub').textContent='Please allow microphone and try again';
+    document.getElementById('voiceSub').style.display='';
+    document.getElementById('vMicBtn').style.display='flex';
+  }
+}
+function vKillRecording() { if(vMediaRecorder&&vMediaRecorder.state==='recording') vMediaRecorder.stop(); vIsRecording=false; }
+
+async function vProcessVoice(audioBlob) {
+  setVoiceState('processing');
+  try {
+    const wavBlob = await vConvertToWav(audioBlob);
+    const fd = new FormData(); fd.append('file',wavBlob,'audio.wav'); fd.append('model','saaras:v3'); fd.append('language_code','unknown'); fd.append('mode','transcribe');
+    const sttResp = await fetch('https://api.sarvam.ai/speech-to-text',{method:'POST',headers:{'api-subscription-key':SARVAM_KEY},body:fd});
+    if(!sttResp.ok) throw new Error('Speech recognition failed');
+    const sttData = await sttResp.json();
+    const transcript = (sttData.transcript||'').trim(), detectedLang = sttData.language_code||'en';
+    if(!transcript) { document.getElementById('voiceLabel').textContent="Didn't catch that"; document.getElementById('voiceSub').textContent='Tap mic to try again'; document.getElementById('voiceSub').style.display=''; document.getElementById('vMicBtn').style.display='flex'; document.getElementById('vStopBtn').style.display='none'; return; }
+    document.getElementById('voiceTranscript').textContent='"'+transcript+'"'; document.getElementById('voiceTranscript').style.display='block';
+    setVoiceState('thinking');
+    voiceChatHistory.push({role:'user',content:transcript});
+    const resp = await fetch(VOICE_CHAT_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:voiceChatHistory})});
+    const data = await resp.json().catch(()=>({}));
+    if(!resp.ok) throw new Error(data.error?.message||'Chat error');
+    const aiText = data.content?.[0]?.text||'';
+    voiceChatHistory.push({role:'assistant',content:aiText});
+    setVoiceState('speaking');
+    const respEl = document.getElementById('voiceResponse'); respEl.style.display='block';
+    respEl.innerHTML = '<div style="font-family:JioType,sans-serif;font-size:15px;color:#0c0d10;line-height:1.55">'+vFormatMd(aiText)+'</div>';
+    vSpeakTTS(aiText, detectedLang);
+    // Also add to chat
+    setTimeout(() => { userMessage(transcript); const t=showThinking(); setTimeout(()=>{removeThinking();handleResponse(transcript.toLowerCase());},800); }, 300);
+  } catch(err) {
+    document.getElementById('voiceLabel').textContent='Something went wrong';
+    document.getElementById('voiceSub').textContent=err.message||'Tap mic to try again';
+    document.getElementById('voiceSub').style.display='';
+    document.getElementById('vMicBtn').style.display='flex'; document.getElementById('vStopBtn').style.display='none';
+    if(voiceChatHistory.length&&voiceChatHistory[voiceChatHistory.length-1].role==='user') voiceChatHistory.pop();
+  }
+}
+
+function vFormatMd(t) {
+  let h = t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>');
+  const lines=h.split('\n'); let r='',inL=false;
+  for(const l of lines){const tr=l.trim();if(/^[-•*]\s/.test(tr)){if(!inL){r+='<ul>';inL=true;}r+='<li>'+tr.replace(/^[-•*]\s/,'')+'</li>';}else{if(inL){r+='</ul>';inL=false;}if(tr)r+='<p>'+tr+'</p>';}}
+  if(inL)r+='</ul>'; return r||'<p>'+t+'</p>';
+}
+
+async function vSpeakTTS(text, lang) {
+  const ttsLang = (lang&&lang.startsWith('hi'))?'hi-IN':'en-IN';
+  const cleaned = text.replace(/[#*_`>\[\](){}|~]/g,'').replace(/\bhttps?:\/\/\S+/g,'').replace(/[^\w\s.,!?;:'"₹%\-\n\u0900-\u097F\u0A00-\u0A7F\u0A80-\u0AFF]/g,'').replace(/\n{2,}/g,'. ').replace(/\n/g,' ').trim().substring(0,500);
+  if(!cleaned) return;
+  try {
+    const ttsResp = await fetch('https://api.sarvam.ai/text-to-speech',{method:'POST',headers:{'api-subscription-key':SARVAM_KEY,'Content-Type':'application/json'},body:JSON.stringify({inputs:[cleaned],target_language_code:ttsLang,speaker:'anushka',model:'bulbul:v2'})});
+    const ttsData = await ttsResp.json(); if(!ttsResp.ok) return;
+    if(ttsData.audios&&ttsData.audios[0]) {
+      vLastTtsBase64=ttsData.audios[0];
+      const vPlay=document.getElementById('vPlayBtn'); if(vPlay) vPlay.style.display='block';
+      if(vPlaybackCtx) { vPlayTts(vLastTtsBase64); }
+      else { const audio=new Audio('data:audio/wav;base64,'+vLastTtsBase64); vCurrentAudio=audio; audio.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle';}; audio.play().catch(()=>{}); }
+    }
+  } catch(e) {}
+}
+
+async function vConvertToWav(webmBlob) {
+  return new Promise(resolve => {
+    const audioCtx=new(window.AudioContext||window.webkitAudioContext)({sampleRate:16000});
+    const reader=new FileReader(); reader.onload=async function(){
+      try { const ab=await audioCtx.decodeAudioData(reader.result); const offCtx=new OfflineAudioContext(1,ab.duration*16000,16000); const src=offCtx.createBufferSource(); src.buffer=ab; src.connect(offCtx.destination); src.start(); const rendered=await offCtx.startRendering(); resolve(new Blob([vEncodeWav(rendered.getChannelData(0),16000)],{type:'audio/wav'})); }
+      catch(e) { resolve(webmBlob); }
+    }; reader.readAsArrayBuffer(webmBlob);
+  });
+}
+function vEncodeWav(samples,sr){const buf=new ArrayBuffer(44+samples.length*2),v=new DataView(buf);function ws(o,s){for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));}ws(0,'RIFF');v.setUint32(4,36+samples.length*2,true);ws(8,'WAVE');ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,samples.length*2,true);for(let i=0;i<samples.length;i++){const s=Math.max(-1,Math.min(1,samples[i]));v.setInt16(44+i*2,s<0?s*0x8000:s*0x7FFF,true);}return buf;}
+
+// ── Init ──
+startWelcome();
+</script>
+</body>
+</html>
