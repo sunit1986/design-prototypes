@@ -62,6 +62,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 .assistant-ring{position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--primary-50)}
 .assistant-ring.grey{border-color:var(--grey-60)}
 .assistant-item.inactive{opacity:.8}
+.assistant-item.highlighted .assistant-ring{border-width:3px;box-shadow:0 0 0 2px rgba(53,53,243,.25)}
 .assistant-img{width:60px;height:60px;border-radius:50%;object-fit:cover;position:relative;z-index:1}
 .assistant-label{font-size:14px;font-weight:500;color:var(--text-medium);opacity:.8;text-align:center;white-space:nowrap}
 
@@ -373,7 +374,7 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-bollywood.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Bollywood</div><div class="menu-list-desc">Movies, gossip, recommendations</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-cricket.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Cricket</div><div class="menu-list-desc">Scores, highlights, predictions</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-devotion.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Devotion</div><div class="menu-list-desc">Bhajans, festivals, spiritual guidance</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
-      <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-education.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Education</div><div class="menu-list-desc">Learning, exams, career advice</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+      <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-education.png" alt=""><div class="menu-list-text"><div class="menu-list-name">News</div><div class="menu-list-desc">Headlines, updates, trending stories</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-finance.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Finance</div><div class="menu-list-desc">Loans, investments, budgeting</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-government.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Government</div><div class="menu-list-desc">Schemes, documents, citizen services</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-health.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Health</div><div class="menu-list-desc">Fitness, diet, mental wellness</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
@@ -443,14 +444,14 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
       <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-cricket.png" alt="Cricket"></div>
       <span class="assistant-label">Cricket</span>
     </a>
-    <div class="assistant-item inactive">
-      <div class="assistant-avatar-wrap"><div class="assistant-ring grey"></div><img class="assistant-img" src="Assets/persona-devotion.png" alt="Devotion"></div>
+    <a class="assistant-item highlighted" href="#" style="text-decoration:none;color:inherit" id="assistant-devotion" data-landing=""><!-- replace href with Devotion landing URL when shared -->
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-devotion.png" alt="Devotion"></div>
       <span class="assistant-label">Devotion</span>
-    </div>
-    <div class="assistant-item inactive">
-      <div class="assistant-avatar-wrap"><div class="assistant-ring grey"></div><img class="assistant-img" src="Assets/persona-education.png" alt="Education"></div>
-      <span class="assistant-label">Education</span>
-    </div>
+    </a>
+    <a class="assistant-item" href="#" style="text-decoration:none;color:inherit" id="assistant-news" data-landing=""><!-- replace href with News landing URL when shared -->
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-education.png" alt="News"></div>
+      <span class="assistant-label">News</span>
+    </a>
     <div class="assistant-item inactive">
       <div class="assistant-avatar-wrap"><div class="assistant-ring grey"></div><img class="assistant-img" src="Assets/persona-finance.png" alt="Finance"></div>
       <span class="assistant-label">Finance</span>
