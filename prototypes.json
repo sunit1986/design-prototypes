@@ -1,0 +1,24 @@
+{
+  "prototypes": [
+    {
+      "id": "1",
+      "title": "JioBharatIQ Home",
+      "description": "AI Assistant home page with splash screen, assistants, tools, and updates",
+      "category": "Voice",
+      "url": "https://sunit1986.github.io/design-prototypes/jbiqhomepage.html",
+      "thumbnail": null,
+      "isNew": true,
+      "addedDate": "2026-02-28"
+    },
+    {
+      "id": "2",
+      "title": "Bollywood Tools",
+      "description": "Bollywood AI tools — songs, dialogues, trivia, and more",
+      "category": "Entertainment",
+      "url": "https://sunit1986.github.io/design-prototypes/bollywood-tools.html",
+      "thumbnail": null,
+      "isNew": true,
+      "addedDate": "2026-03-04"
+    }
+  ]
+}
