@@ -232,9 +232,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 }
 .menu-drawer.open{transform:translateX(0)}
 body.menu-open{overflow:hidden;position:fixed;width:100%}
-.menu-status{display:flex;align-items:center;justify-content:space-between;padding:10px 24px 0;height:52px;flex-shrink:0}
-.menu-time{font-size:15px;font-weight:600;color:var(--text-high)}
-.menu-status-icons{display:flex;align-items:center;gap:6px}
+.menu-top{display:flex;align-items:center;justify-content:flex-end;padding:10px 16px 0;height:48px;flex-shrink:0}
 .menu-close-wrap{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#e0d6ff;border:none;cursor:pointer;flex-shrink:0}
 .menu-close-wrap svg{width:24px;height:24px;color:var(--icon-medium)}
 .menu-header{display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0 0;height:56px;flex-shrink:0}
@@ -314,12 +312,7 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
 <div id="menuDrawer" class="menu-drawer">
   <!-- Main menu view -->
   <div id="menuMain" class="menu-page active">
-    <div class="menu-status">
-      <span class="menu-time">9:30</span>
-      <div class="menu-status-icons">
-        <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect width="18" height="12" rx="1" fill="currentColor" opacity=".9"/><path d="M2 4h2v4H2V4zm4 0h2v4H6V4zm4 0h2v4h-2V4zm4 0h2v4h-2V4z" fill="#fff"/></svg>
-        <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M1 6c0-2.5 2-4.5 4.5-4.5S10 3.5 10 6s-2 4.5-4.5 4.5S1 8.5 1 6z" stroke="currentColor" stroke-width="1.5"/><path d="M10 6h7" stroke="currentColor" stroke-width="1.5"/></svg>
-      </div>
+    <div class="menu-top">
       <button class="menu-close-wrap" onclick="closeMenu()" aria-label="Close">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
@@ -373,7 +366,7 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-astrology.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Astrology</div><div class="menu-list-desc">Horoscopes, relationships, friendships</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-bollywood.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Bollywood</div><div class="menu-list-desc">Movies, gossip, recommendations</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-cricket.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Cricket</div><div class="menu-list-desc">Scores, highlights, predictions</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
-      <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-devotion.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Devotion</div><div class="menu-list-desc">Bhajans, festivals, spiritual guidance</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+      <a class="menu-list-row" href="https://shivali95.github.io/devotion/devotion-ai-chat.html" target="_blank" rel="noopener"><img class="menu-list-avatar" src="Assets/persona-devotion.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Devotion</div><div class="menu-list-desc">Bhajans, festivals, spiritual guidance</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-education.png" alt=""><div class="menu-list-text"><div class="menu-list-name">News</div><div class="menu-list-desc">Headlines, updates, trending stories</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-finance.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Finance</div><div class="menu-list-desc">Loans, investments, budgeting</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-government.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Government</div><div class="menu-list-desc">Schemes, documents, citizen services</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
@@ -444,7 +437,7 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
       <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-cricket.png" alt="Cricket"></div>
       <span class="assistant-label">Cricket</span>
     </a>
-    <a class="assistant-item highlighted" href="#" style="text-decoration:none;color:inherit" id="assistant-devotion" data-landing=""><!-- replace href with Devotion landing URL when shared -->
+    <a class="assistant-item highlighted" href="https://shivali95.github.io/devotion/devotion-ai-chat.html" style="text-decoration:none;color:inherit" id="assistant-devotion" data-landing="https://shivali95.github.io/devotion/devotion-ai-chat.html" target="_blank" rel="noopener">
       <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-devotion.png" alt="Devotion"></div>
       <span class="assistant-label">Devotion</span>
     </a>
