@@ -84,7 +84,7 @@ a{text-decoration:none;color:inherit}
 
 /* TRENDING TOPICS — disabled */
 .trending-section{opacity:.5;pointer-events:none;user-select:none}
-.picks-row{display:flex;gap:8px;overflow-x:auto;padding:0 16px}
+.picks-row{display:flex;gap:8px;overflow-x:auto;padding:0 16px;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
 .pick-item{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
 .pick-circle{
   width:52px;height:52px;border-radius:50%;border:1px solid #f3e8ff;
@@ -224,7 +224,7 @@ a{text-decoration:none;color:inherit}
   <div class="section-block anim-3" style="margin-top:24px">
     <div class="section-title">Trending Topics</div>
   </div>
-  <div class="picks-row anim-3" style="padding-top:0">
+  <div class="picks-row anim-3" style="padding-top:0;flex-wrap:nowrap">
     <div class="pick-item">
       <div class="pick-circle"><span style="font-size:20px">🗳️</span></div>
       <span class="pick-label">Elections</span>
@@ -237,8 +237,6 @@ a{text-decoration:none;color:inherit}
       <div class="pick-circle"><span style="font-size:20px">🔬</span></div>
       <span class="pick-label">Science</span>
     </div>
-  </div>
-  <div class="picks-row anim-3" style="margin-top:10px;padding-top:0">
     <div class="pick-item">
       <div class="pick-circle"><span style="font-size:20px">⚽</span></div>
       <span class="pick-label">Sports</span>
