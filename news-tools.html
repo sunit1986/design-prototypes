@@ -219,11 +219,12 @@ a{text-decoration:none;color:inherit}
     </div>
   </div>
 
-  <!-- TRENDING TOPICS — disabled, 50% opacity -->
-  <div class="section-block anim-3 trending-section" style="margin-top:24px" aria-disabled="true">
+  <!-- TRENDING TOPICS — disabled, 50% opacity (wrapper so animation does not override opacity) -->
+  <div class="trending-section" style="opacity:.5;pointer-events:none;user-select:none" aria-disabled="true">
+  <div class="section-block anim-3" style="margin-top:24px">
     <div class="section-title">Trending Topics</div>
   </div>
-  <div class="picks-row anim-3 trending-section" style="padding-top:0" aria-disabled="true">
+  <div class="picks-row anim-3" style="padding-top:0">
     <div class="pick-item">
       <div class="pick-circle"><span style="font-size:20px">🗳️</span></div>
       <span class="pick-label">Elections</span>
@@ -244,6 +245,7 @@ a{text-decoration:none;color:inherit}
       <div class="pick-circle"><span style="font-size:20px">🏛️</span></div>
       <span class="pick-label">Govt.</span>
     </div>
+  </div>
   </div>
 
   <div style="height:32px"></div>
