@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breaking News Studio - JioBharatIQ</title>
+<!-- jbiq:v3.5.6 -->
+<style>
+@font-face { font-family: 'JioType'; font-weight: 400; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 500; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 700; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 900; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+:root {
+  --primary-20: #e8e8fc; --primary-30: #9999ff; --primary-40: #6464ff;
+  --primary-50: #3535f3; --primary-60: #000093; --primary-70: #00004c;
+  --primary-80: #010029;
+  --secondary-20: #fef7e9; --secondary-30: #ffe3ae; --secondary-40: #ffd947;
+  --secondary-50: #f7ab20; --secondary-60: #ac660c; --secondary-70: #7f4b10;
+  --sparkle-50: #1eccb0; --sparkle-60: #1e7b74;
+  --error: #fa2f40; --warning: #f06d0f; --success: #25ab21;
+  --grey-100: #141414; --grey-80: rgba(0,0,0,0.66); --grey-60: #b5b5b5;
+  --grey-40: #e0e0e0; --grey-20: #f5f5f5; --white: #ffffff;
+  --surface-ghost: #eeeeef; --surface-ghost-icon: #e7e9ff;
+  --surface-bold: #3900ad; --surface-default: #ffffff;
+  --stroke-subtle: rgba(36,38,43,0.12);
+  --radius-xs: 4px; --radius-sm: 8px; --radius-md: 12px;
+  --radius-lg: 16px; --radius-xl: 24px; --radius-pill: 999px;
+  --sp-3xs: 4px; --sp-2xs: 6px; --sp-xs: 8px; --sp-s: 12px;
+  --sp-base: 14px; --sp-m: 16px; --sp-l: 20px; --sp-xl: 24px;
+  --sp-2xl: 32px; --sp-3xl: 40px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'JioType'; background: var(--white); display: flex; flex-direction: column; }
+.phone-frame { width: 100%; height: 100%; background: var(--white); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+
+/* ===== APP HEADER ===== */
+.app-header { height: 56px; padding: 0 12px; display: flex; align-items: center; gap: var(--sp-s); border-bottom: 1px solid var(--stroke-subtle); background: var(--white); position: relative; z-index: 80; flex-shrink: 0; }
+.header-left { display: flex; align-items: center; gap: var(--sp-s); }
+.back-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; border-radius: 50%; text-decoration: none; }
+.back-btn:active { background: var(--surface-ghost); }
+.back-btn svg { width: 24px; height: 24px; fill: var(--grey-100); }
+.header-title-block { display: flex; flex-direction: column; }
+.header-title { font-size: 16px; font-weight: 500; color: var(--grey-100); line-height: 1.2; }
+.header-domain { font-size: 12px; color: var(--grey-80); line-height: 1.3; }
+
+/* ===== NOTIFICATION BANNER ===== */
+.notif-banner { position: absolute; top: 56px; left: var(--sp-s); right: var(--sp-s); z-index: 100; background: var(--white); border-radius: var(--radius-lg); padding: var(--sp-base) var(--sp-m); cursor: pointer; box-shadow: 0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08); border: 1px solid var(--stroke-subtle); transform: translateY(-120%); opacity: 0; transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), opacity 0.4s; }
+.notif-banner.visible { transform: translateY(8px); opacity: 1; }
+.notif-banner:active { transform: translateY(8px) scale(0.98); }
+.notif-banner-header { display: flex; align-items: center; gap: var(--sp-xs); margin-bottom: var(--sp-2xs); }
+.notif-banner-icon { width: 20px; height: 20px; border-radius: var(--radius-xs); background: var(--error); display: flex; align-items: center; justify-content: center; }
+.notif-banner-app { font-size: 11px; font-weight: 700; color: var(--grey-80); text-transform: uppercase; letter-spacing: 0.5px; }
+.notif-banner-time { font-size: 11px; font-weight: 500; color: var(--grey-60); margin-left: auto; }
+.notif-banner-live { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--error); background: rgba(250,47,64,0.1); padding: 2px 6px; border-radius: var(--radius-pill); margin-left: var(--sp-xs); display: flex; align-items: center; gap: var(--sp-3xs); }
+.notif-live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--error); animation: livePulse 1s infinite; }
+@keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.38; } }
+.notif-banner-title { font-size: 15px; font-weight: 700; color: var(--grey-100); line-height: 1.3; }
+.notif-banner-body { font-size: 13px; font-weight: 500; color: var(--grey-80); margin-top: 2px; line-height: 1.4; }
+.notif-banner-action { display: inline-flex; align-items: center; gap: var(--sp-3xs); margin-top: var(--sp-xs); font-size: 12px; font-weight: 700; color: var(--primary-50); }
+
+/* ===== CHAT AREA ===== */
+.chat-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.chat-area { flex: 1; overflow-y: auto; padding: var(--sp-m); padding-bottom: var(--sp-xs); display: flex; flex-direction: column; gap: var(--sp-s); scroll-behavior: smooth; background: var(--white); }
+.chat-area::-webkit-scrollbar { width: 0; }
+.msg { max-width: 88%; animation: msgIn 0.35s ease-out; }
+.msg-ai { align-self: flex-start; }
+.msg-full { max-width: 100%; width: 100%; }
+.bubble { padding: var(--sp-s) var(--sp-m); font-size: 14px; line-height: 1.5; color: var(--grey-100); word-wrap: break-word; }
+.bubble-ai { background: var(--surface-ghost); border-radius: var(--radius-xs) var(--radius-lg) var(--radius-lg) var(--radius-lg); }
+
+/* ===== INPUT WIDGET ===== */
+.input-widget { padding: 2px var(--sp-s) var(--sp-m); background: var(--white); position: relative; z-index: 80; flex-shrink: 0; }
+.input-field-wrap { background: var(--surface-ghost); border-radius: var(--radius-xl); padding: var(--sp-2xs); display: flex; flex-direction: column; }
+.input-text-area { padding: 10px var(--sp-xs); display: flex; align-items: center; }
+.input-text-area input { font-family: 'JioType'; font-size: 14px; font-weight: 400; color: var(--grey-100); background: transparent; border: none; outline: none; width: 100%; line-height: 1.3; }
+.input-text-area input::placeholder { color: var(--grey-60); opacity: 0.65; }
+.input-actions { display: flex; justify-content: space-between; align-items: center; height: 43px; }
+.input-left-actions { display: flex; gap: 2px; }
+.input-icon-btn { width: 36px; height: 36px; border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; background: var(--surface-ghost-icon); border: none; cursor: pointer; }
+.input-icon-btn:active { opacity: 0.38; }
+.input-icon-btn svg { width: 20px; height: 20px; }
+.speak-btn { background: var(--surface-bold); border: none; border-radius: var(--radius-pill); padding: 10px var(--sp-l); display: flex; align-items: center; gap: var(--sp-xs); cursor: pointer; }
+.speak-btn:active { opacity: 0.38; }
+.speak-btn svg { width: 18px; height: 18px; }
+.speak-btn span { font-family: 'JioType'; font-weight: 700; font-size: 14px; color: var(--white); line-height: 1; }
+
+/* ===== BREAKING CARD ===== */
+.breaking-card { border-radius: var(--radius-lg); overflow: hidden; background: var(--white); border: 1px solid var(--stroke-subtle); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+/* ===== HERO POSTER — PIXEL ART, FLAT, NO GRADIENTS ===== */
+.hero-poster { position: relative; width: 100%; aspect-ratio: 9/10; overflow: hidden; background: var(--primary-80); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+
+/* Flat stadium background layers */
+.hero-poster .stadium-floor { position: absolute; bottom: 0; left: 0; right: 0; height: 42%; background: var(--primary-70); }
+.hero-poster .stadium-mid { position: absolute; bottom: 42%; left: 0; right: 0; height: 8%; background: var(--primary-60); }
+
+/* Pixel crowd — row of tiny squares */
+.hero-poster .pixel-crowd { position: absolute; bottom: 50%; left: 0; right: 0; height: 24px; display: flex; flex-wrap: wrap; gap: 1px; padding: 0 2px; overflow: hidden; opacity: 0.38; }
+.hero-poster .px-person { width: 6px; height: 8px; border-radius: 0; flex-shrink: 0; }
+
+/* Confetti */
+.hero-poster .confetti-box { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; }
+.hero-poster .conf { position: absolute; opacity: 0; animation: confDrop 4s ease-in infinite; }
+@keyframes confDrop { 0% { opacity: 0; transform: translateY(-20px) rotate(0deg); } 8% { opacity: 1; } 100% { opacity: 0; transform: translateY(500px) rotate(720deg); } }
+
+/* ===== PIXEL ART PLAYERS ===== */
+.px-player { position: absolute; z-index: 10; }
+.px-player-main { bottom: 36%; left: 50%; transform: translateX(-50%); z-index: 12; }
+.px-player-left { bottom: 38%; left: 8%; z-index: 10; transform: scale(0.72); }
+.px-player-right { bottom: 37%; right: 6%; z-index: 10; transform: scale(0.68); }
+
+/* Pixel body parts — ALL SQUARES, no border-radius */
+.px-body { position: relative; width: 56px; }
+.px-head { width: 20px; height: 20px; background: var(--secondary-60); position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 3; }
+.px-hair { width: 22px; height: 8px; background: var(--grey-100); position: absolute; top: -2px; left: 50%; transform: translateX(-50%); z-index: 4; }
+.px-helmet { width: 24px; height: 12px; background: var(--primary-60); position: absolute; top: -4px; left: 50%; transform: translateX(-50%); z-index: 5; }
+.px-jersey { width: 32px; height: 28px; background: var(--primary-60); position: absolute; top: 18px; left: 50%; transform: translateX(-50%); z-index: 2; }
+.px-jersey-stripe { width: 28px; height: 4px; background: var(--secondary-50); position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+.px-jersey-num { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 900; color: var(--white); font-family: 'JioType'; line-height: 1; }
+.px-arm-l { width: 10px; height: 32px; background: var(--primary-60); position: absolute; top: 14px; left: 2px; z-index: 1; transform-origin: top center; animation: pxArm 0.7s ease-in-out infinite alternate; }
+.px-arm-r { width: 10px; height: 32px; background: var(--primary-60); position: absolute; top: 14px; right: 2px; z-index: 1; transform-origin: top center; animation: pxArm 0.7s ease-in-out infinite alternate-reverse; }
+@keyframes pxArm { 0% { transform: rotate(20deg); } 100% { transform: rotate(-45deg); } }
+.px-fist { width: 10px; height: 10px; background: var(--secondary-60); position: absolute; bottom: -2px; left: 0; }
+.px-shorts { width: 28px; height: 14px; background: var(--primary-20); position: absolute; top: 44px; left: 50%; transform: translateX(-50%); }
+.px-leg-l { width: 10px; height: 16px; background: var(--primary-20); position: absolute; top: 56px; left: 14px; }
+.px-leg-r { width: 10px; height: 16px; background: var(--primary-20); position: absolute; top: 56px; right: 14px; }
+.px-boot-l { width: 12px; height: 6px; background: var(--grey-100); position: absolute; top: 72px; left: 13px; }
+.px-boot-r { width: 12px; height: 6px; background: var(--grey-100); position: absolute; top: 72px; right: 13px; }
+.px-shadow { width: 36px; height: 6px; background: rgba(0,0,0,0.38); position: absolute; top: 78px; left: 50%; transform: translateX(-50%); }
+
+/* ===== PIXEL TROPHY ===== */
+.px-trophy-wrap { position: absolute; bottom: 56%; left: 50%; transform: translateX(-50%); z-index: 15; animation: tFloat 2s ease-in-out infinite; }
+@keyframes tFloat { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-6px); } }
+.px-trophy { position: relative; width: 48px; height: 56px; }
+.px-trophy-cup { width: 36px; height: 24px; background: var(--secondary-40); position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+.px-trophy-handle-l { width: 6px; height: 16px; background: var(--secondary-50); position: absolute; top: 4px; left: 0; }
+.px-trophy-handle-r { width: 6px; height: 16px; background: var(--secondary-50); position: absolute; top: 4px; right: 0; }
+.px-trophy-stem { width: 10px; height: 12px; background: var(--secondary-50); position: absolute; top: 24px; left: 50%; transform: translateX(-50%); }
+.px-trophy-base { width: 28px; height: 8px; background: var(--secondary-40); position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+.px-trophy-star { width: 8px; height: 8px; background: var(--white); position: absolute; top: 8px; left: 50%; transform: translateX(-50%) rotate(45deg); opacity: 0.38; }
+.px-trophy-glow { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 64px; height: 64px; background: var(--secondary-40); opacity: 0.38; animation: glowP 2s ease-in-out infinite; }
+@keyframes glowP { 0%,100% { opacity: 0.2; } 50% { opacity: 0.38; } }
+
+/* Poster overlay text */
+.hero-poster .poster-overlay { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: space-between; padding: var(--sp-l) var(--sp-m); }
+.hero-poster .poster-top { display: flex; flex-direction: column; gap: var(--sp-2xs); }
+.hero-poster .breaking-badge { display: inline-flex; align-items: center; gap: var(--sp-2xs); align-self: flex-start; padding: var(--sp-3xs) var(--sp-s); border-radius: var(--radius-xs); background: var(--error); }
+.hero-poster .b-dot { width: 6px; height: 6px; background: var(--white); animation: blink 1s infinite; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.38; } }
+.hero-poster .b-text { font-size: 10px; font-weight: 900; color: var(--white); text-transform: uppercase; letter-spacing: 1.5px; }
+.hero-poster .poster-headline { font-size: 28px; font-weight: 900; color: var(--white); line-height: 1.05; letter-spacing: -0.84px; text-shadow: 0 2px 0 var(--primary-80); }
+.hero-poster .headline-gold { color: var(--secondary-40); }
+.hero-poster .poster-bottom { display: flex; flex-direction: column; gap: var(--sp-xs); }
+
+/* Score card — flat */
+.hero-poster .score-card { display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-s); border-radius: var(--radius-sm); background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.08); }
+.hero-poster .flag-wrap { width: 28px; height: 20px; overflow: hidden; flex-shrink: 0; display: flex; flex-direction: column; }
+.hero-poster .fl-saffron { flex: 1; background: var(--warning); }
+.hero-poster .fl-white { flex: 1; background: var(--white); display: flex; align-items: center; justify-content: center; }
+.hero-poster .fl-green { flex: 1; background: var(--success); }
+.hero-poster .fl-chakra { width: 5px; height: 5px; border: 1px solid var(--primary-50); }
+.hero-poster .fl-pak { background: var(--success); position: relative; }
+.hero-poster .fl-pak-w { position: absolute; left: 0; top: 0; bottom: 0; width: 28%; background: var(--white); }
+.hero-poster .team-name { font-size: 11px; font-weight: 700; color: var(--white); }
+.hero-poster .team-score { font-size: 11px; font-weight: 900; color: var(--secondary-40); }
+.hero-poster .vs-text { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.38); }
+.hero-poster .result-text { font-size: 11px; font-weight: 700; color: var(--sparkle-50); margin-left: auto; }
+
+/* POTM strip — flat */
+.hero-poster .potm-strip { display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) 10px; border-radius: var(--radius-sm); background: rgba(247,171,32,0.12); border: 1px solid rgba(247,171,32,0.2); }
+.hero-poster .potm-icon { width: 32px; height: 32px; background: var(--primary-50); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: var(--white); flex-shrink: 0; }
+.hero-poster .potm-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--secondary-50); }
+.hero-poster .potm-p-name { font-size: 13px; font-weight: 900; color: var(--white); line-height: 1.2; }
+.hero-poster .potm-stat { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.65); }
+
+/* Verified bar */
+.hero-poster .verified-bar { display: flex; align-items: center; justify-content: center; gap: var(--sp-2xs); padding: 5px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.06); }
+.hero-poster .v-logo { width: 16px; height: 16px; background: var(--primary-50); display: flex; align-items: center; justify-content: center; }
+.hero-poster .v-text { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.6); }
+
+/* ===== CARD BODY ===== */
+.card-body { padding: var(--sp-s) var(--sp-m); display: flex; flex-direction: column; gap: var(--sp-s); }
+.lang-bar { display: flex; gap: var(--sp-xs); }
+.lang-chip { padding: var(--sp-2xs) var(--sp-base); border-radius: var(--radius-pill); border: 1.5px solid var(--grey-40); background: var(--white); font-size: 12px; font-weight: 700; color: var(--grey-100); cursor: pointer; transition: all 0.2s; font-family: 'JioType'; }
+.lang-chip:active { transform: scale(0.95); }
+.lang-chip.active { background: var(--primary-50); color: var(--white); border-color: var(--primary-50); }
+.share-row { display: flex; gap: var(--sp-xs); flex-wrap: wrap; }
+.share-btn { display: flex; align-items: center; gap: var(--sp-2xs); padding: 10px var(--sp-m); border-radius: var(--radius-pill); border: none; cursor: pointer; font-family: 'JioType'; font-size: 13px; font-weight: 700; transition: all 0.2s; }
+.share-btn:active { transform: scale(0.95); }
+.share-btn-wa { background: var(--success); color: var(--white); }
+.share-btn-ig { background: var(--error); color: var(--white); }
+.share-btn-copy { background: var(--surface-ghost); color: var(--grey-100); }
+.live-stats { display: flex; gap: var(--sp-m); padding: var(--sp-xs) 0; }
+.live-stat { display: flex; flex-direction: column; align-items: center; }
+.live-stat-num { font-size: 16px; font-weight: 900; color: var(--grey-100); font-variant-numeric: tabular-nums; }
+.live-stat-label { font-size: 10px; font-weight: 500; color: var(--grey-80); }
+
+/* ===== BOTTOM SHEET ===== */
+.share-overlay { position: absolute; inset: 0; z-index: 200; background: var(--grey-80); display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.share-overlay.active { opacity: 1; pointer-events: auto; }
+.share-sheet { width: 100%; background: var(--white); border-radius: var(--radius-xl) var(--radius-xl) 0 0; padding: var(--sp-l) var(--sp-m) var(--sp-2xl); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.22,1,0.36,1); }
+.share-overlay.active .share-sheet { transform: translateY(0); }
+.sheet-handle { width: 40px; height: 4px; border-radius: var(--radius-pill); background: var(--grey-40); margin: 0 auto var(--sp-m); }
+.sheet-icon-wrap { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto var(--sp-s); background: rgba(37,171,33,0.1); display: flex; align-items: center; justify-content: center; }
+.sheet-title { font-size: 18px; font-weight: 900; color: var(--grey-100); text-align: center; }
+.sheet-desc { font-size: 13px; font-weight: 500; color: var(--grey-80); text-align: center; margin-top: var(--sp-3xs); line-height: 1.5; }
+.sheet-groups { display: flex; flex-direction: column; gap: var(--sp-xs); margin-top: var(--sp-m); }
+.sheet-group { display: flex; align-items: center; gap: var(--sp-s); padding: var(--sp-s) var(--sp-base); border-radius: var(--radius-md); background: var(--grey-20); animation: groupSlide 0.4s ease-out both; }
+.sheet-group:nth-child(2) { animation-delay: 0.12s; }
+.sheet-group:nth-child(3) { animation-delay: 0.24s; }
+@keyframes groupSlide { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+.group-avatar { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: var(--white); flex-shrink: 0; }
+.group-name { font-size: 14px; font-weight: 700; color: var(--grey-100); }
+.group-sent { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--success); display: flex; align-items: center; gap: var(--sp-3xs); }
+.sheet-done-btn { width: 100%; margin-top: var(--sp-m); padding: var(--sp-base); border-radius: var(--radius-pill); background: var(--primary-50); color: var(--white); border: none; font-family: 'JioType'; font-size: 16px; font-weight: 700; cursor: pointer; }
+.sheet-done-btn:active { opacity: 0.38; }
+
+/* Skeleton / Toast / Anim */
+.skeleton-card { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--stroke-subtle); }
+.skel-block { background: var(--grey-20); background-size: 200% 100%; animation: shimmer 1.5s infinite; background-image: linear-gradient(90deg, var(--grey-20) 25%, var(--grey-40) 50%, var(--grey-20) 75%); }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.jds-toast { position: fixed; bottom: 80px; left: var(--sp-m); right: var(--sp-m); max-width: 420px; margin: 0 auto; padding: var(--sp-s) var(--sp-m); border-radius: var(--radius-md); background: var(--grey-100); color: var(--white); font-size: 14px; font-weight: 700; z-index: 300; display: flex; align-items: center; gap: var(--sp-xs); transform: translateY(100px); opacity: 0; transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.3s; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+.jds-toast.show { transform: translateY(0); opacity: 1; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: msgIn 0.4s ease-out; }
+</style>
+</head>
+<body>
+<div class="phone-frame">
+    <div class="app-header">
+    <div class="header-left">
+      <a href="https://sunit1986.github.io/design-prototypes/news-tools.html" class="back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+      </a>
+      <div class="header-title-block">
+        <span class="header-title">Breaking News Studio</span>
+        <span class="header-domain">JioBharatIQ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="notif-banner" id="notifBanner" onclick="openBreakingCard()">
+    <div class="notif-banner-header">
+      <div class="notif-banner-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></div>
+      <div class="notif-banner-app">BREAKING NEWS</div>
+      <div class="notif-banner-live"><div class="notif-live-dot"></div> LIVE</div>
+      <div class="notif-banner-time">just now</div>
+    </div>
+    <div class="notif-banner-title">INDIA WINS CHAMPIONS TROPHY 2025!</div>
+    <div class="notif-banner-body">India 287/6 beat Pakistan 241 all out by 46 runs. Bumrah 4/32.</div>
+    <div class="notif-banner-action">Tap to see & share the victory card <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+  </div>
+
+  <div class="chat-body">
+    <div class="chat-area" id="chatArea"></div>
+    <div class="input-widget">
+      <div class="input-field-wrap">
+        <div class="input-text-area"><input type="text" id="inputField" placeholder="Ask about this news..." readonly></div>
+        <div class="input-actions">
+          <div class="input-left-actions"><button class="input-icon-btn"><svg viewBox="0 0 24 24" fill="#170054"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg></button></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="input-icon-btn"><svg viewBox="0 0 24 24" fill="#170054"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z"/></svg></button>
+            <button class="speak-btn"><svg viewBox="0 0 24 24" fill="white"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1z"/></svg><span>Speak</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-overlay" id="shareOverlay">
+    <div class="share-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="var(--success)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div class="sheet-title">Shared to 3 groups!</div>
+      <div class="sheet-desc">Your victory card is on its way. Image + caption generated automatically.</div>
+      <div class="sheet-groups">
+        <div class="sheet-group"><div class="group-avatar" style="background:var(--success)">F</div><div class="group-name">Family Group</div><div class="group-sent"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--success)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Sent</div></div>
+        <div class="sheet-group"><div class="group-avatar" style="background:var(--primary-50)">C</div><div class="group-name">Cricket Lovers</div><div class="group-sent"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--success)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Sent</div></div>
+        <div class="sheet-group"><div class="group-avatar" style="background:var(--secondary-50)">O</div><div class="group-name">Office Friends</div><div class="group-sent"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--success)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Sent</div></div>
+      </div>
+      <button class="sheet-done-btn" onclick="closeShareSheet()">Done</button>
+    </div>
+  </div>
+  <div class="jds-toast" id="toast"></div>
+</div>
+
+<script>
+const ELEVENLABS_API_KEY = 'sk_86a2daf2318ba84afa5190ff9a2c09fcc9e7f9dafea1fe79';
+const VOICES = { en: { id: 'pNInz6obpgDQGcFmaJgB' }, hi: { id: 'zT03pEAEi0VHKciJODfn' }, ta: { id: 'pNInz6obpgDQGcFmaJgB' } };
+const ttsCache = new Map(); let currentAudio = null;
+
+async function speakText(text, lang) {
+  const voiceId = VOICES[lang]?.id || VOICES.en.id;
+  const key = text + '|' + voiceId;
+  if (ttsCache.has(key)) { playAudio(ttsCache.get(key)); return; }
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, { method:'POST', headers:{'xi-api-key':ELEVENLABS_API_KEY,'Content-Type':'application/json'}, body:JSON.stringify({text, model_id:'eleven_multilingual_v2', voice_settings:{stability:0.55,similarity_boost:0.85,style:0.5,use_speaker_boost:true}}) });
+    if (!r.ok) throw new Error(r.status);
+    const url = URL.createObjectURL(await r.blob()); ttsCache.set(key, url); playAudio(url);
+  } catch(e) { console.warn('TTS:', e); }
+}
+function playAudio(u) { if (currentAudio) { currentAudio.pause(); } currentAudio = new Audio(u); currentAudio.play().catch(()=>{}); }
+
+const chatArea = document.getElementById('chatArea');
+function scrollToBottom() { setTimeout(() => chatArea.scrollTop = chatArea.scrollHeight, 60); }
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+function addMsg(h, d) { return new Promise(r => { setTimeout(() => { const div = document.createElement('div'); div.className = 'msg msg-ai fade-in'; div.innerHTML = `<div class="bubble bubble-ai">${h}</div>`; chatArea.appendChild(div); scrollToBottom(); r(); }, d||0); }); }
+function addRaw(h, fw) { const d = document.createElement('div'); d.className = `msg msg-ai fade-in${fw?' msg-full':''}`; d.innerHTML = h; chatArea.appendChild(d); scrollToBottom(); return d; }
+
+function spawnConfetti(box) {
+  const cols = ['var(--secondary-40)','var(--sparkle-50)','var(--primary-30)','var(--error)','var(--white)','var(--secondary-50)','var(--primary-20)'];
+  for (let i = 0; i < 40; i++) { const c = document.createElement('div'); c.className = 'conf'; c.style.left = Math.random()*100+'%'; c.style.animationDelay = Math.random()*4+'s'; c.style.animationDuration = (3+Math.random()*3)+'s'; c.style.background = cols[Math.floor(Math.random()*cols.length)]; const s = 4+Math.random()*6; c.style.width = s+'px'; c.style.height = s+'px'; box.appendChild(c); }
+}
+
+function generateCrowd() {
+  const crowdCols = ['var(--primary-30)','var(--secondary-50)','var(--sparkle-50)','var(--error)','var(--white)','var(--primary-40)','var(--secondary-40)'];
+  let html = '';
+  for (let i = 0; i < 80; i++) { html += `<div class="px-person" style="background:${crowdCols[Math.floor(Math.random()*crowdCols.length)]}"></div>`; }
+  return html;
+}
+
+function pxPlayerHtml(num, skinColor) {
+  const skin = skinColor || 'var(--secondary-60)';
+  return `<div class="px-body">
+    <div class="px-hair"></div>
+    <div class="px-head" style="background:${skin}"></div>
+    <div class="px-arm-l" style="animation-delay:${Math.random()*0.3}s"><div class="px-fist" style="background:${skin}"></div></div>
+    <div class="px-arm-r" style="animation-delay:${Math.random()*0.3}s"><div class="px-fist" style="background:${skin}"></div></div>
+    <div class="px-jersey"><div class="px-jersey-stripe"></div><div class="px-jersey-num">${num}</div></div>
+    <div class="px-shorts"></div>
+    <div class="px-leg-l"></div><div class="px-leg-r"></div>
+    <div class="px-boot-l"></div><div class="px-boot-r"></div>
+    <div class="px-shadow"></div>
+  </div>`;
+}
+
+const langData = {
+  en: { headline:'<span class="headline-gold">INDIA WINS</span><br>CHAMPIONS TROPHY 2025!', team1:'INDIA', runs1:'287/6', team2:'PAKISTAN', runs2:'241 all out', result:'Won by 46 runs', potmLabel:'Player of the Match', potmStats:'4/32 (10 overs) | Econ: 3.20', celebVoice:'What a spectacular victory! India wins the Champions Trophy 2025, beating Pakistan by 46 runs! Jasprit Bumrah is the Player of the Match!' },
+  hi: { headline:'<span class="headline-gold">भारत ने जीता</span><br>चैंपियंस ट्रॉफी 2025!', team1:'भारत', runs1:'287/6', team2:'पाकिस्तान', runs2:'241 ऑल आउट', result:'46 रनों से जीत', potmLabel:'मैन ऑफ द मैच', potmStats:'4/32 (10 ओवर) | इकॉनमी: 3.20', celebVoice:'क्या शानदार जीत है! भारत ने चैंपियंस ट्रॉफी 2025 जीत ली, पाकिस्तान को 46 रनों से हराया! बुमराह मैन ऑफ द मैच!' },
+  ta: { headline:'<span class="headline-gold">இந்தியா வென்றது</span><br>சாம்பியன்ஸ் டிராபி 2025!', team1:'இந்தியா', runs1:'287/6', team2:'பாகிஸ்தான்', runs2:'241 ஆல் அவுட்', result:'46 ரன்கள் வெற்றி', potmLabel:'ஆட்டநாயகன்', potmStats:'4/32 (10 ஓவர்கள்) | எகானமி: 3.20', celebVoice:'India wins the Champions Trophy 2025 by 46 runs! Bumrah takes 4 wickets!' }
+};
+let currentLang = 'en', cardRendered = false;
+
+function switchLang(lang) {
+  currentLang = lang; const d = langData[lang];
+  document.querySelectorAll('.lang-chip').forEach(c => c.classList.toggle('active', c.dataset.lang === lang));
+  const hl = document.getElementById('cardHeadline'); if (hl) hl.innerHTML = d.headline;
+  const t1 = document.getElementById('sTeam1'); if (t1) t1.textContent = d.team1;
+  const r1 = document.getElementById('sRuns1'); if (r1) r1.textContent = d.runs1;
+  const t2 = document.getElementById('sTeam2'); if (t2) t2.textContent = d.team2;
+  const r2 = document.getElementById('sRuns2'); if (r2) r2.textContent = d.runs2;
+  const rs = document.getElementById('sResult'); if (rs) rs.textContent = d.result;
+  const pl = document.getElementById('potmLabel'); if (pl) pl.textContent = d.potmLabel;
+  const ps = document.getElementById('potmStats'); if (ps) ps.textContent = d.potmStats;
+  speakText(d.celebVoice, lang);
+}
+
+let shareCount = 2400, viewCount = 18000, secondsAgo = 58;
+function startLiveCounter() { setInterval(() => { shareCount += Math.floor(Math.random()*12)+3; viewCount += Math.floor(Math.random()*60)+20; secondsAgo++; const s=document.getElementById('liveShares'),v=document.getElementById('liveViews'),t=document.getElementById('liveTime'); if(s) s.textContent=(shareCount/1000).toFixed(1)+'K'; if(v) v.textContent=(viewCount/1000).toFixed(1)+'K'; if(t) t.textContent=secondsAgo<60?secondsAgo+'s':Math.floor(secondsAgo/60)+'m'; }, 2000); }
+
+let notifShown = false;
+async function startFlow() { await addMsg('Welcome back, Ananya! Your morning briefing was delivered at 7:15 AM.', 0); await wait(500); await addMsg('Champions Trophy Final is LIVE &mdash; India vs Pakistan. Stay tuned for updates.', 300); await wait(2500); showNotification(); }
+function showNotification() { if(notifShown) return; notifShown=true; document.getElementById('headerStatus').textContent='Breaking News'; document.getElementById('headerStatus').style.color='var(--error)'; document.getElementById('notifBanner').classList.add('visible'); }
+
+const pxTrophy = `<div class="px-trophy-wrap"><div class="px-trophy-glow"></div><div class="px-trophy"><div class="px-trophy-cup"><div class="px-trophy-star"></div></div><div class="px-trophy-handle-l"></div><div class="px-trophy-handle-r"></div><div class="px-trophy-stem"></div><div class="px-trophy-base"></div></div></div>`;
+
+async function openBreakingCard() {
+  const b = document.getElementById('notifBanner'); b.style.transition='transform 0.3s, opacity 0.2s'; b.classList.remove('visible');
+  document.getElementById('headerStatus').textContent='Online'; document.getElementById('headerStatus').style.color='';
+  if (cardRendered) return; cardRendered = true;
+
+  const sk = addRaw(`<div class="skeleton-card"><div class="skel-block" style="width:100%;height:180px"></div><div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px"><div class="skel-block" style="width:75%;height:20px;border-radius:var(--radius-sm)"></div><div class="skel-block" style="width:55%;height:14px;border-radius:var(--radius-sm)"></div></div></div>`, true);
+  await wait(1500); sk.remove();
+
+  const cardHtml = `<div class="breaking-card">
+    <div class="hero-poster">
+      <div class="stadium-floor"></div>
+      <div class="stadium-mid"></div>
+      <div class="pixel-crowd">${generateCrowd()}</div>
+      <div class="confetti-box" id="confBox"></div>
+      ${pxTrophy}
+      <div class="px-player px-player-main">${pxPlayerHtml(93)}</div>
+      <div class="px-player px-player-left">${pxPlayerHtml(18, 'var(--secondary-70)')}</div>
+      <div class="px-player px-player-right">${pxPlayerHtml(45, 'var(--secondary-60)')}</div>
+      <div class="poster-overlay">
+        <div class="poster-top">
+          <div class="breaking-badge"><div class="b-dot"></div><div class="b-text">Breaking</div></div>
+          <div class="poster-headline" id="cardHeadline"><span class="headline-gold">INDIA WINS</span><br>CHAMPIONS TROPHY 2025!</div>
+        </div>
+        <div class="poster-bottom">
+          <div class="score-card">
+            <div class="flag-wrap"><div class="fl-saffron"></div><div class="fl-white"><div class="fl-chakra"></div></div><div class="fl-green"></div></div>
+            <div><div class="team-name" id="sTeam1">INDIA</div><div class="team-score" id="sRuns1">287/6</div></div>
+            <div class="vs-text">vs</div>
+            <div class="flag-wrap fl-pak" style="width:28px;height:20px;overflow:hidden;position:relative;background:var(--success)"><div class="fl-pak-w"></div></div>
+            <div><div class="team-name" id="sTeam2">PAKISTAN</div><div class="team-score" id="sRuns2">241 all out</div></div>
+            <div class="result-text" id="sResult">Won by 46 runs</div>
+          </div>
+          <div class="potm-strip"><div class="potm-icon">JB</div><div><div class="potm-tag" id="potmLabel">Player of the Match</div><div class="potm-p-name">Jasprit Bumrah</div><div class="potm-stat" id="potmStats">4/32 (10 overs) | Econ: 3.20</div></div></div>
+          <div class="verified-bar"><div class="v-logo"><svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1z"/></svg></div><div class="v-text">JioBharatIQ</div><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><div class="v-text">Verified News</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="lang-bar"><button class="lang-chip active" data-lang="en" onclick="switchLang('en')">English</button><button class="lang-chip" data-lang="hi" onclick="switchLang('hi')">हिन्दी</button><button class="lang-chip" data-lang="ta" onclick="switchLang('ta')">தமிழ்</button></div>
+      <div class="share-row">
+        <button class="share-btn share-btn-wa" onclick="shareWhatsApp()"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</button>
+        <button class="share-btn share-btn-ig" onclick="shareIG()"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg> Story</button>
+        <button class="share-btn share-btn-copy" onclick="copyCard()"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Copy</button>
+      </div>
+      <div class="live-stats">
+        <div class="live-stat"><div class="live-stat-num" id="liveShares">2.4K</div><div class="live-stat-label">Shares</div></div>
+        <div class="live-stat"><div class="live-stat-num" id="liveViews">18.0K</div><div class="live-stat-label">Views</div></div>
+        <div class="live-stat"><div class="live-stat-num">12</div><div class="live-stat-label">Languages</div></div>
+        <div class="live-stat"><div class="live-stat-num" id="liveTime">58s</div><div class="live-stat-label">ago</div></div>
+      </div>
+    </div>
+  </div>`;
+
+  addRaw(cardHtml, true);
+  setTimeout(() => { const box = document.getElementById('confBox'); if (box) spawnConfetti(box); }, 100);
+  speakText(langData.en.celebVoice, 'en');
+  startLiveCounter();
+}
+
+function shareWhatsApp() { document.getElementById('shareOverlay').classList.add('active'); }
+function shareIG() { showToast('Added to Instagram Story!'); }
+function copyCard() { showToast('Card copied to clipboard!'); }
+function closeShareSheet() { document.getElementById('shareOverlay').classList.remove('active'); }
+document.getElementById('shareOverlay').addEventListener('click', function(e) { if (e.target === this) closeShareSheet(); });
+
+function showToast(msg) { const t = document.getElementById('toast'); t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="var(--sparkle-50)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> ${msg}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+
+startFlow();
+</script>
+</body>
+</html>

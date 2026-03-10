@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Briefing - Jio News AI</title>
+<!-- jbiq:v3.5.6 -->
+<style>
+@font-face { font-family: 'JioType'; font-weight: 400; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 500; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 700; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 900; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+:root {
+  --primary: #3535f3;
+  --primary-light: #e8e8fc;
+  --primary-dark: #3900ad;
+  --secondary: #f7ab20;
+  --sparkle: #1eccb0;
+  --error: #fa2f40;
+  --warning: #f06d0f;
+  --success: #25ab21;
+  --grey-100: #141414;
+  --grey-80: rgba(0,0,0,0.66);
+  --grey-60: #b5b5b5;
+  --grey-40: #e0e0e0;
+  --grey-20: #f5f5f5;
+  --surface-ghost: #eeeeef;
+  --surface-bold: #3900ad;
+  --white: #ffffff;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+  --surface-ghost-icon: #e7e9ff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'JioType'; background: var(--white); display: flex; flex-direction: column; }
+
+.phone-frame { width: 100%; height: 100%; background: var(--white); position: relative; overflow: hidden; }
+
+.chat-header {
+  height: 56px; padding: 0 12px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--grey-40); background: var(--white); position: relative; z-index: 80;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.back-btn {
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  border: none; background: none; cursor: pointer; border-radius: 50%;
+}
+.back-btn:active { background: var(--surface-ghost); }
+.back-btn svg { width: 24px; height: 24px; fill: var(--grey-100); }
+.header-title-block { display: flex; flex-direction: column; }
+.header-title { font-size: 16px; font-weight: 500; color: var(--grey-100); line-height: 1.2; }
+.header-domain { font-size: 12px; color: var(--grey-80); line-height: 1.3; }
+
+.chat-area {
+  flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 8px;
+  display: flex; flex-direction: column; gap: 12px;
+  scroll-behavior: smooth; background: var(--white);
+}
+.chat-area::-webkit-scrollbar { width: 0; }
+.chat-body { display: flex; flex-direction: column; height: calc(100vh - 56px - 88px); }
+
+.msg { max-width: 88%; animation: msgIn 0.35s ease-out; }
+.msg-ai { align-self: flex-start; }
+.msg-user { align-self: flex-end; }
+.msg-full { max-width: 100%; width: 100%; }
+
+.bubble { padding: 12px 16px; font-size: 14px; line-height: 1.5; color: var(--grey-100); word-wrap: break-word; }
+.bubble-ai { background: var(--surface-ghost); border-radius: var(--radius-xs) var(--radius-lg) var(--radius-lg) var(--radius-lg); }
+.bubble-user { background: var(--primary); color: var(--white); border-radius: var(--radius-lg) var(--radius-xs) var(--radius-lg) var(--radius-lg); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.chip {
+  padding: 8px 16px; border-radius: var(--radius-pill); border: 1.5px solid var(--primary);
+  color: var(--primary); font-size: 13px; font-weight: 700; cursor: pointer;
+  background: var(--white); transition: all 0.2s;
+}
+.chip:hover, .chip:active { background: var(--primary); color: var(--white); }
+.chip-disabled { opacity: 0.38; pointer-events: none; border-color: var(--grey-60); color: var(--grey-60); }
+
+/* Notification card */
+.notif-card {
+  background: var(--surface-ghost); border-radius: var(--radius-lg); padding: 16px;
+  display: flex; align-items: center; gap: 12px; margin-top: 8px; cursor: pointer;
+  transition: all 0.2s; border: 1.5px solid transparent;
+}
+.notif-card:hover { border-color: var(--primary); background: var(--primary-light); }
+.notif-icon {
+  width: 44px; height: 44px; border-radius: 50%; background: var(--primary);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.notif-text h4 { font-size: 14px; font-weight: 700; color: var(--grey-100); line-height: 1.3; }
+.notif-text p { font-size: 12px; color: var(--grey-80); margin-top: 2px; }
+.notif-time { font-size: 11px; color: var(--grey-60); margin-left: auto; flex-shrink: 0; }
+
+/* === Anchor Card === */
+.anchor-card {
+  background: var(--white); border: 1px solid var(--grey-40);
+  border-radius: var(--radius-lg); overflow-y: auto; color: var(--grey-100);
+  padding: 20px 16px; text-align: center; position: relative;
+  display: flex; flex-direction: column; align-items: center;
+}
+.anchor-hero { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; width: 100%; }
+.anchor-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 8px;
+}
+.anchor-name { font-size: 16px; font-weight: 700; color: var(--grey-100); margin-bottom: 2px; }
+.anchor-role { font-size: 11px; color: var(--grey-60); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.anchor-status { font-size: 13px; color: var(--sparkle); font-weight: 700; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.anchor-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sparkle); animation: pulse-dot 1.5s infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.38; } }
+.anchor-timer { font-size: 13px; color: var(--grey-60); font-variant-numeric: tabular-nums; margin-top: 4px; }
+
+.story-progress { display: flex; gap: 4px; margin: 16px 0 12px; width: 100%; max-width: 280px; }
+.story-dot { flex: 1; height: 3px; border-radius: 2px; background: var(--grey-40); transition: background 0.3s; }
+.story-dot-active { background: var(--sparkle); }
+.story-dot-done { background: var(--sparkle); }
+
+/* === News Anchor Avatar === */
+.anchor-person {
+  display: flex; flex-direction: column; align-items: center; margin: 16px 0 12px;
+  position: relative;
+}
+.anchor-person-body {
+  position: relative; width: 120px; height: 150px;
+}
+/* Head */
+.ap-head {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(145deg, #d4a574, #c49464);
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+/* Hair */
+.ap-hair {
+  width: 68px; height: 34px; border-radius: 34px 34px 0 0;
+  background: #1a1a1a; position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+  z-index: 3;
+}
+/* Face */
+.ap-face { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 40px; height: 36px; z-index: 4; }
+/* Eyes */
+.ap-eye {
+  width: 6px; height: 6px; border-radius: 50%; background: #2c1810;
+  position: absolute; top: 8px;
+}
+.ap-eye-l { left: 6px; }
+.ap-eye-r { right: 6px; }
+/* Blink animation */
+@keyframes blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+.ap-eye { animation: blink 4s ease-in-out infinite; }
+.ap-eye-r { animation-delay: 0.1s; }
+/* Mouth */
+.ap-mouth {
+  width: 10px; height: 4px; border-radius: 0 0 5px 5px;
+  background: #8b4513; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+  transition: all 0.15s;
+}
+/* Lip sync when speaking */
+@keyframes lipSync {
+  0% { height: 4px; width: 10px; border-radius: 0 0 5px 5px; }
+  15% { height: 10px; width: 14px; border-radius: 50%; }
+  30% { height: 6px; width: 8px; border-radius: 50%; }
+  45% { height: 12px; width: 12px; border-radius: 50%; }
+  60% { height: 5px; width: 10px; border-radius: 0 0 5px 5px; }
+  75% { height: 10px; width: 14px; border-radius: 50%; }
+  90% { height: 7px; width: 9px; border-radius: 50%; }
+  100% { height: 4px; width: 10px; border-radius: 0 0 5px 5px; }
+}
+.avatar-speaking .ap-mouth {
+  animation: lipSync 0.6s ease-in-out infinite;
+  background: #6b3410;
+}
+.avatar-idle .ap-mouth {
+  height: 4px; width: 10px; animation: none;
+}
+/* Torso */
+.ap-torso {
+  width: 80px; height: 86px; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(180deg, #1a237e, #0d1642);
+  border-radius: 40px 40px 12px 12px; z-index: 1;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+/* Collar */
+.ap-collar {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 30px; height: 12px;
+  border-left: 15px solid transparent; border-right: 15px solid transparent;
+  border-top: 12px solid #e8e8e8; z-index: 2;
+}
+/* Tie */
+.ap-tie {
+  width: 10px; height: 30px; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 3;
+}
+.ap-tie::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  border-left: 5px solid transparent; border-right: 5px solid transparent;
+  border-top: 8px solid #c0392b;
+}
+.ap-tie::after {
+  content: ''; position: absolute; top: 7px; left: 1px;
+  width: 8px; height: 22px; background: #c0392b;
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 30% 100%);
+}
+/* Glow ring when speaking */
+.avatar-speaking .ap-head {
+  box-shadow: 0 0 0 3px rgba(30,204,176,0.3), 0 0 16px rgba(30,204,176,0.15);
+}
+.anchor-person-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--grey-60); margin-top: 8px;
+}
+
+/* Thinking shimmer */
+.thinking-shimmer {
+  background: linear-gradient(90deg, rgba(53,53,243,0.06), rgba(30,204,176,0.1), rgba(53,53,243,0.06));
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+  border-radius: var(--radius-xs) var(--radius-lg) var(--radius-lg) var(--radius-lg);
+  padding: 14px 16px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.story-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+  border-radius: var(--radius-pill); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+}
+.badge-local { background: rgba(30,204,176,0.15); color: var(--sparkle); }
+.badge-business { background: rgba(247,171,32,0.15); color: var(--secondary); }
+.badge-markets { background: rgba(53,53,243,0.15); color: var(--primary); }
+.badge-sports { background: rgba(37,171,33,0.15); color: var(--success); }
+.badge-gold { background: rgba(247,171,32,0.2); color: var(--secondary); }
+.badge-good { background: rgba(30,204,176,0.15); color: var(--sparkle); }
+.badge-weather { background: rgba(53,53,243,0.15); color: var(--primary); }
+
+.anchor-transcript {
+  background: var(--surface-ghost); border-radius: var(--radius-md);
+  padding: 14px 16px; width: 100%; text-align: left; margin-top: 10px;
+  border: 1px solid var(--grey-40); min-height: 80px;
+}
+.anchor-transcript-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--grey-60); margin-bottom: 8px; }
+.anchor-transcript-text { font-size: 14px; line-height: 1.6; color: var(--grey-100); }
+.anchor-transcript-text strong { color: var(--grey-100); font-weight: 700; }
+
+.deep-dive-panel {
+  background: rgba(247,171,32,0.06); border-radius: var(--radius-md); padding: 14px 16px;
+  width: 100%; text-align: left; margin-top: 10px;
+  border-left: 3px solid var(--secondary);
+}
+.deep-dive-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--secondary); margin-bottom: 8px; }
+.deep-dive-text { font-size: 13px; line-height: 1.6; color: var(--grey-100); }
+.deep-dive-text strong { color: var(--grey-100); font-weight: 700; }
+
+.anchor-actions { display: flex; gap: 14px; margin-top: 16px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.anchor-btn {
+  width: 48px; height: 48px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.anchor-btn:active { transform: scale(0.9); }
+.anchor-btn-skip { background: var(--surface-ghost); color: var(--grey-100); border: 1px solid var(--grey-40); }
+.anchor-btn-mic { background: var(--surface-ghost); color: var(--grey-60); border: 1.5px solid var(--grey-40); }
+.anchor-btn-mic.mic-active { color: var(--primary); border-color: var(--primary); box-shadow: 0 0 0 3px rgba(53,53,243,0.15); }
+.anchor-btn-end { background: var(--error); color: var(--white); width: 44px; height: 44px; }
+.anchor-btn-more {
+  background: rgba(53,53,243,0.08); color: var(--primary);
+  border: 1.5px solid rgba(53,53,243,0.2); padding: 0 16px;
+  width: auto; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700;
+  font-family: 'JioType'; height: 40px;
+}
+.anchor-btn-more:hover { background: rgba(53,53,243,0.15); }
+.anchor-hint { font-size: 12px; color: var(--grey-60); margin-top: 8px; text-align: center; }
+
+.summary-card {
+  background: var(--surface-ghost); border-radius: var(--radius-md); padding: 14px 16px;
+  width: 100%; text-align: left; margin-top: 10px;
+}
+.summary-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--sparkle); margin-bottom: 10px; }
+.summary-item { font-size: 13px; line-height: 1.8; color: var(--grey-100); }
+.summary-item strong { color: var(--grey-100); font-weight: 700; }
+
+/* Input widget */
+.input-widget { padding: 2px 12px 16px; background: var(--white); position: relative; z-index: 80; }
+.input-field-wrap {
+  background: var(--surface-ghost); border-radius: var(--radius-xl); padding: 6px;
+  display: flex; flex-direction: column;
+}
+.input-text-area { padding: 10px 8px; display: flex; align-items: center; }
+.input-text-area input {
+  font-family: 'JioType'; font-size: 14px; font-weight: 400; color: var(--grey-100);
+  background: transparent; border: none; outline: none; width: 100%; line-height: 1.3;
+}
+.input-text-area input::placeholder { color: var(--grey-60); opacity: 0.65; }
+.input-actions { display: flex; justify-content: space-between; align-items: center; height: 43px; }
+.input-left-actions { display: flex; gap: 2px; }
+.input-icon-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-pill);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-ghost-icon); border: none; cursor: pointer;
+}
+.input-icon-btn:active { opacity: 0.7; }
+.input-icon-btn svg { width: 20px; height: 20px; }
+.send-btn {
+  background: var(--primary); border: none; border-radius: var(--radius-pill);
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.send-btn:active { transform: scale(0.9); }
+.send-btn svg { width: 18px; height: 18px; }
+.speak-btn {
+  background: var(--surface-bold); border: none; border-radius: var(--radius-pill);
+  padding: 10px 20px; display: flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.speak-btn:active { opacity: 0.85; }
+.speak-btn svg { width: 18px; height: 18px; }
+.speak-btn span { font-family: 'JioType'; font-weight: 700; font-size: 14px; color: var(--white); line-height: 1; }
+
+.typing { display: flex; gap: 4px; padding: 12px 16px; }
+.typing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--grey-60); animation: typingAnim 1.2s ease-in-out infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes msgIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes typingAnim { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+
+.hidden { display: none !important; }
+.fade-in { animation: msgIn 0.4s ease-out; }
+</style>
+</head>
+
+<body>
+
+<div class="phone-frame">
+    <div class="chat-header">
+    <div class="header-left">
+      <a href="https://sunit1986.github.io/design-prototypes/news-tools.html" class="back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+      </a>
+      <div class="header-title-block">
+        <span class="header-title">Jio News AI</span>
+        <span class="header-domain">Morning Briefing</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-body">
+    <div class="chat-area" id="chatArea"></div>
+    <div class="input-widget">
+      <div class="input-field-wrap">
+        <div class="input-text-area">
+          <input type="text" id="inputField" placeholder="Apni pasand likho...">
+        </div>
+        <div class="input-actions">
+          <div class="input-left-actions">
+            <button class="input-icon-btn">
+              <svg viewBox="0 0 24 24" fill="#3900ad"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg>
+            </button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="send-btn" id="sendBtn" onclick="handleSend()" style="display:none">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+            <button class="speak-btn" onclick="handleMicClick()">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1z"/></svg>
+              <span>Speak</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// === SVG Icons ===
+const ICONS = {
+  mic: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z"/></svg>',
+  play: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/></svg>',
+  skip: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5.536 21.886a1.004 1.004 0 001.033-.064l13-9a1 1 0 000-1.644l-13-9A1 1 0 005 3v18a1 1 0 00.536.886z"/></svg>',
+  volume: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>',
+  end: '<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.1-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>',
+  refresh: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4a8 8 0 013.85 1H15a1 1 0 100 2h3a1 1 0 001-1V3a1 1 0 00-2 0v.36A10 10 0 0012 2a10 10 0 00-8.65 5A9.94 9.94 0 002 12a1 1 0 102 0 8 8 0 018-8zm9.71 7.29A1 1 0 0020 12a8 8 0 01-11.84 7H9a1 1 0 000-2H6a1 1 0 00-1 1v3a1 1 0 102 0v-.36A10 10 0 0012 22a10 10 0 0010-10 1 1 0 00-.29-.71z"/></svg>',
+  pause: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5a2 2 0 00-2 2v10a2 2 0 104 0V7a2 2 0 00-2-2zm8 0a2 2 0 00-2 2v10a2 2 0 104 0V7a2 2 0 00-2-2z"/></svg>',
+};
+
+// === ElevenLabs TTS ===
+const ELEVENLABS_API_KEY = 'sk_86a2daf2318ba84afa5190ff9a2c09fcc9e7f9dafea1fe79';
+const HINDI_VOICES = {
+  raju:    { id: 'zT03pEAEi0VHKciJODfn', name: 'Raju', desc: 'Relatable Hindi voice' },
+  aakash:  { id: 'N2al4jd45e882svx17SU', name: 'Aakash Aryan', desc: 'Deep Hindi bass' },
+  viraj:   { id: 'FmBhnvP58BK0vz65OOj7', name: 'Viraj', desc: 'Energetic Hindi narrator' },
+  ranbir:  { id: 'yRis6UiS4dtT4Aqv72DC', name: 'Ranbir M', desc: 'Deep, engaging Hindi' },
+  ahmed:   { id: 'k7nOSUCadIEwB6fdJmbw', name: 'Ahmed', desc: 'Professional Hindi' },
+  pkanil:  { id: 'JTPrASXyK62cF3L7w8hv', name: 'P K Anil', desc: 'Clear Hindi diction' },
+};
+let activeVoiceId = HINDI_VOICES.raju.id;
+const ttsCache = new Map();
+let currentAudio = null;
+let isSpeaking = false;
+let isPaused = false;
+
+// === Conversation Preferences ===
+let conversationStep = 0; // 1=topic, 2=language, 3=duration
+let userPreferences = { topic: null, language: null, duration: null };
+
+async function elevenLabsTTS(text, onended = null) {
+  const cacheKey = text + '|' + activeVoiceId;
+  if (ttsCache.has(cacheKey)) { playAudioFromUrl(ttsCache.get(cacheKey), onended); return; }
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${activeVoiceId}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVENLABS_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.65, similarity_boost: 0.8, style: 0.2, use_speaker_boost: true } })
+    });
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    ttsCache.set(cacheKey, url);
+    playAudioFromUrl(url, onended);
+  } catch (e) {
+    console.warn('ElevenLabs TTS failed:', e);
+    browserSpeak(text, 0.9);
+    if (onended) setTimeout(onended, Math.max(3000, text.length * 50));
+  }
+}
+
+function playAudioFromUrl(url, onended) {
+  stopCurrentAudio();
+  currentAudio = new Audio(url);
+  isSpeaking = true; isPaused = false;
+  updatePauseBtn();
+  // Start lip sync
+  const avatarEl = document.getElementById('briefingAvatar');
+  if (avatarEl) { avatarEl.classList.remove('avatar-idle'); avatarEl.classList.add('avatar-speaking'); }
+  currentAudio.onended = () => {
+    isSpeaking = false;
+    if (avatarEl) { avatarEl.classList.remove('avatar-speaking'); avatarEl.classList.add('avatar-idle'); }
+    if (onended) onended();
+  };
+  currentAudio.play().catch(e => {
+    isSpeaking = false;
+    if (avatarEl) { avatarEl.classList.remove('avatar-speaking'); avatarEl.classList.add('avatar-idle'); }
+    if (onended) setTimeout(onended, 300);
+  });
+}
+
+function stopCurrentAudio() {
+  if (currentAudio) {
+    currentAudio.pause(); currentAudio.currentTime = 0; isSpeaking = false; isPaused = false;
+    const avatarEl = document.getElementById('briefingAvatar');
+    if (avatarEl) { avatarEl.classList.remove('avatar-speaking'); avatarEl.classList.add('avatar-idle'); }
+  }
+  updatePauseBtn();
+}
+
+function togglePauseAudio() {
+  if (!currentAudio) return;
+  const avatarEl = document.getElementById('briefingAvatar');
+  if (isPaused) {
+    // Resume
+    currentAudio.play();
+    isPaused = false; isSpeaking = true;
+    if (avatarEl) { avatarEl.classList.remove('avatar-idle'); avatarEl.classList.add('avatar-speaking'); }
+    startBriefingTimer(false);
+  } else {
+    // Pause
+    currentAudio.pause();
+    isPaused = true; isSpeaking = false;
+    if (avatarEl) { avatarEl.classList.remove('avatar-speaking'); avatarEl.classList.add('avatar-idle'); }
+    stopBriefingTimer();
+  }
+  updatePauseBtn();
+}
+
+function updatePauseBtn() {
+  const btn = document.getElementById('pauseBtn');
+  if (!btn) return;
+  btn.innerHTML = isPaused ? ICONS.play : ICONS.pause;
+  btn.title = isPaused ? 'Resume' : 'Pause';
+  btn.style.background = isPaused ? 'rgba(53,53,243,0.1)' : '';
+  btn.style.color = isPaused ? 'var(--primary)' : '';
+  btn.style.borderColor = isPaused ? 'rgba(53,53,243,0.3)' : '';
+}
+
+function browserSpeak(text, rate = 0.9) {
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'hi-IN'; u.rate = rate; speechSynthesis.speak(u);
+}
+
+function preCacheStories(fromIndex = 0) {
+  briefingStories.slice(fromIndex, fromIndex + 3).forEach(s => {
+    const k = s.speakText + '|' + activeVoiceId;
+    if (ttsCache.has(k)) return;
+    fetch(`https://api.elevenlabs.io/v1/text-to-speech/${activeVoiceId}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVENLABS_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: s.speakText, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.65, similarity_boost: 0.8, style: 0.2, use_speaker_boost: true } })
+    }).then(r => r.blob()).then(b => { ttsCache.set(k, URL.createObjectURL(b)); }).catch(() => {});
+  });
+}
+
+// === Chat Helpers ===
+const chatArea = document.getElementById('chatArea');
+let currentState = 'welcome';
+
+function addMsg(type, html, delay = 0) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = `msg msg-${type} fade-in`;
+      div.innerHTML = `<div class="bubble bubble-${type}">${html}</div>`;
+      chatArea.appendChild(div); scrollToBottom(); resolve();
+    }, delay);
+  });
+}
+
+function addRaw(html, delay = 0, fullWidth = false) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = `msg msg-ai fade-in${fullWidth ? ' msg-full' : ''}`;
+      div.innerHTML = html;
+      chatArea.appendChild(div); scrollToBottom(); resolve();
+    }, delay);
+  });
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg msg-ai'; div.id = 'typing-indicator';
+  div.innerHTML = `<div class="bubble bubble-ai"><div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  chatArea.appendChild(div); scrollToBottom();
+}
+function hideTyping() { const el = document.getElementById('typing-indicator'); if (el) el.remove(); }
+function scrollToBottom() { setTimeout(() => { chatArea.scrollTop = chatArea.scrollHeight; }, 50); }
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// === Input Handling ===
+const inputField = document.getElementById('inputField');
+const sendBtn = document.getElementById('sendBtn');
+
+inputField.addEventListener('input', function() {
+  sendBtn.style.display = this.value.trim() ? 'flex' : 'none';
+});
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && this.value.trim()) { e.preventDefault(); handleSend(); }
+});
+
+function handleMicClick() {
+  if (currentState === 'briefing') triggerDeepDive();
+}
+
+async function handleSend() {
+  const text = inputField.value.trim();
+  if (!text) return;
+  inputField.value = '';
+  sendBtn.style.display = 'none';
+  await addMsg('user', text);
+  if (currentState === 'collecting_preferences') {
+    await processPreferenceInput(text);
+  }
+}
+
+function makeChips(options) {
+  return `<div class="bubble bubble-ai"><div class="chips">${options.map(o =>
+    `<span class="chip" onclick="chipSelect('${o.value}')">${o.label}</span>`
+  ).join('')}</div></div>`;
+}
+
+function chipSelect(value) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.add('chip-disabled'));
+  inputField.value = value;
+  handleSend();
+}
+
+// === Preference Parsers ===
+function parseTopic(text) {
+  if (/aakashvani|radio|formal|shuddh|serious|classic/.test(text)) return 'aakashvani';
+  if (/business|vyapaar|bazaar|market|karobaar/.test(text)) return 'business';
+  if (/sport|khel|cricket|football/.test(text)) return 'sports';
+  if (/quick|headlines|jaldi|fast|short/.test(text)) return 'headlines';
+  return 'aakashvani';
+}
+
+function parseLanguage(text) {
+  if (/english|angrezi/.test(text)) return 'english';
+  if (/hinglish|mix|dono/.test(text)) return 'hinglish';
+  return 'hindi';
+}
+
+function parseDuration(text) {
+  if (/quick|2|do min|short|chhota/.test(text)) return 'quick';
+  if (/detail|15|pandrah|lamba|long|zyada/.test(text)) return 'detailed';
+  return 'standard';
+}
+
+function getTopicAck(topic) {
+  const m = {
+    aakashvani: 'Bahut accha! <strong>Aakashvani andaaz</strong> \u2014 shuddh Hindi mein gambheer samachar vaachan. Classic pasand hai aapki!',
+    business: 'Vyapaar samachar pe focus \u2014 <strong>aapke kaam ki khabrein pehle!</strong>',
+    sports: 'Khel jagat ki taza khabrein \u2014 <strong>game on!</strong>',
+    headlines: 'Quick headlines \u2014 <strong>seedha aur saral!</strong>'
+  };
+  return m[topic] || m.aakashvani;
+}
+
+function getLanguageAck(lang) {
+  const m = {
+    hindi: '<strong>Shuddh Hindi</strong> mein! Bilkul sahi.',
+    english: '<strong>English</strong> it is! Got it.',
+    hinglish: '<strong>Hinglish</strong> \u2014 best of both worlds!'
+  };
+  return m[lang] || m.hindi;
+}
+
+function getDurationAck(dur) {
+  const m = {
+    quick: 'Theek hai, <strong>2 minute ka quick briefing</strong> tayyar karta hoon!',
+    standard: 'Perfect, <strong>7 minute ka standard briefing</strong> \u2014 sab kuch cover hoga!',
+    detailed: '<strong>15 minute ka detailed briefing</strong> \u2014 har khabar pe gehrai se!'
+  };
+  return m[dur] || m.standard;
+}
+
+async function processPreferenceInput(text) {
+  const lower = text.toLowerCase();
+  showTyping();
+  await wait(800);
+  hideTyping();
+
+  switch(conversationStep) {
+    case 1: // Topic
+      userPreferences.topic = parseTopic(lower);
+      conversationStep = 2;
+      await addMsg('ai', getTopicAck(userPreferences.topic));
+      await wait(400);
+      await addMsg('ai', 'Aap kis bhasha mein sunna chahenge?');
+      await addRaw(makeChips([
+        { label: 'Hindi', value: 'hindi' },
+        { label: 'English', value: 'english' },
+        { label: 'Hinglish', value: 'hinglish' }
+      ]));
+      break;
+
+    case 2: // Language
+      userPreferences.language = parseLanguage(lower);
+      conversationStep = 3;
+      await addMsg('ai', getLanguageAck(userPreferences.language));
+      await wait(400);
+      await addMsg('ai', 'Kitna lamba briefing chahiye?');
+      await addRaw(makeChips([
+        { label: 'Quick (2 min)', value: 'quick' },
+        { label: 'Standard (7 min)', value: 'standard' },
+        { label: 'Detailed (15 min)', value: 'detailed' }
+      ]));
+      break;
+
+    case 3: // Duration
+      userPreferences.duration = parseDuration(lower);
+      conversationStep = 0;
+      await addMsg('ai', getDurationAck(userPreferences.duration));
+      await wait(300);
+      await goToState('thinking');
+      break;
+  }
+}
+
+// === Briefing Stories (Aakashvani Style) ===
+const briefingStories = [
+  {
+    category: 'SAMACHAR',
+    badgeClass: 'badge-weather',
+    speakText: '\u0928\u092E\u0938\u094D\u0915\u093E\u0930, \u092F\u0939 \u0939\u0948 \u091C\u093F\u092F\u094B \u0938\u092E\u093E\u091A\u093E\u0930 \u0938\u0947\u0935\u093E\u0964 \u092E\u0948\u0902 \u0939\u0942\u0901 \u0906\u092A\u0915\u093E \u0938\u092E\u093E\u091A\u093E\u0930 \u0935\u093E\u091A\u0915\u0964 \u0906\u091C \u092C\u0941\u0927\u0935\u093E\u0930, 26 \u092B\u0930\u0935\u0930\u0940\u0964 \u0935\u093E\u0930\u093E\u0923\u0938\u0940 \u092E\u0947\u0902 \u0906\u091C \u0915\u093E \u0924\u093E\u092A\u092E\u093E\u0928 28 \u0921\u093F\u0917\u094D\u0930\u0940 \u0938\u0947\u0932\u094D\u0938\u093F\u092F\u0938, \u0926\u093F\u0928 \u092E\u0947\u0902 \u0927\u0942\u092A \u0930\u0939\u0947\u0917\u0940, \u0926\u094B\u092A\u0939\u0930 \u0915\u0947 \u092C\u093E\u0926 \u0939\u0932\u094D\u0915\u0940 \u0939\u0935\u093E \u0915\u093E \u0905\u0928\u0941\u092E\u093E\u0928 \u0939\u0948\u0964 \u0906\u0907\u090F \u0938\u0941\u0928\u093F\u090F \u0906\u091C \u0915\u0940 \u092A\u094D\u0930\u092E\u0941\u0916 \u0916\u092C\u0930\u0947\u0902\u0964',
+    transcript: '<strong>Namaskar,</strong> yeh hai Jio Samachar Seva. Aaj budhvaar, 26 February. Varanasi mein aaj ka taapman <strong>28\u00B0C</strong>, din mein dhoop rahegi, dopahar ke baad halki hawa ka anumaan hai. Aaiye suniye aaj ki pramukh khabren.',
+    title: 'Pramukh Samachar'
+  },
+  {
+    category: 'STHANIYA SAMACHAR',
+    badgeClass: 'badge-local',
+    speakText: '\u092A\u0939\u0932\u0940 \u0916\u092C\u0930\u0964 \u0909\u0924\u094D\u0924\u0930 \u092A\u094D\u0930\u0926\u0947\u0936 \u0915\u0947 \u092E\u0941\u0916\u094D\u092F\u092E\u0902\u0924\u094D\u0930\u0940 \u0906\u091C \u0935\u093E\u0930\u093E\u0923\u0938\u0940 \u0915\u0947 \u0926\u094C\u0930\u0947 \u092A\u0930 \u0939\u0948\u0902\u0964 \u0938\u0941\u092C\u0939 \u0926\u0938 \u092C\u091C\u0947 \u0938\u0947 \u0936\u093E\u092E \u091A\u093E\u0930 \u092C\u091C\u0947 \u0924\u0915 \u0938\u093F\u0917\u0930\u093E \u0938\u0947 \u0932\u0902\u0915\u093E \u092E\u093E\u0930\u094D\u0917 \u092A\u0930 \u092F\u093E\u0924\u093E\u092F\u093E\u0924 \u092A\u0930\u093F\u0935\u0930\u094D\u0924\u0928 \u0930\u0939\u0947\u0917\u093E\u0964 \u0917\u094B\u0926\u094C\u0932\u093F\u092F\u093E \u091A\u094C\u0930\u093E\u0939\u093E \u092D\u0940 \u092A\u094D\u0930\u092D\u093E\u0935\u093F\u0924 \u0939\u094B\u0917\u093E\u0964 \u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915 \u092E\u093E\u0930\u094D\u0917 \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u092D\u0947\u0932\u0942\u092A\u0941\u0930 \u0938\u0947 \u0905\u0938\u094D\u0938\u0940 \u092E\u093E\u0930\u094D\u0917 \u0915\u093E \u0909\u092A\u092F\u094B\u0917 \u0915\u0930\u0947\u0902\u0964',
+    transcript: '<strong>Uttar Pradesh ke Mukhyamantri</strong> aaj Varanasi ke daure par hain. Subah 10 baje se shaam 4 baje tak <strong>Sigra se Lanka marg</strong> par yaatayaat parivartan rahega. <strong>Godowlia chauraha</strong> bhi prabhavit hoga. Vaikalpik maarg: Bhelupur se Assi.',
+    title: 'Mukhyamantri ka Varanasi Daura'
+  },
+  {
+    category: 'VYAPAAR SAMACHAR',
+    badgeClass: 'badge-business',
+    speakText: '\u0926\u0942\u0938\u0930\u0940 \u0916\u092C\u0930\u0964 \u0906\u091C \u091C\u0940.\u090F\u0938.\u091F\u0940. \u092A\u0930\u093F\u0937\u0926 \u0915\u0940 \u092C\u0948\u0920\u0915 \u092E\u0947\u0902 \u0935\u0938\u094D\u0924\u094D\u0930 \u0909\u0926\u094D\u092F\u094B\u0917 \u092A\u0930 \u092E\u0939\u0924\u094D\u0935\u092A\u0942\u0930\u094D\u0923 \u091A\u0930\u094D\u091A\u093E \u0939\u094B\u0928\u0947 \u0935\u093E\u0932\u0940 \u0939\u0948\u0964 \u092E\u0948\u0928-\u092E\u0947\u0921 \u092B\u0948\u092C\u094D\u0930\u093F\u0915\u094D\u0938 \u092A\u0930 \u0915\u0930 \u0915\u0940 \u0926\u0930 \u092C\u093E\u0930\u0939 \u092A\u094D\u0930\u0924\u093F\u0936\u0924 \u0938\u0947 \u0918\u091F\u093E\u0915\u0930 \u092A\u093E\u0901\u091A \u092A\u094D\u0930\u0924\u093F\u0936\u0924 \u0915\u0930\u0928\u0947 \u0915\u093E \u092A\u094D\u0930\u0938\u094D\u0924\u093E\u0935 \u0939\u0948\u0964 \u0930\u093E\u091C\u0947\u0936 \u091C\u0940, \u092F\u0926\u093F \u092F\u0939 \u092A\u094D\u0930\u0938\u094D\u0924\u093E\u0935 \u092A\u093E\u0930\u093F\u0924 \u0939\u094B\u0924\u093E \u0939\u0948 \u0924\u094B \u0906\u092A\u0915\u0947 \u092A\u0949\u0932\u093F\u090F\u0938\u094D\u091F\u0930 \u0938\u094D\u091F\u0949\u0915 \u092A\u0930 \u0932\u0917\u092D\u0917 \u0906\u0920 \u0938\u0947 \u0926\u0938 \u0930\u0941\u092A\u092F\u0947 \u092A\u094D\u0930\u0924\u093F \u092E\u0940\u091F\u0930 \u0915\u093E \u0932\u093E\u092D \u0939\u094B \u0938\u0915\u0924\u093E \u0939\u0948\u0964',
+    transcript: 'Aaj <strong>GST Parishad</strong> ki baithak mein vastra udyog par mahatvapurn charcha hone wali hai. Man-made fabrics par kar ki dar <strong>12% se 5%</strong> karne ka prastaav hai. Yadi yeh parit hota hai toh polyester stock par <strong>\u20B98-10 prati metre</strong> ka laabh ho sakta hai.',
+    title: 'GST Vastra Udyog Samachar',
+    hasDeepDive: true,
+    deepDiveSpeakText: '\u0930\u093E\u091C\u0947\u0936 \u091C\u0940, \u0906\u0907\u090F \u0907\u0938\u0915\u094B \u0935\u093F\u0938\u094D\u0924\u093E\u0930 \u0938\u0947 \u0938\u092E\u091D\u0924\u0947 \u0939\u0948\u0902\u0964 \u091C\u0940.\u090F\u0938.\u091F\u0940. \u092A\u0930\u093F\u0937\u0926 \u092E\u0947\u0902 \u092A\u094D\u0930\u0938\u094D\u0924\u093E\u0935 \u0939\u0948 \u0915\u093F \u092E\u0948\u0928-\u092E\u0947\u0921 \u092B\u0948\u092C\u094D\u0930\u093F\u0915\u094D\u0938 \u092A\u0930 \u0915\u0930 \u0915\u0940 \u0926\u0930 \u092C\u093E\u0930\u0939 \u092A\u094D\u0930\u0924\u093F\u0936\u0924 \u0938\u0947 \u0918\u091F\u093E\u0915\u0930 \u092A\u093E\u0901\u091A \u092A\u094D\u0930\u0924\u093F\u0936\u0924 \u0915\u0940 \u091C\u093E\u090F\u0964 \u092F\u0926\u093F \u092F\u0939 \u092A\u093E\u0930\u093F\u0924 \u0939\u094B\u0924\u093E \u0939\u0948, \u0924\u094B \u0906\u092A\u0915\u0947 \u092A\u0949\u0932\u093F\u090F\u0938\u094D\u091F\u0930 \u0938\u094D\u091F\u0949\u0915 \u092A\u0930 \u0932\u0917\u092D\u0917 \u0906\u0920 \u0938\u0947 \u0926\u0938 \u0930\u0941\u092A\u092F\u0947 \u092A\u094D\u0930\u0924\u093F \u092E\u0940\u091F\u0930 \u0915\u093E \u0938\u0940\u0927\u093E \u0932\u093E\u092D \u0939\u094B\u0917\u093E\u0964 \u092F\u0939 \u092A\u094D\u0930\u0938\u094D\u0924\u093E\u0935 \u092E\u093E\u0930\u094D\u091A \u0915\u0940 \u092C\u0948\u0920\u0915 \u092E\u0947\u0902 \u091A\u0930\u094D\u091A\u093E \u0915\u0947 \u0932\u093F\u090F \u0930\u0916\u093E \u091C\u093E\u090F\u0917\u093E\u0964 \u0909\u0926\u094D\u092F\u094B\u0917 \u0938\u0902\u0918\u094B\u0902 \u0928\u0947 \u0907\u0938\u0915\u093E \u0938\u092E\u0930\u094D\u0925\u0928 \u0915\u093F\u092F\u093E \u0939\u0948\u0964 \u092A\u093F\u091B\u0932\u0947 \u0935\u0930\u094D\u0937 \u092D\u0940 \u0910\u0938\u093E \u092A\u094D\u0930\u0938\u094D\u0924\u093E\u0935 \u0906\u092F\u093E \u0925\u093E, \u0932\u0947\u0915\u093F\u0928 \u0930\u093E\u091C\u094D\u092F\u094B\u0902 \u0915\u0947 \u0935\u093F\u0930\u094B\u0927 \u092E\u0947\u0902 \u0930\u0941\u0915 \u0917\u092F\u093E \u0925\u093E\u0964 \u0907\u0938 \u092C\u093E\u0930 \u0935\u093E\u0923\u093F\u091C\u094D\u092F \u092E\u0902\u0924\u094D\u0930\u093E\u0932\u092F \u0928\u0947 \u092D\u0940 \u0938\u092E\u0930\u094D\u0925\u0928 \u0926\u093F\u092F\u093E \u0939\u0948, \u0907\u0938\u0932\u093F\u090F \u0907\u0938\u0915\u0947 \u092A\u093E\u0930\u093F\u0924 \u0939\u094B\u0928\u0947 \u0915\u0940 \u0938\u0902\u092D\u093E\u0935\u0928\u093E \u0905\u0927\u093F\u0915 \u0939\u0948\u0964',
+    deepDiveTranscript: 'GST Parishad mein prastaav hai ki man-made fabrics par kar <strong>12% se 5%</strong> ki jaaye.<br><br>Polyester stock par <strong>\u20B98-10 prati metre</strong> ka seedha laabh hoga.<br><br>Yeh prastaav <strong>March ki baithak</strong> mein charcha ke liye rakhaa jayega. Udyog sanghon ne iska samarthan kiya hai.<br><br>Pichhle varsh bhi aisa prastaav aaya tha, lekin raajyon ke virodh mein ruk gaya. <strong>Is baar Vaanijya Mantralaya ne bhi samarthan diya hai.</strong>'
+  },
+  {
+    category: 'BAZAAR SAMACHAR',
+    badgeClass: 'badge-markets',
+    speakText: '\u092C\u093E\u091C\u093C\u093E\u0930 \u0915\u0940 \u0916\u092C\u0930\u0947\u0902\u0964 \u0938\u0947\u0902\u0938\u0947\u0915\u094D\u0938 \u0906\u091C \u0926\u094B \u0938\u094C \u0905\u0902\u0915\u094B\u0902 \u0915\u0940 \u092C\u0922\u093C\u094B\u0924\u0930\u0940 \u0915\u0947 \u0938\u093E\u0925 \u0916\u0941\u0932\u093E\u0964 \u091F\u093E\u091F\u093E \u092E\u094B\u091F\u0930\u094D\u0938 \u0915\u0947 \u0936\u0947\u092F\u0930 \u0924\u0940\u0928 \u092A\u094D\u0930\u0924\u093F\u0936\u0924 \u090A\u092A\u0930 \u0939\u0948\u0902, \u0928\u090F \u0907\u0932\u0947\u0915\u094D\u091F\u094D\u0930\u093F\u0915 \u0935\u094D\u0939\u0940\u0915\u0932 \u0915\u0940 \u0918\u094B\u0937\u0923\u093E \u0915\u0947 \u092C\u093E\u0926\u0964 \u0906\u0908.\u091F\u0940. \u0915\u094D\u0937\u0947\u0924\u094D\u0930 \u092E\u0947\u0902 \u0939\u0932\u094D\u0915\u093E \u0926\u092C\u093E\u0935 \u0939\u0948, \u091F\u0940.\u0938\u0940.\u090F\u0938. \u0914\u0930 \u0907\u0902\u092B\u094B\u0938\u093F\u0938 \u0926\u094B\u0928\u094B\u0902 \u090F\u0915 \u092A\u094D\u0930\u0924\u093F\u0936\u0924 \u0928\u0940\u091A\u0947\u0964',
+    transcript: '<strong>Sensex aaj 200 ankon ki badhot</strong> ke saath khula. Tata Motors <strong>3% upar</strong>, naye EV ghoshna ke baad. IT kshetra mein halka dabaav \u2014 TCS aur Infosys 1% neeche.',
+    title: 'Bazaar ki Sthiti'
+  },
+  {
+    category: 'KHEL SAMACHAR',
+    badgeClass: 'badge-sports',
+    speakText: '\u0916\u0947\u0932 \u091C\u0917\u0924 \u0938\u0947\u0964 \u092D\u093E\u0930\u0924 \u0914\u0930 \u0911\u0938\u094D\u091F\u094D\u0930\u0947\u0932\u093F\u092F\u093E \u0915\u0947 \u092C\u0940\u091A \u091A\u094C\u0925\u0947 \u091F\u0947\u0938\u094D\u091F \u092E\u0948\u091A \u092E\u0947\u0902 \u092D\u093E\u0930\u0924 \u0915\u093E \u0938\u094D\u0915\u094B\u0930 \u0939\u0948 \u0926\u094B \u0938\u094C \u0905\u0938\u094D\u0938\u0940, \u091B\u0939 \u0935\u093F\u0915\u0947\u091F \u092A\u0930\u0964 \u0935\u093F\u0930\u093E\u091F \u0915\u094B\u0939\u0932\u0940 \u0928\u0947 \u0936\u093E\u0928\u0926\u093E\u0930 \u0905\u0920\u0939\u0924\u094D\u0924\u0930 \u0930\u0928 \u092C\u0928\u093E\u090F \u0939\u0948\u0902 \u0914\u0930 \u0905\u092D\u0940 \u092D\u0940 \u0915\u094D\u0930\u0940\u091C\u093C \u092A\u0930 \u0939\u0948\u0902\u0964 \u0930\u0935\u0940\u0902\u0926\u094D\u0930 \u091C\u0921\u0947\u091C\u093E \u092D\u0940 \u092C\u0924\u094D\u0924\u0940\u0938 \u0930\u0928 \u092A\u0930 \u0916\u0947\u0932 \u0930\u0939\u0947 \u0939\u0948\u0902\u0964',
+    transcript: 'Bharat-Australia 4th Test: Bharat <strong>280/6</strong>. Virat Kohli <strong>78*</strong> run, abhi bhi crease par. Jadeja 32* par.',
+    title: 'Cricket Score'
+  },
+  {
+    category: 'SONE KA BHAAV',
+    badgeClass: 'badge-gold',
+    speakText: '\u0938\u094B\u0928\u0947 \u0915\u093E \u092D\u093E\u0935 \u0906\u091C \u092C\u093E\u0938\u0920 \u0939\u091C\u093C\u093E\u0930 \u091A\u093E\u0930 \u0938\u094C \u092A\u091A\u093E\u0938 \u0930\u0941\u092A\u092F\u0947 \u092A\u094D\u0930\u0924\u093F \u0926\u0938 \u0917\u094D\u0930\u093E\u092E \u0939\u0948, \u0915\u0932 \u0915\u0940 \u0924\u0941\u0932\u0928\u093E \u092E\u0947\u0902 \u090F\u0915 \u0938\u094C \u092C\u0940\u0938 \u0930\u0941\u092A\u092F\u0947 \u0915\u0940 \u092C\u0922\u093C\u094B\u0924\u0930\u0940 \u0939\u0941\u0908 \u0939\u0948\u0964 \u091A\u093E\u0901\u0926\u0940 \u091A\u094C\u0939\u0924\u094D\u0924\u0930 \u0939\u091C\u093C\u093E\u0930 \u0906\u0920 \u0938\u094C \u0930\u0941\u092A\u092F\u0947 \u092A\u094D\u0930\u0924\u093F \u0915\u093F\u0932\u094B \u092A\u0930 \u0938\u094D\u0925\u093F\u0930 \u0939\u0948\u0964',
+    transcript: 'Sone ka bhaav: <strong>\u20B962,450 prati 10 gram</strong> (+\u20B9120). Chaandi: <strong>\u20B974,800 prati kilo</strong>.',
+    title: 'Sone-Chaandi ke Bhaav'
+  },
+  {
+    category: 'VISHESH KHABAR',
+    badgeClass: 'badge-good',
+    speakText: '\u0914\u0930 \u0905\u092C \u090F\u0915 \u0935\u093F\u0936\u0947\u0937 \u0916\u092C\u0930\u0964 \u0935\u093E\u0930\u093E\u0923\u0938\u0940 \u0915\u0947 \u0905\u0930\u094D\u091C\u0941\u0928 \u0936\u0930\u094D\u092E\u093E, \u091C\u094B \u092C\u0928\u093E\u0930\u0938 \u0939\u093F\u0902\u0926\u0942 \u0935\u093F\u0936\u094D\u0935\u0935\u093F\u0926\u094D\u092F\u093E\u0932\u092F \u0915\u0947 \u091B\u093E\u0924\u094D\u0930 \u0939\u0948\u0902, \u0928\u0947 \u0930\u093E\u0937\u094D\u091F\u094D\u0930\u0940\u092F \u0935\u093F\u091C\u094D\u091E\u093E\u0928 \u0928\u0935\u093E\u091A\u093E\u0930 \u092A\u0941\u0930\u0938\u094D\u0915\u093E\u0930 \u091C\u0940\u0924\u093E \u0939\u0948\u0964 \u0907\u0928\u094D\u0939\u094B\u0902\u0928\u0947 \u090F\u0915 \u0915\u092E \u0932\u093E\u0917\u0924 \u0915\u093E \u091C\u0932 \u0936\u094B\u0927\u0915 \u092F\u0902\u0924\u094D\u0930 \u092C\u0928\u093E\u092F\u093E \u0939\u0948 \u091C\u094B \u0917\u094D\u0930\u093E\u092E\u0940\u0923 \u0915\u094D\u0937\u0947\u0924\u094D\u0930\u094B\u0902 \u092E\u0947\u0902 \u092D\u0940 \u092A\u094D\u0930\u092D\u093E\u0935\u0940 \u0939\u0948\u0964 \u0935\u093E\u0930\u093E\u0923\u0938\u0940 \u0915\u093E \u0928\u093E\u092E \u0926\u0947\u0936 \u092E\u0947\u0902 \u0917\u094C\u0930\u0935\u0936\u093E\u0932\u0940 \u0939\u0941\u0906\u0964',
+    transcript: 'Varanasi ke <strong>Arjun Sharma</strong> (BHU) ne <strong>Rashtriya Vigyan Navaachar Puraskaar</strong> jeeta. Kam laagat ka jal shodhak yantra banaya jo gramin kshetron mein prabhaavi hai. <strong>Varanasi ka gaurav!</strong>',
+    title: 'Varanasi ka Gaurav'
+  },
+  {
+    category: 'SAMAAPTI',
+    badgeClass: 'badge-weather',
+    speakText: '\u092F\u0939 \u0925\u0940 \u0906\u091C \u0915\u0940 \u092A\u094D\u0930\u092E\u0941\u0916 \u0916\u092C\u0930\u0947\u0902, \u0930\u093E\u091C\u0947\u0936 \u091C\u0940\u0964 \u0938\u093E\u0924 \u0938\u092E\u093E\u091A\u093E\u0930, \u0938\u093E\u0924 \u092E\u093F\u0928\u091F \u092E\u0947\u0902\u0964 \u0915\u0932 \u0938\u0941\u092C\u0939 \u092B\u093F\u0930 \u092E\u093F\u0932\u0947\u0902\u0917\u0947 \u0928\u0908 \u0916\u092C\u0930\u094B\u0902 \u0915\u0947 \u0938\u093E\u0925\u0964 \u0906\u092A\u0915\u093E \u0926\u093F\u0928 \u092E\u0902\u0917\u0932\u092E\u092F \u0939\u094B\u0964 \u0928\u092E\u0938\u094D\u0915\u093E\u0930\u0964',
+    transcript: 'Yeh thi aaj ki pramukh khabren. <strong>7 samachar, 7 minute.</strong> Kal subah phir milenge. <strong>Aapka din mangalmay ho. Namaskar.</strong>',
+    title: 'Samaapti'
+  }
+];
+
+// === Briefing Engine ===
+let briefingStep = 0;
+let briefingTimerInterval = null;
+let briefingSeconds = 0;
+let isDeepDiving = false;
+
+function startBriefingTimer(reset = true) {
+  if (reset) briefingSeconds = 0;
+  clearInterval(briefingTimerInterval);
+  const timerEl = document.getElementById('briefingTimer');
+  if (!timerEl) return;
+  briefingTimerInterval = setInterval(() => {
+    briefingSeconds++;
+    const m = String(Math.floor(briefingSeconds / 60)).padStart(2, '0');
+    const s = String(briefingSeconds % 60).padStart(2, '0');
+    timerEl.textContent = m + ':' + s;
+  }, 1000);
+}
+function stopBriefingTimer() { clearInterval(briefingTimerInterval); briefingTimerInterval = null; }
+
+function renderBriefingStep(step) {
+  const story = briefingStories[step];
+  const content = document.getElementById('briefingContent');
+  const statusEl = document.getElementById('briefingStatus');
+  const avatarEl = document.getElementById('briefingAvatar');
+  const actionsEl = document.getElementById('briefingActions');
+  if (!content || !statusEl) return;
+
+  document.querySelectorAll('.story-dot').forEach((dot, i) => {
+    dot.classList.remove('story-dot-active');
+    if (i < step) dot.classList.add('story-dot-done');
+    else if (i === step) dot.classList.add('story-dot-active');
+  });
+
+  const isFinal = step === briefingStories.length - 1;
+  const totalStories = briefingStories.length - 2;
+  const storyNum = 'Samachar ' + step + '/' + totalStories;
+  const timerEl = document.getElementById('briefingTimer');
+
+  if (isFinal) {
+    statusEl.innerHTML = '<div class="anchor-status-dot" style="background:var(--secondary)"></div> Samaapti \u00B7 ' + (timerEl ? timerEl.textContent : '');
+    statusEl.style.color = 'var(--secondary)';
+    stopBriefingTimer();
+    if (avatarEl) { avatarEl.classList.add('avatar-idle'); avatarEl.classList.remove('avatar-speaking'); }
+  } else {
+    statusEl.style.color = '';
+    statusEl.innerHTML = '<div class="anchor-status-dot"></div> ' + (step === 0 ? 'Aarambh...' : storyNum);
+    if (avatarEl) avatarEl.classList.remove('avatar-idle');
+  }
+
+  content.style.opacity = '0';
+  setTimeout(() => {
+    let html = `<div class="story-badge ${story.badgeClass}">${story.category}</div>`;
+    html += `<div class="anchor-transcript"><div class="anchor-transcript-label">${story.title}</div><div class="anchor-transcript-text">${story.transcript}</div></div>`;
+    if (story.hasDeepDive && !isDeepDiving) {
+      html += '<div class="anchor-hint">"Aur batao" bolein ya tap karein</div>';
+    }
+    content.innerHTML = html;
+    content.style.opacity = '1';
+    scrollToBottom();
+  }, 200);
+
+  if (isFinal) {
+    actionsEl.innerHTML = `<button class="anchor-btn anchor-btn-skip" onclick="replayBriefing()" title="Replay">${ICONS.refresh}</button>`;
+  } else {
+    const moreBtn = story.hasDeepDive ? `<button class="anchor-btn anchor-btn-more" onclick="triggerDeepDive()">Aur batao</button>` : '';
+    actionsEl.innerHTML = `
+      <button class="anchor-btn anchor-btn-skip" onclick="replayStoryAudio()" title="Replay">${ICONS.volume}</button>
+      <button class="anchor-btn anchor-btn-skip" id="pauseBtn" onclick="togglePauseAudio()" title="Pause">${ICONS.pause}</button>
+      ${moreBtn}
+      <button class="anchor-btn anchor-btn-skip" onclick="skipStory()" title="Skip">${ICONS.skip}</button>
+      <button class="anchor-btn anchor-btn-end" onclick="endBriefing()" title="End">${ICONS.end}</button>`;
+  }
+
+  elevenLabsTTS(story.speakText, () => {
+    if (isDeepDiving) return;
+    if (!isFinal) {
+      setTimeout(() => { if (!isDeepDiving) advanceBriefing(); }, 800);
+    } else {
+      showBriefingSummary();
+    }
+  });
+
+  preCacheStories(step + 1);
+}
+
+function advanceBriefing() { briefingStep++; renderBriefingStep(briefingStep); }
+function skipStory() { stopCurrentAudio(); isDeepDiving = false; advanceBriefing(); }
+function replayStoryAudio() { const s = briefingStories[briefingStep]; if (s) elevenLabsTTS(s.speakText); }
+function replayBriefing() { stopCurrentAudio(); briefingStep = 0; briefingSeconds = 0; isDeepDiving = false; startBriefingTimer(); renderBriefingStep(0); }
+
+function triggerDeepDive() {
+  const story = briefingStories[briefingStep];
+  if (!story || !story.hasDeepDive || isDeepDiving) return;
+  stopCurrentAudio(); isDeepDiving = true;
+  const content = document.getElementById('briefingContent');
+  const statusEl = document.getElementById('briefingStatus');
+  const actionsEl = document.getElementById('briefingActions');
+  const avatarEl = document.getElementById('briefingAvatar');
+  if (!content) return;
+
+  statusEl.innerHTML = '<div class="anchor-status-dot" style="background:var(--secondary)"></div> Vistrit Vivaran';
+  statusEl.style.color = 'var(--secondary)';
+  if (avatarEl) avatarEl.classList.remove('avatar-idle');
+
+  content.style.opacity = '0';
+  setTimeout(() => {
+    content.innerHTML = `<div class="story-badge badge-business">VISTRIT VIVARAN</div><div class="deep-dive-panel"><div class="deep-dive-label">Detailed Explanation</div><div class="deep-dive-text">${story.deepDiveTranscript}</div></div>`;
+    content.style.opacity = '1'; scrollToBottom();
+  }, 200);
+
+  actionsEl.innerHTML = `
+    <button class="anchor-btn anchor-btn-skip" onclick="replayDeepDive()" title="Replay">${ICONS.volume}</button>
+    <button class="anchor-btn anchor-btn-skip" id="pauseBtn" onclick="togglePauseAudio()" title="Pause">${ICONS.pause}</button>
+    <button class="anchor-btn anchor-btn-more" onclick="resumeBriefing()" style="background:rgba(30,204,176,0.15);color:var(--sparkle);border-color:rgba(30,204,176,0.3)">Aage suniye</button>
+    <button class="anchor-btn anchor-btn-end" onclick="endBriefing()" title="End">${ICONS.end}</button>`;
+
+  elevenLabsTTS(story.deepDiveSpeakText);
+}
+function replayDeepDive() { const s = briefingStories[briefingStep]; if (s?.deepDiveSpeakText) elevenLabsTTS(s.deepDiveSpeakText); }
+function resumeBriefing() { stopCurrentAudio(); isDeepDiving = false; advanceBriefing(); }
+
+function endBriefing() {
+  stopCurrentAudio(); stopBriefingTimer(); isDeepDiving = false;
+  const statusEl = document.getElementById('briefingStatus');
+  const avatarEl = document.getElementById('briefingAvatar');
+  const actionsEl = document.getElementById('briefingActions');
+  const timerEl = document.getElementById('briefingTimer');
+  if (statusEl) { statusEl.innerHTML = '<div class="anchor-status-dot" style="background:var(--secondary)"></div> Samaapti \u00B7 ' + (timerEl ? timerEl.textContent : ''); statusEl.style.color = 'var(--secondary)'; }
+  if (avatarEl) { avatarEl.classList.add('avatar-idle'); avatarEl.classList.remove('avatar-speaking'); }
+  if (actionsEl) actionsEl.innerHTML = `<button class="anchor-btn anchor-btn-skip" onclick="replayBriefing()" title="Replay">${ICONS.refresh}</button>`;
+  showBriefingSummary();
+}
+
+function showBriefingSummary() {
+  const content = document.getElementById('briefingContent');
+  if (!content) return;
+  const summaryHTML = `<div class="summary-card">
+    <div class="summary-title">Aaj ka Saransh</div>
+    <div class="summary-item">\u2022 <strong>Mukhyamantri</strong> aaj Varanasi daure par \u2014 Sigra-Lanka marg prabhavit</div>
+    <div class="summary-item">\u2022 <strong>GST</strong>: Vastra udyog par kar 12% se 5% ka prastaav</div>
+    <div class="summary-item">\u2022 <strong>Sensex</strong> 200 ankon ki badhot ke saath khula</div>
+    <div class="summary-item">\u2022 <strong>Virat Kohli</strong> 78* \u2014 Bharat 280/6</div>
+    <div class="summary-item">\u2022 <strong>Sona</strong> \u20B962,450/10g (+\u20B9120)</div>
+    <div class="summary-item">\u2022 <strong>Arjun Sharma</strong> (BHU) ne Rashtriya Vigyan Puraskaar jeeta</div>
+  </div>`;
+  content.insertAdjacentHTML('beforeend', summaryHTML);
+  scrollToBottom();
+}
+
+// === State Machine ===
+let _lastNavAt = 0;
+async function goToState(state) {
+  const now = Date.now();
+  if (now - _lastNavAt < 300) return;
+  _lastNavAt = now;
+  currentState = state;
+
+  switch(state) {
+
+    case 'welcome':
+      conversationStep = 0;
+      userPreferences = { topic: null, language: null, duration: null };
+      inputField.readOnly = false;
+      inputField.placeholder = 'Apni pasand likho...';
+
+      await addMsg('ai', 'Namaskar Rajesh ji! Main hoon aapka <strong>Jio News AI</strong> anchor. Aaj ka samachar briefing tayyar karne mein madad karunga.');
+      await wait(400);
+      await addMsg('ai', 'Pehle bataiye, aap kaise andaaz mein samachar sunna pasand karenge?');
+      await addRaw(makeChips([
+        { label: 'Aakashvani Andaaz', value: 'aakashvani' },
+        { label: 'Business Focus', value: 'business' },
+        { label: 'Quick Headlines', value: 'headlines' }
+      ]));
+      currentState = 'collecting_preferences';
+      conversationStep = 1;
+      break;
+
+    case 'thinking':
+      inputField.readOnly = true;
+      inputField.placeholder = 'Briefing tayyar ho raha hai...';
+      showTyping();
+      await wait(600);
+      hideTyping();
+      await addRaw(`<div class="thinking-shimmer" style="font-size:14px;line-height:1.5;color:var(--grey-100);">
+        <strong>Aapka briefing tayyar ho raha hai...</strong><br>
+        <span style="font-size:12px;color:var(--grey-80)">Samachar ikattha kar raha hoon, awaaz set kar raha hoon</span>
+      </div>`);
+      preCacheStories(0);
+      showTyping();
+      await wait(2500);
+      hideTyping();
+      await goToState('style_selected');
+      break;
+
+    case 'style_selected': {
+      const topicLabel = { aakashvani: 'Aakashvani andaaz', business: 'Business focus', sports: 'Khel samachar', headlines: 'Quick headlines' }[userPreferences.topic] || 'Aakashvani andaaz';
+      const durLabel = { quick: '~2 min', standard: '~7 min', detailed: '~15 min' }[userPreferences.duration] || '~7 min';
+      const storyCount = userPreferences.duration === 'quick' ? '3' : (userPreferences.duration === 'detailed' ? '10' : '7');
+      const timeNow = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+      await addMsg('ai', `Tayyar hai! <strong>${topicLabel}</strong> mein aapka briefing. <strong>${storyCount} samachar, ${durLabel}.</strong> Beech mein kisi bhi khabar par bol sakte hain <em>"Aur batao"</em> \u2014 main vistaar se bataunga.`);
+      await addRaw(`
+        <div class="notif-card" onclick="goToState('briefing')">
+          <div class="notif-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/></svg>
+          </div>
+          <div class="notif-text">
+            <h4>Samachar suniye</h4>
+            <p>${topicLabel} \u2022 ${storyCount} samachar \u2022 ${durLabel}</p>
+          </div>
+          <div class="notif-time">${timeNow}</div>
+        </div>
+      `, 300);
+      break;
+    }
+
+    case 'briefing':
+      inputField.readOnly = true;
+      inputField.placeholder = "Bolo: 'Aur batao...'";
+      document.querySelectorAll('.anchor-card').forEach(c => c.closest('.msg')?.remove());
+      stopBriefingTimer();
+      briefingStep = 0; briefingSeconds = 0; isDeepDiving = false;
+      preCacheStories(0);
+
+      const storyDots = briefingStories.map(() => '<div class="story-dot"></div>').join('');
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'msg msg-ai msg-full fade-in';
+      cardDiv.innerHTML = `<div class="anchor-card" id="anchorCard">
+        <div class="anchor-hero">
+          <div class="anchor-avatar">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z"/></svg>
+          </div>
+          <div class="anchor-name">Rajesh ji ka Samachar</div>
+          <div class="anchor-role">Jio Samachar Seva \u2022 Varanasi</div>
+          <div class="anchor-status" id="briefingStatus"><div class="anchor-status-dot"></div> Aarambh...</div>
+          <div class="anchor-timer" id="briefingTimer">00:00</div>
+        </div>
+        <div class="story-progress">${storyDots}</div>
+        <div class="anchor-person" id="briefingAvatar">
+          <div class="anchor-person-body">
+            <div class="ap-head">
+              <div class="ap-hair"></div>
+              <div class="ap-face">
+                <div class="ap-eye ap-eye-l"></div>
+                <div class="ap-eye ap-eye-r"></div>
+                <div class="ap-mouth" id="avatarMouth"></div>
+              </div>
+            </div>
+            <div class="ap-torso">
+              <div class="ap-collar"></div>
+              <div class="ap-tie"></div>
+            </div>
+          </div>
+          <div class="anchor-person-label">Jio News AI</div>
+        </div>
+        <div id="briefingContent"></div>
+        <div class="anchor-actions" id="briefingActions"></div>
+      </div>`;
+      chatArea.appendChild(cardDiv);
+      scrollToBottom();
+      startBriefingTimer();
+      setTimeout(() => renderBriefingStep(0), 600);
+      break;
+  }
+}
+
+// Start
+goToState('welcome');
+</script>
+</body>
+</html>

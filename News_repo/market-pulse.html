@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Pulse - JioBharatIQ</title>
+<!-- jbiq:v3.5.6 -->
+<style>
+@font-face { font-family: 'JioType'; font-weight: 400; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 500; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 700; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 900; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+:root {
+  --primary-20: #e8e8fc;
+  --primary-30: #9999ff;
+  --primary-50: #3535f3;
+  --primary-60: #000093;
+  --primary-70: #00004c;
+  --primary-80: #010029;
+  --secondary-20: #fef7e9;
+  --secondary-40: #ffd947;
+  --secondary-50: #f7ab20;
+  --secondary-60: #ac660c;
+  --sparkle-20: #e8faf7;
+  --sparkle-50: #1eccb0;
+  --error: #fa2f40;
+  --warning: #f06d0f;
+  --success: #25ab21;
+  --grey-100: #141414;
+  --grey-80: rgba(0,0,0,0.66);
+  --grey-60: #b5b5b5;
+  --grey-40: #e0e0e0;
+  --grey-20: #f5f5f5;
+  --surface-ghost: #eeeeef;
+  --surface-ghost-icon: #e7e9ff;
+  --surface-bold: #3900ad;
+  --white: #ffffff;
+  --stroke-subtle: rgba(36,38,43,0.12);
+  --text-low: rgba(25,27,30,0.65);
+  --text-disabled: rgba(25,27,30,0.38);
+  --icon-medium: #170054;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'JioType', sans-serif; background: var(--white); display: flex; flex-direction: column; }
+
+.phone-frame { width: 100%; height: 100%; background: var(--white); position: relative; overflow: hidden; }
+
+/* Header */
+.app-header {
+  height: 56px; padding: 0 12px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--stroke-subtle); background: var(--white); position: relative; z-index: 80;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.back-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; border-radius: 50%; text-decoration: none; }
+.back-btn:active { background: var(--surface-ghost); }
+.back-btn svg { width: 24px; height: 24px; fill: var(--grey-100); }
+.header-title-block { display: flex; flex-direction: column; }
+.header-title { font-size: 16px; font-weight: 500; color: var(--grey-100); line-height: 1.2; }
+.header-domain { font-size: 12px; color: var(--grey-80); line-height: 1.3; }
+
+/* Chat area */
+.chat-body { display: flex; flex-direction: column; height: calc(100vh - 56px - 88px); }
+.chat-area {
+  flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 80px;
+  display: flex; flex-direction: column; gap: 12px;
+  scroll-behavior: smooth; background: var(--white);
+}
+.chat-area::-webkit-scrollbar { width: 0; }
+
+.msg { max-width: 88%; animation: msgIn 0.35s ease-out; }
+.msg-ai { align-self: flex-start; }
+.msg-user { align-self: flex-end; }
+.msg-full { max-width: 100%; width: 100%; }
+
+.bubble { padding: 12px 16px; font-size: 14px; line-height: 1.5; color: var(--grey-100); word-wrap: break-word; }
+.bubble-ai { background: var(--surface-ghost); border-radius: var(--radius-xs) var(--radius-lg) var(--radius-lg) var(--radius-lg); }
+.bubble-user { background: var(--primary-50); color: var(--white); border-radius: var(--radius-lg) var(--radius-xs) var(--radius-lg) var(--radius-lg); }
+
+/* Skeleton loading */
+.skeleton { background: linear-gradient(90deg, var(--surface-ghost) 25%, var(--grey-40) 50%, var(--surface-ghost) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius-sm); }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* Market Summary */
+.ms-card { background: var(--white); border-radius: var(--radius-lg); border: 1.5px solid var(--stroke-subtle); overflow: hidden; }
+.ms-mood { padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+.ms-mood-green { background: var(--sparkle-20); }
+.ms-mood-yellow { background: var(--secondary-20); }
+.ms-mood-red { background: rgba(250,47,64,0.08); }
+.ms-mood-dot { width: 14px; height: 14px; border-radius: 50%; animation: msPulse 1.5s ease infinite; }
+.ms-mood-dot-green { background: var(--success); box-shadow: 0 0 8px rgba(37,171,33,0.4); }
+.ms-mood-dot-yellow { background: var(--warning); box-shadow: 0 0 8px rgba(240,109,15,0.4); }
+.ms-mood-dot-red { background: var(--error); box-shadow: 0 0 8px rgba(250,47,64,0.4); }
+@keyframes msPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+.ms-mood-text { font-size: 14px; font-weight: 900; color: var(--grey-100); }
+.ms-mood-detail { font-size: 11px; color: var(--text-low); font-weight: 400; }
+.ms-indices { display: flex; gap: 0; padding: 0; border-bottom: 1px solid var(--stroke-subtle); }
+.ms-index { flex: 1; padding: 12px 10px; text-align: center; border-right: 1px solid var(--stroke-subtle); }
+.ms-index:last-child { border-right: none; }
+.ms-index-name { font-size: 10px; font-weight: 700; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.5px; }
+.ms-index-value { font-size: 16px; font-weight: 900; color: var(--grey-100); margin-top: 2px; }
+.ms-index-change { font-size: 11px; font-weight: 700; margin-top: 1px; }
+.ms-section { padding: 14px 16px; }
+.ms-section + .ms-section { border-top: 1px solid var(--stroke-subtle); }
+.ms-section-title { font-size: 12px; font-weight: 900; color: var(--grey-100); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.ms-gl-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.ms-gl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ms-gl-name { font-size: 13px; font-weight: 700; color: var(--grey-100); flex: 1; }
+.ms-gl-pct { font-size: 13px; font-weight: 900; min-width: 48px; text-align: right; }
+.ms-gl-reason { font-size: 10px; color: var(--text-low); margin-top: -2px; padding-left: 16px; }
+.ms-sectors { display: flex; flex-wrap: wrap; gap: 6px; }
+.ms-sector-tag { padding: 5px 10px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+.ms-sector-up { background: rgba(37,171,33,0.08); color: var(--success); }
+.ms-sector-down { background: rgba(250,47,64,0.08); color: var(--error); }
+.ms-fii-row { display: flex; gap: 10px; }
+.ms-fii-card { flex: 1; padding: 10px 12px; border-radius: var(--radius-sm); text-align: center; }
+.ms-fii-buy { background: rgba(37,171,33,0.06); border: 1px solid rgba(37,171,33,0.15); }
+.ms-fii-sell { background: rgba(250,47,64,0.06); border: 1px solid rgba(250,47,64,0.15); }
+.ms-fii-label { font-size: 10px; font-weight: 700; color: var(--text-low); text-transform: uppercase; }
+.ms-fii-who { font-size: 12px; font-weight: 900; color: var(--grey-100); margin-top: 2px; }
+.ms-fii-amount { font-size: 14px; font-weight: 900; margin-top: 2px; }
+.ms-gold-row { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--secondary-20); border-radius: var(--radius-sm); margin-top: 8px; }
+.ms-gold-icon { font-size: 18px; }
+.ms-gold-label { font-size: 12px; color: var(--grey-80); }
+.ms-gold-price { font-size: 14px; font-weight: 900; color: var(--secondary-60); margin-left: auto; }
+.ms-gold-change { font-size: 11px; font-weight: 700; color: var(--success); }
+.ms-listen-btn { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 auto; padding: 10px 22px; border: none; border-radius: var(--radius-pill); background: var(--primary-50); color: var(--white); font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; }
+.ms-listen-btn:active { transform: scale(0.96); }
+
+/* Time Machine card */
+.tm-carousel { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 0; -webkit-overflow-scrolling: touch; }
+.tm-carousel::-webkit-scrollbar { display: none; }
+.tm-card {
+  min-width: 280px; scroll-snap-align: start; border-radius: var(--radius-lg);
+  padding: 20px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.2s;
+}
+.tm-card:active { transform: scale(0.97); }
+.tm-card-green { background: linear-gradient(135deg, var(--sparkle-20) 0%, rgba(30,204,176,0.12) 100%); border: 1.5px solid rgba(30,204,176,0.2); }
+.tm-card-red { background: rgba(250,47,64,0.06); border: 1.5px solid rgba(250,47,64,0.15); }
+.tm-stock-name { font-size: 13px; font-weight: 700; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.5px; }
+.tm-amount-row { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; }
+.tm-amount-start { font-size: 24px; font-weight: 900; color: var(--grey-100); }
+.tm-arrow { font-size: 20px; font-weight: 700; }
+.tm-arrow-green { color: var(--sparkle-50); }
+.tm-arrow-red { color: var(--error); }
+.tm-amount-end { font-size: 28px; font-weight: 900; }
+.tm-amount-end-green { color: var(--sparkle-50); }
+.tm-amount-end-red { color: var(--error); }
+.tm-pct { font-size: 13px; font-weight: 700; margin-top: 4px; }
+.tm-pct-green { color: var(--sparkle-50); }
+.tm-pct-red { color: var(--error); }
+.tm-period { font-size: 11px; color: var(--text-low); margin-top: 2px; }
+
+/* Growth bar animation */
+.tm-growth-bar { display: flex; align-items: flex-end; gap: 3px; height: 48px; margin-top: 12px; }
+.tm-bar { width: 8px; border-radius: 4px 4px 0 0; animation: barGrow 0.8s ease-out forwards; transform-origin: bottom; }
+.tm-bar-green { background: var(--sparkle-50); }
+.tm-bar-red { background: var(--error); }
+@keyframes barGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+.tm-hint { font-size: 12px; color: var(--text-low); text-align: center; margin-top: 8px; }
+.tm-dots { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
+.tm-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--grey-40); transition: all 0.3s; }
+.tm-dot-active { background: var(--primary-50); width: 16px; border-radius: var(--radius-pill); }
+
+/* Portfolio card */
+.portfolio-card {
+  background: linear-gradient(180deg, var(--primary-80) 0%, var(--primary-70) 50%, var(--primary-60) 100%);
+  border-radius: var(--radius-lg); padding: 20px; color: var(--white);
+}
+.pf-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.pf-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+.pf-listen-btn {
+  display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+  border-radius: var(--radius-pill); background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: all 0.2s;
+}
+.pf-listen-btn:active { background: rgba(255,255,255,0.2); }
+.pf-listen-btn span { font-size: 11px; font-weight: 700; color: var(--white); font-family: 'JioType', sans-serif; }
+.pf-total-row { display: flex; align-items: baseline; gap: 12px; }
+.pf-invested { font-size: 14px; color: rgba(255,255,255,0.6); }
+.pf-current { font-size: 32px; font-weight: 900; color: var(--white); }
+.pf-gain { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: var(--radius-pill); background: rgba(30,204,176,0.15); font-size: 13px; font-weight: 700; color: var(--sparkle-50); margin-top: 8px; }
+
+.pf-stocks { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.pf-stock-row {
+  display: flex; align-items: center; padding: 12px; border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.06); cursor: pointer; transition: all 0.2s;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.pf-stock-row:active { background: rgba(255,255,255,0.12); }
+.pf-stock-indicator { width: 8px; height: 8px; border-radius: 50%; margin-right: 12px; flex-shrink: 0; }
+.pf-stock-indicator-up { background: var(--sparkle-50); box-shadow: 0 0 8px rgba(30,204,176,0.4); }
+.pf-stock-indicator-down { background: var(--error); box-shadow: 0 0 8px rgba(250,47,64,0.4); }
+.pf-stock-name { font-size: 14px; font-weight: 700; color: var(--white); }
+.pf-stock-summary { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+.pf-stock-value { margin-left: auto; text-align: right; }
+.pf-stock-amount { font-size: 14px; font-weight: 700; color: var(--white); }
+.pf-stock-change { font-size: 11px; font-weight: 700; }
+.pf-stock-change-up { color: var(--sparkle-50); }
+.pf-stock-change-down { color: var(--error); }
+
+/* Stock detail bottom sheet */
+.bottom-sheet-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 200; opacity: 0;
+  transition: opacity 0.3s; pointer-events: none;
+}
+.bottom-sheet-overlay.active { opacity: 1; pointer-events: all; }
+.bottom-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 201;
+  background: var(--white); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 12px 16px 24px; transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1); max-height: 80vh; overflow-y: auto;
+}
+.bottom-sheet.active { transform: translateY(0); }
+.bs-handle { width: 40px; height: 4px; border-radius: var(--radius-pill); background: var(--grey-40); margin: 0 auto 16px; }
+.bs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.bs-title { font-size: 18px; font-weight: 900; color: var(--grey-100); }
+.bs-close {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--surface-ghost);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; border: none;
+}
+.bs-close:active { background: var(--grey-40); }
+.bs-stock-meta { display: flex; flex-direction: column; gap: 12px; }
+.bs-stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--stroke-subtle); }
+.bs-stat-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
+.bs-stat-value { font-size: 14px; font-weight: 700; color: var(--grey-100); }
+.bs-speak-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 14px; border-radius: var(--radius-lg);
+  background: var(--surface-bold); border: none; cursor: pointer; margin-top: 16px;
+}
+.bs-speak-btn:active { opacity: 0.85; }
+.bs-speak-btn span { font-size: 14px; font-weight: 700; color: var(--white); font-family: 'JioType', sans-serif; }
+
+/* ₹100 Challenge */
+.challenge-card {
+  background: var(--secondary-20); border-radius: var(--radius-lg); padding: 20px;
+  border: 1.5px solid rgba(247,171,32,0.2);
+}
+.challenge-title { font-size: 18px; font-weight: 900; color: var(--grey-100); }
+.challenge-sub { font-size: 13px; color: var(--text-low); margin-top: 4px; }
+.challenge-options { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.challenge-opt {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  border-radius: var(--radius-md); background: var(--white); cursor: pointer;
+  border: 1.5px solid var(--stroke-subtle); transition: all 0.2s;
+}
+.challenge-opt:active { transform: scale(0.97); }
+.challenge-opt:hover { border-color: var(--primary-50); }
+.challenge-opt-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-sm); display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; font-weight: 900; color: var(--white);
+}
+.challenge-opt-safe { background: var(--sparkle-50); }
+.challenge-opt-medium { background: var(--secondary-50); }
+.challenge-opt-high { background: var(--primary-50); }
+.challenge-opt-info h4 { font-size: 14px; font-weight: 700; color: var(--grey-100); }
+.challenge-opt-info p { font-size: 12px; color: var(--text-low); margin-top: 2px; }
+.challenge-risk-tag {
+  margin-left: auto; font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: var(--radius-pill); text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* Challenge result */
+.challenge-result {
+  border-radius: var(--radius-lg); padding: 20px; border: 1.5px solid var(--stroke-subtle);
+  background: var(--white);
+}
+.cr-range-bar { height: 8px; border-radius: var(--radius-pill); background: var(--grey-20); margin: 16px 0 8px; position: relative; overflow: hidden; }
+.cr-range-fill { height: 100%; border-radius: var(--radius-pill); animation: rangeFill 1s ease-out forwards; transform-origin: left; }
+@keyframes rangeFill { from { width: 0; } }
+.cr-range-labels { display: flex; justify-content: space-between; }
+.cr-range-label { font-size: 12px; font-weight: 700; }
+.cr-disclaimer { font-size: 11px; color: var(--text-low); margin-top: 12px; padding: 8px 12px; background: var(--grey-20); border-radius: var(--radius-sm); }
+.cr-listen-btn, .sip-listen-btn { display: flex; align-items: center; gap: 6px; padding: 8px 18px; border: none; border-radius: var(--radius-pill); background: var(--primary-50); color: var(--white); font-family: 'JioType', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; }
+.cr-listen-btn:active, .sip-listen-btn:active { transform: scale(0.96); }
+
+/* Chai pe Charcha audio player */
+.chai-card {
+  background: linear-gradient(135deg, var(--secondary-20) 0%, var(--white) 100%);
+  border-radius: var(--radius-lg); padding: 20px; border: 1.5px solid rgba(247,171,32,0.2);
+}
+.chai-header { display: flex; align-items: center; gap: 12px; }
+.chai-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--secondary-50);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.chai-title { font-size: 16px; font-weight: 900; color: var(--grey-100); }
+.chai-sub { font-size: 12px; color: var(--text-low); margin-top: 2px; }
+.chai-waves { display: flex; gap: 3px; align-items: center; justify-content: center; height: 32px; margin: 16px 0; }
+.chai-bar { width: 4px; border-radius: var(--radius-pill); background: var(--secondary-50); animation: chaiWave 1s ease-in-out infinite; }
+.chai-waves-paused .chai-bar { animation: none; height: 4px; opacity: 0.38; }
+@keyframes chaiWave { 0%, 100% { height: 6px; opacity: 0.38; } 50% { height: 28px; opacity: 1; } }
+.chai-controls { display: flex; align-items: center; justify-content: center; gap: 16px; }
+.chai-play-btn {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--secondary-50);
+  display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(247,171,32,0.3); transition: all 0.2s;
+}
+.chai-play-btn:active { transform: scale(0.9); }
+.chai-time { font-size: 12px; font-weight: 500; color: var(--text-low); font-variant-numeric: tabular-nums; }
+
+/* SIP Calculator */
+.sip-card {
+  background: var(--primary-20); border-radius: var(--radius-lg); padding: 20px;
+  border: 1.5px solid rgba(53,53,243,0.15);
+}
+.sip-title { font-size: 16px; font-weight: 900; color: var(--grey-100); }
+.sip-sub { font-size: 13px; color: var(--text-low); margin-top: 4px; }
+.sip-input-row { display: flex; gap: 8px; margin-top: 16px; }
+.sip-input-group { flex: 1; }
+.sip-input-label { font-size: 11px; font-weight: 700; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.sip-input {
+  width: 100%; padding: 10px 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--grey-40);
+  font-family: 'JioType', sans-serif; font-size: 16px; font-weight: 700; color: var(--grey-100);
+  background: var(--white); outline: none; transition: border-color 0.2s;
+}
+.sip-input:focus { border-color: var(--primary-50); }
+.sip-coins { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 80px; margin: 20px 0 12px; }
+.sip-coin {
+  width: 24px; border-radius: 4px 4px 0 0; background: var(--primary-50);
+  animation: coinGrow 0.6s ease-out forwards; transform-origin: bottom;
+}
+@keyframes coinGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.sip-result { text-align: center; }
+.sip-result-label { font-size: 12px; color: var(--text-low); }
+.sip-result-amount { font-size: 28px; font-weight: 900; color: var(--primary-50); margin-top: 4px; }
+.sip-result-gain { font-size: 13px; font-weight: 700; color: var(--sparkle-50); margin-top: 4px; }
+.sip-calc-btn {
+  width: 100%; padding: 14px; border-radius: var(--radius-lg); background: var(--primary-50);
+  border: none; cursor: pointer; margin-top: 16px; transition: all 0.2s;
+}
+.sip-calc-btn:active { opacity: 0.85; }
+.sip-calc-btn span { font-size: 14px; font-weight: 700; color: var(--white); font-family: 'JioType', sans-serif; }
+
+/* Stock Deep Dive */
+.sd-card { background: var(--white); border-radius: var(--radius-lg); border: 1.5px solid var(--stroke-subtle); padding: 16px; }
+.sd-title { font-size: 16px; font-weight: 900; color: var(--grey-100); }
+.sd-sub { font-size: 12px; color: var(--text-low); margin-top: 2px; }
+.sd-options { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.sd-opt { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-md); border: 1.5px solid var(--stroke-subtle); cursor: pointer; transition: all 0.2s; background: var(--white); }
+.sd-opt:active { background: var(--grey-20); transform: scale(0.98); }
+.sd-opt-icon { font-size: 22px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--grey-20); }
+.sd-opt-info { flex: 1; }
+.sd-opt-info h4 { font-size: 14px; font-weight: 700; color: var(--grey-100); margin: 0; }
+.sd-opt-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-pill); }
+.sd-result { background: var(--white); border-radius: var(--radius-lg); border: 1.5px solid var(--stroke-subtle); padding: 16px; }
+.sd-result-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.sd-result-title { font-size: 16px; font-weight: 900; color: var(--grey-100); }
+.sd-result-price { font-size: 14px; font-weight: 700; color: var(--grey-100); text-align: right; }
+.sd-result-change { font-size: 12px; font-weight: 700; }
+.sd-section { margin-top: 12px; padding: 10px 12px; border-radius: var(--radius-sm); }
+.sd-section-green { background: rgba(37,171,33,0.06); border-left: 3px solid var(--success); }
+.sd-section-red { background: rgba(250,47,64,0.06); border-left: 3px solid var(--error); }
+.sd-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); margin-bottom: 4px; }
+.sd-section-text { font-size: 13px; color: var(--grey-100); line-height: 1.4; }
+.sd-verdict { margin-top: 14px; padding: 10px 14px; border-radius: var(--radius-sm); background: var(--grey-20); text-align: center; }
+.sd-verdict-text { font-size: 13px; font-weight: 700; }
+.sd-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+.sd-meta-item { font-size: 11px; color: var(--text-low); }
+.sd-meta-item span { font-weight: 700; color: var(--grey-100); display: block; font-size: 12px; }
+.sd-listen-btn { display: flex; align-items: center; gap: 6px; padding: 8px 18px; border: none; border-radius: var(--radius-pill); background: var(--primary-50); color: var(--white); font-family: 'JioType', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; }
+.sd-listen-btn:active { transform: scale(0.96); }
+
+/* TTS Play + Pause button group */
+.tts-btn-group { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; }
+.tts-pause-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--grey-20); transition: all 0.2s; flex-shrink: 0;
+}
+.tts-pause-btn:active { transform: scale(0.9); }
+.tts-pause-btn[disabled] { opacity: 0.38; pointer-events: none; }
+.tts-pause-btn.tts-paused { background: var(--sparkle-20); }
+.tts-pause-btn.tts-paused svg { fill: var(--sparkle-50); }
+/* Dark variant for portfolio card */
+.pf-pause-btn {
+  width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.2s; flex-shrink: 0;
+}
+.pf-pause-btn:active { transform: scale(0.9); }
+.pf-pause-btn[disabled] { opacity: 0.38; pointer-events: none; }
+.pf-pause-btn.tts-paused { background: rgba(30,204,176,0.15); }
+/* Bottom sheet speak button group */
+.bs-btn-group { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+.bs-btn-group .bs-speak-btn { flex: 1; margin-top: 0; }
+.bs-pause-btn {
+  width: 44px; height: 44px; border-radius: var(--radius-md); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-ghost); transition: all 0.2s; flex-shrink: 0;
+}
+.bs-pause-btn:active { transform: scale(0.9); }
+.bs-pause-btn[disabled] { opacity: 0.38; pointer-events: none; }
+.bs-pause-btn.tts-paused { background: var(--sparkle-20); }
+.bs-pause-btn.tts-paused svg { fill: var(--sparkle-50); }
+
+/* Voice query card */
+.voice-query-card {
+  background: linear-gradient(135deg, var(--surface-ghost) 0%, var(--primary-20) 100%);
+  border-radius: var(--radius-lg); padding: 20px; text-align: center;
+  border: 1.5px solid rgba(53,53,243,0.1);
+}
+.vq-title { font-size: 14px; font-weight: 700; color: var(--grey-100); }
+.vq-sub { font-size: 12px; color: var(--text-low); margin-top: 4px; }
+.vq-mic-btn {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--surface-bold);
+  display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;
+  margin: 16px auto 8px; box-shadow: 0 4px 20px rgba(57,0,173,0.3); transition: all 0.2s;
+  position: relative;
+}
+.vq-mic-btn:active { transform: scale(0.9); }
+.vq-mic-btn.listening { animation: micPulse 1.5s ease-in-out infinite; }
+@keyframes micPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(57,0,173,0.4); } 50% { box-shadow: 0 0 0 16px rgba(57,0,173,0); } }
+.vq-hint { font-size: 12px; color: var(--text-low); }
+
+/* Voice response card */
+.voice-resp-card {
+  background: var(--surface-ghost); border-radius: var(--radius-lg); padding: 16px;
+  border-left: 3px solid var(--surface-bold);
+}
+.vr-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.vr-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--sparkle-50); display: flex; align-items: center; justify-content: center; }
+.vr-name { font-size: 12px; font-weight: 700; color: var(--text-low); }
+.vr-text { font-size: 14px; line-height: 1.6; color: var(--grey-100); }
+.vr-text strong { color: var(--primary-50); }
+.vr-waves { display: flex; gap: 3px; align-items: center; height: 24px; margin-top: 12px; }
+.vr-bar { width: 3px; border-radius: var(--radius-pill); background: var(--surface-bold); animation: vrWave 0.8s ease-in-out infinite; }
+.vr-waves-done .vr-bar { animation: none; height: 4px; opacity: 0.38; }
+@keyframes vrWave { 0%, 100% { height: 4px; opacity: 0.38; } 50% { height: 20px; opacity: 1; } }
+
+/* Chips */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.chip {
+  padding: 8px 16px; border-radius: var(--radius-pill); border: 1.5px solid var(--primary-50);
+  color: var(--primary-50); font-size: 13px; font-weight: 700; cursor: pointer;
+  background: var(--white); transition: all 0.2s; font-family: 'JioType', sans-serif;
+}
+.chip:hover, .chip:active { background: var(--primary-50); color: var(--white); }
+.chip:hover .chip-desc, .chip:active .chip-desc { color: rgba(255,255,255,0.85); }
+.chip-rich {
+  padding: 10px 16px; border-radius: var(--radius-lg); text-align: left; display: flex; flex-direction: column; gap: 2px;
+}
+.chip-desc { font-weight: 400; font-size: 11px; color: var(--grey-80); line-height: 1.3; transition: color 0.2s; }
+.chip-disabled { opacity: 0.38; pointer-events: none; border-color: var(--grey-60); color: var(--grey-60); }
+
+/* Input widget */
+.input-widget { padding: 2px 12px 16px; background: var(--white); position: relative; z-index: 80; }
+.input-field-wrap {
+  background: var(--surface-ghost); border-radius: var(--radius-xl); padding: 6px;
+  display: flex; flex-direction: column;
+}
+.input-text-area { padding: 10px 8px; display: flex; align-items: center; }
+.input-text-area input {
+  font-family: 'JioType', sans-serif; font-size: 14px; font-weight: 400; color: var(--grey-100);
+  background: transparent; border: none; outline: none; width: 100%; line-height: 1.3;
+}
+.input-text-area input::placeholder { color: var(--grey-60); opacity: 0.65; }
+.input-actions { display: flex; justify-content: space-between; align-items: center; height: 43px; }
+.input-left-actions { display: flex; gap: 2px; }
+.input-icon-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-pill);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-ghost-icon); border: none; cursor: pointer;
+}
+.input-icon-btn:active { opacity: 0.7; }
+.input-icon-btn svg { width: 20px; height: 20px; }
+.speak-btn {
+  background: var(--surface-bold); border: none; border-radius: var(--radius-pill);
+  padding: 10px 20px; display: flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.speak-btn:active { opacity: 0.85; }
+.speak-btn svg { width: 18px; height: 18px; }
+.speak-btn span { font-family: 'JioType', sans-serif; font-weight: 700; font-size: 14px; color: var(--white); line-height: 1; }
+
+/* Typing indicator */
+.typing { display: flex; gap: 4px; padding: 12px 16px; }
+.typing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--grey-60); animation: typingAnim 1.2s ease-in-out infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--grey-100); color: var(--white); padding: 12px 20px;
+  border-radius: var(--radius-lg); font-size: 13px; font-weight: 500; z-index: 300;
+  opacity: 0; transition: all 0.35s cubic-bezier(0.32, 0.72, 0, 1); white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@keyframes msgIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes typingAnim { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+
+.hidden { display: none !important; }
+.fade-in { animation: msgIn 0.4s ease-out; }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="app-header">
+    <div class="header-left">
+      <a href="https://sunit1986.github.io/design-prototypes/news-tools.html" class="back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+      </a>
+      <div class="header-title-block">
+        <span class="header-title">Market Pulse</span>
+        <span class="header-domain">Tayyar hai</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-body">
+    <div class="chat-area" id="chatArea"></div>
+    <div class="input-widget">
+      <div class="input-field-wrap">
+        <div class="input-text-area">
+          <input type="text" id="inputField" placeholder="Poochho: 'Reliance ka kya scene hai?'" onkeydown="if(event.key==='Enter')handleTextInput()">
+        </div>
+        <div class="input-actions">
+          <div class="input-left-actions">
+            <button class="input-icon-btn">
+              <svg viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg>
+            </button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="input-icon-btn" onclick="handleVoiceInput()">
+              <svg viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z"/></svg>
+            </button>
+            <button class="speak-btn" onclick="handleVoiceInput()">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1z"/></svg>
+              <span>Bolo</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Sheet -->
+<div class="bottom-sheet-overlay" id="bsOverlay" onclick="closeBottomSheet()"></div>
+<div class="bottom-sheet" id="bottomSheet">
+  <div class="bs-handle"></div>
+  <div id="bsContent"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// === ElevenLabs TTS ===
+const ELEVENLABS_API_KEY = 'sk_86a2daf2318ba84afa5190ff9a2c09fcc9e7f9dafea1fe79';
+const HINDI_VOICE_ID = 'zT03pEAEi0VHKciJODfn'; // Raju - relatable Hindi voice
+const ttsCache = new Map();
+let currentAudio = null;
+let isSpeaking = false;
+
+async function elevenLabsTTS(text, onended = null) {
+  const cacheKey = text.substring(0, 100) + '|' + HINDI_VOICE_ID;
+  if (ttsCache.has(cacheKey)) {
+    playAudioFromUrl(ttsCache.get(cacheKey), onended);
+    return;
+  }
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${HINDI_VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVENLABS_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: text,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.65, similarity_boost: 0.8, style: 0.2, use_speaker_boost: true }
+      })
+    });
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    ttsCache.set(cacheKey, url);
+    playAudioFromUrl(url, onended);
+  } catch (e) {
+    console.warn('ElevenLabs TTS failed:', e);
+    if (onended) setTimeout(onended, 1500);
+  }
+}
+
+function playAudioFromUrl(url, onended) {
+  // Preserve active group — stopCurrentAudio resets it but we're about to play new audio
+  const savedGroup = _activeGroupId;
+  stopCurrentAudio();
+  _activeGroupId = savedGroup;
+  currentAudio = new Audio(url);
+  isSpeaking = true;
+  currentAudio.onended = () => { isSpeaking = false; if (onended) onended(); };
+  currentAudio.onerror = () => { isSpeaking = false; if (onended) onended(); };
+  currentAudio.play().then(() => {
+    // Audio started — enable the pause button for the active group
+    if (_activeGroupId) {
+      const pb = document.getElementById(_activeGroupId + '-pause');
+      if (pb) { pb.disabled = false; pb.classList.remove('tts-paused'); }
+    }
+  }).catch(() => { isSpeaking = false; if (onended) setTimeout(onended, 300); });
+}
+
+function stopCurrentAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; isSpeaking = false; }
+  resetTTSGroup();
+}
+
+// === TTS Play + Pause (two-button system) ===
+const SPEAKER_ICON = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>';
+const PAUSE_ICON = '<path d="M6 4h4v16H6zm8 0h4v16h-4z"/>';
+const PLAY_ICON = '<path d="M8 5v14l11-7z"/>';
+let _activeGroupId = null;
+
+function playTTS(groupId, text) {
+  const pauseBtn = document.getElementById(groupId + '-pause');
+
+  // If this group was paused → resume
+  if (_activeGroupId === groupId && currentAudio && currentAudio.paused && currentAudio.currentTime > 0) {
+    currentAudio.play();
+    if (pauseBtn) { pauseBtn.disabled = false; pauseBtn.classList.remove('tts-paused'); }
+    showToast('Phir se sun rahe hain...');
+    return;
+  }
+
+  // New playback — stop any previous audio first
+  resetTTSGroup();
+  _activeGroupId = groupId;
+  // Pause button stays disabled until audio actually starts (enabled in playAudioFromUrl)
+  showToast('Sun rahe hain...');
+
+  elevenLabsTTS(text, () => {
+    resetTTSGroup();
+  });
+}
+
+function pauseTTS(groupId) {
+  if (_activeGroupId !== groupId || !currentAudio) return;
+  const pauseBtn = document.getElementById(groupId + '-pause');
+
+  if (!currentAudio.paused) {
+    currentAudio.pause();
+    if (pauseBtn) pauseBtn.classList.add('tts-paused');
+    showToast('Ruka diya');
+  } else if (currentAudio.paused && currentAudio.currentTime > 0) {
+    // Pressing pause again while paused → resume
+    currentAudio.play();
+    if (pauseBtn) pauseBtn.classList.remove('tts-paused');
+    showToast('Phir se sun rahe hain...');
+  }
+}
+
+function resetTTSGroup() {
+  if (_activeGroupId) {
+    const pauseBtn = document.getElementById(_activeGroupId + '-pause');
+    if (pauseBtn) { pauseBtn.disabled = true; pauseBtn.classList.remove('tts-paused'); }
+    _activeGroupId = null;
+  }
+}
+
+// === Chat Helpers ===
+const chatArea = document.getElementById('chatArea');
+
+function addMsg(type, html, delay = 0) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = `msg msg-${type} fade-in`;
+      div.innerHTML = `<div class="bubble bubble-${type}">${html}</div>`;
+      chatArea.appendChild(div); scrollToBottom(); resolve();
+    }, delay);
+  });
+}
+
+function addRaw(html, delay = 0, fullWidth = false) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = `msg msg-ai fade-in${fullWidth ? ' msg-full' : ''}`;
+      div.innerHTML = html;
+      chatArea.appendChild(div); scrollToBottom(); resolve();
+    }, delay);
+  });
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg msg-ai'; div.id = 'typing-indicator';
+  div.innerHTML = '<div class="bubble bubble-ai"><div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+  chatArea.appendChild(div); scrollToBottom();
+}
+function hideTyping() { const el = document.getElementById('typing-indicator'); if (el) el.remove(); }
+function scrollToBottom() { setTimeout(() => { chatArea.scrollTop = chatArea.scrollHeight; }, 50); }
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// === Bottom Sheet ===
+function openBottomSheet(html) {
+  document.getElementById('bsContent').innerHTML = html;
+  document.getElementById('bsOverlay').classList.add('active');
+  document.getElementById('bottomSheet').classList.add('active');
+}
+function closeBottomSheet() {
+  document.getElementById('bsOverlay').classList.remove('active');
+  document.getElementById('bottomSheet').classList.remove('active');
+  stopCurrentAudio();
+}
+
+// === Language ===
+let currentLang = 'hi';
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  showToast(lang === 'hi' ? 'Hindi mein dikha rahe hain' : 'Showing in English');
+}
+
+// === Stock Data ===
+const STOCKS_DATA = {
+  marketSummary: {
+    date: new Date().toLocaleDateString('hi-IN', { weekday: 'long', day: 'numeric', month: 'long' }),
+    indices: [
+      { name: 'Sensex', value: '74,832', change: '+248', pct: '+0.33%', up: true },
+      { name: 'Nifty 50', value: '22,650', change: '+72', pct: '+0.32%', up: true },
+      { name: 'Bank Nifty', value: '48,920', change: '+185', pct: '+0.38%', up: true }
+    ],
+    mood: 'green', // green | yellow | red
+    moodLabel: 'Bazaar mein tezi',
+    moodDetail: '1,420 stocks upar, 890 neeche',
+    topGainers: [
+      { name: 'Tata Motors', pct: '+3.2%', reason: 'EV sales record' },
+      { name: 'SBI', pct: '+2.1%', reason: 'NPA mein sudhar' },
+      { name: 'Zomato', pct: '+1.8%', reason: 'Quick commerce growth' }
+    ],
+    topLosers: [
+      { name: 'TCS', pct: '-1.5%', reason: 'US deal cancellation' },
+      { name: 'Infosys', pct: '-0.9%', reason: 'IT sector pressure' },
+      { name: 'Vodafone Idea', pct: '-2.3%', reason: 'Debt tension' }
+    ],
+    sectors: [
+      { name: 'Banking', pct: '+0.8%', up: true },
+      { name: 'Auto', pct: '+1.4%', up: true },
+      { name: 'IT', pct: '-0.7%', up: false },
+      { name: 'Pharma', pct: '+0.3%', up: true },
+      { name: 'Metal', pct: '-0.4%', up: false },
+      { name: 'FMCG', pct: '+0.2%', up: true }
+    ],
+    fiiDii: {
+      fii: { action: 'Bikriya', amount: '₹1,250 Cr', sell: true },
+      dii: { action: 'Khareedaari', amount: '₹1,830 Cr', sell: false }
+    },
+    gold: '₹72,450/10g',
+    goldChange: '+0.4%',
+    speakText: 'नमस्कार अमित भाई! आज बाज़ार में तेज़ी रही। सेंसेक्स चौहत्तर हज़ार आठ सौ बत्तीस पर बंद हुआ, दो सौ अड़तालीस अंक ऊपर। निफ्टी बाईस हज़ार छः सौ पचास पर। चौदह सौ बीस स्टॉक ऊपर गए, आठ सौ नब्बे नीचे। टाटा मोटर्स आज का स्टार रहा, तीन पॉइंट दो प्रतिशत ऊपर, ई.वी. सेल्स रिकॉर्ड की वजह से। आई.टी. सेक्टर में दबाव रहा, टी.सी.एस. और इन्फ़ोसिस दोनों नीचे। विदेशी निवेशकों ने बारह सौ पचास करोड़ की बिक्री की, लेकिन देसी संस्थाओं ने अठारह सौ तीस करोड़ की खरीदारी से बाज़ार को सहारा दिया। सोना बहत्तर हज़ार चार सौ पचास पर स्थिर है।'
+  },
+  timeMachine: [
+    { name: 'Zomato', invested: 500, current: 648, pct: 29.6, period: '1 saal pehle', positive: true },
+    { name: 'Tata Motors', invested: 500, current: 580, pct: 16.0, period: '1 saal pehle', positive: true },
+    { name: 'IRFC', invested: 500, current: 410, pct: -18.0, period: '1 saal pehle', positive: false },
+    { name: 'Reliance', invested: 500, current: 555, pct: 11.0, period: '1 saal pehle', positive: true },
+  ],
+  portfolio: {
+    invested: 15000, current: 16340, gainPct: 8.9,
+    speakText: 'अमित भाई, आपका पोर्टफोलियो। आपने कुल पंद्रह हज़ार रुपये लगाए हैं और आज इसकी वैल्यू सोलह हज़ार तीन सौ चालीस रुपये है। आठ पॉइंट नौ प्रतिशत का प्रॉफिट है, यानी एक हज़ार तीन सौ चालीस रुपये। इन्फ़ोसिस और टाटा मोटर्स अच्छा कर रहे हैं। वोडाफोन आइडिया में नुकसान है, सोलह प्रतिशत नीचे।',
+    stocks: [
+      { name: 'Infosys', invested: 4200, current: 4520, change: '+7.6%', up: true,
+        summary: 'Pichle hafte 3% upar. Q3 results aaye — revenue guidance badhaaya.',
+        detail: { price: '1,855', dayChange: '+1.2%', pe: '28.4', weekHigh: '1,920', weekLow: '1,580', analystRating: '9/12 Buy' },
+        speakText: 'इन्फ़ोसिस आज अठारह सौ पचपन रुपये पर है, एक पॉइंट दो प्रतिशत ऊपर। पिछले हफ़्ते तीन प्रतिशत ऊपर गया। क्यू थ्री रिज़ल्ट्स में कंपनी ने रेवेन्यू गाइडेंस बढ़ाया है। बारह एनालिस्ट्स में से नौ का कहना है बाय। लेकिन अमित भाई, यह सिर्फ जानकारी है — इन्वेस्ट करने से पहले अपना रिसर्च ज़रूर करें।'
+      },
+      { name: 'Tata Motors', invested: 3800, current: 4180, change: '+10%', up: true,
+        summary: 'EV sales mein 40% badhot. Stock steady chal raha hai.',
+        detail: { price: '785', dayChange: '+0.8%', pe: '22.1', weekHigh: '810', weekLow: '620', analystRating: '10/14 Buy' },
+        speakText: 'टाटा मोटर्स आज सात सौ पचासी रुपये पर है। ई.वी. सेल्स में चालीस प्रतिशत बढ़ोतरी हुई है। स्टॉक स्टेडी चल रहा है। चौदह एनालिस्ट्स में से दस का कहना है बाय।'
+      },
+      { name: 'SBI', invested: 4000, current: 4140, change: '+3.5%', up: true,
+        summary: 'Banking sector stable. Dividend bhi milega.',
+        detail: { price: '621', dayChange: '+0.3%', pe: '9.8', weekHigh: '660', weekLow: '545', analystRating: '8/12 Buy' },
+        speakText: 'एस.बी.आई. आज छः सौ इक्कीस रुपये पर है। बैंकिंग सेक्टर स्टेबल है। डिविडेंड भी मिलने वाला है। पी.ई. रेशियो नौ पॉइंट आठ है जो काफी अच्छा है।'
+      },
+      { name: 'Vodafone Idea', invested: 3000, current: 2500, change: '-16.7%', up: false,
+        summary: 'Subscriber loss jaari. Debt zyada hai.',
+        detail: { price: '12.5', dayChange: '-2.1%', pe: 'N/A (Loss)', weekHigh: '18', weekLow: '9', analystRating: '2/10 Buy' },
+        speakText: 'वोडाफोन आइडिया आज साढ़े बारह रुपये पर है, दो प्रतिशत नीचे। सब्सक्राइबर लॉस जारी है और डेट ज़्यादा है। दस एनालिस्ट्स में से सिर्फ दो का कहना है बाय। अमित भाई, इसमें काफी रिस्क है।'
+      },
+    ]
+  },
+  challenge: {
+    sbi: { low: 95, high: 115, fill: 65, color: 'var(--sparkle-50)', riskLabel: 'Low Risk', riskBg: 'var(--sparkle-20)', riskColor: 'var(--sparkle-50)', speakText: 'एस.बी.आई. एक सेफ बैंकिंग स्टॉक है। एक साल बाद आपके सौ रुपये पचानवे से एक सौ पंद्रह के बीच हो सकते हैं। रिस्क कम है, रिटर्न भी मॉडरेट है।' },
+    tata: { low: 90, high: 130, fill: 55, color: 'var(--secondary-50)', riskLabel: 'Medium Risk', riskBg: 'var(--secondary-20)', riskColor: 'var(--secondary-50)', speakText: 'टाटा मोटर्स मीडियम रिस्क स्टॉक है। एक साल बाद आपके सौ रुपये नब्बे से एक सौ तीस के बीच हो सकते हैं। ई.वी. ग्रोथ अच्छी है लेकिन ऑटो सेक्टर में उतार-चढ़ाव रहता है।' },
+    zomato: { low: 75, high: 160, fill: 45, color: 'var(--primary-50)', riskLabel: 'High Risk', riskBg: 'var(--primary-20)', riskColor: 'var(--primary-50)', speakText: 'ज़ोमैटो हाई ग्रोथ, हाई रिस्क स्टॉक है। एक साल बाद आपके सौ रुपये पचहत्तर से एक सौ साठ के बीच हो सकते हैं। ग्रोथ बहुत अच्छी है लेकिन गिरावट भी तेज़ हो सकती है। यह एस्टीमेट है, गारंटी नहीं।' }
+  },
+  stockDive: {
+    options: [
+      { id: 'reliance', name: 'Reliance Industries', icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M2 20h20v2H2v-2zm2-2h2V8l4 2V6l4 2V2h6v16H4z"/></svg>', tag: 'Oil to Jio', tagColor: 'var(--primary-50)', tagBg: 'var(--primary-20)' },
+      { id: 'it_sector', name: 'IT Sector', icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="var(--sparkle-50)"><path d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>', tag: 'TCS, Infy, Wipro', tagColor: 'var(--sparkle-50)', tagBg: 'var(--sparkle-20)' },
+      { id: 'banking', name: 'Banking Sector', icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="var(--secondary-50)"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>', tag: 'SBI, HDFC, ICICI', tagColor: 'var(--secondary-50)', tagBg: 'var(--secondary-20)' },
+      { id: 'gold_silver', name: 'Sona-Chandi', icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="var(--secondary-60)"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="12" font-weight="700">₹</text></svg>', tag: 'Gold & Silver', tagColor: 'var(--secondary-60)', tagBg: 'var(--secondary-20)' }
+    ],
+    results: {
+      reliance: {
+        title: 'Reliance Industries',
+        price: '₹2,450', change: '+1.2%', changeUp: true,
+        pe: '28.5', weekRange: '₹2,100 – ₹2,800', marketCap: '₹16.6 lakh crore',
+        strength: 'Jio subscriber record level par hai, retail aur oil dono segments strong.',
+        risk: 'Telecom mein competition badh raha hai, new energy mein abhi profit nahi.',
+        verdict: '12 mein se 9 analysts kehte hain — Buy',
+        verdictColor: 'var(--sparkle-50)',
+        speakText: 'रिलायंस इंडस्ट्रीज़ आज चौबीस सौ पचास रुपये पर है। जियो के सब्सक्राइबर रिकॉर्ड लेवल पर हैं। ऑयल और रिटेल दोनों सेगमेंट अच्छा कर रहे हैं। बारह एनालिस्ट्स में से नौ कहते हैं बाय। लेकिन टेलीकॉम में कम्पटीशन भी बढ़ रहा है।'
+      },
+      it_sector: {
+        title: 'IT Sector Overview',
+        price: 'Nifty IT: 34,200', change: '-0.8%', changeUp: false,
+        pe: '26.2 (sector avg)', weekRange: '30,100 – 38,500', marketCap: '—',
+        strength: 'AI aur cloud deals badh rahe hain. Dollar strong hone se revenue badhega.',
+        risk: 'US mein recession ka darr hai. Hiring slow hai aur margins par pressure hai.',
+        verdict: 'Mixed — TCS aur Infosys stable, mid-caps mein zyada growth',
+        verdictColor: 'var(--secondary-50)',
+        speakText: 'आई.टी. सेक्टर में मिला-जुला हाल है। निफ्टी आई.टी. चौंतीस हज़ार दो सौ पर है, शून्य पॉइंट आठ प्रतिशत नीचे। ए.आई. और क्लाउड डील्स बढ़ रही हैं लेकिन यू.एस. में रिसेशन का डर है। टी.सी.एस. और इन्फ़ोसिस स्टेबल हैं, मिड-कैप में ज़्यादा ग्रोथ दिख रही है।'
+      },
+      banking: {
+        title: 'Banking Sector Overview',
+        price: 'Bank Nifty: 48,900', change: '+0.5%', changeUp: true,
+        pe: '14.8 (sector avg)', weekRange: '42,000 – 52,500', marketCap: '—',
+        strength: 'Credit growth 15%+ hai. NPA kam ho rahe hain. RBI ka stance supportive hai.',
+        risk: 'Interest rate cycle turn ho sakta hai. Unsecured loans badh rahe hain.',
+        verdict: 'Positive — SBI, HDFC Bank top picks hain',
+        verdictColor: 'var(--sparkle-50)',
+        speakText: 'बैंकिंग सेक्टर अच्छा चल रहा है। बैंक निफ्टी अड़तालीस हज़ार नौ सौ पर है। क्रेडिट ग्रोथ पंद्रह प्रतिशत से ज़्यादा है और एन.पी.ए. कम हो रहे हैं। एस.बी.आई. और एच.डी.एफ.सी. बैंक टॉप पिक्स हैं। लेकिन इंटरेस्ट रेट साइकल टर्न हो सकता है।'
+      },
+      gold_silver: {
+        title: 'Sona-Chandi ka Bhav',
+        price: 'Gold: ₹72,450/10g', change: '+0.4%', changeUp: true,
+        pe: 'Silver: ₹85,200/kg', weekRange: '₹62,000 – ₹74,500 (Gold)', marketCap: 'MCX Gold: ₹72,680',
+        strength: 'Global tension mein gold safe haven hai. Central banks gold kharid rahe hain.',
+        risk: 'Dollar strong hone par gold gir sakta hai. Silver mein zyada volatility hai.',
+        verdict: 'Gold: steady growth | Silver: high risk-high reward',
+        verdictColor: 'var(--secondary-60)',
+        speakText: 'सोने का भाव आज बहत्तर हज़ार चार सौ पचास रुपये प्रति दस ग्राम है। चांदी पचासी हज़ार दो सौ रुपये प्रति किलो। ग्लोबल टेंशन में गोल्ड सेफ हेवन माना जाता है। सेंट्रल बैंक गोल्ड खरीद रहे हैं। लेकिन डॉलर स्ट्रॉन्ग होने पर गोल्ड गिर सकता है। सिल्वर में ज़्यादा वोलैटिलिटी है।'
+      }
+    }
+  },
+  chaiPeCharcha: {
+    speakText: 'नमस्कार दोस्तों, आज की चाय पे चर्चा में आपका स्वागत है। आज मार्केट थोड़ा शरमाया, सेंसेक्स दो सौ अंक ऊपर खुला लेकिन दोपहर तक फ्लैट हो गया। टाटा मोटर्स ने आज अच्छा परफॉर्म किया, ई.वी. सेल्स के नए आंकड़ों के बाद तीन प्रतिशत ऊपर। आई.टी. सेक्टर में थोड़ा दबाव रहा, टी.सी.एस. और इन्फ़ोसिस दोनों एक प्रतिशत नीचे। बैंकिंग सेक्टर ने मार्केट को सहारा दिया। एस.बी.आई. और एच.डी.एफ.सी. बैंक दोनों हरे निशान में बंद हुए। सोने का भाव बासठ हज़ार चार सौ पचास पर स्थिर है। कुल मिलाकर आज का दिन ठीक-ठाक रहा, कल के लिए एक्सपर्ट्स का कहना है कि मार्केट रेंज-बाउंड रहेगा। तो दोस्तों, अपना रिसर्च करते रहिए और पैनिक मत कीजिए। कल फिर मिलेंगे चाय पे चर्चा में!'
+  }
+};
+
+// === State Machine ===
+let currentState = 'welcome';
+let _lastNavAt = 0;
+let chaiPlaying = false;
+
+async function goToState(state) {
+  const now = Date.now();
+  if (now - _lastNavAt < 300) return;
+  _lastNavAt = now;
+  currentState = state;
+
+  switch(state) {
+
+    case 'welcome':
+      await addMsg('ai', 'Namaskar Amit bhai! <strong>Market Pulse</strong> mein aapka swagat hai. Yahan stocks, portfolio aur market ki jaankari simple Hindi mein milegi — koi jargon nahi, koi chart nahi.');
+      await wait(400);
+      await addMsg('ai', 'Aaj aapke liye kya dekhein?');
+      await addRaw(`
+        <div class="chips">
+          <div class="chip chip-rich" onclick="goToState('market_summary')">Aaj ka Bazaar<span class="chip-desc">Sensex, Nifty aur poora haal</span></div>
+          <div class="chip chip-rich" onclick="goToState('portfolio')">Mera Portfolio<span class="chip-desc">Apne 4 stocks ka haal dekho</span></div>
+          <div class="chip chip-rich" onclick="goToState('chai_pe_charcha')">Chai pe Charcha<span class="chip-desc">2 min mein aaj ka market suno</span></div>
+          <div class="chip chip-rich" onclick="goToState('challenge')">₹100 ka Challenge<span class="chip-desc">Chhoti rakam, bada seekh</span></div>
+          <div class="chip chip-rich" onclick="goToState('time_machine')">Time Machine<span class="chip-desc">Agar pehle invest kiya hota toh?</span></div>
+          <div class="chip chip-rich" onclick="goToState('stock_dive')">Stock Deep Dive<span class="chip-desc">Kisi stock ya sector ko samjho</span></div>
+        </div>
+      `, 200);
+      break;
+
+    case 'market_summary':
+      await addMsg('user', 'Aaj ka bazaar dikhao');
+      showTyping(); await wait(800); hideTyping();
+      await addMsg('ai', 'Aaj ka poora haal-chaal ek nazar mein — <strong>Amit bhai ke liye tayyar</strong>:');
+      await addRaw(buildMarketSummaryCard(), 300, true);
+      await wait(600);
+      await addRaw(`
+        <div class="chips">
+          <div class="chip" onclick="goToState('portfolio')">Mera Portfolio</div>
+          <div class="chip" onclick="goToState('stock_dive')">Stock Deep Dive</div>
+          <div class="chip" onclick="goToState('chai_pe_charcha')">Chai pe Charcha</div>
+        </div>
+      `, 400);
+      break;
+
+    case 'time_machine':
+      await addMsg('user', 'Time Machine dikhao');
+      showTyping(); await wait(700); hideTyping();
+      await addMsg('ai', 'Socho <strong>1 saal pehle</strong> agar ₹500 lagaye hote toh aaj kya hota? Swipe karke dekho:');
+      await addRaw(buildTimeMachineCarousel(), 300, true);
+      await wait(800);
+      await addRaw(`
+        <div class="chips">
+          <div class="chip" onclick="goToState('portfolio')">Mera Portfolio</div>
+          <div class="chip" onclick="goToState('stock_dive')">Stock Deep Dive</div>
+        </div>
+      `, 400);
+      break;
+
+    case 'portfolio':
+      await addMsg('user', 'Mera portfolio dikhao');
+      showTyping(); await wait(700); hideTyping();
+      await addRaw(buildPortfolioCard(), 200, true);
+      await wait(600);
+      await addMsg('ai', 'Kisi bhi stock par tap karo — detail mein batata hoon. Ya bolo koi sawaal!');
+      await addRaw(`
+        <div class="chips">
+          <div class="chip" onclick="goToState('stock_dive')">Stock Deep Dive</div>
+          <div class="chip" onclick="showStockDiveResult('gold_silver')">Sona-Chandi ka bhav</div>
+          <div class="chip" onclick="goToState('chai_pe_charcha')">Chai pe Charcha</div>
+        </div>
+      `, 400);
+      break;
+
+    case 'challenge':
+      await addMsg('user', '₹100 ka challenge khelo');
+      showTyping(); await wait(600); hideTyping();
+      await addMsg('ai', 'Chalo khelte hain! Agar aaj <strong>₹100 lagaana ho</strong> toh kahan lagaoge?');
+      await addRaw(buildChallengeCard(), 300, true);
+      break;
+
+    case 'voice_query':
+      await addRaw(buildVoiceQueryCard(), 200, true);
+      break;
+
+    case 'chai_pe_charcha':
+      await addMsg('user', 'Chai pe Charcha sunao');
+      showTyping(); await wait(600); hideTyping();
+      await addMsg('ai', 'Aaj ki <strong>Chai pe Charcha</strong> tayyar hai — 2 minute mein poora market ka haal, dost ki tarah:');
+      await addRaw(buildChaiCard(), 300, true);
+      await wait(600);
+      await addRaw(`
+        <div class="chips">
+          <div class="chip" onclick="goToState('portfolio')">Mera Portfolio</div>
+          <div class="chip" onclick="goToState('stock_dive')">Stock Deep Dive</div>
+        </div>
+      `, 400);
+      break;
+
+    case 'stock_dive':
+      await addMsg('user', 'Stock Deep Dive dikhao');
+      showTyping(); await wait(700); hideTyping();
+      await addMsg('ai', 'Kisko samajhna hai? Ek stock ya poora sector — aap chuniye:');
+      await addRaw(buildStockDiveCard(), 300, true);
+      break;
+
+    case 'sip_calc':
+      await addMsg('user', 'SIP calculator dikhao');
+      showTyping(); await wait(500); hideTyping();
+      await addMsg('ai', 'SIP se chhoti-chhoti rakam bhi badi ho jaati hai. Dekho:');
+      await addRaw(buildSIPCard(), 300, true);
+      await wait(600);
+      await addRaw(`
+        <div class="chips">
+          <div class="chip" onclick="goToState('portfolio')">Mera Portfolio</div>
+          <div class="chip" onclick="goToState('stock_dive')">Stock Deep Dive</div>
+          <div class="chip" onclick="showStockDiveResult('gold_silver')">Sona-Chandi ka bhav</div>
+        </div>
+      `, 400);
+      break;
+  }
+}
+
+// === Build Market Summary Card ===
+function buildMarketSummaryCard() {
+  const ms = STOCKS_DATA.marketSummary;
+
+  const indicesHTML = ms.indices.map(idx => `
+    <div class="ms-index">
+      <div class="ms-index-name">${idx.name}</div>
+      <div class="ms-index-value">${idx.value}</div>
+      <div class="ms-index-change" style="color:${idx.up ? 'var(--success)' : 'var(--error)'}">${idx.change} (${idx.pct})</div>
+    </div>
+  `).join('');
+
+  const gainersHTML = ms.topGainers.map(g => `
+    <div>
+      <div class="ms-gl-row">
+        <div class="ms-gl-dot" style="background:var(--success)"></div>
+        <div class="ms-gl-name">${g.name}</div>
+        <div class="ms-gl-pct" style="color:var(--success)">${g.pct}</div>
+      </div>
+      <div class="ms-gl-reason">${g.reason}</div>
+    </div>
+  `).join('');
+
+  const losersHTML = ms.topLosers.map(l => `
+    <div>
+      <div class="ms-gl-row">
+        <div class="ms-gl-dot" style="background:var(--error)"></div>
+        <div class="ms-gl-name">${l.name}</div>
+        <div class="ms-gl-pct" style="color:var(--error)">${l.pct}</div>
+      </div>
+      <div class="ms-gl-reason">${l.reason}</div>
+    </div>
+  `).join('');
+
+  const sectorsHTML = ms.sectors.map(s => `
+    <div class="ms-sector-tag ${s.up ? 'ms-sector-up' : 'ms-sector-down'}">
+      ${s.up ? '▲' : '▼'} ${s.name} ${s.pct}
+    </div>
+  `).join('');
+
+  const fii = ms.fiiDii.fii;
+  const dii = ms.fiiDii.dii;
+
+  return `<div class="ms-card">
+    <div class="ms-mood ms-mood-${ms.mood}">
+      <div class="ms-mood-dot ms-mood-dot-${ms.mood}"></div>
+      <div>
+        <div class="ms-mood-text">${ms.moodLabel}</div>
+        <div class="ms-mood-detail">${ms.moodDetail}</div>
+      </div>
+    </div>
+
+    <div class="ms-indices">${indicesHTML}</div>
+
+    <div class="ms-section">
+      <div class="ms-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--success)"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6.01 4 4 6.3-6.29L22 12V6z"/></svg> Aaj ke sitare</div>
+      ${gainersHTML}
+    </div>
+
+    <div class="ms-section">
+      <div class="ms-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--error)"><path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6.01 4-4 6.3 6.29L22 12v6z"/></svg> Aaj gire</div>
+      ${losersHTML}
+    </div>
+
+    <div class="ms-section">
+      <div class="ms-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M2 20h20v2H2v-2zm2-2h2V8l4 2V6l4 2V2h6v16H4z"/></svg> Sectors</div>
+      <div class="ms-sectors">${sectorsHTML}</div>
+    </div>
+
+    <div class="ms-section">
+      <div class="ms-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg> FII / DII</div>
+      <div class="ms-fii-row">
+        <div class="ms-fii-card ${fii.sell ? 'ms-fii-sell' : 'ms-fii-buy'}">
+          <div class="ms-fii-label">Videshi (FII)</div>
+          <div class="ms-fii-who">${fii.action}</div>
+          <div class="ms-fii-amount" style="color:${fii.sell ? 'var(--error)' : 'var(--success)'}">${fii.amount}</div>
+        </div>
+        <div class="ms-fii-card ${dii.sell ? 'ms-fii-sell' : 'ms-fii-buy'}">
+          <div class="ms-fii-label">Desi (DII)</div>
+          <div class="ms-fii-who">${dii.action}</div>
+          <div class="ms-fii-amount" style="color:${dii.sell ? 'var(--error)' : 'var(--success)'}">${dii.amount}</div>
+        </div>
+      </div>
+      <div class="ms-gold-row">
+        <div class="ms-gold-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--secondary-50)"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="var(--white)" font-size="12" font-weight="700" font-family="JioType">₹</text></svg></div>
+        <div><div class="ms-gold-label">Sona</div></div>
+        <div class="ms-gold-price">${ms.gold}</div>
+        <div class="ms-gold-change">${ms.goldChange}</div>
+      </div>
+    </div>
+
+    <div class="ms-section" style="text-align:center">
+      <div class="tts-btn-group">
+        <button class="ms-listen-btn" onclick="playTTS('tts-ms', STOCKS_DATA.marketSummary.speakText)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          <span>Poora haal suniye — 30 sec</span>
+        </button>
+        <button class="tts-pause-btn" id="tts-ms-pause" disabled onclick="pauseTTS('tts-ms')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// === Build Time Machine Carousel ===
+function buildTimeMachineCarousel() {
+  const cards = STOCKS_DATA.timeMachine.map((s, i) => {
+    const cls = s.positive ? 'green' : 'red';
+    const arrow = s.positive ? '→' : '→';
+    const bars = [];
+    for (let j = 0; j < 12; j++) {
+      const h = s.positive
+        ? Math.floor(8 + (j / 11) * 38 + Math.random() * 6)
+        : Math.floor(38 - (j / 11) * 28 + Math.random() * 6);
+      bars.push(`<div class="tm-bar tm-bar-${cls}" style="height:${h}px;animation-delay:${j*0.06}s"></div>`);
+    }
+    return `<div class="tm-card tm-card-${cls}">
+      <div class="tm-stock-name">${s.name}</div>
+      <div class="tm-amount-row">
+        <span class="tm-amount-start">₹${s.invested}</span>
+        <span class="tm-arrow tm-arrow-${cls}">${arrow}</span>
+        <span class="tm-amount-end tm-amount-end-${cls}">₹${s.current}</span>
+      </div>
+      <div class="tm-pct tm-pct-${cls}">${s.positive ? '+' : ''}${s.pct}%</div>
+      <div class="tm-period">${s.period}</div>
+      <div class="tm-growth-bar">${bars.join('')}</div>
+    </div>`;
+  }).join('');
+
+  const dots = STOCKS_DATA.timeMachine.map((_, i) =>
+    `<div class="tm-dot ${i === 0 ? 'tm-dot-active' : ''}" id="tmDot${i}"></div>`
+  ).join('');
+
+  return `<div class="tm-carousel" id="tmCarousel" onscroll="updateTMDots()">${cards}</div>
+    <div class="tm-dots">${dots}</div>
+    <div class="tm-hint">← Swipe karke aur stocks dekho →</div>`;
+}
+
+function updateTMDots() {
+  const carousel = document.getElementById('tmCarousel');
+  if (!carousel) return;
+  const idx = Math.round(carousel.scrollLeft / 292);
+  STOCKS_DATA.timeMachine.forEach((_, i) => {
+    const dot = document.getElementById('tmDot' + i);
+    if (dot) { dot.className = 'tm-dot' + (i === idx ? ' tm-dot-active' : ''); }
+  });
+}
+
+// === Build Portfolio Card ===
+function buildPortfolioCard() {
+  const pf = STOCKS_DATA.portfolio;
+  const stockRows = pf.stocks.map((s, i) => `
+    <div class="pf-stock-row" onclick="openStockDetail(${i})">
+      <div class="pf-stock-indicator ${s.up ? 'pf-stock-indicator-up' : 'pf-stock-indicator-down'}"></div>
+      <div>
+        <div class="pf-stock-name">${s.name}</div>
+        <div class="pf-stock-summary">${s.summary}</div>
+      </div>
+      <div class="pf-stock-value">
+        <div class="pf-stock-amount">₹${s.current.toLocaleString()}</div>
+        <div class="pf-stock-change ${s.up ? 'pf-stock-change-up' : 'pf-stock-change-down'}">${s.change}</div>
+      </div>
+    </div>
+  `).join('');
+
+  return `<div class="portfolio-card">
+    <div class="pf-header">
+      <div class="pf-label">Amit ka Portfolio</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="pf-listen-btn" onclick="playTTS('tts-pf', STOCKS_DATA.portfolio.speakText)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          <span>Suniye</span>
+        </div>
+        <button class="pf-pause-btn" id="tts-pf-pause" disabled onclick="pauseTTS('tts-pf')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="pf-invested">Lagaya: ₹${pf.invested.toLocaleString()}</div>
+    <div class="pf-total-row">
+      <span class="pf-current">₹${pf.current.toLocaleString()}</span>
+    </div>
+    <div class="pf-gain">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+      +${pf.gainPct}% (₹${(pf.current - pf.invested).toLocaleString()} profit)
+    </div>
+    <div class="pf-stocks">${stockRows}</div>
+  </div>`;
+}
+
+// speakPortfolioSummary now handled via playTTS with STOCKS_DATA.portfolio.speakText
+
+function openStockDetail(idx) {
+  const s = STOCKS_DATA.portfolio.stocks[idx];
+  const d = s.detail;
+  openBottomSheet(`
+    <div class="bs-header">
+      <div class="bs-title">${s.name}</div>
+      <button class="bs-close" onclick="closeBottomSheet()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <div class="bs-stock-meta">
+      <div class="bs-stat-row"><span class="bs-stat-label">Aaj ka price</span><span class="bs-stat-value">₹${d.price}</span></div>
+      <div class="bs-stat-row"><span class="bs-stat-label">Aaj ka change</span><span class="bs-stat-value" style="color:${s.up ? 'var(--sparkle-50)' : 'var(--error)'}">${d.dayChange}</span></div>
+      <div class="bs-stat-row"><span class="bs-stat-label">Aapka investment</span><span class="bs-stat-value">₹${s.invested.toLocaleString()}</span></div>
+      <div class="bs-stat-row"><span class="bs-stat-label">Aaj ki value</span><span class="bs-stat-value">₹${s.current.toLocaleString()}</span></div>
+      <div class="bs-stat-row"><span class="bs-stat-label">P/E Ratio</span><span class="bs-stat-value">${d.pe}</span></div>
+      <div class="bs-stat-row"><span class="bs-stat-label">52W High / Low</span><span class="bs-stat-value">₹${d.weekHigh} / ₹${d.weekLow}</span></div>
+      <div class="bs-stat-row" style="border:none"><span class="bs-stat-label">Analyst Rating</span><span class="bs-stat-value">${d.analystRating}</span></div>
+    </div>
+    <div class="bs-btn-group">
+      <button class="bs-speak-btn" onclick="playTTS('tts-bs', STOCKS_DATA.portfolio.stocks[${idx}].speakText)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <span>Hindi mein suniye</span>
+      </button>
+      <button class="bs-pause-btn" id="tts-bs-pause" disabled onclick="pauseTTS('tts-bs')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+      </button>
+    </div>
+  `);
+}
+
+// speakStockDetail now handled via playTTS with STOCKS_DATA.portfolio.stocks[idx].speakText
+
+// === Build ₹100 Challenge Card ===
+function buildChallengeCard() {
+  return `<div class="challenge-card">
+    <div class="challenge-title">₹100 Challenge</div>
+    <div class="challenge-sub">Agar aaj ₹100 lagaana ho toh kahan?</div>
+    <div class="challenge-options">
+      <div class="challenge-opt" onclick="showChallengeResult('sbi')">
+        <div class="challenge-opt-icon challenge-opt-safe">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        </div>
+        <div class="challenge-opt-info">
+          <h4>SBI</h4>
+          <p>India ka sabse bada bank — safe choice</p>
+        </div>
+        <span class="challenge-risk-tag" style="background:var(--sparkle-20);color:var(--sparkle-50)">Safe</span>
+      </div>
+      <div class="challenge-opt" onclick="showChallengeResult('tata')">
+        <div class="challenge-opt-icon challenge-opt-medium">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+        </div>
+        <div class="challenge-opt-info">
+          <h4>Tata Motors</h4>
+          <p>EV mein leader — medium risk</p>
+        </div>
+        <span class="challenge-risk-tag" style="background:var(--secondary-20);color:var(--secondary-50)">Medium</span>
+      </div>
+      <div class="challenge-opt" onclick="showChallengeResult('zomato')">
+        <div class="challenge-opt-icon challenge-opt-high">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.06.5-9 4.76-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.06-4.09l-2.6-1.53C16.17 17.98 14.21 19 12 19z"/></svg>
+        </div>
+        <div class="challenge-opt-info">
+          <h4>Zomato</h4>
+          <p>High growth — zyada risk, zyada reward</p>
+        </div>
+        <span class="challenge-risk-tag" style="background:var(--primary-20);color:var(--primary-50)">High</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function showChallengeResult(stock) {
+  const data = STOCKS_DATA.challenge[stock];
+  const stockName = stock === 'sbi' ? 'SBI' : stock === 'tata' ? 'Tata Motors' : 'Zomato';
+
+  addMsg('user', `₹100 ${stockName} mein lagata hoon`).then(async () => {
+    showTyping(); await wait(800); hideTyping();
+    await addRaw(`
+      <div class="challenge-result">
+        <div style="font-size:14px;font-weight:700;color:var(--grey-100)">1 saal baad ₹100 ka kya hoga?</div>
+        <div style="font-size:13px;color:var(--text-low);margin-top:4px"><strong>${stockName}</strong> mein lagane par:</div>
+        <div class="cr-range-bar">
+          <div class="cr-range-fill" style="width:${data.fill}%;background:${data.color}"></div>
+        </div>
+        <div class="cr-range-labels">
+          <span class="cr-range-label" style="color:var(--error)">₹${data.low}</span>
+          <span class="cr-range-label" style="color:var(--sparkle-50)">₹${data.high}</span>
+        </div>
+        <div style="text-align:center;margin-top:12px">
+          <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--radius-pill);background:${data.riskBg};color:${data.riskColor}">${data.riskLabel}</span>
+        </div>
+        <div class="cr-disclaimer">Yeh estimate hai, guarantee nahi. Invest karne se pehle apna research zaroor karein.</div>
+        <div class="tts-btn-group">
+          <button class="cr-listen-btn" onclick="playTTS('tts-cr', STOCKS_DATA.challenge['${stock}'].speakText)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            <span>Hindi mein suniye</span>
+          </button>
+          <button class="tts-pause-btn" id="tts-cr-pause" disabled onclick="pauseTTS('tts-cr')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+          </button>
+        </div>
+      </div>
+    `, 200, true);
+
+    await wait(600);
+    await addRaw(`
+      <div class="chips">
+        <div class="chip" onclick="goToState('portfolio')">Mera Portfolio</div>
+        <div class="chip" onclick="goToState('stock_dive')">Stock Deep Dive</div>
+        <div class="chip" onclick="goToState('sip_calc')">SIP Calculator</div>
+      </div>
+    `, 400);
+  });
+}
+
+// === Build Chai pe Charcha Card ===
+function buildChaiCard() {
+  const bars = [];
+  for (let i = 0; i < 20; i++) {
+    bars.push(`<div class="chai-bar" style="animation-delay:${i * 0.08}s"></div>`);
+  }
+  return `<div class="chai-card">
+    <div class="chai-header">
+      <div class="chai-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M2 21h18v-2H2M20 8h-2V5h2m0-2H4v10a4 4 0 004 4h6a4 4 0 004-4v-3h2a2 2 0 002-2V5a2 2 0 00-2-2z"/></svg>
+      </div>
+      <div>
+        <div class="chai-title">Chai pe Charcha</div>
+        <div class="chai-sub">Aaj ka market — dost ki zubaani</div>
+      </div>
+    </div>
+    <div class="chai-waves chai-waves-paused" id="chaiWaves">${bars.join('')}</div>
+    <div class="chai-controls">
+      <span class="chai-time" id="chaiTime">0:00 / 2:00</span>
+      <div class="chai-play-btn" id="chaiPlayBtn" onclick="toggleChai()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white" id="chaiPlayIcon"><path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/></svg>
+      </div>
+      <span class="chai-time">Hindi</span>
+    </div>
+  </div>`;
+}
+
+let chaiTimerInterval = null;
+let chaiSeconds = 0;
+function toggleChai() {
+  if (chaiPlaying) {
+    stopCurrentAudio();
+    chaiPlaying = false;
+    document.getElementById('chaiWaves').classList.add('chai-waves-paused');
+    document.getElementById('chaiPlayIcon').innerHTML = '<path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/>';
+    if (chaiTimerInterval) { clearInterval(chaiTimerInterval); chaiTimerInterval = null; }
+  } else {
+    chaiPlaying = true;
+    chaiSeconds = 0;
+    document.getElementById('chaiWaves').classList.remove('chai-waves-paused');
+    document.getElementById('chaiPlayIcon').innerHTML = '<path d="M6 4h4v16H6zm8 0h4v16h-4z"/>';
+    chaiTimerInterval = setInterval(() => {
+      chaiSeconds++;
+      const m = Math.floor(chaiSeconds / 60);
+      const s = String(chaiSeconds % 60).padStart(2, '0');
+      const el = document.getElementById('chaiTime');
+      if (el) el.textContent = `${m}:${s} / 2:00`;
+    }, 1000);
+    elevenLabsTTS(STOCKS_DATA.chaiPeCharcha.speakText, () => {
+      chaiPlaying = false;
+      document.getElementById('chaiWaves')?.classList.add('chai-waves-paused');
+      document.getElementById('chaiPlayIcon').innerHTML = '<path d="M19.15 10.36l-10-7A2 2 0 008 3a1.88 1.88 0 00-.92.23A2 2 0 006 5v14a2 2 0 001.08 1.77c.282.154.599.233.92.23a2 2 0 001.15-.36l10-7a2 2 0 000-3.28z"/>';
+      if (chaiTimerInterval) { clearInterval(chaiTimerInterval); chaiTimerInterval = null; }
+    });
+  }
+}
+
+// === Build Stock Deep Dive Card ===
+function buildStockDiveCard() {
+  const opts = STOCKS_DATA.stockDive.options.map(o => `
+    <div class="sd-opt" onclick="showStockDiveResult('${o.id}')">
+      <div class="sd-opt-icon">${o.icon}</div>
+      <div class="sd-opt-info">
+        <h4>${o.name}</h4>
+      </div>
+      <span class="sd-opt-tag" style="background:${o.tagBg};color:${o.tagColor}">${o.tag}</span>
+    </div>
+  `).join('');
+
+  return `<div class="sd-card">
+    <div class="sd-title">Stock Deep Dive</div>
+    <div class="sd-sub">Kisi bhi stock ya sector ki sachhai — simple Hindi mein</div>
+    <div class="sd-options">${opts}</div>
+  </div>`;
+}
+
+function showStockDiveResult(id) {
+  const data = STOCKS_DATA.stockDive.results[id];
+  const opt = STOCKS_DATA.stockDive.options.find(o => o.id === id);
+
+  addMsg('user', `${opt.name} ke baare mein batao`).then(async () => {
+    showTyping(); await wait(800); hideTyping();
+    await addRaw(`
+      <div class="sd-result">
+        <div class="sd-result-header">
+          <div class="sd-result-title">${data.title}</div>
+          <div class="sd-result-price">
+            ${data.price}
+            <div class="sd-result-change" style="color:${data.changeUp ? 'var(--sparkle-50)' : 'var(--error)'}">${data.change}</div>
+          </div>
+        </div>
+        <div class="sd-meta">
+          <div class="sd-meta-item">${id === 'gold_silver' ? 'Silver' : 'P/E Ratio'}<span>${data.pe}</span></div>
+          <div class="sd-meta-item">52W Range<span>${data.weekRange}</span></div>
+        </div>
+        <div class="sd-section sd-section-green">
+          <div class="sd-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--success)" style="vertical-align:middle"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg> Achha kya hai</div>
+          <div class="sd-section-text">${data.strength}</div>
+        </div>
+        <div class="sd-section sd-section-red">
+          <div class="sd-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--warning)" style="vertical-align:middle"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> Dhyan rakhein</div>
+          <div class="sd-section-text">${data.risk}</div>
+        </div>
+        <div class="sd-verdict">
+          <div class="sd-verdict-text" style="color:${data.verdictColor}">${data.verdict}</div>
+        </div>
+        <div class="tts-btn-group">
+          <button class="sd-listen-btn" onclick="playTTS('tts-sd', STOCKS_DATA.stockDive.results['${id}'].speakText)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            <span>Hindi mein suniye</span>
+          </button>
+          <button class="tts-pause-btn" id="tts-sd-pause" disabled onclick="pauseTTS('tts-sd')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+          </button>
+        </div>
+      </div>
+    `, 200, true);
+
+    await wait(600);
+    // Suggest prompts — include gold/silver if they haven't picked it
+    const goldChip = id !== 'gold_silver' ? '<div class="chip" onclick="showStockDiveResult(\'gold_silver\')">Sona-Chandi ka bhav</div>' : '';
+    await addRaw(`
+      <div class="chips">
+        ${goldChip}
+        <div class="chip" onclick="goToState('portfolio')">Mera Portfolio</div>
+        <div class="chip" onclick="goToState('sip_calc')">SIP Calculator</div>
+      </div>
+    `, 400);
+  });
+}
+
+// === Build SIP Calculator Card ===
+function buildSIPCard() {
+  return `<div class="sip-card">
+    <div class="sip-title">SIP Calculator</div>
+    <div class="sip-sub">Chhoti rakam, bada sapna — dekhiye kaise badhta hai</div>
+    <div class="sip-input-row">
+      <div class="sip-input-group">
+        <div class="sip-input-label">Har mahine (₹)</div>
+        <input class="sip-input" type="number" id="sipAmount" value="500" min="100" step="100">
+      </div>
+      <div class="sip-input-group">
+        <div class="sip-input-label">Kitne saal</div>
+        <input class="sip-input" type="number" id="sipYears" value="3" min="1" max="30">
+      </div>
+      <div class="sip-input-group">
+        <div class="sip-input-label">Return (%)</div>
+        <input class="sip-input" type="number" id="sipReturn" value="12" min="1" max="30">
+      </div>
+    </div>
+    <button class="sip-calc-btn" onclick="calculateSIP()"><span>Hisab lagao</span></button>
+    <div id="sipResult"></div>
+  </div>`;
+}
+
+function calculateSIP() {
+  const monthly = parseInt(document.getElementById('sipAmount').value) || 500;
+  const years = parseInt(document.getElementById('sipYears').value) || 3;
+  const rate = parseInt(document.getElementById('sipReturn').value) || 12;
+
+  const monthlyRate = rate / 12 / 100;
+  const months = years * 12;
+  const totalInvested = monthly * months;
+  const futureValue = Math.round(monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate));
+  const gain = futureValue - totalInvested;
+
+  // Build coin visualization
+  const coins = [];
+  const numCoins = Math.min(years * 4, 20);
+  for (let i = 0; i < numCoins; i++) {
+    const h = Math.floor(10 + (i / (numCoins - 1)) * 65);
+    coins.push(`<div class="sip-coin" style="height:${h}px;animation-delay:${i * 0.05}s"></div>`);
+  }
+
+  const resultEl = document.getElementById('sipResult');
+  window._lastSIPSpeak = 'अमित भाई, अगर आप हर महीने ' + monthly + ' रुपये ' + years + ' साल तक लगाते हैं, तो कुल ' + totalInvested + ' रुपये लगेंगे। बारह प्रतिशत रिटर्न पर यह बढ़कर लगभग ' + futureValue + ' रुपये हो सकते हैं। यानी ' + gain + ' रुपये का फायदा।';
+
+  resultEl.innerHTML = `
+    <div class="sip-coins">${coins.join('')}</div>
+    <div class="sip-result">
+      <div class="sip-result-label">₹${monthly}/mahina × ${years} saal = </div>
+      <div class="sip-result-amount">₹${futureValue.toLocaleString()}</div>
+      <div class="sip-result-gain">Lagaya: ₹${totalInvested.toLocaleString()} | Profit: ₹${gain.toLocaleString()}</div>
+    </div>
+    <div class="tts-btn-group">
+      <button class="sip-listen-btn" onclick="playTTS('tts-sip', window._lastSIPSpeak)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <span>Suniye</span>
+      </button>
+      <button class="tts-pause-btn" id="tts-sip-pause" disabled onclick="pauseTTS('tts-sip')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--grey-100)"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+      </button>
+    </div>
+  `;
+  scrollToBottom();
+}
+
+// === Build Voice Query Card ===
+function buildVoiceQueryCard() {
+  return `<div class="voice-query-card">
+    <div class="vq-title">Kuch bhi poochho stocks ke baare mein</div>
+    <div class="vq-sub">Hindi mein bolo — jawaab bhi Hindi mein milega</div>
+    <div class="vq-mic-btn" id="vqMicBtn" onclick="simulateVoiceQuery()">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z"/></svg>
+    </div>
+    <div class="vq-hint">Boliye: "Reliance ka kya scene hai?"</div>
+  </div>`;
+}
+
+async function simulateVoiceQuery() {
+  const micBtn = document.getElementById('vqMicBtn');
+  if (micBtn) micBtn.classList.add('listening');
+  showToast('Sun raha hoon...');
+  await wait(2000);
+  if (micBtn) micBtn.classList.remove('listening');
+
+  await addMsg('user', 'Reliance ka kya scene hai?');
+  showTyping(); await wait(1000); hideTyping();
+
+  const waveBars = [];
+  for (let i = 0; i < 16; i++) {
+    waveBars.push(`<div class="vr-bar" style="animation-delay:${i * 0.06}s"></div>`);
+  }
+
+  await addRaw(`
+    <div class="voice-resp-card">
+      <div class="vr-header">
+        <div class="vr-avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+        </div>
+        <span class="vr-name">Market Pulse AI</span>
+      </div>
+      <div class="vr-text">
+        <strong>Reliance Industries</strong> aaj <strong>₹2,450</strong> par hai, <strong>1.2% upar</strong>. Jio ka subscriber count record level par hai. Retail segment ka margin thoda kam hua hai. Overall, <strong>12 analysts mein se 9 ka kehna hai 'Buy'</strong>. Lekin Amit bhai, yeh sirf jaankari hai — invest karne se pehle apna research zaroor karein.
+      </div>
+      <div class="vr-waves" id="vrWaves">${waveBars.join('')}</div>
+    </div>
+  `, 200, true);
+
+  const relianceSpeakText = 'रिलायंस इंडस्ट्रीज़ आज चौबीस सौ पचास रुपये पर है, एक पॉइंट दो प्रतिशत ऊपर। जियो का सब्सक्राइबर काउंट रिकॉर्ड लेवल पर है। रिटेल सेगमेंट का मार्जिन थोड़ा कम हुआ है। ओवरऑल, बारह एनालिस्ट्स में से नौ का कहना है बाय। लेकिन अमित भाई, यह सिर्फ जानकारी है — इन्वेस्ट करने से पहले अपना रिसर्च ज़रूर करें।';
+  elevenLabsTTS(relianceSpeakText, () => {
+    const w = document.getElementById('vrWaves');
+    if (w) w.classList.add('vr-waves-done');
+  });
+
+  await wait(800);
+  await addRaw(`
+    <div class="chips">
+      <div class="chip" onclick="goToState('portfolio')">Mera Portfolio</div>
+      <div class="chip" onclick="goToState('stock_dive')">Stock Deep Dive</div>
+      <div class="chip" onclick="showStockDiveResult('gold_silver')">Sona-Chandi ka bhav</div>
+    </div>
+  `, 400);
+}
+
+// === Input Handlers ===
+function handleTextInput() {
+  const input = document.getElementById('inputField');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  const lowerText = text.toLowerCase();
+  if (lowerText.includes('bazaar') || lowerText.includes('market') || lowerText.includes('sensex') || lowerText.includes('nifty') || lowerText.includes('aaj ka')) {
+    goToState('market_summary');
+  } else if (lowerText.includes('reliance') || lowerText.includes('scene') || lowerText.includes('kya')) {
+    addMsg('user', text).then(() => simulateReliance());
+  } else if (lowerText.includes('portfolio') || lowerText.includes('mera')) {
+    goToState('portfolio');
+  } else if (lowerText.includes('sip') || lowerText.includes('calculator')) {
+    goToState('sip_calc');
+  } else if (lowerText.includes('chai') || lowerText.includes('charcha')) {
+    goToState('chai_pe_charcha');
+  } else if (lowerText.includes('100') || lowerText.includes('challenge')) {
+    goToState('challenge');
+  } else if (lowerText.includes('gold') || lowerText.includes('sona') || lowerText.includes('chandi') || lowerText.includes('silver')) {
+    addMsg('user', text).then(() => showStockDiveResult('gold_silver'));
+  } else if (lowerText.includes('sector') || lowerText.includes('deep dive') || lowerText.includes('banking') || lowerText.includes('it sector')) {
+    goToState('stock_dive');
+  } else {
+    addMsg('user', text).then(async () => {
+      showTyping(); await wait(600); hideTyping();
+      await addMsg('ai', 'Amit bhai, iske baare mein abhi jaankari nahi hai. Yeh try karo:');
+      await addRaw(`
+        <div class="chips">
+          <div class="chip" onclick="goToState('stock_dive')">Stock Deep Dive</div>
+          <div class="chip" onclick="goToState('portfolio')">Mera Portfolio</div>
+          <div class="chip" onclick="goToState('chai_pe_charcha')">Chai pe Charcha</div>
+        </div>
+      `, 200);
+    });
+  }
+}
+
+async function simulateReliance() {
+  showTyping(); await wait(1000); hideTyping();
+  const waveBars = [];
+  for (let i = 0; i < 16; i++) {
+    waveBars.push(`<div class="vr-bar" style="animation-delay:${i * 0.06}s"></div>`);
+  }
+  await addRaw(`
+    <div class="voice-resp-card">
+      <div class="vr-header">
+        <div class="vr-avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+        </div>
+        <span class="vr-name">Market Pulse AI</span>
+      </div>
+      <div class="vr-text">
+        <strong>Reliance Industries</strong> aaj <strong>₹2,450</strong> par hai, <strong>1.2% upar</strong>. Jio ka subscriber count record level par hai. Retail segment ka margin thoda kam hua hai. <strong>12 analysts mein se 9</strong> ka kehna hai 'Buy'.
+      </div>
+      <div class="vr-waves" id="vrWaves2">${waveBars.join('')}</div>
+    </div>
+  `, 200, true);
+
+  const relianceSpeak = 'रिलायंस इंडस्ट्रीज़ आज चौबीस सौ पचास रुपये पर है, एक पॉइंट दो प्रतिशत ऊपर। जियो का सब्सक्राइबर काउंट रिकॉर्ड लेवल पर है। बारह एनालिस्ट्स में से नौ का कहना है बाय।';
+  elevenLabsTTS(relianceSpeak, () => {
+    const w = document.getElementById('vrWaves2');
+    if (w) w.classList.add('vr-waves-done');
+  });
+}
+
+function handleVoiceInput() {
+  simulateVoiceQuery();
+}
+
+// === Start ===
+goToState('welcome');
+</script>
+</body>
+</html>

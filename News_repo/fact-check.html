@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fact-Check Shield - JioBharatIQ</title>
+<!-- jbiq:v3.5.6 -->
+<style>
+@font-face { font-family: 'JioType'; font-weight: 400; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 500; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 700; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 900; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+:root {
+  --primary-20: #e8e8fc;
+  --primary-30: #9999ff;
+  --primary-50: #3535f3;
+  --primary-60: #000093;
+  --secondary-20: #fef7e9;
+  --secondary-40: #ffd947;
+  --secondary-50: #f7ab20;
+  --sparkle-20: #e8faf7;
+  --sparkle-50: #1eccb0;
+  --error: #fa2f40;
+  --warning: #f06d0f;
+  --success: #25ab21;
+  --grey-100: #141414;
+  --grey-80: rgba(0,0,0,0.66);
+  --grey-60: #b5b5b5;
+  --grey-40: #e0e0e0;
+  --grey-20: #f5f5f5;
+  --surface-ghost: #eeeeef;
+  --surface-ghost-icon: #e7e9ff;
+  --surface-bold: #3900ad;
+  --white: #ffffff;
+  --stroke-subtle: rgba(36,38,43,0.12);
+  --text-low: rgba(25,27,30,0.65);
+  --text-disabled: rgba(25,27,30,0.38);
+  --icon-medium: #170054;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'JioType'; background: var(--white); display: flex; flex-direction: column; }
+
+.phone-frame { width: 100%; height: 100%; background: var(--white); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+
+/* ============== APP HEADER ============== */
+.app-header {
+  height: 56px; padding: 0 12px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--stroke-subtle); background: var(--white);
+  position: relative; z-index: 80; flex-shrink: 0;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.back-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; border-radius: 50%; text-decoration: none; }
+.back-btn:active { background: var(--surface-ghost); }
+.back-btn svg { width: 24px; height: 24px; fill: var(--grey-100); }
+.header-title-block { display: flex; flex-direction: column; }
+.header-title { font-size: 16px; font-weight: 500; color: var(--grey-100); line-height: 1.2; }
+.header-domain { font-size: 12px; color: var(--grey-80); line-height: 1.3; }
+
+/* ============== CHAT AREA ============== */
+.chat-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.chat-area {
+  flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 8px;
+  display: flex; flex-direction: column; gap: 12px;
+  scroll-behavior: smooth; background: var(--white);
+}
+.chat-area::-webkit-scrollbar { width: 0; }
+
+.msg { max-width: 88%; animation: msgIn 0.35s ease-out; }
+.msg-ai { align-self: flex-start; }
+.msg-user { align-self: flex-end; }
+.msg-full { max-width: 100%; width: 100%; }
+
+.bubble { padding: 12px 16px; font-size: 14px; line-height: 1.5; color: var(--grey-100); word-wrap: break-word; }
+.bubble-ai { background: var(--surface-ghost); border-radius: var(--radius-xs) var(--radius-lg) var(--radius-lg) var(--radius-lg); }
+.bubble-user { background: var(--primary-50); color: var(--white); border-radius: var(--radius-lg) var(--radius-xs) var(--radius-lg) var(--radius-lg); }
+
+/* ============== INPUT WIDGET ============== */
+.input-widget { padding: 2px 12px 16px; background: var(--white); position: relative; z-index: 80; flex-shrink: 0; }
+.input-field-wrap {
+  background: var(--surface-ghost); border-radius: var(--radius-xl); padding: 6px;
+  display: flex; flex-direction: column;
+}
+.input-text-area { padding: 10px 8px; display: flex; align-items: center; }
+.input-text-area input {
+  font-family: 'JioType'; font-size: 14px; font-weight: 400; color: var(--grey-100);
+  background: transparent; border: none; outline: none; width: 100%; line-height: 1.3;
+}
+.input-text-area input::placeholder { color: var(--grey-60); opacity: 0.65; }
+.input-actions { display: flex; justify-content: space-between; align-items: center; height: 43px; }
+.input-left-actions { display: flex; gap: 2px; }
+.input-icon-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-pill);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-ghost-icon); border: none; cursor: pointer;
+}
+.input-icon-btn:active { opacity: 0.7; }
+.input-icon-btn svg { width: 20px; height: 20px; }
+.speak-btn {
+  background: var(--surface-bold); border: none; border-radius: var(--radius-pill);
+  padding: 10px 20px; display: flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.speak-btn:active { opacity: 0.85; }
+.speak-btn svg { width: 18px; height: 18px; }
+.speak-btn span { font-family: 'JioType'; font-weight: 700; font-size: 14px; color: var(--white); line-height: 1; }
+
+/* ============== TYPING INDICATOR ============== */
+.typing { display: flex; gap: 4px; padding: 12px 16px; }
+.typing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--grey-60); animation: typingAnim 1.2s ease-in-out infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ============== INPUT METHOD CARDS ============== */
+.method-card {
+  padding: 14px 16px; border-radius: var(--radius-lg); background: var(--white);
+  border: 1.5px solid var(--grey-40); cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: flex-start; gap: 12px; margin-top: 8px;
+}
+.method-card:hover, .method-card:active { border-color: var(--primary-50); background: var(--primary-20); }
+.method-card-disabled { opacity: 0.38; pointer-events: none; }
+.method-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-sm); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.method-card h4 { font-size: 14px; font-weight: 700; color: var(--grey-100); }
+.method-card p { font-size: 12px; color: var(--grey-80); margin-top: 2px; line-height: 1.4; }
+.method-tag {
+  display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; padding: 2px 8px; border-radius: var(--radius-pill); margin-top: 4px;
+}
+
+/* ============== FORWARDED MESSAGE CARD ============== */
+.fwd-card {
+  background: var(--grey-20); border-radius: var(--radius-md); padding: 12px 14px;
+  border-left: 3px solid var(--warning); margin-top: 8px;
+}
+.fwd-header {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+}
+.fwd-fwd-icon { font-size: 11px; font-weight: 700; color: var(--grey-80); display: flex; align-items: center; gap: 4px; }
+.fwd-body { font-size: 13px; line-height: 1.5; color: var(--grey-100); }
+.fwd-meta { font-size: 11px; color: var(--grey-60); margin-top: 8px; display: flex; align-items: center; gap: 6px; }
+
+/* ============== VERIFICATION PROGRESS ============== */
+.verify-card {
+  background: var(--white); border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-lg); padding: 16px; margin-top: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.verify-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.verify-shield {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.verify-title { font-size: 14px; font-weight: 700; color: var(--grey-100); }
+.verify-subtitle { font-size: 12px; color: var(--text-low); }
+
+.verify-steps { display: flex; flex-direction: column; gap: 10px; }
+.verify-step {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  border-radius: var(--radius-sm); background: var(--grey-20);
+  transition: all 0.3s;
+}
+.verify-step-active { background: var(--primary-20); }
+.verify-step-done { background: var(--sparkle-20); }
+.verify-step-icon {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.verify-step-text { font-size: 13px; font-weight: 500; color: var(--grey-100); }
+.verify-step-text-sub { font-size: 11px; color: var(--text-low); }
+
+/* ============== VERDICT CARD ============== */
+.verdict-card {
+  border-radius: var(--radius-lg); overflow: hidden; margin-top: 8px;
+  border: 1px solid var(--stroke-subtle); box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.verdict-banner {
+  padding: 16px 16px 14px; display: flex; align-items: center; gap: 12px;
+}
+.verdict-banner-false { background: linear-gradient(135deg, var(--error) 0%, var(--primary-60) 100%); }
+.verdict-banner-true { background: linear-gradient(135deg, var(--success) 0%, var(--sparkle-50) 100%); }
+.verdict-badge {
+  font-size: 22px; font-weight: 900; color: var(--white); letter-spacing: -0.5px;
+}
+.verdict-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
+.verdict-shield-icon {
+  width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;
+}
+
+.verdict-body { padding: 14px 16px; background: var(--white); display: flex; flex-direction: column; gap: 12px; }
+
+.verdict-source {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  border-radius: var(--radius-sm); background: var(--grey-20);
+}
+.verdict-source-icon {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--primary-50);
+}
+.verdict-source-text { font-size: 12px; font-weight: 700; color: var(--grey-100); }
+.verdict-source-sub { font-size: 11px; color: var(--text-low); }
+
+.verdict-explain { font-size: 14px; line-height: 1.6; color: var(--grey-100); }
+.verdict-explain strong { font-weight: 700; }
+
+.verdict-first-seen {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+  border-radius: var(--radius-pill); background: rgba(240,109,15,0.1);
+  font-size: 11px; font-weight: 700; color: var(--warning);
+}
+
+.verdict-footer {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 12px; background: var(--grey-20); border-radius: var(--radius-sm);
+}
+.verdict-footer-logo {
+  width: 16px; height: 16px; border-radius: var(--radius-xs);
+  background: var(--primary-50); display: flex; align-items: center; justify-content: center;
+}
+.verdict-footer-text { font-size: 11px; font-weight: 700; color: var(--grey-80); }
+
+/* ============== CORRECTION CTA ============== */
+.correction-prompt {
+  background: var(--sparkle-20); border-radius: var(--radius-md); padding: 14px 16px;
+  border: 1px solid rgba(30,204,176,0.2); margin-top: 8px;
+}
+.correction-prompt-text { font-size: 14px; font-weight: 500; color: var(--grey-100); line-height: 1.5; }
+.correction-btns { display: flex; gap: 8px; margin-top: 12px; }
+.correction-btn-yes {
+  background: var(--primary-50); color: var(--white); border: none;
+  border-radius: var(--radius-pill); padding: 10px 20px;
+  font-family: 'JioType'; font-size: 14px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.correction-btn-yes:active { opacity: 0.85; }
+.correction-btn-no {
+  background: var(--white); color: var(--grey-100); border: 1.5px solid var(--grey-40);
+  border-radius: var(--radius-pill); padding: 10px 20px;
+  font-family: 'JioType'; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.correction-btn-no:active { opacity: 0.85; }
+
+/* ============== SHARE/CORRECTION BOTTOM SHEET ============== */
+.share-overlay {
+  position: absolute; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.66); display: flex; align-items: flex-end;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.share-overlay.active { opacity: 1; pointer-events: auto; }
+
+.share-sheet {
+  width: 100%; background: var(--white); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 20px 16px 32px; transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  max-height: 92vh; overflow-y: auto;
+}
+.share-overlay.active .share-sheet { transform: translateY(0); }
+
+.sheet-handle { width: 40px; height: 4px; border-radius: var(--radius-pill); background: var(--grey-40); margin: 0 auto 16px; }
+.sheet-title { font-size: 18px; font-weight: 900; color: var(--grey-100); }
+.sheet-desc { font-size: 13px; font-weight: 500; color: var(--grey-80); margin-top: 4px; line-height: 1.5; }
+
+/* correction-preview replaced by share-image card */
+
+.sheet-groups { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.sheet-group {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  border-radius: var(--radius-md); background: var(--grey-20); cursor: pointer;
+  transition: all 0.2s; border: 1.5px solid transparent;
+}
+.sheet-group:hover { border-color: var(--primary-50); }
+.sheet-group-selected { border-color: var(--primary-50); background: var(--primary-20); }
+.sheet-group-sent { border-color: var(--sparkle-50); background: var(--sparkle-20); pointer-events: none; }
+.group-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: var(--white); flex-shrink: 0;
+}
+.group-name { font-size: 14px; font-weight: 700; color: var(--grey-100); }
+.group-members { font-size: 11px; color: var(--text-low); }
+.group-status {
+  margin-left: auto; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; gap: 4px;
+}
+.group-status-sent { color: var(--sparkle-50); }
+
+.sheet-send-btn {
+  width: 100%; margin-top: 16px; padding: 14px; border-radius: var(--radius-pill);
+  background: var(--primary-50); color: var(--white); border: none;
+  font-family: 'JioType'; font-size: 16px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.sheet-send-btn:active { opacity: 0.85; }
+.sheet-send-btn:disabled { opacity: 0.38; pointer-events: none; }
+
+.sheet-done-btn {
+  width: 100%; margin-top: 12px; padding: 14px; border-radius: var(--radius-pill);
+  background: var(--primary-50); color: var(--white); border: none;
+  font-family: 'JioType'; font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.sheet-done-btn:active { opacity: 0.85; }
+
+/* ============== VOICE INPUT OVERLAY ============== */
+.voice-overlay {
+  position: absolute; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.66); display: flex; align-items: flex-end;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.voice-overlay.active { opacity: 1; pointer-events: auto; }
+.voice-sheet {
+  width: 100%; background: var(--white); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 24px 16px 32px; text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.voice-overlay.active .voice-sheet { transform: translateY(0); }
+
+.voice-orb {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;
+  background: var(--primary-50); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 0 rgba(53,53,243,0.3);
+  animation: orbPulse 1.5s ease-in-out infinite;
+}
+@keyframes orbPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(53,53,243,0.3); } 50% { box-shadow: 0 0 0 16px rgba(53,53,243,0); } }
+.voice-orb-idle { animation: none; box-shadow: none; }
+
+.voice-waves { display: flex; gap: 3px; align-items: center; justify-content: center; height: 32px; margin: 12px 0; }
+.voice-wave-bar { width: 3px; border-radius: var(--radius-pill); background: var(--primary-50); animation: vWave 0.8s ease-in-out infinite; }
+@keyframes vWave { 0%,100% { height: 6px; opacity: 0.3; } 50% { height: 24px; opacity: 1; } }
+.voice-waves-idle .voice-wave-bar { animation: none; height: 4px; opacity: 0.2; }
+
+.voice-transcript { font-size: 16px; font-weight: 500; color: var(--grey-100); min-height: 24px; margin-top: 8px; }
+.voice-hint { font-size: 12px; color: var(--text-low); margin-top: 8px; }
+.voice-cancel-btn {
+  margin-top: 16px; padding: 10px 24px; border-radius: var(--radius-pill);
+  background: var(--surface-ghost); border: none; font-family: 'JioType';
+  font-size: 14px; font-weight: 700; color: var(--grey-100); cursor: pointer;
+}
+
+/* ============== SKELETON ============== */
+.skel-block {
+  background: linear-gradient(90deg, var(--grey-20) 25%, var(--grey-40) 50%, var(--grey-20) 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius-sm);
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ============== TOAST ============== */
+.jds-toast {
+  position: fixed; bottom: 80px; left: 16px; right: 16px; max-width: 420px; margin: 0 auto;
+  padding: 12px 16px; border-radius: var(--radius-md);
+  background: var(--grey-100); color: var(--white);
+  font-size: 14px; font-weight: 700; z-index: 300;
+  display: flex; align-items: center; gap: 8px;
+  transform: translateY(100px); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.jds-toast.show { transform: translateY(0); opacity: 1; }
+
+/* ============== SUMMARY STATS ============== */
+.summary-card-wrap { background: var(--surface-ghost); border-radius: var(--radius-lg); padding: 16px; margin-top: 4px; }
+.summary-card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-50); margin-bottom: 10px; }
+.summary-stats-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.summary-stat-box { flex: 1; min-width: 80px; background: var(--white); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+.summary-stat-num { font-size: 22px; font-weight: 900; }
+.summary-stat-label { font-size: 11px; font-weight: 500; color: var(--grey-80); }
+
+/* ============== SHAREABLE IMAGE CARD ============== */
+.share-image {
+  border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12); margin-top: 14px;
+}
+.share-img-header {
+  background: linear-gradient(135deg, var(--error) 0%, #8b0016 100%);
+  padding: 18px 20px 16px; text-align: center; position: relative;
+}
+.share-img-alert-tag {
+  display: inline-block; background: rgba(255,255,255,0.18); border-radius: var(--radius-pill);
+  padding: 3px 12px; font-size: 9px; font-weight: 900; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--white); margin-bottom: 10px;
+}
+.share-img-shield {
+  width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;
+}
+.share-img-verdict { font-size: 28px; font-weight: 900; color: var(--white); letter-spacing: -0.5px; }
+.share-img-verdict-sub { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.65); margin-top: 2px; }
+
+.share-img-body { padding: 16px 18px; background: var(--white); }
+.share-img-claim {
+  background: #fff5f5; border: 1px solid rgba(250,47,64,0.15);
+  border-radius: var(--radius-md); padding: 12px 14px 12px 18px;
+  font-size: 13px; line-height: 1.55; color: var(--grey-100);
+  position: relative; margin-bottom: 14px;
+}
+.share-img-claim::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--error); border-radius: var(--radius-xs) 0 0 var(--radius-xs);
+}
+.share-img-claim-label {
+  font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--error); margin-bottom: 4px;
+}
+
+.share-img-reality { margin-bottom: 14px; }
+.share-img-reality-divider {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.share-img-reality-divider::before, .share-img-reality-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--grey-40);
+}
+.share-img-reality-divider span {
+  font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--success); white-space: nowrap;
+}
+.share-img-reality-text { font-size: 13px; line-height: 1.55; color: var(--grey-100); }
+
+.share-img-sources { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.share-img-source-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  background: var(--sparkle-20); font-size: 10px; font-weight: 700; color: var(--sparkle-50);
+}
+.share-img-first-seen {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  background: rgba(240,109,15,0.1); font-size: 10px; font-weight: 700; color: var(--warning);
+}
+
+.share-img-footer {
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-60) 100%);
+  padding: 10px 18px; display: flex; align-items: center; justify-content: space-between;
+}
+.share-img-brand { display: flex; align-items: center; gap: 8px; }
+.share-img-brand-icon {
+  width: 24px; height: 24px; background: rgba(255,255,255,0.2);
+  border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center;
+}
+.share-img-brand-name { font-size: 11px; font-weight: 900; color: var(--white); }
+.share-img-brand-sub { font-size: 9px; color: rgba(255,255,255,0.65); }
+.share-img-tagline {
+  font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.8);
+  text-align: right; line-height: 1.3;
+}
+
+/* ============== ANIMATIONS ============== */
+@keyframes msgIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes typingAnim { 0%,100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+@keyframes stepSlide { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+.fade-in { animation: msgIn 0.4s ease-out; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <!-- App Header -->
+  <div class="app-header">
+    <div class="header-left">
+      <a href="https://sunit1986.github.io/design-prototypes/news-tools.html" class="back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+      </a>
+      <div class="header-title-block">
+        <span class="header-title">Fact-Check Shield</span>
+        <span class="header-domain">JioBharatIQ Verify</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat area -->
+  <div class="chat-body">
+    <div class="chat-area" id="chatArea"></div>
+    <div class="input-widget">
+      <div class="input-field-wrap">
+        <div class="input-text-area">
+          <input type="text" id="inputField" placeholder="Paste link ya message yahaan..." readonly>
+        </div>
+        <div class="input-actions">
+          <div class="input-left-actions">
+            <button class="input-icon-btn">
+              <svg viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M20 11h-7V4a1 1 0 00-2 0v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2z"/></svg>
+            </button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="input-icon-btn" onclick="openVoiceInput()">
+              <svg viewBox="0 0 24 24" fill="var(--icon-medium)"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1zm-3 10H9a1 1 0 000 2h6a1 1 0 000-2z"/></svg>
+            </button>
+            <button class="speak-btn" onclick="openVoiceInput()">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1z"/></svg>
+              <span>Speak</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice Input Overlay -->
+  <div class="voice-overlay" id="voiceOverlay">
+    <div class="voice-sheet">
+      <div class="voice-orb" id="voiceOrb">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1z"/></svg>
+      </div>
+      <div class="voice-waves" id="voiceWaves">
+        <div class="voice-wave-bar" style="animation-delay:0s"></div>
+        <div class="voice-wave-bar" style="animation-delay:0.1s"></div>
+        <div class="voice-wave-bar" style="animation-delay:0.2s"></div>
+        <div class="voice-wave-bar" style="animation-delay:0.3s"></div>
+        <div class="voice-wave-bar" style="animation-delay:0.4s"></div>
+        <div class="voice-wave-bar" style="animation-delay:0.5s"></div>
+        <div class="voice-wave-bar" style="animation-delay:0.6s"></div>
+        <div class="voice-wave-bar" style="animation-delay:0.7s"></div>
+        <div class="voice-wave-bar" style="animation-delay:0.8s"></div>
+      </div>
+      <div class="voice-transcript" id="voiceTranscript">Sun raha hoon...</div>
+      <div class="voice-hint" id="voiceHint">Boliye kya verify karna hai</div>
+      <button class="voice-cancel-btn" onclick="closeVoiceInput()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Correction Share Bottom Sheet -->
+  <div class="share-overlay" id="shareOverlay">
+    <div class="share-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title" id="sheetTitle">Correction bhejein</div>
+      <div class="sheet-desc" id="sheetDesc">Yeh shareable card apne groups mein bhejein &mdash; sabko sach pata chalega:</div>
+
+      <div class="share-image">
+        <div class="share-img-header">
+          <div class="share-img-alert-tag">Fake News Alert</div>
+          <div class="share-img-shield">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </div>
+          <div class="share-img-verdict">FALSE</div>
+          <div class="share-img-verdict-sub">Verified &bull; Fact-Check Shield</div>
+        </div>
+        <div class="share-img-body">
+          <div class="share-img-claim">
+            <div class="share-img-claim-label">Fake Claim</div>
+            "RBI ne naya rule nikala &mdash; 1 January se &#8377;2000 ke note band honge. Jaldi bank jaao!"
+          </div>
+          <div class="share-img-reality">
+            <div class="share-img-reality-divider"><span>Sachai</span></div>
+            <div class="share-img-reality-text">RBI ne aisa koi notification jaari nahi kiya hai. &#8377;2000 ke note band hone ki koi official announcement nahi hui hai.</div>
+          </div>
+          <div class="share-img-sources">
+            <span class="share-img-source-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--sparkle-50)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              Vishvas News
+            </span>
+            <span class="share-img-source-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--sparkle-50)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              PIB Fact Check
+            </span>
+          </div>
+          <div class="share-img-first-seen">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--warning)"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+            Pehli baar viral: October 2023
+          </div>
+        </div>
+        <div class="share-img-footer">
+          <div class="share-img-brand">
+            <div class="share-img-brand-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            </div>
+            <div>
+              <div class="share-img-brand-name">JioBharatIQ</div>
+              <div class="share-img-brand-sub">Fact-Check Shield</div>
+            </div>
+          </div>
+          <div class="share-img-tagline">Pehle Verify,<br>Phir Share</div>
+        </div>
+      </div>
+
+      <div class="sheet-groups" id="sheetGroups">
+        <div class="sheet-group" onclick="toggleGroup(this)" data-name="Sharma Parivaar">
+          <div class="group-avatar" style="background:var(--success)">S</div>
+          <div>
+            <div class="group-name">Sharma Parivaar</div>
+            <div class="group-members">32 members</div>
+          </div>
+          <div class="group-status" id="group0Status"></div>
+        </div>
+        <div class="sheet-group" onclick="toggleGroup(this)" data-name="Retired Officers">
+          <div class="group-avatar" style="background:var(--primary-50)">R</div>
+          <div>
+            <div class="group-name">Retired Officers</div>
+            <div class="group-members">18 members</div>
+          </div>
+          <div class="group-status" id="group1Status"></div>
+        </div>
+        <div class="sheet-group" onclick="toggleGroup(this)" data-name="Colony WhatsApp">
+          <div class="group-avatar" style="background:var(--secondary-50)">C</div>
+          <div>
+            <div class="group-name">Colony WhatsApp</div>
+            <div class="group-members">45 members</div>
+          </div>
+          <div class="group-status" id="group2Status"></div>
+        </div>
+      </div>
+
+      <button class="sheet-send-btn" id="sheetSendBtn" disabled onclick="sendCorrections()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        Correction bhejein
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="jds-toast" id="toast"></div>
+</div>
+
+<script>
+// ============== ELEVENLABS TTS ==============
+const ELEVENLABS_API_KEY = 'sk_86a2daf2318ba84afa5190ff9a2c09fcc9e7f9dafea1fe79';
+const VOICE_RAJU = 'zT03pEAEi0VHKciJODfn';
+const ttsCache = new Map();
+let currentAudio = null;
+let isSpeaking = false;
+
+async function elevenLabsTTS(text, onended = null) {
+  const cacheKey = text + '|' + VOICE_RAJU;
+  if (ttsCache.has(cacheKey)) { playAudio(ttsCache.get(cacheKey), onended); return; }
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_RAJU}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVENLABS_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.65, similarity_boost: 0.8, style: 0.2, use_speaker_boost: true }
+      })
+    });
+    if (!res.ok) throw new Error('API ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    ttsCache.set(cacheKey, url);
+    playAudio(url, onended);
+  } catch(e) { console.warn('TTS failed:', e); if (onended) setTimeout(onended, 2000); }
+}
+
+function playAudio(url, onended) {
+  stopAudio();
+  currentAudio = new Audio(url);
+  isSpeaking = true;
+  currentAudio.onended = () => { isSpeaking = false; if (onended) onended(); };
+  currentAudio.play().catch(() => { isSpeaking = false; if (onended) setTimeout(onended, 300); });
+}
+function stopAudio() { if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; isSpeaking = false; } }
+
+// Pre-cache critical TTS
+function preCacheTTS(text) {
+  const k = text + '|' + VOICE_RAJU;
+  if (ttsCache.has(k)) return;
+  fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_RAJU}`, {
+    method: 'POST',
+    headers: { 'xi-api-key': ELEVENLABS_API_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2',
+      voice_settings: { stability: 0.65, similarity_boost: 0.8, style: 0.2, use_speaker_boost: true } })
+  }).then(r => r.blob()).then(b => { ttsCache.set(k, URL.createObjectURL(b)); }).catch(() => {});
+}
+
+// ============== TTS CONTENT ==============
+const TTS_VERDICT = 'रमेश जी, यह खबर पूरी तरह गलत है। आर.बी.आई. ने ऐसा कोई नोटिफिकेशन जारी नहीं किया है। दो हज़ार रुपये के नोट बंद होने की कोई आधिकारिक घोषणा नहीं हुई है। यह संदेश पहली बार अक्टूबर 2023 में वायरल हुआ था और तब भी गलत था। विश्वास न्यूज़ और पी.आई.बी. फैक्ट चेक दोनों ने इसे झूठा करार दिया है।';
+// Only verdict TTS — single voice dialogue in the entire flow
+
+// ============== HELPERS ==============
+const chatArea = document.getElementById('chatArea');
+function scrollToBottom() { setTimeout(() => { chatArea.scrollTop = chatArea.scrollHeight; }, 60); }
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function addMsg(type, html, delay) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = `msg msg-${type} fade-in`;
+      div.innerHTML = `<div class="bubble bubble-${type}">${html}</div>`;
+      chatArea.appendChild(div); scrollToBottom(); resolve();
+    }, delay || 0);
+  });
+}
+
+function addRaw(html, fullWidth) {
+  const div = document.createElement('div');
+  div.className = `msg msg-ai fade-in${fullWidth ? ' msg-full' : ''}`;
+  div.innerHTML = html;
+  chatArea.appendChild(div); scrollToBottom();
+  return div;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg msg-ai'; div.id = 'typing-indicator';
+  div.innerHTML = '<div class="bubble bubble-ai"><div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+  chatArea.appendChild(div); scrollToBottom();
+}
+function hideTyping() { const el = document.getElementById('typing-indicator'); if (el) el.remove(); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="var(--sparkle-50)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> ${msg}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============== FLOW STATE ==============
+let currentState = 'welcome';
+let selectedGroups = new Set();
+
+// ============== MAIN FLOW ==============
+async function startFlow() {
+  // Pre-cache verdict TTS early
+  preCacheTTS(TTS_VERDICT);
+  await addMsg('ai', 'Namaskar <strong>Ramesh ji!</strong> Main hoon aapka <strong>Fact-Check Shield</strong> &mdash; JioBharatIQ Verify.');
+  await wait(400);
+  await addMsg('ai', 'Koi bhi sandigdh message, link, screenshot ya voice mein &mdash; bhejiye, main turant sachai bata dunga.');
+  await wait(600);
+  await addMsg('ai', 'Aap kaise verify karna chahenge? Apni pasand chunein:');
+  await wait(300);
+  showInputMethods();
+}
+
+function showInputMethods() {
+  currentState = 'methods';
+  // SVG icons for each method
+  const fwdIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 8V4l8 8-8 8v-4H4V8z"/></svg>';
+  const imgIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>';
+  const micIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-1 1v1a5 5 0 11-10 0v-1a1 1 0 10-2 0v1a7 7 0 1014 0v-1a1 1 0 00-1-1z"/></svg>';
+  const linkIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>';
+  const scanIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5zm-6 8h1.5v1.5H13V13zm1.5 1.5H16V16h-1.5v-1.5zM16 13h1.5v1.5H16V13zm-3 3h1.5v1.5H13V16zm1.5 1.5H16V19h-1.5v-1.5zM16 16h1.5v1.5H16V16zm1.5-1.5H19V16h-1.5v-1.5zm0 3H19V19h-1.5v-1.5z"/></svg>';
+
+  addRaw(`
+    <div class="method-card" onclick="selectMethod('whatsapp')">
+      <div class="method-icon" style="background:var(--success)">${fwdIcon}</div>
+      <div>
+        <h4>WhatsApp Forward</h4>
+        <p>Sandigdh message forward karein ya paste karein</p>
+        <span class="method-tag" style="background:var(--primary-20);color:var(--primary-50)">Recommended</span>
+      </div>
+    </div>
+    <div class="method-card method-card-disabled">
+      <div class="method-icon" style="background:var(--secondary-50)">${imgIcon}</div>
+      <div>
+        <h4>Screenshot Paste</h4>
+        <p>Instagram, Facebook, Telegram ka screenshot upload karein</p>
+        <span class="method-tag" style="background:var(--grey-20);color:var(--grey-60)">Coming Soon</span>
+      </div>
+    </div>
+    <div class="method-card method-card-disabled">
+      <div class="method-icon" style="background:var(--primary-50)">${micIcon}</div>
+      <div>
+        <h4>Voice Describe</h4>
+        <p>Bol kar batayein kya verify karna hai</p>
+        <span class="method-tag" style="background:var(--grey-20);color:var(--grey-60)">Coming Soon</span>
+      </div>
+    </div>
+    <div class="method-card method-card-disabled">
+      <div class="method-icon" style="background:var(--sparkle-50)">${linkIcon}</div>
+      <div>
+        <h4>Link Paste</h4>
+        <p>Kisi bhi browser/app se URL copy kar ke paste karein</p>
+        <span class="method-tag" style="background:var(--grey-20);color:var(--grey-60)">Coming Soon</span>
+      </div>
+    </div>
+    <div class="method-card method-card-disabled">
+      <div class="method-icon" style="background:var(--warning)">${scanIcon}</div>
+      <div>
+        <h4>In-App Scanner</h4>
+        <p>Akhbaar, TV, ya pamphlet ki photo se verify karein</p>
+        <span class="method-tag" style="background:var(--grey-20);color:var(--grey-60)">Coming Soon</span>
+      </div>
+    </div>
+  `, false);
+}
+
+async function selectMethod(method) {
+  if (currentState !== 'methods') return;
+  currentState = 'processing';
+
+  if (method === 'whatsapp') {
+    await addMsg('user', 'WhatsApp forward se verify karunga');
+    await wait(300);
+    showTyping(); await wait(600); hideTyping();
+    await addMsg('ai', 'Thik hai! Apna sandigdh WhatsApp message neeche paste karein ya forward karein.');
+    await wait(800);
+
+    // Simulate Ramesh forwarding the message
+    await addMsg('user', 'Yeh message aaya hai family group mein:');
+    await wait(300);
+
+    // Show forwarded message card
+    addRaw(`
+      <div class="fwd-card">
+        <div class="fwd-header">
+          <div class="fwd-fwd-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--grey-60)"><path d="M12 8V4l8 8-8 8v-4H4V8z"/></svg>
+            Forwarded
+          </div>
+        </div>
+        <div class="fwd-body">
+          <strong>BREAKING:</strong> RBI ne naya rule nikala &mdash; 1 January se &#8377;2000 ke note band honge. Jaldi bank jaao!<br><br>
+          Yeh confirmed news hai, sabko batao. Sab apne &#8377;2000 ke note bank mein jama kara dein warna raddi ho jaayenge!!
+        </div>
+        <div class="fwd-meta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--grey-60)"><path d="M12 8V4l8 8-8 8v-4H4V8z"/></svg>
+          Forwarded many times
+        </div>
+      </div>
+    `, false);
+    await wait(500);
+    startVerification();
+
+  } else {
+    // Other methods are disabled (Coming Soon)
+    return;
+  }
+}
+
+// ============== VOICE INPUT ==============
+function openVoiceInput() {
+  document.getElementById('voiceOverlay').classList.add('active');
+  document.getElementById('voiceTranscript').textContent = 'Sun raha hoon...';
+  document.getElementById('voiceHint').textContent = 'Boliye kya verify karna hai';
+  document.getElementById('voiceOrb').classList.remove('voice-orb-idle');
+  document.getElementById('voiceWaves').classList.remove('voice-waves-idle');
+
+  // Simulate voice transcription
+  setTimeout(() => {
+    document.getElementById('voiceTranscript').textContent = '"Mujhe ek message aaya ki..."';
+  }, 1500);
+  setTimeout(() => {
+    document.getElementById('voiceTranscript').textContent = '"...2000 ke note band hone wale hain..."';
+  }, 3000);
+  setTimeout(() => {
+    document.getElementById('voiceTranscript').textContent = '"...RBI ne rule nikala hai - sach hai kya?"';
+    document.getElementById('voiceOrb').classList.add('voice-orb-idle');
+    document.getElementById('voiceWaves').classList.add('voice-waves-idle');
+    document.getElementById('voiceHint').textContent = 'Samajh gaya! Verify kar raha hoon...';
+  }, 4500);
+  setTimeout(() => {
+    closeVoiceInput();
+    voiceFlowContinue();
+  }, 5800);
+}
+
+function closeVoiceInput() {
+  document.getElementById('voiceOverlay').classList.remove('active');
+}
+
+async function voiceFlowContinue() {
+  currentState = 'processing';
+  await addMsg('user', 'Mujhe ek message aaya ki 2000 ke note band hone wale hain, RBI ne rule nikala hai &mdash; sach hai kya?');
+  await wait(400);
+  startVerification();
+}
+
+document.getElementById('voiceOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeVoiceInput();
+});
+
+// ============== VERIFICATION ENGINE ==============
+async function startVerification() {
+  const headerStatus = document.getElementById('headerStatus');
+  headerStatus.textContent = 'Verifying...';
+  headerStatus.className = 'header-verifying';
+
+  showTyping(); await wait(800); hideTyping();
+  await addMsg('ai', 'Message mila. Verify kar raha hoon &mdash; <strong>8 second</strong> mein result aa jayega...');
+  await wait(400);
+
+  // Show verification steps card
+  const verifyDiv = addRaw(`
+    <div class="verify-card">
+      <div class="verify-header">
+        <div class="verify-shield" style="background:var(--primary-20)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+        </div>
+        <div>
+          <div class="verify-title">Fact-Check Shield</div>
+          <div class="verify-subtitle">Verifying your message...</div>
+        </div>
+      </div>
+      <div class="verify-steps" id="verifySteps">
+        <div class="verify-step verify-step-active" id="vStep0">
+          <div class="verify-step-icon" style="background:var(--primary-20)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          </div>
+          <div>
+            <div class="verify-step-text">Claim extract kar raha hoon...</div>
+          </div>
+        </div>
+        <div class="verify-step" id="vStep1">
+          <div class="verify-step-icon" style="background:var(--grey-40)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--grey-60)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          </div>
+          <div>
+            <div class="verify-step-text" style="color:var(--grey-60)">Vishvas News + PIB database check</div>
+          </div>
+        </div>
+        <div class="verify-step" id="vStep2">
+          <div class="verify-step-icon" style="background:var(--grey-40)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--grey-60)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          </div>
+          <div>
+            <div class="verify-step-text" style="color:var(--grey-60)">RBI official sources verify</div>
+          </div>
+        </div>
+        <div class="verify-step" id="vStep3">
+          <div class="verify-step-icon" style="background:var(--grey-40)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--grey-60)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          </div>
+          <div>
+            <div class="verify-step-text" style="color:var(--grey-60)">Verdict prepare kar raha hoon</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `, true);
+
+  // Animate steps
+  await wait(1500);
+  activateStep(0, true);
+  activateStep(1, false);
+  await wait(2000);
+  activateStep(1, true);
+  activateStep(2, false);
+  await wait(1800);
+  activateStep(2, true);
+  activateStep(3, false);
+  await wait(1200);
+  activateStep(3, true);
+
+  await wait(500);
+  // Remove verify card
+  verifyDiv.remove();
+
+  headerStatus.textContent = 'Verified';
+  headerStatus.className = 'header-online';
+
+  // Show verdict
+  showVerdict();
+}
+
+function activateStep(index, done) {
+  const step = document.getElementById('vStep' + index);
+  if (!step) return;
+  if (done) {
+    step.className = 'verify-step verify-step-done';
+    step.querySelector('.verify-step-icon').style.background = 'var(--sparkle-20)';
+    step.querySelector('.verify-step-icon svg').setAttribute('fill', 'var(--sparkle-50)');
+    step.querySelector('.verify-step-icon').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--sparkle-50)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
+    step.querySelector('.verify-step-text').style.color = 'var(--grey-100)';
+  } else {
+    step.className = 'verify-step verify-step-active';
+    step.querySelector('.verify-step-icon').style.background = 'var(--primary-20)';
+    step.querySelector('.verify-step-icon').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>';
+    step.querySelector('.verify-step-text').style.color = 'var(--grey-100)';
+    step.style.animation = 'stepSlide 0.3s ease-out';
+  }
+}
+
+async function showVerdict() {
+  // Play verdict TTS
+  elevenLabsTTS(TTS_VERDICT);
+
+  addRaw(`
+    <div class="verdict-card">
+      <div class="verdict-banner verdict-banner-false">
+        <div class="verdict-shield-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </div>
+        <div>
+          <div class="verdict-label">Verified Result</div>
+          <div class="verdict-badge">FALSE</div>
+        </div>
+      </div>
+      <div class="verdict-body">
+        <div class="verdict-source">
+          <div class="verdict-source-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          </div>
+          <div>
+            <div class="verdict-source-text">Vishvas News + PIB Fact Check</div>
+            <div class="verdict-source-sub">Government verified sources</div>
+          </div>
+        </div>
+        <div class="verdict-explain">
+          <strong>Ramesh ji,</strong> yeh khabar <strong>galat</strong> hai. RBI ne aisa koi notification jaari nahi kiya hai. &#8377;2000 ke note band hone ki koi official announcement nahi hui hai.<br><br>
+          Yeh message <strong>pehli baar October 2023</strong> mein viral hua tha aur tab bhi galat tha.
+        </div>
+        <div class="verdict-first-seen">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--warning)"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          Pehli baar viral: October 2023
+        </div>
+        <div class="verdict-footer">
+          <div class="verdict-footer-logo">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          </div>
+          <div class="verdict-footer-text">JioBharatIQ Fact-Check Shield</div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--primary-50)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <div class="verdict-footer-text">Verified</div>
+        </div>
+      </div>
+    </div>
+  `, true);
+
+  await wait(1500);
+
+  // Correction prompt (no TTS — verdict speech continues uninterrupted)
+  addRaw(`
+    <div class="correction-prompt">
+      <div class="correction-prompt-text">
+        <strong>Kya aap apne group mein correction bhejana chahenge?</strong><br>
+        Aapke liye ek ready-made message tayyar hai.
+      </div>
+      <div class="correction-btns">
+        <button class="correction-btn-yes" onclick="openCorrectionSheet()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          Haan, bhejo
+        </button>
+        <button class="correction-btn-no" onclick="declineCorrection()">Nahi, rehne do</button>
+      </div>
+    </div>
+  `, false);
+}
+
+// ============== CORRECTION SHEET ==============
+function openCorrectionSheet() {
+  selectedGroups.clear();
+  document.querySelectorAll('.sheet-group').forEach(g => {
+    g.classList.remove('sheet-group-selected', 'sheet-group-sent');
+    const statusEl = g.querySelector('.group-status');
+    if (statusEl) statusEl.innerHTML = '';
+  });
+  document.getElementById('sheetSendBtn').disabled = true;
+  document.getElementById('sheetSendBtn').innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> Correction bhejein';
+  document.getElementById('sheetTitle').textContent = 'Correction bhejein';
+  document.getElementById('sheetDesc').textContent = 'Yeh shareable card apne groups mein bhejein — sabko sach pata chalega:';
+  document.getElementById('shareOverlay').classList.add('active');
+}
+
+function toggleGroup(el) {
+  if (el.classList.contains('sheet-group-sent')) return;
+  const name = el.dataset.name;
+  if (selectedGroups.has(name)) {
+    selectedGroups.delete(name);
+    el.classList.remove('sheet-group-selected');
+  } else {
+    selectedGroups.add(name);
+    el.classList.add('sheet-group-selected');
+  }
+  document.getElementById('sheetSendBtn').disabled = selectedGroups.size === 0;
+}
+
+async function sendCorrections() {
+  const btn = document.getElementById('sheetSendBtn');
+  btn.disabled = true;
+  btn.innerHTML = 'Bhej raha hoon...';
+
+  const groups = document.querySelectorAll('.sheet-group');
+  for (const g of groups) {
+    const name = g.dataset.name;
+    if (selectedGroups.has(name)) {
+      await wait(600);
+      g.classList.remove('sheet-group-selected');
+      g.classList.add('sheet-group-sent');
+      const statusEl = g.querySelector('.group-status');
+      statusEl.className = 'group-status group-status-sent';
+      statusEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--sparkle-50)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Sent';
+    }
+  }
+
+  await wait(400);
+  btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Bhej diya!';
+  btn.style.background = 'var(--sparkle-50)';
+
+  await wait(1200);
+  closeShareSheet();
+  await wait(300);
+  showToast('Correction ' + selectedGroups.size + ' groups mein bhej diya!');
+  await wait(500);
+  showFinalMessage();
+}
+
+function closeShareSheet() {
+  document.getElementById('shareOverlay').classList.remove('active');
+}
+
+document.getElementById('shareOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeShareSheet();
+});
+
+async function declineCorrection() {
+  await addMsg('user', 'Nahi, rehne do');
+  await wait(300);
+  showFinalMessage();
+}
+
+async function showFinalMessage() {
+  showTyping(); await wait(500); hideTyping();
+  await addMsg('ai', 'Bahut accha Ramesh ji! Aage se koi bhi sandigdh message aaye &mdash; seedha idhar bhej dijiye. <strong>Pehle verify karein, phir share karein.</strong>');
+  await wait(400);
+
+  // Stats card
+  addRaw(`
+    <div class="summary-card-wrap">
+      <div class="summary-card-title">Aaj ka Fact-Check Summary</div>
+      <div class="summary-stats-row">
+        <div class="summary-stat-box">
+          <div class="summary-stat-num" style="color:var(--error)">1</div>
+          <div class="summary-stat-label">Fake detected</div>
+        </div>
+        <div class="summary-stat-box">
+          <div class="summary-stat-num" style="color:var(--sparkle-50)">8s</div>
+          <div class="summary-stat-label">Verify time</div>
+        </div>
+        <div class="summary-stat-box">
+          <div class="summary-stat-num" style="color:var(--success)">3</div>
+          <div class="summary-stat-label">Groups saved</div>
+        </div>
+      </div>
+    </div>
+  `, true);
+}
+
+// ============== START ==============
+startFlow();
+</script>
+</body>
+</html>
