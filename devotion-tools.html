@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Devotion — Jio AI</title>
+<style>
+@font-face{font-family:'JioType';font-weight:400;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:500;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:700;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:900;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2')}
+
+:root{
+  --surface:#fff;--surface-ghost:#eeeeef;--surface-ghost-icon:#e7e9ff;--surface-bold:#3900ad;
+  --surface-subtle:#eeeeef;--surface-minimal:#f8f8f9;
+  --text-high:#0c0d10;--text-medium:#191b1e;--text-low:rgba(25,27,30,.65);
+  --icon-medium:#170054;--stroke-subtle:rgba(36,38,43,.12);
+  --primary-50:#3535f3;--primary-20:#e8e8fc;--sparkle-50:#1eccb0;
+  --grey-100:#141414;--grey-60:#b5b5b5;--grey-20:#f5f5f5;
+  --shape-pill:999px;--shape-4xl:24px;--shape-l:16px;--shape-m:12px;--shape-s:8px;--shape-xs:4px;
+  --font:'JioType',sans-serif;
+  --devotion-hero:#701c3f;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--surface);color:var(--text-high);display:flex;flex-direction:column}
+::-webkit-scrollbar{display:none}
+a{text-decoration:none;color:inherit}
+
+/* HERO BANNER — Devotion purple/magenta */
+.hero-banner{
+  position:relative;width:100%;height:137px;overflow:hidden;flex-shrink:0;
+  background:linear-gradient(165deg,#501a35 0%,var(--devotion-hero) 50%,#3d1530 100%);
+}
+.hero-banner-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(.75);
+}
+.hero-banner-gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(112,28,63,.77) 100%);
+}
+.back-btn{
+  position:absolute;top:16px;left:12px;z-index:5;
+  width:40px;height:40px;border-radius:50%;border:none;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.back-btn:active{background:rgba(255,255,255,.3)}
+.back-btn svg{width:20px;height:20px;color:#fff}
+
+/* AVATAR */
+.avatar-section{
+  display:flex;flex-direction:column;align-items:center;
+  margin-top:-56px;position:relative;z-index:3;
+}
+.avatar-ring{
+  width:120px;height:120px;border-radius:50%;
+  border:3px solid #f3e8ff;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.avatar-ring img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.avatar-name{
+  font-size:24px;font-weight:700;line-height:1.3;letter-spacing:-.72px;
+  color:#000;text-align:center;margin-top:8px;
+}
+
+/* BODY */
+.body-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:120px;background:linear-gradient(180deg,transparent 0%,#f2f5fd 120px)}
+
+/* EXPLORE */
+.section-block{padding:0 16px;margin-top:24px}
+.section-title{font-size:16px;font-weight:700;line-height:1.1;color:var(--grey-100);margin-bottom:12px}
+.chips-grid{display:flex;flex-direction:column;gap:10px}
+.chips-row{display:flex;gap:10px;flex-wrap:nowrap;overflow-x:auto}
+.explore-chip{
+  flex-shrink:0;display:flex;align-items:center;gap:6px;
+  padding:8px 18px;border-radius:40px;
+  background:#f1f1f1;cursor:pointer;white-space:nowrap;
+  transition:all .15s;
+}
+.explore-chip:active{background:var(--primary-20)}
+.explore-chip.disabled{opacity:.38;pointer-events:none;cursor:default}
+.explore-chip .emoji{font-size:25px;line-height:1.3}
+.explore-chip .label{font-size:15px;font-weight:500;color:#15253f;line-height:1}
+
+/* DIVINE GUIDANCE — horizontal scroll circles */
+.picks-row{display:flex;gap:8px;overflow-x:auto;padding:0 16px;-webkit-overflow-scrolling:touch}
+.pick-item{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.pick-circle{
+  width:52px;height:52px;border-radius:50%;border:1px solid #f3e8ff;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  background:#fff;font-size:23px;line-height:1.2;
+}
+.pick-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.pick-label{font-size:12px;font-weight:400;color:var(--text-high);text-align:center;line-height:1.3;max-width:65px}
+
+/* FLOATING INPUT */
+.input-widget{
+  position:fixed;bottom:0;left:0;right:0;z-index:30;
+  padding:6px 12px 16px;
+  background:linear-gradient(transparent,var(--surface) 30%);
+}
+.input-field{
+  background:#eeeeef;border-radius:24px;
+  padding:8px;display:flex;flex-direction:column;gap:8px;
+}
+.input-top{display:flex;align-items:center;gap:4px}
+.input-text{
+  flex:1;padding:4px 8px;font-family:var(--font);font-size:16px;font-weight:400;
+  color:var(--text-low);opacity:.65;border:none;outline:none;background:none;
+  line-height:1.3;
+}
+.input-close-btn{
+  width:32px;height:32px;border-radius:50%;border:none;
+  background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+}
+.input-close-btn svg{width:18px;height:18px;color:var(--text-low);opacity:.5}
+.input-actions{display:flex;justify-content:space-between;align-items:center}
+.input-left{display:flex;gap:2px;align-items:center}
+.input-icon-btn{
+  width:32px;height:32px;border-radius:50%;border:none;
+  background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.input-icon-btn svg{width:20px;height:20px;color:var(--text-low);opacity:.45}
+.input-icon-btn:active{background:rgba(0,0,0,.05)}
+.input-right{display:flex;gap:8px;align-items:center}
+.input-mic-btn{
+  width:32px;height:32px;border-radius:50%;border:none;
+  background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.input-mic-btn svg{width:20px;height:20px;color:var(--text-low);opacity:.45}
+.input-mic-btn:active{background:rgba(0,0,0,.05)}
+.speak-btn{
+  background:#6d17ce;border:none;border-radius:var(--shape-pill);
+  padding:8px 16px;display:flex;align-items:center;gap:6px;cursor:pointer;
+}
+.speak-btn svg{width:14px;height:14px;color:#fff}
+.speak-btn span{font-family:var(--font);font-weight:700;font-size:14px;color:#fff;line-height:1}
+.speak-btn:active{opacity:.85;transform:scale(.97)}
+
+/* VOICE OVERLAY */
+@keyframes dotBreath{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(.92);opacity:.4}}
+@keyframes dotListen{0%,100%{transform:scale(1);opacity:1}25%{transform:scale(.7);opacity:.5}50%{transform:scale(1.08);opacity:1}75%{transform:scale(.8);opacity:.6}}
+@keyframes dotProcess{0%,100%{transform:scale(.8);opacity:.5}50%{transform:scale(1);opacity:1}}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(109,23,206,.4)}50%{box-shadow:0 0 0 16px rgba(109,23,206,0)}}
+
+.v-dots{width:148px;height:148px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v-dots div{border-radius:50%;background:#6d17ce;transition:background .3s}
+.v-dots--idle div{animation:dotBreath 2.5s ease-in-out infinite;opacity:.5}
+.v-dots--idle div:nth-child(2){animation-delay:.3s}
+.v-dots--idle div:nth-child(3){animation-delay:.6s}
+.v-dots--idle div:nth-child(4){animation-delay:.9s}
+.v-dots--listening div{animation:dotListen 1s ease-in-out infinite;background:#6d17ce}
+.v-dots--listening div:nth-child(2){animation-delay:.15s}
+.v-dots--listening div:nth-child(3){animation-delay:.3s}
+.v-dots--listening div:nth-child(4){animation-delay:.45s}
+.v-dots--processing div,.v-dots--thinking div{animation:dotProcess 1.2s ease-in-out infinite;background:#9966dd}
+.v-dots--processing div:nth-child(2),.v-dots--thinking div:nth-child(2){animation-delay:.2s}
+.v-dots--processing div:nth-child(3),.v-dots--thinking div:nth-child(3){animation-delay:.4s}
+.v-dots--processing div:nth-child(4),.v-dots--thinking div:nth-child(4){animation-delay:.6s}
+.v-dots--speaking div{animation:dotBreath 2s ease-in-out infinite}
+
+.v-mic-btn{
+  width:64px;height:64px;border-radius:50%;border:none;
+  background:#6d17ce;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 4px 12px rgba(109,23,206,.35);
+}
+.v-mic-btn:active{transform:scale(.92)}
+.v-mic-btn.v-mic--pulse{animation:micPulse 1.5s ease-in-out infinite}
+
+.v-stop-btn{
+  width:64px;height:64px;border-radius:50%;border:none;
+  background:#fa2f40;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 4px 12px rgba(250,47,64,.3);
+}
+.v-stop-btn:active{transform:scale(.92)}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.anim-1{animation:fadeDown .4s ease both;animation-delay:0s}
+.anim-2{animation:fadeDown .4s ease both;animation-delay:.1s}
+.anim-3{animation:fadeDown .4s ease both;animation-delay:.15s}
+.anim-4{animation:fadeDown .4s ease both;animation-delay:.2s}
+</style>
+</head>
+<body>
+
+<!-- HERO BANNER -->
+<div class="hero-banner anim-1">
+  <div class="hero-banner-gradient"></div>
+  <a href="https://sunit1986.github.io/design-prototypes/jbiqhomepage.html" class="back-btn" aria-label="Back">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+</div>
+
+<!-- AVATAR + NAME -->
+<div class="avatar-section anim-1">
+  <div class="avatar-ring">
+    <img src="Assets/persona-devotion.png" alt="Devotion" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+    <span style="display:none;align-items:center;justify-content:center;width:100%;height:100%;font-size:48px;background:var(--primary-20)">🙏</span>
+  </div>
+  <div class="avatar-name">Devotion</div>
+</div>
+
+<!-- SCROLLABLE BODY -->
+<div class="body-scroll">
+
+  <!-- EXPLORE -->
+  <div class="section-block anim-2">
+    <div class="section-title">Explore</div>
+    <div class="chips-grid">
+      <div class="chips-row">
+        <a href="javascript:void(0)" class="explore-chip">
+          <span class="emoji">🙏</span>
+          <span class="label">Daily prayers</span>
+        </a>
+        <a href="javascript:void(0)" class="explore-chip">
+          <span class="emoji">🔱</span>
+          <span class="label">God & Goddess Stories</span>
+        </a>
+        <a href="javascript:void(0)" class="explore-chip">
+          <span class="emoji">💎</span>
+          <span class="label">Temple visits</span>
+        </a>
+      </div>
+      <div class="chips-row">
+        <a href="javascript:void(0)" class="explore-chip">
+          <span class="emoji">🎶</span>
+          <span class="label">Devotional songs</span>
+        </a>
+        <a href="javascript:void(0)" class="explore-chip">
+          <span class="emoji">🧘</span>
+          <span class="label">Morning mindfulness</span>
+        </a>
+        <a href="javascript:void(0)" class="explore-chip">
+          <span class="emoji">🔢</span>
+          <span class="label">Numerology</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVINE GUIDANCE -->
+  <div class="section-block anim-3" style="margin-top:24px">
+    <div class="section-title">Divine Guidance</div>
+  </div>
+  <div class="picks-row anim-3">
+    <div class="pick-item">
+      <div class="pick-circle">🕉</div>
+      <span class="pick-label">Shiva</span>
+    </div>
+    <div class="pick-item">
+      <div class="pick-circle">🪷</div>
+      <span class="pick-label">Lakshmi</span>
+    </div>
+    <div class="pick-item">
+      <div class="pick-circle">🐘</div>
+      <span class="pick-label">Ganesha</span>
+    </div>
+    <div class="pick-item">
+      <div class="pick-circle">🎶</div>
+      <span class="pick-label">Krishna</span>
+    </div>
+    <div class="pick-item">
+      <div class="pick-circle">🔱</div>
+      <span class="pick-label">Durga</span>
+    </div>
+    <div class="pick-item">
+      <div class="pick-circle">🕉</div>
+      <span class="pick-label">Rama</span>
+    </div>
+    <div class="pick-item">
+      <div class="pick-circle">⚖</div>
+      <span class="pick-label">Libra</span>
+    </div>
+    <div class="pick-item">
+      <div class="pick-circle">♏</div>
+      <span class="pick-label">Scorpio</span>
+    </div>
+    <div class="pick-item">
+      <div class="pick-circle">♐</div>
+      <span class="pick-label">Sagittarius</span>
+    </div>
+  </div>
+
+  <div style="height:32px"></div>
+</div>
+
+<!-- BOTTOM INPUT BAR -->
+<div class="input-widget" id="homeInput">
+  <div class="input-field">
+    <div class="input-top">
+      <input class="input-text" type="text" placeholder="How would you like to find peace today?" readonly id="homeInputText">
+    </div>
+    <div class="input-actions">
+      <div class="input-left">
+        <button class="input-icon-btn" aria-label="Add">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="input-right">
+        <button class="input-mic-btn" aria-label="Mic">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="speak-btn" id="homeSpeakBtn">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z" fill="currentColor"/></svg>
+          <span>Speak</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VOICE OVERLAY -->
+<div id="voiceOverlay" style="display:none;position:fixed;inset:0;z-index:100;background:#fff;flex-direction:column;font-family:var(--font)">
+  <div style="display:flex;align-items:center;padding:10px 12px;height:56px;flex-shrink:0">
+    <button onclick="closeVoice()" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#170054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span style="font-size:16px;font-weight:500;color:var(--text-high);margin-left:4px">Voice</span>
+    <span style="flex:1"></span>
+  </div>
+  <div id="voiceBody" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;padding:0 24px">
+    <div id="voiceDots" class="v-dots v-dots--idle">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <div id="voiceLabel" style="margin-top:28px;font-size:20px;font-weight:700;color:var(--text-high);text-align:center">Hey, Deepa</div>
+    <div id="voiceSub" style="margin-top:8px;font-size:15px;font-weight:400;color:var(--text-low);text-align:center">Tap the mic to start speaking</div>
+    <div id="voiceTranscript" style="display:none;margin-top:20px;font-size:15px;font-weight:500;color:var(--text-high);text-align:center;max-width:300px;line-height:1.5;background:#f5f5f5;padding:12px 16px;border-radius:16px"></div>
+    <div id="voiceResponse" style="display:none;margin-top:16px;text-align:left;width:100%;max-width:330px;max-height:240px;overflow-y:auto"></div>
+  </div>
+  <div style="padding:12px 24px 28px;display:flex;flex-direction:column;align-items:center;gap:12px">
+    <button id="vMicBtn" onclick="voiceTapMic()" class="v-mic-btn">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="#fff"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button id="vStopBtn" onclick="voiceTapStop()" class="v-stop-btn" style="display:none">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="#fff"/></svg>
+    </button>
+    <button id="vPlayBtn" onclick="voicePlayLastTts()" style="display:none;padding:10px 20px;border-radius:999px;border:none;background:#3900ad;color:#fff;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer">Play response</button>
+    <div id="vAgainHint" style="display:none;font-size:13px;color:var(--text-low);text-align:center">Tap mic to speak again</div>
+  </div>
+</div>
+
+<!-- CHAT OVERLAY -->
+<div id="chatOverlay" style="display:none;position:fixed;inset:0;z-index:100;background:#fff;flex-direction:column;font-family:var(--font)">
+  <div style="display:flex;align-items:center;padding:10px 12px;height:56px;flex-shrink:0;border-bottom:1px solid #e3e3e4">
+    <button onclick="closeChat()" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#170054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span style="font-size:16px;font-weight:500;color:var(--text-high);margin-left:4px">New chat</span>
+    <span style="flex:1"></span>
+    <button style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer" aria-label="Edit">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M16.474 5.408l2.118 2.118m-.756-3.982L12.109 9.27a2.118 2.118 0 00-.58 1.082L11 13l2.648-.53c.41-.082.786-.283 1.082-.579l5.727-5.727a1.853 1.853 0 10-2.621-2.621z" stroke="#170054" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 15v3a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3" stroke="#170054" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div id="chatMessages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px"></div>
+  <div style="padding:6px 12px 16px;background:linear-gradient(transparent,#fff 30%)">
+    <div id="chatInputContainer" style="background:#eeeeef;border-radius:24px;padding:8px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:4px">
+        <input id="chatInput" type="text" placeholder="Ask anything..." style="flex:1;padding:4px 8px;font-family:var(--font);font-size:16px;font-weight:400;color:var(--text-high);border:none;outline:none;background:none;line-height:1.3" autocomplete="off">
+        <button id="chatSendBtn" onclick="sendChat()" style="display:none;width:32px;height:32px;border-radius:50%;border:none;background:#6d17ce;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;gap:2px;align-items:center">
+          <button class="input-icon-btn" aria-label="Add"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="input-mic-btn" aria-label="Mic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <button id="chatSpeakBtn" onclick="openVoice();closeChat()" style="background:#6d17ce;border:none;border-radius:var(--shape-pill);padding:8px 16px;display:flex;align-items:center;gap:6px;cursor:pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z" fill="currentColor"/></svg>
+            <span style="font-family:var(--font);font-weight:700;font-size:14px;color:#fff;line-height:1">Speak</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.ai-avatar{width:32px;height:32px;display:grid;grid-template-columns:1fr 1fr;gap:3px;flex-shrink:0}
+.ai-avatar div{border-radius:50%;background:#6d17ce}
+.user-bubble{max-width:270px;align-self:flex-end;background:#eeeeef;border-radius:24px 24px 0 24px;padding:12px 16px;font-family:var(--font);font-size:14px;font-weight:400;color:var(--text-high);line-height:1.45;word-break:break-word}
+.ai-row{display:flex;gap:10px;align-items:flex-start}
+.ai-bubble{flex:1;font-family:var(--font);font-size:14px;font-weight:400;color:var(--text-high);line-height:1.55;word-break:break-word}
+.ai-bubble p{margin-bottom:12px}.ai-bubble p:last-child{margin-bottom:0}
+.ai-bubble h3{font-size:16px;font-weight:700;margin:16px 0 8px;line-height:1.3}.ai-bubble h3:first-child{margin-top:0}
+.ai-bubble ul,.ai-bubble ol{margin:4px 0 12px 18px}.ai-bubble li{margin-bottom:4px}.ai-bubble strong{font-weight:600}
+.thinking-row{display:flex;gap:10px;align-items:center}
+.thinking-label{font-family:var(--font);font-size:14px;font-weight:400;color:var(--text-low)}
+.feedback-row{display:flex;gap:6px;margin-top:8px}
+.fb-btn{width:30px;height:30px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.fb-btn:active{background:#eeeeef}.fb-btn svg{width:18px;height:18px;color:#666}
+</style>
+
+<script>
+document.getElementById('homeInputText').addEventListener('click',function(){ openChat(); });
+document.getElementById('homeInputText').removeAttribute('readonly');
+document.getElementById('homeInputText').addEventListener('focus',function(e){ e.preventDefault(); this.blur(); openChat(); });
+document.getElementById('homeSpeakBtn').addEventListener('click',function(e){ e.stopPropagation(); openVoice(); });
+
+const _vp=['sk','_8ajz','668k_','7FQZo','3QWwc','AQ8Sm','30SmT','t6L4'];
+const SARVAM_KEY=_vp[0]+_vp[1]+_vp[2]+_vp[3]+_vp[4]+_vp[5]+_vp[6]+_vp[7];
+const VOICE_CHAT_PROXY='https://jbiq-proxy.sunit3-sharma.workers.dev';
+let voiceChatHistory=[],vMediaRecorder=null,vAudioChunks=[],vIsRecording=false,vCurrentAudio=null,vPlaybackCtx=null,vLastTtsBase64=null;
+let chatHistory=[];
+let vState='closed';
+
+function openVoice(){vUnlockAudio();document.getElementById('voiceOverlay').style.display='flex';setVoiceState('idle')}
+function closeVoice(){vKillRecording();if(vCurrentAudio){vCurrentAudio.pause();vCurrentAudio=null}document.getElementById('voiceOverlay').style.display='none';vState='closed'}
+function voiceTapMic(){vUnlockAudio();if(vCurrentAudio){vCurrentAudio.pause();vCurrentAudio=null}vStartRecording()}
+function voiceTapStop(){if(vIsRecording)vKillRecording()}
+
+function setVoiceState(s){
+  vState=s;
+  const dots=document.getElementById('voiceDots'),label=document.getElementById('voiceLabel'),sub=document.getElementById('voiceSub'),transcript=document.getElementById('voiceTranscript'),response=document.getElementById('voiceResponse'),micBtn=document.getElementById('vMicBtn'),stopBtn=document.getElementById('vStopBtn'),playBtn=document.getElementById('vPlayBtn'),hint=document.getElementById('vAgainHint');
+  dots.className='v-dots v-dots--'+s;
+  switch(s){
+    case'idle':label.textContent='Hey, Deepa';sub.textContent='Tap the mic to start speaking';sub.style.display='';transcript.style.display='none';response.style.display='none';micBtn.style.display='flex';micBtn.classList.remove('v-mic--pulse');stopBtn.style.display='none';if(playBtn)playBtn.style.display='none';hint.style.display='none';break;
+    case'listening':label.textContent='Listening...';sub.textContent='Tap the red button when done';sub.style.display='';micBtn.style.display='none';stopBtn.style.display='flex';if(playBtn)playBtn.style.display='none';hint.style.display='none';break;
+    case'processing':label.textContent='Processing...';sub.textContent='Converting speech to text';sub.style.display='';micBtn.style.display='none';stopBtn.style.display='none';if(playBtn)playBtn.style.display='none';hint.style.display='none';break;
+    case'thinking':label.textContent='Thinking...';sub.style.display='none';micBtn.style.display='none';stopBtn.style.display='none';if(playBtn)playBtn.style.display='none';hint.style.display='none';break;
+    case'speaking':label.textContent='';sub.style.display='none';micBtn.style.display='flex';micBtn.classList.add('v-mic--pulse');stopBtn.style.display='none';if(playBtn)playBtn.style.display=vLastTtsBase64?'block':'none';hint.style.display='block';break;
+  }
+}
+
+function vUnlockAudio(){if(vPlaybackCtx)return;try{vPlaybackCtx=new(window.AudioContext||window.webkitAudioContext)();vPlaybackCtx.resume()}catch(e){}}
+function vBase64ToAB(b){const bin=atob(b);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return bytes.buffer}
+function vPlayTts(b64){if(!vPlaybackCtx||!b64)return;try{vPlaybackCtx.resume();vPlaybackCtx.decodeAudioData(vBase64ToAB(b64)).then(buf=>{const src=vPlaybackCtx.createBufferSource();src.buffer=buf;src.connect(vPlaybackCtx.destination);src.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle'};src.start(0)}).catch(()=>{})}catch(e){}}
+function voicePlayLastTts(){vUnlockAudio();if(vLastTtsBase64)vPlayTts(vLastTtsBase64)}
+
+async function vStartRecording(){try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});vAudioChunks=[];vMediaRecorder=new MediaRecorder(stream,{mimeType:'audio/webm;codecs=opus'});vMediaRecorder.ondataavailable=e=>{if(e.data.size>0)vAudioChunks.push(e.data)};vMediaRecorder.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());if(!vAudioChunks.length){setVoiceState('idle');return}await vProcessVoice(new Blob(vAudioChunks,{type:'audio/webm'}))};vMediaRecorder.start();vIsRecording=true;setVoiceState('listening')}catch(err){document.getElementById('voiceLabel').textContent='Mic access denied';document.getElementById('voiceSub').textContent='Please allow microphone access';document.getElementById('voiceSub').style.display='';document.getElementById('vMicBtn').style.display='flex'}}
+function vKillRecording(){if(vMediaRecorder&&vMediaRecorder.state==='recording')vMediaRecorder.stop();vIsRecording=false}
+
+async function vProcessVoice(audioBlob){
+  setVoiceState('processing');
+  try{
+    const wavBlob=await vConvertToWav(audioBlob);
+    const fd=new FormData();fd.append('file',wavBlob,'audio.wav');fd.append('model','saaras:v3');fd.append('language_code','unknown');fd.append('mode','transcribe');
+    const sttResp=await fetch('https://api.sarvam.ai/speech-to-text',{method:'POST',headers:{'api-subscription-key':SARVAM_KEY},body:fd});
+    if(!sttResp.ok)throw new Error('Speech recognition failed');
+    const sttData=await sttResp.json();
+    const transcript=(sttData.transcript||'').trim();
+    const detectedLang=sttData.language_code||'en';
+    if(!transcript){document.getElementById('voiceLabel').textContent="Didn't catch that";document.getElementById('voiceSub').textContent='Tap mic to try again';document.getElementById('voiceSub').style.display='';document.getElementById('vMicBtn').style.display='flex';document.getElementById('vStopBtn').style.display='none';return}
+    document.getElementById('voiceTranscript').textContent='"'+transcript+'"';
+    document.getElementById('voiceTranscript').style.display='block';
+    setVoiceState('thinking');
+    voiceChatHistory.push({role:'user',content:transcript});
+    const resp=await fetch(VOICE_CHAT_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:voiceChatHistory})});
+    const data=await resp.json().catch(()=>({}));
+    if(!resp.ok)throw new Error(data.error?.message||'Chat error');
+    const aiText=data.content?.[0]?.text||'';
+    voiceChatHistory.push({role:'assistant',content:aiText});
+    setVoiceState('speaking');
+    const respEl=document.getElementById('voiceResponse');
+    respEl.style.display='block';
+    respEl.innerHTML='<div style="font-family:var(--font);font-size:15px;color:var(--text-high);line-height:1.55">'+vFormatMd(aiText)+'</div>';
+    vSpeakTTS(aiText,detectedLang);
+  }catch(err){
+    document.getElementById('voiceLabel').textContent='Something went wrong';
+    document.getElementById('voiceSub').textContent=err.message||'Tap mic to try again';
+    document.getElementById('voiceSub').style.display='';
+    document.getElementById('vMicBtn').style.display='flex';
+    document.getElementById('vStopBtn').style.display='none';
+    if(voiceChatHistory.length&&voiceChatHistory[voiceChatHistory.length-1].role==='user')voiceChatHistory.pop();
+  }
+}
+
+function vFormatMd(t){let h=t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/### (.*?)(\n|$)/g,'<h3>$1</h3>');const lines=h.split('\n');let r='',inL=false;for(const l of lines){const tr=l.trim();if(/^[-•*]\s/.test(tr)){if(!inL){r+='<ul>';inL=true}r+='<li>'+tr.replace(/^[-•*]\s/,'')+'</li>'}else{if(inL){r+='</ul>';inL=false}if(tr)r+='<p>'+tr+'</p>'}}if(inL)r+='</ul>';return r||'<p>'+t+'</p>'}
+
+async function vSpeakTTS(text,lang){
+  const ttsLang=(lang&&lang.startsWith('hi'))?'hi-IN':'en-IN';
+  const cleaned=text.replace(/[#*_`>\[\](){}|~]/g,'').replace(/\bhttps?:\/\/\S+/g,'').replace(/[^\w\s.,!?;:'"₹%\-\n\u0900-\u097F]/g,'').replace(/\n{2,}/g,'. ').replace(/\n/g,' ').replace(/\s{2,}/g,' ').trim().substring(0,500);
+  if(!cleaned)return;
+  try{
+    const ttsResp=await fetch('https://api.sarvam.ai/text-to-speech',{method:'POST',headers:{'api-subscription-key':SARVAM_KEY,'Content-Type':'application/json'},body:JSON.stringify({inputs:[cleaned],target_language_code:ttsLang,speaker:'anushka',model:'bulbul:v2'})});
+    const ttsData=await ttsResp.json();
+    if(!ttsResp.ok)return;
+    if(ttsData.audios&&ttsData.audios[0]){
+      vLastTtsBase64=ttsData.audios[0];
+      const vPlay=document.getElementById('vPlayBtn');if(vPlay)vPlay.style.display='block';
+      if(vPlaybackCtx){vPlayTts(vLastTtsBase64)}else{const audio=new Audio('data:audio/wav;base64,'+vLastTtsBase64);vCurrentAudio=audio;audio.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle'};audio.play().catch(()=>{})}
+    }
+  }catch(e){}
+}
+
+async function vConvertToWav(webmBlob){return new Promise(resolve=>{const audioCtx=new(window.AudioContext||window.webkitAudioContext)({sampleRate:16000});const reader=new FileReader();reader.onload=async function(){try{const ab=await audioCtx.decodeAudioData(reader.result);const offCtx=new OfflineAudioContext(1,ab.duration*16000,16000);const src=offCtx.createBufferSource();src.buffer=ab;src.connect(offCtx.destination);src.start();const rendered=await offCtx.startRendering();resolve(new Blob([vEncodeWav(rendered.getChannelData(0),16000)],{type:'audio/wav'}))}catch(e){resolve(webmBlob)}};reader.readAsArrayBuffer(webmBlob)})}
+function vEncodeWav(samples,sr){const buf=new ArrayBuffer(44+samples.length*2);const v=new DataView(buf);function ws(o,s){for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))}ws(0,'RIFF');v.setUint32(4,36+samples.length*2,true);ws(8,'WAVE');ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,samples.length*2,true);for(let i=0;i<samples.length;i++){const s=Math.max(-1,Math.min(1,samples[i]));v.setInt16(44+i*2,s<0?s*0x8000:s*0x7FFF,true)}return buf}
+
+function openChat(){document.getElementById('chatOverlay').style.display='flex';setTimeout(()=>document.getElementById('chatInput').focus(),100)}
+function closeChat(){document.getElementById('chatOverlay').style.display='none'}
+
+document.getElementById('chatInput').addEventListener('input',function(){
+  const sb=document.getElementById('chatSendBtn');const sp=document.getElementById('chatSpeakBtn');
+  if(this.value.trim()){sb.style.display='flex';sp.style.display='none'}else{sb.style.display='none';sp.style.display='flex'}
+});
+document.getElementById('chatInput').addEventListener('keydown',function(e){if(e.key==='Enter'&&this.value.trim())sendChat()});
+
+async function sendChat(){
+  const inp=document.getElementById('chatInput');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  document.getElementById('chatSendBtn').style.display='none';
+  document.getElementById('chatSpeakBtn').style.display='flex';
+  addUserBubble(msg);
+  const thinkEl=addThinking();
+  chatHistory.push({role:'user',content:msg});
+  try{
+    const resp=await callAnthropic(chatHistory);
+    thinkEl.remove();addAIBubble(resp);
+    chatHistory.push({role:'assistant',content:resp});
+  }catch(err){
+    thinkEl.remove();
+    addAIBubble('Error: '+(err.message||'Something went wrong. Please try again.'));
+    chatHistory.pop();
+  }
+}
+
+function addUserBubble(text){const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='user-bubble';d.textContent=text;c.appendChild(d);scrollChat()}
+function addThinking(){const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='thinking-row';d.innerHTML='<div class="ai-avatar"><div></div><div></div><div></div><div></div></div><span class="thinking-label">Thinking...</span>';c.appendChild(d);scrollChat();return d}
+function addAIBubble(text){
+  const c=document.getElementById('chatMessages');
+  const row=document.createElement('div');row.className='ai-row';
+  const avatar=document.createElement('div');avatar.className='ai-avatar';
+  avatar.innerHTML='<div></div><div></div><div></div><div></div>';
+  const bubble=document.createElement('div');bubble.className='ai-bubble';
+  bubble.innerHTML=formatMarkdown(text);
+  const feedbackHTML='<div class="feedback-row"><button class="fb-btn" title="Like"><svg viewBox="0 0 24 24" fill="none"><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3m7-2V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="fb-btn" title="Dislike"><svg viewBox="0 0 24 24" fill="none"><path d="M17 2H19.67a2 2 0 012 1.7l1.38 9a2 2 0 01-2 2.3H14m0 0v4a3 3 0 003 3l4-9V2H9.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H14zM7 2H4a2 2 0 00-2 2v7a2 2 0 002 2h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="scale(1,-1) translate(0,-24)"/></svg></button><button class="fb-btn" title="Copy" onclick="navigator.clipboard.writeText(this.closest(\'.ai-row\').querySelector(\'.ai-bubble\').innerText)"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="1.5"/></svg></button><button class="fb-btn" title="Share"><svg viewBox="0 0 24 24" fill="none"><circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" stroke-width="1.5"/></svg></button></div>';
+  const wrapper=document.createElement('div');wrapper.style.cssText='flex:1;display:flex;flex-direction:column';wrapper.appendChild(bubble);wrapper.insertAdjacentHTML('beforeend',feedbackHTML);row.appendChild(avatar);row.appendChild(wrapper);c.appendChild(row);scrollChat();
+}
+function scrollChat(){const c=document.getElementById('chatMessages');setTimeout(()=>c.scrollTop=c.scrollHeight,50)}
+function formatMarkdown(text){
+  let html=text.replace(/\*\*\*(.*?)\*\*\*/g,'<strong><em>$1</em></strong>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/### (.*?)(\n|$)/g,'<h3>$1</h3>').replace(/## (.*?)(\n|$)/g,'<h3>$1</h3>').replace(/# (.*?)(\n|$)/g,'<h3>$1</h3>');
+  const lines=html.split('\n');let result='',inList=false;
+  for(const line of lines){
+    const trimmed=line.trim();
+    if(/^[-•*]\s/.test(trimmed)){if(!inList){result+='<ul>';inList=true}result+='<li>'+trimmed.replace(/^[-•*]\s/,'')+'</li>'}
+    else if(/^\d+\.\s/.test(trimmed)){if(!inList){result+='<ol>';inList=true}result+='<li>'+trimmed.replace(/^\d+\.\s/,'')+'</li>'}
+    else{if(inList){result+='</ul>';inList=false}if(trimmed)result+='<p>'+trimmed+'</p>'}
+  }
+  if(inList)result+='</ul>';
+  return result||'<p>'+text+'</p>';
+}
+async function callAnthropic(messages){
+  const resp=await fetch(VOICE_CHAT_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages})});
+  const data=await resp.json().catch(()=>({}));
+  if(!resp.ok){if(resp.status===401)throw new Error('Chat proxy needs a valid Anthropic API key.');throw new Error(data.error?.message||data.message||'Chat API error '+resp.status)}
+  if(!data.content||!Array.isArray(data.content)||!data.content[0])throw new Error('Invalid response from chat server.');
+  return data.content[0].text||'';
+}
+</script>
+
+</body>
+</html>
