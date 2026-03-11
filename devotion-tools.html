@@ -220,7 +220,7 @@ a{text-decoration:none;color:inherit}
         </a>
         <a href="https://shivali95.github.io/devotion/daily-ritual.html" class="explore-chip">
           <span class="emoji">🧘</span>
-          <span class="label">Daily Ritual</span>
+          <span class="label">Today's Calendar</span>
         </a>
         <a href="https://shivali95.github.io/devotion/live-darshan.html" class="explore-chip">
           <span class="emoji">🕉️</span>
@@ -230,11 +230,11 @@ a{text-decoration:none;color:inherit}
       <div class="chips-row" style="margin-top:10px">
         <a href="https://shivali95.github.io/devotion/puja-vidhi.html" class="explore-chip">
           <span class="emoji">🙏</span>
-          <span class="label">Prayer</span>
+          <span class="label">Morning Prayer</span>
         </a>
         <a href="https://shivali95.github.io/devotion/festivals.html" class="explore-chip">
           <span class="emoji">🪔</span>
-          <span class="label">Festivals</span>
+          <span class="label">Upcoming Festivals</span>
         </a>
       </div>
     </div>
@@ -378,15 +378,13 @@ a{text-decoration:none;color:inherit}
 .fb-btn:active{background:#eeeeef}.fb-btn svg{width:18px;height:18px;color:#666}
 </style>
 
+<script src="jbiq-config.js"></script>
 <script>
+// SARVAM_KEY and VOICE_CHAT_PROXY now loaded from jbiq-config.js
 document.getElementById('homeInputText').addEventListener('click',function(){ openChat(); });
 document.getElementById('homeInputText').removeAttribute('readonly');
 document.getElementById('homeInputText').addEventListener('focus',function(e){ e.preventDefault(); this.blur(); openChat(); });
 document.getElementById('homeSpeakBtn').addEventListener('click',function(e){ e.stopPropagation(); openVoice(); });
-
-const _vp=['sk','_8ajz','668k_','7FQZo','3QWwc','AQ8Sm','30SmT','t6L4'];
-const SARVAM_KEY=_vp[0]+_vp[1]+_vp[2]+_vp[3]+_vp[4]+_vp[5]+_vp[6]+_vp[7];
-const VOICE_CHAT_PROXY='https://jbiq-proxy.sunit3-sharma.workers.dev';
 let voiceChatHistory=[],vMediaRecorder=null,vAudioChunks=[],vIsRecording=false,vCurrentAudio=null,vPlaybackCtx=null,vLastTtsBase64=null;
 let chatHistory=[];
 let vState='closed';
@@ -412,7 +410,7 @@ function setVoiceState(s){
 function vUnlockAudio(){if(vPlaybackCtx)return;try{vPlaybackCtx=new(window.AudioContext||window.webkitAudioContext)();vPlaybackCtx.resume()}catch(e){}}
 function vBase64ToAB(b){const bin=atob(b);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return bytes.buffer}
 function vPlayTts(b64){if(!vPlaybackCtx||!b64)return;try{vPlaybackCtx.resume();vPlaybackCtx.decodeAudioData(vBase64ToAB(b64)).then(buf=>{const src=vPlaybackCtx.createBufferSource();src.buffer=buf;src.connect(vPlaybackCtx.destination);src.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle'};src.start(0)}).catch(()=>{})}catch(e){}}
-function voicePlayLastTts(){vUnlockAudio();if(vLastTtsBase64)vPlayTts(vLastTtsBase64)}
+function voicePlayLastTts(){vUnlockAudio();if(vLastTtsBase64){vPlayTts(vLastTtsBase64)}else if(vCurrentAudio){vCurrentAudio.currentTime=0;vCurrentAudio.play().catch(()=>{})}}
 
 async function vStartRecording(){try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});vAudioChunks=[];vMediaRecorder=new MediaRecorder(stream,{mimeType:'audio/webm;codecs=opus'});vMediaRecorder.ondataavailable=e=>{if(e.data.size>0)vAudioChunks.push(e.data)};vMediaRecorder.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());if(!vAudioChunks.length){setVoiceState('idle');return}await vProcessVoice(new Blob(vAudioChunks,{type:'audio/webm'}))};vMediaRecorder.start();vIsRecording=true;setVoiceState('listening')}catch(err){document.getElementById('voiceLabel').textContent='Mic access denied';document.getElementById('voiceSub').textContent='Please allow microphone access';document.getElementById('voiceSub').style.display='';document.getElementById('vMicBtn').style.display='flex'}}
 function vKillRecording(){if(vMediaRecorder&&vMediaRecorder.state==='recording')vMediaRecorder.stop();vIsRecording=false}
@@ -455,6 +453,20 @@ async function vProcessVoice(audioBlob){
 function vFormatMd(t){let h=t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/### (.*?)(\n|$)/g,'<h3>$1</h3>');const lines=h.split('\n');let r='',inL=false;for(const l of lines){const tr=l.trim();if(/^[-•*]\s/.test(tr)){if(!inL){r+='<ul>';inL=true}r+='<li>'+tr.replace(/^[-•*]\s/,'')+'</li>'}else{if(inL){r+='</ul>';inL=false}if(tr)r+='<p>'+tr+'</p>'}}if(inL)r+='</ul>';return r||'<p>'+t+'</p>'}
 
 async function vSpeakTTS(text,lang){
+  // Use unified TTS from config (supports Sarvam/ElevenLabs switching)
+  if(window.JBIQ_TTS){
+    try{
+      const result=await window.JBIQ_TTS(text,lang);
+      if(!result)return;
+      vLastTtsBase64=result.base64||null;
+      vCurrentAudio=result.audio;
+      const vPlay=document.getElementById('vPlayBtn');if(vPlay)vPlay.style.display='block';
+      result.audio.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle'};
+      if(vPlaybackCtx&&result.base64){vPlayTts(result.base64)}else{result.audio.play().catch(()=>{})}
+    }catch(e){console.error('TTS error:',e)}
+    return;
+  }
+  // Fallback to Sarvam if config not loaded
   const ttsLang=(lang&&lang.startsWith('hi'))?'hi-IN':'en-IN';
   const cleaned=text.replace(/[#*_`>\[\](){}|~]/g,'').replace(/\bhttps?:\/\/\S+/g,'').replace(/[^\w\s.,!?;:'"₹%\-\n\u0900-\u097F]/g,'').replace(/\n{2,}/g,'. ').replace(/\n/g,' ').replace(/\s{2,}/g,' ').trim().substring(0,500);
   if(!cleaned)return;
