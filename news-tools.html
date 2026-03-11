@@ -197,21 +197,21 @@ a{text-decoration:none;color:inherit}
     <div class="section-title">Explore</div>
     <div class="chips-grid">
       <div class="chips-row">
-        <a href="News_repo/" class="explore-chip">
+        <a href="https://samyakshahjio.github.io/News_repo/" class="explore-chip">
           <span class="emoji">📰</span>
           <span class="label">Daily News Reader</span>
         </a>
-        <a href="News_repo/breaking-news.html" class="explore-chip">
+        <a href="https://samyakshahjio.github.io/News_repo/breaking-news.html" class="explore-chip">
           <span class="emoji">🔴</span>
           <span class="label">Breaking News Studio</span>
         </a>
       </div>
       <div class="chips-row">
-        <a href="News_repo/fact-check.html" class="explore-chip">
+        <a href="https://samyakshahjio.github.io/News_repo/fact-check.html" class="explore-chip">
           <span class="emoji">✅</span>
           <span class="label">Fact Checker</span>
         </a>
-        <a href="News_repo/market-pulse.html" class="explore-chip">
+        <a href="https://samyakshahjio.github.io/News_repo/market-pulse.html" class="explore-chip">
           <span class="emoji">📈</span>
           <span class="label">Market Pulse</span>
         </a>
@@ -359,16 +359,14 @@ a{text-decoration:none;color:inherit}
 .fb-btn:active{background:#eeeeef}.fb-btn svg{width:18px;height:18px;color:#666}
 </style>
 
+<script src="jbiq-config.js"></script>
 <script>
 // BOTTOM BAR & VOICE — Full STT/LLM/TTS (BOTTOM-BAR-AND-VOICE-SPEC)
+// SARVAM_KEY and VOICE_CHAT_PROXY now loaded from jbiq-config.js
 document.getElementById('homeInputText').addEventListener('click',function(){ openChat(); });
 document.getElementById('homeInputText').removeAttribute('readonly');
 document.getElementById('homeInputText').addEventListener('focus',function(e){ e.preventDefault(); this.blur(); openChat(); });
 document.getElementById('homeSpeakBtn').addEventListener('click',function(e){ e.stopPropagation(); openVoice(); });
-
-var _vp=['sk','_8ajz','668k_','7FQZo','3QWwc','AQ8Sm','30SmT','t6L4'];
-var SARVAM_KEY=_vp[0]+_vp[1]+_vp[2]+_vp[3]+_vp[4]+_vp[5]+_vp[6]+_vp[7];
-var VOICE_CHAT_PROXY='https://jbiq-proxy.sunit3-sharma.workers.dev';
 var voiceChatHistory=[],vMediaRecorder=null,vAudioChunks=[],vIsRecording=false,vCurrentAudio=null,vPlaybackCtx=null,vLastTtsBase64=null;
 var chatHistory=[];
 var vState='closed';
@@ -394,7 +392,7 @@ function setVoiceState(s){
 function vUnlockAudio(){if(vPlaybackCtx)return;try{vPlaybackCtx=new(window.AudioContext||window.webkitAudioContext)();vPlaybackCtx.resume()}catch(e){}}
 function vBase64ToAB(b){var bin=atob(b);var bytes=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return bytes.buffer}
 function vPlayTts(b64){if(!vPlaybackCtx||!b64)return;try{vPlaybackCtx.resume();vPlaybackCtx.decodeAudioData(vBase64ToAB(b64)).then(function(buf){var src=vPlaybackCtx.createBufferSource();src.buffer=buf;src.connect(vPlaybackCtx.destination);src.onended=function(){if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle'};src.start(0)}).catch(function(){})}catch(e){}}
-function voicePlayLastTts(){vUnlockAudio();if(vLastTtsBase64)vPlayTts(vLastTtsBase64)}
+function voicePlayLastTts(){vUnlockAudio();if(vLastTtsBase64){vPlayTts(vLastTtsBase64)}else if(vCurrentAudio){vCurrentAudio.currentTime=0;vCurrentAudio.play().catch(function(){})}}
 
 async function vStartRecording(){try{var stream=await navigator.mediaDevices.getUserMedia({audio:true});vAudioChunks=[];vMediaRecorder=new MediaRecorder(stream,{mimeType:'audio/webm;codecs=opus'});vMediaRecorder.ondataavailable=function(e){if(e.data.size>0)vAudioChunks.push(e.data)};vMediaRecorder.onstop=async function(){stream.getTracks().forEach(function(t){t.stop()});if(!vAudioChunks.length){setVoiceState('idle');return}await vProcessVoice(new Blob(vAudioChunks,{type:'audio/webm'}))};vMediaRecorder.start();vIsRecording=true;setVoiceState('listening')}catch(err){document.getElementById('voiceLabel').textContent='Mic access denied';document.getElementById('voiceSub').textContent='Please allow microphone access';document.getElementById('voiceSub').style.display='';document.getElementById('vMicBtn').style.display='flex'}}
 function vKillRecording(){if(vMediaRecorder&&vMediaRecorder.state==='recording')vMediaRecorder.stop();vIsRecording=false}
@@ -437,6 +435,20 @@ async function vProcessVoice(audioBlob){
 function vFormatMd(t){var h=t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/### (.*?)(\n|$)/g,'<h3>$1</h3>');var lines=h.split('\n');var r='',inL=false;for(var i=0;i<lines.length;i++){var l=lines[i];var tr=l.trim();if(/^[-•*]\s/.test(tr)){if(!inL){r+='<ul>';inL=true}r+='<li>'+tr.replace(/^[-•*]\s/,'')+'</li>'}else{if(inL){r+='</ul>';inL=false}if(tr)r+='<p>'+tr+'</p>'}}if(inL)r+='</ul>';return r||'<p>'+t+'</p>'}
 
 async function vSpeakTTS(text,lang){
+  // Use unified TTS from config (supports Sarvam/ElevenLabs switching)
+  if(window.JBIQ_TTS){
+    try{
+      var result=await window.JBIQ_TTS(text,lang);
+      if(!result)return;
+      vLastTtsBase64=result.base64||null;
+      vCurrentAudio=result.audio;
+      var vPlay=document.getElementById('vPlayBtn');if(vPlay)vPlay.style.display='block';
+      result.audio.onended=function(){if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle'};
+      if(vPlaybackCtx&&result.base64){vPlayTts(result.base64)}else{result.audio.play().catch(function(){})}
+    }catch(e){console.error('TTS error:',e)}
+    return;
+  }
+  // Fallback to Sarvam if config not loaded
   var ttsLang=(lang&&lang.startsWith('hi'))?'hi-IN':'en-IN';
   var cleaned=text.replace(/[#*_`>\[\](){}|~]/g,'').replace(/\bhttps?:\/\/\S+/g,'').replace(/[^\w\s.,!?;:\'"₹%\-\n\u0900-\u097F]/g,'').replace(/\n{2,}/g,'. ').replace(/\n/g,' ').replace(/\s{2,}/g,' ').trim().substring(0,500);
   if(!cleaned)return;
