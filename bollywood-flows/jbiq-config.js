@@ -20,7 +20,7 @@ window.JBIQ_CONFIG = {
   // ElevenLabs (used for TTS when TTS_PROVIDER='elevenlabs')
   ELEVENLABS_KEY: 'sk_86a2daf2318ba84afa5190ff9a2c09fcc9e7f9dafea1fe79',
   ELEVENLABS_URL: 'https://api.elevenlabs.io/v1/text-to-speech',
-  ELEVENLABS_VOICE: 'EXAVITQu4vr4xnSDxMaL',  // "Sarah" - female English voice
+  ELEVENLABS_VOICE: 'FaqthkZu1EWxXxUFbAfb',  // Custom voice for RJ
   ELEVENLABS_MODEL: 'eleven_multilingual_v2',
 
   // User

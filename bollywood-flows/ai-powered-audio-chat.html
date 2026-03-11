@@ -1076,7 +1076,7 @@ const interludes = [
 
 const podcasts = [
   { id: 1, title: 'Thirukkural Today', lang: 'Tamil', topic: 'Spiritual', duration: '10 min', episodes: 142, color: '#FF6B35', bgLight: '#FFF3ED', icon: 'temple' },
-  { id: 2, title: 'Bitcoin 101', lang: 'Tamil', topic: 'Finance', duration: '12 min', episodes: 89, color: '#00BCD4', bgLight: '#E0F7FA', icon: 'finance' },
+  { id: 2, title: 'Bitcoin 101', lang: 'English', topic: 'Finance', duration: '12 min', episodes: 89, color: '#00BCD4', bgLight: '#E0F7FA', icon: 'finance' },
   { id: 3, title: 'Subah ka Sach', lang: 'Hindi', topic: 'News', duration: '8 min', episodes: 203, color: '#25ab21', bgLight: '#E6F7E6', icon: 'news' },
   { id: 4, title: 'Sehat ki Baat', lang: 'Hindi', topic: 'Health', duration: '10 min', episodes: 167, color: '#fa2f40', bgLight: '#FDE8EA', icon: 'health' },
   { id: 5, title: 'Ponniyin Selvan History', lang: 'Tamil', topic: 'History', duration: '12 min', episodes: 45, color: '#7C4DFF', bgLight: '#F3EDFF', icon: 'sword' },
@@ -1537,7 +1537,7 @@ function showPodcastList() {
 }
 
 function showPodcastPreferences() {
-  const langs = ['All', 'Tamil', 'Hindi', 'Telugu', 'English'];
+  const langs = ['All', 'English', 'Tamil', 'Hindi', 'Telugu'];
   const journeys = ['All', 'Finance', 'Spiritual', 'News', 'Health', 'History', 'Tech'];
 
   const makeChips = (arr, prefKey) => arr.map(v =>
