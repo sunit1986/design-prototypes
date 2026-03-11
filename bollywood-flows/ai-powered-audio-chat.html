@@ -1049,6 +1049,7 @@ let selectedPodcast = null;
 let podcastPlaying = false;
 let podcastProgress = 0;
 let podcastInterval = null;
+let podcastAudio = null; // Audio element for podcast playback
 let showingQA = false;
 
 // Data
@@ -1682,6 +1683,12 @@ function openPodcast(id) {
   podcastProgress = 0;
   podcastPlaying = false;
   showingQA = false;
+  // Reset audio for new podcast
+  if (podcastAudio) {
+    podcastAudio.pause();
+    podcastAudio.currentTime = 0;
+    podcastAudio = null;
+  }
 
   addMsg(`<div class="user-msg"><div class="user-bubble">Play ${selectedPodcast.title}</div></div>`);
 
@@ -1738,38 +1745,47 @@ function openPodcast(id) {
 }
 
 function togglePodcast() {
-  podcastPlaying = !podcastPlaying;
   const btn = document.getElementById('ppPlayBtn');
+  
+  // Initialize audio element if not exists
+  if (!podcastAudio) {
+    podcastAudio = new Audio('../Assets/audio/podcast-episode.m4a');
+    podcastAudio.addEventListener('timeupdate', () => {
+      if (podcastAudio.duration) {
+        podcastProgress = (podcastAudio.currentTime / podcastAudio.duration) * 100;
+        const bar = document.getElementById('ppBar');
+        const cur = document.getElementById('ppTimeCur');
+        const dur = document.getElementById('ppTimeDur');
+        if (bar) bar.style.width = podcastProgress + '%';
+        if (cur) cur.textContent = fmtTime(podcastAudio.currentTime);
+        if (dur) dur.textContent = fmtTime(podcastAudio.duration);
+
+        // Show QA after 15%
+        if (podcastProgress > 15) {
+          const qa = document.getElementById('qaArea');
+          if (qa) qa.classList.remove('hidden');
+        }
+
+        // Show recommendation after 40%
+        if (podcastProgress > 40) {
+          const rec = document.getElementById('recArea');
+          if (rec) rec.classList.remove('hidden');
+        }
+      }
+    });
+    podcastAudio.addEventListener('ended', () => {
+      podcastPlaying = false;
+      if (btn) btn.innerHTML = IC.play;
+    });
+  }
+
+  podcastPlaying = !podcastPlaying;
   if (btn) btn.innerHTML = podcastPlaying ? IC.pause : IC.play;
 
   if (podcastPlaying) {
-    podcastInterval = setInterval(() => {
-      podcastProgress += 0.3;
-      const bar = document.getElementById('ppBar');
-      const cur = document.getElementById('ppTimeCur');
-      if (bar) bar.style.width = podcastProgress + '%';
-      if (cur) cur.textContent = fmtTime(podcastProgress * 6);
-
-      // Show QA after 15%
-      if (podcastProgress > 15) {
-        const qa = document.getElementById('qaArea');
-        if (qa) qa.classList.remove('hidden');
-      }
-
-      // Show recommendation after 40%
-      if (podcastProgress > 40) {
-        const rec = document.getElementById('recArea');
-        if (rec) rec.classList.remove('hidden');
-      }
-
-      if (podcastProgress >= 100) {
-        podcastPlaying = false;
-        clearInterval(podcastInterval);
-        if (btn) btn.innerHTML = IC.play;
-      }
-    }, 100);
+    podcastAudio.play();
   } else {
-    clearInterval(podcastInterval);
+    podcastAudio.pause();
   }
 }
 
@@ -1802,6 +1818,10 @@ function submitQA() {
 
 function backToPodcastList() {
   if (podcastInterval) clearInterval(podcastInterval);
+  if (podcastAudio) {
+    podcastAudio.pause();
+    podcastAudio.currentTime = 0;
+  }
   podcastPlaying = false;
   renderPodcastList('All');
 }
