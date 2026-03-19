@@ -267,6 +267,28 @@ Schema:
   return { system: systemPrompt, user: userPrompts[mode] || userPrompts.message };
 }
 
+// --- Robust JSON Parser (handles markdown fences + truncation) ---
+function parseAIJson(raw) {
+  if (!raw) throw new Error("Empty response from AI");
+
+  // Strip markdown code fences: ```json ... ``` or ``` ... ```
+  let text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+
+  // Extract first complete JSON object in case there's leading/trailing prose
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start !== -1 && end !== -1 && end > start) {
+    text = text.slice(start, end + 1);
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    // Truncated JSON — attempt partial recovery by closing open structures
+    throw new Error(`Response was cut off or malformed. Try again. (${e.message})`);
+  }
+}
+
 // --- Claude API Call ---
 async function callClaude(apiKey, model, prompt) {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -278,7 +300,7 @@ async function callClaude(apiKey, model, prompt) {
     },
     body: JSON.stringify({
       model,
-      max_tokens: 2048,
+      max_tokens: 4096,
       system: prompt.system,
       messages: [{ role: "user", content: prompt.user }]
     })
@@ -291,7 +313,7 @@ async function callClaude(apiKey, model, prompt) {
 
   const data = await response.json();
   const raw = data.content[0].text;
-  return JSON.parse(raw);
+  return parseAIJson(raw);
 }
 
 // --- OpenAI API Call ---
@@ -309,7 +331,7 @@ async function callOpenAI(apiKey, model, prompt) {
         { role: "system", content: prompt.system },
         { role: "user", content: prompt.user }
       ],
-      max_tokens: 2048,
+      max_tokens: 4096,
       temperature: 0.3
     })
   });
@@ -321,5 +343,6 @@ async function callOpenAI(apiKey, model, prompt) {
 
   const data = await response.json();
   const raw = data.choices[0].message.content;
-  return JSON.parse(raw);
+  return parseAIJson(raw);
 }
+

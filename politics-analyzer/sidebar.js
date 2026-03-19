@@ -83,6 +83,7 @@ async function runAnalysis() {
     });
 
     if (response.success) {
+      clearInterval(window.__loadingInterval);
       currentResult = response.result;
       renderResults(response.result);
       updateRepliesTab(response.result);
@@ -110,11 +111,11 @@ function showLoading() {
         ${steps.map((s, idx) => `<div class="loading-step ${idx === 0 ? "active" : ""}" id="ls${idx}">${s}</div>`).join("")}
       </div>
     </div>`;
-  const iv = setInterval(() => {
+  window.__loadingInterval = clearInterval(window.__loadingInterval) || setInterval(() => {
     document.getElementById(`ls${i}`)?.classList.remove("active");
     i++;
     const el = document.getElementById(`ls${i}`);
-    if (el) el.classList.add("active"); else clearInterval(iv);
+    if (el) el.classList.add("active"); else clearInterval(window.__loadingInterval);
   }, 600);
 }
 
