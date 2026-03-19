@@ -429,6 +429,95 @@
       cursor: pointer;
     }
 
+    /* ── Tactical Read Card ── */
+    .tactical-card {
+      background: linear-gradient(135deg, #1a0a10 0%, #1a1a2e 100%);
+      border: 1px solid rgba(233,69,96,0.35);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .tactical-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #e94560, #c23152, transparent);
+    }
+    .tactical-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .tactical-icon { font-size: 16px; }
+    .tactical-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      flex: 1;
+    }
+    .tone-badge {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .tactical-headline {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+    .tactical-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .tactical-bullets li {
+      font-size: 12px;
+      color: #c8c8e0;
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .tactical-bullets li::before {
+      content: "·";
+      position: absolute;
+      left: 4px;
+      color: var(--accent);
+      font-weight: 900;
+      font-size: 16px;
+      line-height: 1;
+      top: 1px;
+    }
+
+    /* ── Warning Flags ── */
+    .warning-section { margin-bottom: 12px; }
+    .warning-flag {
+      border-radius: 0 10px 10px 0;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+    }
+    .wf-top {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+    }
+    .wf-icon { font-size: 14px; }
+    .wf-name { font-size: 12px; font-weight: 800; flex: 1; }
+    .wf-sev { font-size: 9px; font-weight: 800; letter-spacing: 0.8px; }
+    .wf-explain { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
     /* ── Insight Tip ── */
     .insight-tip {
       background: rgba(167,139,250,.08);
