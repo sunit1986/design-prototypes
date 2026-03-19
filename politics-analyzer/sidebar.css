@@ -1,0 +1,26 @@
+/* Workplace Political Intelligence — Sidebar Styles */
+/* Injected into host pages via content_scripts */
+
+#wpi-sidebar-root {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  z-index: 2147483646;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.4);
+}
+
+#wpi-sidebar-root.open {
+  transform: translateX(0);
+}
+
+#wpi-sidebar-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #0d0d1a;
+}
