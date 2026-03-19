@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Political Intelligence</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d1a;
+      --bg2: #1a1a2e;
+      --bg3: #16213e;
+      --accent: #e94560;
+      --accent2: #c23152;
+      --text: #e8e8f0;
+      --text2: #c8c8e0;
+      --muted: #8888aa;
+      --border: rgba(255,255,255,0.07);
+      --green: #22c55e;
+      --orange: #fb923c;
+      --red: #ef4444;
+      --purple: #a78bfa;
+      --blue: #60a5fa;
+      --yellow: #fbbf24;
+      --teal: #34d399;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+      overflow: hidden;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      flex-shrink: 0;
+      background: var(--bg3);
+      border-bottom: 1px solid rgba(233,69,96,0.25);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.2s;
+      line-height: 0;
+    }
+    .close-btn:hover { color: var(--accent); }
+
+    .header-logo {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .header-title { flex: 1; }
+    .header-title h1 { font-size: 14px; font-weight: 700; color: var(--text); }
+    .header-title p  { font-size: 11px; color: var(--muted); }
+
+    .header-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(233,69,96,0.15);
+      color: var(--accent);
+      border: 1px solid rgba(233,69,96,0.3);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Nav Tabs ── */
+    .nav-tabs {
+      flex-shrink: 0;
+      display: flex;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      gap: 0;
+    }
+
+    .nav-tab {
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Scrollable Content ── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+    .content::-webkit-scrollbar { width: 4px; }
+    .content::-webkit-scrollbar-track { background: transparent; }
+    .content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .tab-panel { display: none; padding: 16px; }
+    .tab-panel.active { display: block; }
+
+    /* ── Input area ── */
+    .input-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .input-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+      padding: 10px 12px;
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+      transition: border-color 0.2s;
+    }
+    textarea:focus { border-color: rgba(233,69,96,0.4); }
+    textarea::placeholder { color: #404060; }
+
+    .analyze-options {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .analyze-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 9px 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .analyze-btn:hover:not(:disabled) { opacity: 0.9; }
+
+    .mode-select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 12px;
+      padding: 8px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* ── Result Cards ── */
+    .result-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .card-header:hover { border-bottom-color: var(--border); }
+    .card-header.open { border-bottom-color: var(--border); }
+
+    .card-icon { font-size: 16px; flex-shrink: 0; }
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+    .card-meta { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+
+    .card-body { padding: 12px 14px; }
+
+    /* ── Risk ── */
+    .risk-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .risk-score-num {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .risk-bar-wrap { flex: 1; }
+    .risk-label-text { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+    .risk-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .risk-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #22c55e 0%, #fb923c 50%, #ef4444 100%);
+      transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-low    { background: rgba(34,197,94,.15);  color: #22c55e; }
+    .badge-medium { background: rgba(251,146,60,.15); color: #fb923c; }
+    .badge-high   { background: rgba(239,68,68,.15);  color: #ef4444; }
+    .badge-critical { background: rgba(220,38,38,.2); color: #dc2626; border:1px solid #dc2626; }
+
+    /* ── Signals ── */
+    .signal-item {
+      padding: 10px 12px;
+      border-left: 2px solid var(--accent);
+      background: rgba(233,69,96,0.04);
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 8px;
+    }
+    .signal-top { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .signal-name { font-size: 12px; font-weight: 700; color: var(--accent); }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-low    { background: #22c55e; }
+    .dot-medium { background: #fb923c; }
+    .dot-high   { background: #ef4444; }
+    .signal-quote { font-size: 11px; color: var(--muted); font-style: italic; margin-bottom: 5px; }
+    .signal-explain { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+    /* ── Intent ── */
+    .intent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .intent-box { padding: 10px; background: rgba(255,255,255,.03); border-radius: 8px; }
+    .intent-box.highlighted { border-left: 2px solid var(--accent); }
+    .ilabel { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 5px; }
+    .itext  { font-size: 12px; color: var(--text); line-height: 1.5; }
+
+    /* ── Power ── */
+    .power-row { margin-bottom: 10px; }
+    .plabel { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+    .ptext { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+    /* ── Replies ── */
+    .reply-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+    .reply-tab {
+      flex: 1;
+      padding: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: transparent;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .reply-tab:hover { border-color: rgba(233,69,96,.3); color: var(--text); }
+    .reply-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(233,69,96,.1); }
+
+    .reply-box {
+      background: rgba(255,255,255,.03);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .reply-text { font-size: 13px; color: var(--text); line-height: 1.6; margin-bottom: 8px; }
+    .reply-rationale { font-size: 11px; color: var(--muted); font-style: italic; }
+    .reply-copy-btn {
+      margin-top: 10px;
+      width: 100%;
+      padding: 7px;
+      background: rgba(233,69,96,.15);
+      border: 1px solid rgba(233,69,96,.3);
+      border-radius: 6px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .reply-copy-btn:hover { background: rgba(233,69,96,.25); }
+
+    /* ── Summary / Advice ── */
+    .summary-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
+    .advice-list { list-style: none; }
+    .advice-list li {
+      padding: 5px 0;
+      padding-left: 18px;
+      position: relative;
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+    .advice-list li::before {
+      content: "→";
+      position: absolute; left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ── History Tab ── */
+    .history-item {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .history-item:hover { border-color: rgba(233,69,96,.3); }
+    .history-preview { font-size: 12px; color: var(--text2); margin-bottom: 6px; line-height: 1.4; }
+    .history-meta { font-size: 10px; color: var(--muted); display: flex; justify-content: space-between; }
+    .history-risk { display: inline-flex; align-items: center; gap: 4px; }
+
+    /* ── Loading / Error ── */
+    .loading-wrap { text-align: center; padding: 32px 16px; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(233,69,96,.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 12px; color: var(--muted); }
+    .loading-steps { margin-top: 8px; }
+    .loading-step {
+      font-size: 11px;
+      color: #555570;
+      padding: 2px 0;
+      transition: color 0.3s;
+    }
+    .loading-step.active { color: var(--accent); }
+
+    .error-box {
+      background: rgba(239,68,68,.1);
+      border: 1px solid rgba(239,68,68,.3);
+      border-radius: 10px;
+      padding: 14px;
+      color: #ef4444;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* ── No API Key ── */
+    .setup-card {
+      background: var(--bg2);
+      border: 1px solid rgba(233,69,96,.3);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .setup-card .icon { font-size: 32px; margin-bottom: 10px; }
+    .setup-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .setup-card p { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+    .setup-action-btn {
+      padding: 9px 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ── Insight Tip ── */
+    .insight-tip {
+      background: rgba(167,139,250,.08);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+    .insight-tip strong { color: var(--purple); }
+
+    /* ── Chevron ── */
+    .chevron { transition: transform 0.25s; }
+    .chevron.rotated { transform: rotate(180deg); }
+
+    /* ── Footer ── */
+    .footer {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg);
+    }
+    .footer-link {
+      font-size: 10px;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .footer-link:hover { color: var(--accent); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <button class="close-btn" id="closeBtn" title="Close panel">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <div class="header-logo">⚡</div>
+    <div class="header-title">
+      <h1>Political Intelligence</h1>
+      <p>Workplace Power Decoder</p>
+    </div>
+    <span class="header-badge" id="providerBadge">AI</span>
+  </div>
+
+  <!-- Nav Tabs -->
+  <div class="nav-tabs">
+    <div class="nav-tab active" data-tab="analyze">Analyze</div>
+    <div class="nav-tab" data-tab="signals">Signals</div>
+    <div class="nav-tab" data-tab="replies">Replies</div>
+    <div class="nav-tab" data-tab="history">History</div>
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="content">
+
+    <!-- ANALYZE TAB -->
+    <div class="tab-panel active" id="tab-analyze">
+
+      <div id="noKeyWarning" class="setup-card hidden">
+        <div class="icon">🔑</div>
+        <h3>API Key Required</h3>
+        <p>Configure your Claude or OpenAI API key to start decoding workplace politics.</p>
+        <button class="setup-action-btn" id="goToSettings">Configure Now →</button>
+      </div>
+
+      <div id="analyzeForm">
+        <div class="input-card">
+          <div class="input-label">Message or thread to analyze</div>
+          <textarea id="sidebarInput" placeholder="Paste email, Slack message, or conversation thread…"></textarea>
+          <div class="analyze-options">
+            <select class="mode-select" id="analyzeMode">
+              <option value="message">Single message</option>
+              <option value="thread">Thread / conversation</option>
+              <option value="quick">Quick decode</option>
+            </select>
+            <button class="analyze-btn" id="sidebarAnalyzeBtn">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              Analyze
+            </button>
+          </div>
+        </div>
+
+        <!-- Results injected here -->
+        <div id="sidebarResults"></div>
+      </div>
+
+    </div>
+
+    <!-- SIGNALS TAB (signal glossary + patterns) -->
+    <div class="tab-panel" id="tab-signals">
+      <div class="insight-tip">
+        <strong>How to read this:</strong> These are the 12 most common corporate power moves. Learn to spot them in real-time.
+      </div>
+      <div id="signalGlossary"></div>
+    </div>
+
+    <!-- REPLIES TAB (reply builder) -->
+    <div class="tab-panel" id="tab-replies">
+      <div id="repliesPanel">
+        <p style="color:var(--muted);font-size:12px;text-align:center;padding:20px">
+          Run an analysis first to get suggested replies.
+        </p>
+      </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div class="tab-panel" id="tab-history">
+      <div id="historyList">
+        <p style="color:var(--muted);font-size:12px;text-align:center;padding:20px">No history yet.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="footer-link" id="settingsLink">⚙ Settings</span>
+    <span style="font-size:10px;color:#333355">Political Intelligence v1.0</span>
+    <span class="footer-link" id="clearHistoryLink">Clear history</span>
+  </div>
+
+</div>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

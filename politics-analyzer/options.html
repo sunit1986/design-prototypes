@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Political Intelligence — Settings</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0d0d1a;
+      color: #e8e8f0;
+      min-height: 100vh;
+      padding: 40px 20px;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #e94560, #c23152);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+
+    .header-title h1 { font-size: 20px; font-weight: 800; color: #fff; }
+    .header-title p  { font-size: 13px; color: #8888aa; margin-top: 2px; }
+
+    .card {
+      background: #1a1a2e;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #8888aa;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c8c8e0;
+      margin-bottom: 6px;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #555570;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #e8e8f0;
+      font-family: inherit;
+      font-size: 13px;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus { border-color: rgba(233,69,96,0.5); }
+    input::placeholder { color: #404060; }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .input-row input { flex: 1; }
+
+    .toggle-btn {
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #8888aa;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .toggle-btn:hover { border-color: rgba(233,69,96,0.3); color: #e8e8f0; }
+
+    .provider-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .provider-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .provider-tab:hover { border-color: rgba(233,69,96,0.3); }
+    .provider-tab.active { border-color: #e94560; background: rgba(233,69,96,0.1); }
+    .provider-tab .ptname { font-size: 13px; font-weight: 700; color: #e8e8f0; }
+    .provider-tab .ptdesc { font-size: 10px; color: #8888aa; margin-top: 2px; }
+
+    .save-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #e94560, #c23152);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s;
+      margin-top: 4px;
+    }
+    .save-btn:hover { opacity: 0.9; }
+
+    .test-btn {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #e8e8f0;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .test-btn:hover { border-color: rgba(233,69,96,0.3); }
+
+    .status-msg {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-top: 10px;
+      display: none;
+      line-height: 1.5;
+    }
+    .status-msg.success {
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #22c55e;
+      display: block;
+    }
+    .status-msg.error {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #ef4444;
+      display: block;
+    }
+    .status-msg.info {
+      background: rgba(96,165,250,0.1);
+      border: 1px solid rgba(96,165,250,0.2);
+      color: #60a5fa;
+      display: block;
+    }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .toggle-row label { margin-bottom: 0; }
+    .toggle-switch {
+      position: relative;
+      width: 40px; height: 22px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input { display: none; }
+    .toggle-switch .slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 11px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-switch input:checked + .slider { background: #e94560; }
+    .toggle-switch .slider::before {
+      content: "";
+      position: absolute;
+      width: 16px; height: 16px;
+      left: 3px; top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .toggle-switch input:checked + .slider::before { transform: translateX(18px); }
+
+    .about-text {
+      font-size: 12px;
+      color: #555570;
+      line-height: 1.7;
+    }
+    .about-text a { color: #e94560; text-decoration: none; }
+
+    select option { background: #1a1a2e; }
+
+    .model-info {
+      font-size: 11px;
+      color: #555570;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">⚡</div>
+    <div class="header-title">
+      <h1>Political Intelligence</h1>
+      <p>Settings &amp; Configuration</p>
+    </div>
+  </div>
+
+  <!-- API Provider -->
+  <div class="card">
+    <div class="card-title">🔑 AI Provider</div>
+
+    <div class="provider-tabs">
+      <div class="provider-tab active" data-provider="anthropic" onclick="selectProvider('anthropic', this)">
+        <div class="ptname">Claude (Anthropic)</div>
+        <div class="ptdesc">Recommended · Best analysis</div>
+      </div>
+      <div class="provider-tab" data-provider="openai" onclick="selectProvider('openai', this)">
+        <div class="ptname">OpenAI GPT</div>
+        <div class="ptdesc">Alternative provider</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label id="apiKeyLabel">Anthropic API Key</label>
+      <div class="input-row">
+        <input type="password" id="apiKeyInput" placeholder="sk-ant-..." autocomplete="off">
+        <button class="toggle-btn" id="toggleKeyBtn" onclick="toggleKeyVisibility()">Show</button>
+      </div>
+      <div class="hint" id="apiKeyHint">
+        Get your key at console.anthropic.com → API Keys
+      </div>
+    </div>
+
+    <div class="field" id="modelField">
+      <label>Model</label>
+      <select id="modelSelect">
+        <option value="claude-sonnet-4-6">Claude Sonnet 4.6 — Best balance (Recommended)</option>
+        <option value="claude-opus-4-6">Claude Opus 4.6 — Most powerful</option>
+        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — Fastest &amp; cheapest</option>
+      </select>
+      <div class="model-info" id="modelInfo">Sonnet 4.6: Great analysis quality with fast response.</div>
+    </div>
+
+  </div>
+
+  <!-- Behavior Settings -->
+  <div class="card">
+    <div class="card-title">⚙️ Behavior</div>
+
+    <div class="toggle-row">
+      <div>
+        <label>Show floating button on text selection</label>
+        <div class="hint">Floating "Analyze Politics" button appears when you select text</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="showFloatingBtn" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <div>
+        <label>Auto-analyze pasted text</label>
+        <div class="hint">Automatically run analysis when text is pasted into the panel</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="autoAnalyze">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <div>
+        <label>Save analysis history</label>
+        <div class="hint">Store last 50 analyses locally for quick reference</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="saveHistory" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="field">
+      <label>Default analysis mode</label>
+      <select id="defaultMode">
+        <option value="message">Single message</option>
+        <option value="thread">Thread / conversation</option>
+        <option value="quick">Quick decode</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="card">
+    <div class="card-title">🧪 Test &amp; Save</div>
+
+    <button class="save-btn" id="saveBtn" onclick="saveSettings()">Save Settings</button>
+    <button class="test-btn" id="testBtn" onclick="testConnection()">Test API Connection</button>
+
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+  <!-- About -->
+  <div class="card">
+    <div class="card-title">ℹ️ About</div>
+    <p class="about-text">
+      <strong style="color:#e8e8f0">Workplace Political Intelligence</strong> v1.0<br><br>
+      Decode power dynamics, hidden intent, and political signals in workplace communication.
+      Works on Gmail, Outlook, Slack, LinkedIn, Notion, and any web page.<br><br>
+      Your API key is stored locally in Chrome's sync storage and never sent to third parties.
+      All analysis is sent directly to your chosen AI provider.
+    </p>
+  </div>
+
+</div>
+
+<script src="options.js"></script>
+</body>
+</html>

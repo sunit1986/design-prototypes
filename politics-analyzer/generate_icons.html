@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Extension Icons</title>
+  <style>
+    body { background: #0d0d1a; color: #e8e8f0; font-family: sans-serif; padding: 30px; text-align: center; }
+    h2 { color: #e94560; margin-bottom: 20px; }
+    p { color: #8888aa; margin-bottom: 20px; }
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #e94560, #c23152);
+      border: none; border-radius: 8px;
+      color: #fff; font-size: 14px; font-weight: 700;
+      cursor: pointer;
+    }
+    canvas { display: none; }
+    .icons { display: flex; gap: 20px; justify-content: center; margin-top: 24px; align-items: flex-end; }
+    .icon-wrap { text-align: center; }
+    .icon-wrap img { display: block; border-radius: 8px; }
+    .icon-wrap span { color: #8888aa; font-size: 12px; display: block; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <h2>⚡ Icon Generator</h2>
+  <p>Click "Generate Icons" then save each image into the <code>icons/</code> folder as icon16.png, icon48.png, icon128.png</p>
+  <button onclick="generateAll()">Generate & Download Icons</button>
+
+  <div class="icons" id="preview"></div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    function drawIcon(size) {
+      const canvas = document.getElementById("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+
+      // Background gradient
+      const bg = ctx.createLinearGradient(0, 0, size, size);
+      bg.addColorStop(0, "#1a1a2e");
+      bg.addColorStop(1, "#16213e");
+      ctx.fillStyle = bg;
+      const r = size * 0.2;
+      ctx.beginPath();
+      ctx.moveTo(r, 0);
+      ctx.lineTo(size - r, 0);
+      ctx.quadraticCurveTo(size, 0, size, r);
+      ctx.lineTo(size, size - r);
+      ctx.quadraticCurveTo(size, size, size - r, size);
+      ctx.lineTo(r, size);
+      ctx.quadraticCurveTo(0, size, 0, size - r);
+      ctx.lineTo(0, r);
+      ctx.quadraticCurveTo(0, 0, r, 0);
+      ctx.fill();
+
+      // Accent border
+      ctx.strokeStyle = "#e94560";
+      ctx.lineWidth = size * 0.04;
+      ctx.beginPath();
+      ctx.moveTo(r, size * 0.02);
+      ctx.lineTo(size - r, size * 0.02);
+      ctx.quadraticCurveTo(size - size*0.02, size*0.02, size - size*0.02, r);
+      ctx.lineTo(size - size*0.02, size - r);
+      ctx.quadraticCurveTo(size - size*0.02, size - size*0.02, size - r, size - size*0.02);
+      ctx.lineTo(r, size - size*0.02);
+      ctx.quadraticCurveTo(size*0.02, size - size*0.02, size*0.02, size - r);
+      ctx.lineTo(size*0.02, r);
+      ctx.quadraticCurveTo(size*0.02, size*0.02, r, size*0.02);
+      ctx.stroke();
+
+      // Lightning bolt ⚡ emoji style
+      const cx = size / 2;
+      const cy = size / 2;
+      const s = size * 0.55;
+
+      const grad = ctx.createLinearGradient(cx - s/2, cy - s/2, cx + s/2, cy + s/2);
+      grad.addColorStop(0, "#e94560");
+      grad.addColorStop(1, "#c23152");
+      ctx.fillStyle = grad;
+
+      // Draw lightning bolt
+      ctx.beginPath();
+      ctx.moveTo(cx + s * 0.1,  cy - s * 0.45);  // top right
+      ctx.lineTo(cx - s * 0.05, cy + s * 0.05);  // mid left
+      ctx.lineTo(cx + s * 0.15, cy + s * 0.05);  // mid right
+      ctx.lineTo(cx - s * 0.1,  cy + s * 0.45);  // bottom left
+      ctx.lineTo(cx + s * 0.22, cy - s * 0.05);  // upper right
+      ctx.lineTo(cx + s * 0.02, cy - s * 0.05);  // upper left
+      ctx.closePath();
+      ctx.fill();
+
+      return canvas.toDataURL("image/png");
+    }
+
+    function generateAll() {
+      const sizes = [16, 48, 128];
+      const preview = document.getElementById("preview");
+      preview.innerHTML = "";
+
+      sizes.forEach(size => {
+        const dataUrl = drawIcon(size);
+
+        // Preview
+        const wrap = document.createElement("div");
+        wrap.className = "icon-wrap";
+        const img = document.createElement("img");
+        img.src = dataUrl;
+        img.width = size;
+        img.height = size;
+        wrap.appendChild(img);
+        const label = document.createElement("span");
+        label.textContent = `icon${size}.png`;
+        wrap.appendChild(label);
+        preview.appendChild(wrap);
+
+        // Auto-download
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = `icon${size}.png`;
+        a.click();
+      });
+    }
+  </script>
+</body>
+</html>
