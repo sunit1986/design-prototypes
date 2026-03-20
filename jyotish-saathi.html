@@ -43,12 +43,6 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 
 .phone-frame{width:360px;height:800px;background:var(--surface);position:relative;overflow:hidden;display:flex;flex-direction:column;border-radius:32px;box-shadow:0 24px 80px rgba(0,0,0,0.15);}
 
-/* STATUS BAR */
-.status-bar{height:52px;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--surface);}
-.status-bar .time{font-size:15px;font-weight:600;color:var(--text-high);}
-.status-bar .icons{display:flex;gap:6px;align-items:center;}
-.status-bar .icons svg{width:16px;height:16px;fill:var(--text-high);}
-
 /* HEADER */
 .header-nav{height:56px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid var(--surface-moderate);background:var(--surface);}
 .header-left{display:flex;align-items:center;gap:8px;}
@@ -726,36 +720,68 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
   background:rgba(0,0,0,0.15); margin:8px auto 0;
 }
 
-/* ── COSMIC ASTROLOGY HEADER (image 2) ── */
-.cosmic-hero { flex-shrink:0; width:100%; position:relative; }
-.cosmic-hero-wrap { position:relative; width:100%; height:137px; overflow:hidden; }
-.cosmic-hero-banner { position:absolute; inset:0; background:url('https://www.figma.com/api/mcp/asset/37e5b81e-b03f-40f4-9fc3-11595b349c24') center center / cover no-repeat; }
-.cosmic-hero-overlay { position:absolute; inset:0; background:#4802b0; opacity:0.5; pointer-events:none; }
-.cosmic-status-bar { flex-shrink:0; height:52px; padding:10px 20px 6px; display:flex; align-items:flex-end; justify-content:space-between; position:relative; z-index:8; color:#fff; }
-.cosmic-status-bar .time { font-size:14px; font-weight:500; line-height:1.3; }
-.cosmic-status-icons { display:flex; align-items:center; gap:6px; }
-.cosmic-status-icons svg { display:block; opacity:0.95; }
-.cosmic-camera-pill { position:absolute; left:50%; top:18px; transform:translateX(-50%); width:24px; height:24px; border-radius:50%; background:#000; }
-.cosmic-back-btn { position:absolute; top:52px; left:12px; z-index:9; width:46px; height:46px; border-radius:46px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:12px; text-decoration:none; }
-.cosmic-back-btn:active { opacity:0.7; }
-.cosmic-back-btn svg { width:18px; height:18px; color:#fff; }
-.cosmic-back-btn svg path { fill:none; stroke:currentColor; }
-.cosmic-avatar-block { display:flex; flex-direction:column; align-items:center; margin-top:-56px; position:relative; z-index:5; background:#fff; padding-bottom:8px; }
-.cosmic-avatar-ring { width:120px; height:120px; border-radius:50%; border:3px solid #fff; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.12); }
-.cosmic-avatar-ring img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-.cosmic-avatar-title { font-size:24px; font-weight:700; line-height:1.3; letter-spacing:-0.72px; color:#000; text-align:center; margin:8px 0 6px; font-family:'JioType',sans-serif; }
-.cosmic-hero-actions { display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; width:100%; padding:0 12px 4px; }
-.cosmic-hero-actions .icon-btn-ghost { background:var(--surface-ghost,#eeeeef); }
+/* ── LANDING HERO — match bollywood-tools / cricket-tools (137px banner + avatar overlap) ── */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.anim-1{animation:fadeDown .4s ease both;animation-delay:0s}
+.hero-banner{
+  position:relative;width:100%;height:137px;overflow:hidden;flex-shrink:0;
+}
+.hero-banner-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(.85);
+}
+.hero-banner-gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.55) 100%);
+  pointer-events:none;
+}
+/* Hero back: glass pill (scoped so chat chrome .back-btn stays unchanged) */
+.hero-banner .back-btn{
+  position:absolute;top:16px;left:12px;z-index:5;
+  width:40px;height:40px;border-radius:50%;border:none;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.hero-banner .back-btn:active{background:rgba(255,255,255,.3)}
+.hero-banner .back-btn svg{width:20px;height:20px;color:#fff;fill:none}
+.hero-banner .back-btn svg path{fill:none;stroke:currentColor}
 
-/* Chat layer on top of landing (bollywood-tools pattern: landing stays, chat is overlay) */
-.chat-shell {
-  position:absolute; inset:0; z-index:550;
+.avatar-section{
+  display:flex;flex-direction:column;align-items:center;
+  margin-top:-56px;position:relative;z-index:3;
+}
+.avatar-ring{
+  width:120px;height:120px;border-radius:50%;
+  border:3px solid #f3e8ff;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.avatar-ring img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.avatar-name{
+  font-size:24px;font-weight:700;line-height:1.3;letter-spacing:-.72px;
+  color:#000;text-align:center;margin-top:8px;font-family:'JioType',sans-serif;
+}
+
+/* Chat overlay — same layering as career.html / bollywood-tools #chatOverlay (z-index 100; notifs above) */
+.chat-overlay {
+  position:absolute; inset:0; z-index:100;
   display:none; flex-direction:column;
   background:var(--surface); overflow:hidden;
 }
-.chat-shell .cosmic-hero { flex-shrink:0; }
-.chat-shell .chat-container { flex:1; min-height:0; overflow-y:auto; overflow-x:clip; }
-.chat-shell .bottom-widget { flex-shrink:0; }
+.chat-overlay .chat-chrome-header { flex-shrink:0; background:var(--surface); }
+.chat-overlay .header-left { flex:1; min-width:0; }
+.chat-overlay .header-title-area { min-width:0; }
+.chat-overlay .header-nav .header-title { font-weight:700; letter-spacing:-0.02em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chat-overlay .header-nav .header-domain { margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chat-overlay .header-right { flex-shrink:0; align-items:center; }
+.chat-overlay .chat-container { flex:1; min-height:0; overflow-y:auto; overflow-x:clip; }
+.chat-overlay .bottom-widget { flex-shrink:0; }
+
+/* Landing = default column in phone-frame (not stacked under chat in DOM order) */
+.landing-screen {
+  flex:1; min-height:0; display:flex; flex-direction:column;
+  overflow:hidden; background:var(--surface); font-family:'JioType',sans-serif;
+}
 
 /* ── LANDING SCREEN ── */
 .ls-scroll-body { flex:1; overflow-y:auto; scrollbar-width:none; padding-bottom:8px; }
@@ -988,148 +1014,24 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 <body>
 
 <div class="phone-frame" id="app">
-  <div id="chatShell" class="chat-shell" aria-hidden="true">
-  <!-- Cosmic Astrology header (chat) -->
-  <div class="cosmic-hero" id="cosmicHeroChat">
-    <div class="cosmic-hero-wrap">
-      <div class="cosmic-status-bar">
-        <span class="time">9:30</span>
-        <span class="cosmic-camera-pill" aria-hidden="true"></span>
-        <div class="cosmic-status-icons" aria-hidden="true">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 6.567 5.567 5 7.5 5h9C18.433 5 20 6.567 20 8.5v7c0 1.933-1.567 3.5-3.5 3.5h-9C5.567 19 4 17.433 4 15.5v-7z" stroke="#fff" stroke-width="1.4"/><path d="M8 12h8" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 14l2.5-3 2 2.5L14 8l6 7" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <svg width="10" height="15" viewBox="0 0 16 24" fill="none"><rect x="2" y="4" width="12" height="16" rx="2" stroke="#fff" stroke-width="1.4"/><path d="M5 7h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
-        </div>
-      </div>
-      <div class="cosmic-hero-banner"></div>
-      <div class="cosmic-hero-overlay"></div>
-      <button type="button" class="cosmic-back-btn" onclick="goBackToLanding()" aria-label="Back">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-    <div class="cosmic-avatar-block">
-      <div class="cosmic-avatar-ring">
-        <img src="https://www.figma.com/api/mcp/asset/a2eae70d-3b8c-4bbd-9547-f78fa191ec34" alt="" width="120" height="120">
-      </div>
-      <h1 class="cosmic-avatar-title">Astrology</h1>
-      <div class="cosmic-hero-actions">
-        <button type="button" class="icon-btn-ghost" onclick="showKundaliAgain()" title="My Kundali">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-        </button>
-        <button type="button" class="icon-btn-ghost" onclick="showAstrologerOverlay()" title="Talk to Astrologer">
-          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-        </button>
-        <div class="bell-wrapper">
-          <button type="button" class="icon-btn-ghost" onclick="showUpdatesManager()" title="Manage Astrology Updates">
-            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="currentColor"/></svg>
-          </button>
-          <span class="notif-badge"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Chat Container -->
-  <div class="chat-container" id="chatContainer"></div>
-
-  <!-- Bottom Input -->
-  <div class="bottom-widget">
-    <div class="bw-container">
-      <div class="bw-input">
-        <input type="text" class="bw-real-input" id="chatInput"
-          placeholder="Ask your question..."
-          onkeydown="if(event.key==='Enter')sendUserText()"
-          oninput="toggleSendBtn()">
-      </div>
-      <div class="bw-actions">
-        <div class="bw-left">
-          <button class="wib" onclick="showAstrologerOverlay()">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          </button>
-          <button class="wib">
-            <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
-          </button>
-        </div>
-        <button class="bw-send hidden-send" id="sendBtn" onclick="sendUserText()">
-          <svg viewBox="0 0 24 24"><path d="M3.4 20.4l17.45-7.48a1 1 0 000-1.84L3.4 3.6a.993.993 0 00-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>
-        </button>
-        <button class="speak-btn" id="speakBtn">
-          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
-          <span>Speak</span>
-        </button>
-      </div>
-    </div>
-  </div>
-  </div><!-- /#chatShell -->
-
-  <!-- Notification Feed Overlay -->
-  <div class="notif-feed-overlay" id="notifFeedOverlay">
-    <div class="nf-header">
-      <button class="nf-back-btn" onclick="closeNotifFeed()">
-        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>
-      </button>
-      <div class="nf-title">Notifications</div>
-    </div>
-    <div class="nf-body" id="notifFeedBody"></div>
-  </div>
-
-  <!-- Updates Manager Backdrop + Bottom Sheet -->
-  <div class="updates-backdrop" id="updatesBackdrop" onclick="closeUpdatesManager()"></div>
-  <div class="updates-overlay" id="updatesOverlay">
-    <div class="uo-drag-handle"></div>
-    <div class="uo-header">
-      <button class="uo-back" onclick="closeUpdatesManager()">
-        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/></svg>
-      </button>
-      <div class="uo-title">Manage Your Astrology Updates</div>
-    </div>
-    <div class="uo-body" id="updatesBody"></div>
-  </div>
-
-  <!-- Push Notification Preview Modal -->
-  <div class="notif-preview-modal" id="notifPreviewModal" onclick="closeNotifPreviewModal()">
-    <div class="npm-inner" onclick="event.stopPropagation()">
-      <div class="npm-label">📲 Notification Preview</div>
-      <div class="npm-card" id="npmCard">
-        <div class="npm-top">
-          <div class="npm-app-icon">✦</div>
-          <div class="npm-app-name">Jyotish Saathi</div>
-          <div class="npm-time">now</div>
-          <button class="npm-close" onclick="closeNotifPreviewModal()">✕</button>
-        </div>
-        <div class="npm-title" id="npmTitle"></div>
-        <div class="npm-body" id="npmBody"></div>
-        <div class="npm-tap-hint">Tap to open Jyotish Saathi →</div>
-        <div class="npm-swipe-hint"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── LANDING SCREEN ── -->
-  <div id="landingOverlay" style="position:absolute;inset:0;z-index:500;background:#fff;display:flex;flex-direction:column;overflow:hidden;font-family:'JioType',sans-serif;">
+  <!-- LANDING: default screen (cosmic hero + scroll — like bollywood-tools / career.html) -->
+  <div id="landingOverlay" class="landing-screen">
     <div class="ls-scroll-body">
-      <div class="cosmic-hero" id="cosmicHeroLanding">
-        <div class="cosmic-hero-wrap">
-          <div class="cosmic-status-bar">
-            <span class="time">9:30</span>
-            <span class="cosmic-camera-pill" aria-hidden="true"></span>
-            <div class="cosmic-status-icons" aria-hidden="true">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 6.567 5.567 5 7.5 5h9C18.433 5 20 6.567 20 8.5v7c0 1.933-1.567 3.5-3.5 3.5h-9C5.567 19 4 17.433 4 15.5v-7z" stroke="#fff" stroke-width="1.4"/><path d="M8 12h8" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 14l2.5-3 2 2.5L14 8l6 7" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <svg width="10" height="15" viewBox="0 0 16 24" fill="none"><rect x="2" y="4" width="12" height="16" rx="2" stroke="#fff" stroke-width="1.4"/><path d="M5 7h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
-            </div>
-          </div>
-          <div class="cosmic-hero-banner"></div>
-          <div class="cosmic-hero-overlay"></div>
-          <a href="jbiqhomepage.html" class="cosmic-back-btn" aria-label="Back">
+      <div id="cosmicHeroLanding">
+        <div class="hero-banner anim-1">
+          <img class="hero-banner-bg" src="https://www.figma.com/api/mcp/asset/37e5b81e-b03f-40f4-9fc3-11595b349c24" alt="Astrology banner"
+            onerror="this.style.display='none';var el=document.getElementById('jyotish-hero-fallback');if(el)el.style.display='block';">
+          <div id="jyotish-hero-fallback" class="hero-banner-bg" style="display:none;background:linear-gradient(135deg,#1a0a5e 0%,#4802b0 45%,#2d0a8a 100%);position:absolute;inset:0"></div>
+          <div class="hero-banner-gradient"></div>
+          <a href="jbiqhomepage.html" class="back-btn" aria-label="Back">
             <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
-        <div class="cosmic-avatar-block">
-          <div class="cosmic-avatar-ring">
-            <img src="https://www.figma.com/api/mcp/asset/a2eae70d-3b8c-4bbd-9547-f78fa191ec34" alt="" width="120" height="120">
+        <div class="avatar-section anim-1">
+          <div class="avatar-ring">
+            <img src="https://www.figma.com/api/mcp/asset/a2eae70d-3b8c-4bbd-9547-f78fa191ec34" alt="Astrology">
           </div>
-          <h1 class="cosmic-avatar-title">Astrology</h1>
+          <div class="avatar-name">Astrology</div>
         </div>
       </div>
       <div class="ls-rashifal-header">
@@ -1189,6 +1091,115 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
             <div class="ls-entry-option-desc">📞 Voice call • In English • 24/7</div>
           </div>
         </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- CHAT OVERLAY: separate full-screen layer (same idea as career.html / bollywood-tools #chatOverlay) -->
+  <div id="chatOverlay" class="chat-overlay" aria-hidden="true">
+  <!-- White chrome (same pattern as AI-Powered Audio / other tool chats) -->
+  <div class="chat-chrome-header">
+    <div class="header-nav">
+      <div class="header-left">
+        <button type="button" class="back-btn" onclick="goBackToLanding()" aria-label="Back">
+          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <div class="header-title-area">
+          <div class="header-title">Jyotish Saathi</div>
+          <div class="header-domain">Astrology</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" class="icon-btn-ghost" onclick="showKundaliAgain()" title="My Kundali">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </button>
+        <button type="button" class="icon-btn-ghost" onclick="showAstrologerOverlay()" title="Talk to Astrologer">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        </button>
+        <div class="bell-wrapper">
+          <button type="button" class="icon-btn-ghost" onclick="showUpdatesManager()" title="Manage Astrology Updates">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="currentColor"/></svg>
+          </button>
+          <span class="notif-badge"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Container -->
+  <div class="chat-container" id="chatContainer"></div>
+
+  <!-- Bottom Input -->
+  <div class="bottom-widget">
+    <div class="bw-container">
+      <div class="bw-input">
+        <input type="text" class="bw-real-input" id="chatInput"
+          placeholder="Ask your question..."
+          onkeydown="if(event.key==='Enter')sendUserText()"
+          oninput="toggleSendBtn()">
+      </div>
+      <div class="bw-actions">
+        <div class="bw-left">
+          <button class="wib" onclick="showAstrologerOverlay()">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          </button>
+          <button class="wib">
+            <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+          </button>
+        </div>
+        <button class="bw-send hidden-send" id="sendBtn" onclick="sendUserText()">
+          <svg viewBox="0 0 24 24"><path d="M3.4 20.4l17.45-7.48a1 1 0 000-1.84L3.4 3.6a.993.993 0 00-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>
+        </button>
+        <button class="speak-btn" id="speakBtn">
+          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+          <span>Speak</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  </div><!-- /#chatOverlay -->
+
+  <!-- Notification Feed Overlay -->
+  <div class="notif-feed-overlay" id="notifFeedOverlay">
+    <div class="nf-header">
+      <button class="nf-back-btn" onclick="closeNotifFeed()">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>
+      </button>
+      <div class="nf-title">Notifications</div>
+    </div>
+    <div class="nf-body" id="notifFeedBody"></div>
+  </div>
+
+  <!-- Updates Manager Backdrop + Bottom Sheet -->
+  <div class="updates-backdrop" id="updatesBackdrop" onclick="closeUpdatesManager()"></div>
+  <div class="updates-overlay" id="updatesOverlay">
+    <div class="uo-drag-handle"></div>
+    <div class="uo-header">
+      <button class="uo-back" onclick="closeUpdatesManager()">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/></svg>
+      </button>
+      <div class="uo-title">Manage Your Astrology Updates</div>
+    </div>
+    <div class="uo-body" id="updatesBody"></div>
+  </div>
+
+  <!-- Push Notification Preview Modal -->
+  <div class="notif-preview-modal" id="notifPreviewModal" onclick="closeNotifPreviewModal()">
+    <div class="npm-inner" onclick="event.stopPropagation()">
+      <div class="npm-label">📲 Notification Preview</div>
+      <div class="npm-card" id="npmCard">
+        <div class="npm-top">
+          <div class="npm-app-icon">✦</div>
+          <div class="npm-app-name">Jyotish Saathi</div>
+          <div class="npm-time">now</div>
+          <button class="npm-close" onclick="closeNotifPreviewModal()">✕</button>
+        </div>
+        <div class="npm-title" id="npmTitle"></div>
+        <div class="npm-body" id="npmBody"></div>
+        <div class="npm-tap-hint">Tap to open Jyotish Saathi →</div>
+        <div class="npm-swipe-hint"></div>
       </div>
     </div>
   </div>
@@ -4038,8 +4049,8 @@ let _selectedRashi = -1;
 let _callTimerInterval = null;
 let _callTimerStart = 0;
 
-function _setChatShellVisible(on) {
-  const shell = document.getElementById('chatShell');
+function _setChatOverlayVisible(on) {
+  const shell = document.getElementById('chatOverlay');
   if (!shell) return;
   if (on) {
     shell.style.display = 'flex';
@@ -4051,7 +4062,7 @@ function _setChatShellVisible(on) {
 }
 
 function goBackToLanding() {
-  _setChatShellVisible(false);
+  _setChatOverlayVisible(false);
   const cs = document.getElementById('callScreen');
   if (cs) cs.style.display = 'none';
   const el = document.getElementById('landingOverlay');
@@ -4154,16 +4165,16 @@ function _hideLandingAndStartChat(ctx) {
   const el = document.getElementById('landingOverlay');
   const run = () => {
     if (!ctx) {
-      _setChatShellVisible(true);
+      _setChatOverlayVisible(true);
       startWelcome();
       return;
     }
     if (ctx.type === 'call') {
-      _setChatShellVisible(false);
+      _setChatOverlayVisible(false);
       showCallScreen();
       return;
     }
-    _setChatShellVisible(true);
+    _setChatOverlayVisible(true);
     if (ctx.type==='rashifal')   _startChatRashifal(ctx.rashi);
     else if (ctx.type==='insight')    _startChatInsight(ctx.context);
     else if (ctx.type==='topic')      _startChatTopic(ctx.topic);
@@ -4338,10 +4349,10 @@ function lifeAdviceOptionTapped(opt) {
   closeLifeAdviceSheet();
   setTimeout(() => {
     if (opt === 'chat') {
-      _setChatShellVisible(true);
+      _setChatOverlayVisible(true);
       startWelcome();
     } else {
-      _setChatShellVisible(false);
+      _setChatOverlayVisible(false);
       showCallScreen();
     }
   }, 350);
@@ -4387,7 +4398,7 @@ function _clearCallTimer() {
   document.getElementById('csWaveform')?.classList.add('idle');
 }
 function hangUpCall()    { _clearCallTimer(); document.getElementById('callScreen').style.display='none'; }
-function continueInChat(){ _clearCallTimer(); document.getElementById('callScreen').style.display='none'; _setChatShellVisible(true); startWelcome(); }
+function continueInChat(){ _clearCallTimer(); document.getElementById('callScreen').style.display='none'; _setChatOverlayVisible(true); startWelcome(); }
 
 // ── Init ──
 showLandingScreen();
