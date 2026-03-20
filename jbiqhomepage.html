@@ -651,7 +651,7 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
 <div class="input-widget" id="homeInput">
   <div class="input-field">
     <div class="input-top">
-      <input class="input-text" type="text" placeholder="Hey Deepak, what's on your mind?" readonly id="homeInputText">
+      <input class="input-text" type="text" placeholder="Hey Deepak, what's on your mind?" id="homeInputText" autocomplete="off">
     </div>
     <div class="input-actions">
       <div class="input-left">
@@ -660,7 +660,7 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
         </button>
       </div>
       <div class="input-right">
-        <button class="input-mic-btn" aria-label="Mic">
+        <button type="button" class="input-mic-btn" aria-label="Mic" id="homeMicBtn">
           <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
         <button class="speak-btn" id="homeSpeakBtn">
@@ -820,7 +820,20 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
 .fb-btn svg{width:18px;height:18px;color:#666}
 </style>
 
+<!-- If jbiq-config.js fails to load, CHAT_PROXY must still be set; otherwise fetch(CHAT_PROXY) throws ReferenceError or POSTs to this HTML (405 on static hosts). -->
+<script>
+(function () {
+  var u = 'https://jbiq-proxy.sunit3-sharma.workers.dev';
+  if (!window.JBIQ_CONFIG) window.JBIQ_CONFIG = {};
+  if (!window.JBIQ_CONFIG.CHAT_PROXY) window.JBIQ_CONFIG.CHAT_PROXY = u;
+})();
+var CHAT_PROXY = window.JBIQ_CONFIG.CHAT_PROXY;
+</script>
 <script src="jbiq-config.js"></script>
+<script>
+// This page only: TTS for Speak / voice playback uses ElevenLabs (keys in jbiq-config.js)
+if(window.JBIQ_CONFIG)window.JBIQ_CONFIG.TTS_PROVIDER='elevenlabs';
+</script>
 <script>
 // SARVAM_KEY and CHAT_PROXY now loaded from jbiq-config.js
 
@@ -832,12 +845,20 @@ let currentAudio=null;
 let playbackCtx=null;
 let lastTtsBase64=null;
 
-// ── HOME INPUT HANDLERS ──
-document.getElementById('homeInputText').addEventListener('click',function(){openChat()});
-document.getElementById('homeInputText').removeAttribute('readonly');
-document.getElementById('homeInputText').addEventListener('focus',function(e){
-  e.preventDefault();this.blur();openChat();
+// ── HOME INPUT HANDLERS (bottom bar: type + Enter sends; mic / Speak open voice) ──
+function sendFromHomeInput(){
+  const home=document.getElementById('homeInputText');
+  const msg=home.value.trim();
+  if(!msg)return;
+  home.value='';
+  openChat();
+  document.getElementById('chatInput').value=msg;
+  sendChat();
+}
+document.getElementById('homeInputText').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){e.preventDefault();sendFromHomeInput();}
 });
+document.getElementById('homeMicBtn').addEventListener('click',function(){openVoice()});
 document.getElementById('homeSpeakBtn').addEventListener('click',function(){openVoice()});
 
 // ── CHAT OVERLAY ──
@@ -1040,7 +1061,7 @@ function setVoiceState(state){
       sub.style.display='none';
       micBtn.style.display='flex';micBtn.classList.add('v-mic--pulse');
       stopBtn.style.display='none';
-      if(playBtn)playBtn.style.display=lastTtsBase64?'block':'none';
+      if(playBtn)playBtn.style.display=(lastTtsBase64||currentAudio)?'block':'none';
       hint.style.display='block';
       break;
   }

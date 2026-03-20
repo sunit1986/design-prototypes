@@ -1412,8 +1412,8 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
   var u = 'https://jbiq-proxy.sunit3-sharma.workers.dev';
   if (!window.JBIQ_CONFIG) window.JBIQ_CONFIG = {};
   if (!window.JBIQ_CONFIG.CHAT_PROXY) window.JBIQ_CONFIG.CHAT_PROXY = u;
-  if (typeof CHAT_PROXY === 'undefined') window.CHAT_PROXY = window.JBIQ_CONFIG.CHAT_PROXY;
 })();
+var CHAT_PROXY = window.JBIQ_CONFIG.CHAT_PROXY;
 </script>
 <script src="jbiq-config.js"></script>
 <script>
