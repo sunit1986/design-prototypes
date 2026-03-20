@@ -1406,6 +1406,15 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
   </div>
 </div>
 
+<!-- If jbiq-config.js fails to load (e.g. not on GitHub), CHAT_PROXY must still be set; otherwise fetch() can POST to this .html URL and static hosts return 405. -->
+<script>
+(function () {
+  var u = 'https://jbiq-proxy.sunit3-sharma.workers.dev';
+  if (!window.JBIQ_CONFIG) window.JBIQ_CONFIG = {};
+  if (!window.JBIQ_CONFIG.CHAT_PROXY) window.JBIQ_CONFIG.CHAT_PROXY = u;
+  if (typeof CHAT_PROXY === 'undefined') window.CHAT_PROXY = window.JBIQ_CONFIG.CHAT_PROXY;
+})();
+</script>
 <script src="jbiq-config.js"></script>
 <script>
 if(window.JBIQ_CONFIG)window.JBIQ_CONFIG.TTS_PROVIDER='elevenlabs';
