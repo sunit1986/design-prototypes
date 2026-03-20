@@ -785,7 +785,7 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 .chat-shell .bottom-widget { flex-shrink:0; }
 
 /* ── LANDING SCREEN ── */
-.ls-scroll-body { flex:1; min-height:0; overflow-y:auto; scrollbar-width:none; padding-bottom:8px; }
+.ls-scroll-body { flex:1; min-height:0; overflow-y:auto; scrollbar-width:none; padding-bottom:120px; }
 .ls-scroll-body::-webkit-scrollbar { display:none; }
 .ls-top-header { background:#110040; padding:16px 16px 14px; }
 .ls-rashifal-header { background:#fff; padding:14px 16px 10px; border-bottom:1px solid rgba(36,38,43,0.1); }
@@ -1010,6 +1010,49 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
   display:flex; align-items:center; justify-content:center; gap:8px; }
 .cs-continue-btn:active { opacity:0.85; }
 
+/* ── Landing: home bar + voice (same pattern as jbiqhomepage.html) ── */
+.jy-input-widget{position:absolute;bottom:0;left:0;right:0;z-index:12;padding:6px 12px 16px;background:linear-gradient(transparent,rgba(255,255,255,0.92) 22%,#fff 40%);pointer-events:none;}
+.jy-input-widget .input-field{pointer-events:auto;background:var(--surface-ghost,#eeeeef);border-radius:24px;padding:8px;display:flex;flex-direction:column;gap:8px;}
+.jy-input-widget .input-top{display:flex;align-items:center;gap:4px;}
+.jy-input-widget .input-text{flex:1;padding:4px 8px;font-family:'JioType',sans-serif;font-size:16px;font-weight:400;color:var(--text-high);border:none;outline:none;background:none;line-height:1.3;}
+.jy-input-widget .input-text::placeholder{color:var(--text-low);opacity:.65;}
+.jy-input-widget .input-actions{display:flex;justify-content:space-between;align-items:center;}
+.jy-input-widget .input-left{display:flex;gap:2px;align-items:center;}
+.jy-input-widget .input-icon-btn{width:32px;height:32px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.jy-input-widget .input-icon-btn svg{width:20px;height:20px;color:var(--icon-medium,#170054);opacity:.45;}
+.jy-input-widget .input-right{display:flex;gap:8px;align-items:center;}
+.jy-input-widget .input-mic-btn{width:32px;height:32px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.jy-input-widget .input-mic-btn svg{width:20px;height:20px;color:var(--icon-medium,#170054);opacity:.45;}
+.jy-input-widget .speak-btn{background:#6d17ce;border:none;border-radius:999px;padding:8px 16px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.jy-input-widget .speak-btn svg{width:14px;height:14px;fill:#fff;}
+.jy-input-widget .speak-btn span{font-family:'JioType',sans-serif;font-weight:700;font-size:14px;color:#fff;line-height:1;}
+#voiceOverlay.jy-voice-overlay{display:none;position:absolute;inset:0;z-index:565;background:#fff;flex-direction:column;}
+@keyframes jyDotBreath{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(.92);opacity:.4}}
+@keyframes jyDotListen{0%,100%{transform:scale(1);opacity:1}25%{transform:scale(.7);opacity:.5}50%{transform:scale(1.08);opacity:1}75%{transform:scale(.8);opacity:.6}}
+@keyframes jyDotProcess{0%,100%{transform:scale(.8);opacity:.5}50%{transform:scale(1);opacity:1}}
+@keyframes jyMicPulse{0%,100%{box-shadow:0 0 0 0 rgba(109,23,206,.4)}50%{box-shadow:0 0 0 16px rgba(109,23,206,0)}}
+.jy-voice-overlay .v-dots{width:148px;height:148px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.jy-voice-overlay .v-dots div{border-radius:50%;background:#6d17ce;transition:background .3s;}
+.jy-voice-overlay .v-dots--idle div{animation:jyDotBreath 2.5s ease-in-out infinite;opacity:.5;}
+.jy-voice-overlay .v-dots--idle div:nth-child(2){animation-delay:.3s;}
+.jy-voice-overlay .v-dots--idle div:nth-child(3){animation-delay:.6s;}
+.jy-voice-overlay .v-dots--idle div:nth-child(4){animation-delay:.9s;}
+.jy-voice-overlay .v-dots--listening div{animation:jyDotListen 1s ease-in-out infinite;background:#6d17ce;}
+.jy-voice-overlay .v-dots--listening div:nth-child(2){animation-delay:.15s;}
+.jy-voice-overlay .v-dots--listening div:nth-child(3){animation-delay:.3s;}
+.jy-voice-overlay .v-dots--listening div:nth-child(4){animation-delay:.45s;}
+.jy-voice-overlay .v-dots--processing div{animation:jyDotProcess 1.2s ease-in-out infinite;background:#9966dd;}
+.jy-voice-overlay .v-dots--processing div:nth-child(2){animation-delay:.2s;}
+.jy-voice-overlay .v-dots--processing div:nth-child(3){animation-delay:.4s;}
+.jy-voice-overlay .v-dots--processing div:nth-child(4){animation-delay:.6s;}
+.jy-voice-overlay .v-dots--speaking div{animation:jyDotListen 1.6s ease-in-out infinite;background:#3535f3;}
+.jy-voice-overlay .v-dots--speaking div:nth-child(2){animation-delay:.2s;}
+.jy-voice-overlay .v-dots--speaking div:nth-child(3){animation-delay:.4s;}
+.jy-voice-overlay .v-dots--speaking div:nth-child(4){animation-delay:.6s;}
+.jy-voice-overlay .v-mic-btn{width:64px;height:64px;border-radius:50%;border:none;background:#6d17ce;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.jy-voice-overlay .v-mic-btn.v-mic--pulse{animation:jyMicPulse 1.5s ease-in-out infinite;}
+.jy-voice-overlay .v-stop-btn{width:64px;height:64px;border-radius:50%;border:none;background:#fa2f40;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
 </style>
 </head>
 <body>
@@ -1199,6 +1242,30 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
         </button>
       </div>
     </div>
+    <!-- Home-style bottom bar (jbiqhomepage): type + Enter → chat; mic/Speak → voice -->
+    <div class="jy-input-widget" id="jyHomeInput">
+      <div class="input-field">
+        <div class="input-top">
+          <input class="input-text" type="text" id="jyHomeInputText" placeholder="Ask Jyotish Saathi anything…" autocomplete="off">
+        </div>
+        <div class="input-actions">
+          <div class="input-left">
+            <button type="button" class="input-icon-btn" aria-label="Add" onclick="showLandingEntrySheet()">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <div class="input-right">
+            <button type="button" class="input-mic-btn" id="jyHomeMicBtn" aria-label="Mic">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <button type="button" class="speak-btn" id="jyHomeSpeakBtn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z" fill="currentColor"/></svg>
+              <span>Speak</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ── LIFE ADVICE SHEET ── -->
@@ -1246,6 +1313,36 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
     <div class="cs-footer">
       <button class="cs-hangup-btn" onclick="hangUpCall()">📵 Hang Up</button>
       <button class="cs-continue-btn" onclick="continueInChat()">💬 Continue in chat</button>
+    </div>
+  </div>
+
+  <!-- Voice overlay (Anthropic + ElevenLabs TTS via jbiq-config — same stack as jbiqhomepage) -->
+  <div id="voiceOverlay" class="jy-voice-overlay" aria-hidden="true">
+    <div style="display:flex;align-items:center;padding:10px 12px;height:56px;flex-shrink:0">
+      <button type="button" onclick="jyCloseVoice()" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#170054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span style="font-family:'JioType',sans-serif;font-size:16px;font-weight:500;color:var(--text-high);margin-left:4px">Voice</span>
+      <span style="flex:1"></span>
+    </div>
+    <div id="voiceBody" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;padding:0 24px;min-height:0">
+      <div id="voiceDots" class="v-dots v-dots--idle">
+        <div></div><div></div><div></div><div></div>
+      </div>
+      <div id="voiceLabel" style="margin-top:28px;font-family:'JioType',sans-serif;font-size:20px;font-weight:700;color:var(--text-high);text-align:center"></div>
+      <div id="voiceSub" style="margin-top:8px;font-family:'JioType',sans-serif;font-size:15px;font-weight:400;color:var(--text-low);text-align:center"></div>
+      <div id="voiceTranscript" style="display:none;margin-top:20px;font-family:'JioType',sans-serif;font-size:15px;font-weight:500;color:var(--text-high);text-align:center;max-width:300px;line-height:1.5;background:#f5f5f5;padding:12px 16px;border-radius:16px"></div>
+      <div id="voiceResponse" style="display:none;margin-top:16px;text-align:left;width:100%;max-width:330px;max-height:240px;overflow-y:auto"></div>
+    </div>
+    <div style="padding:12px 24px 28px;display:flex;flex-direction:column;align-items:center;gap:12px;flex-shrink:0">
+      <button type="button" id="vMicBtn" onclick="jyVoiceTapMic()" class="v-mic-btn">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="#fff"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button type="button" id="vStopBtn" onclick="jyVoiceTapStop()" class="v-stop-btn" style="display:none">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="#fff"/></svg>
+      </button>
+      <button type="button" id="vPlayBtn" onclick="jyVoicePlayLastTts()" style="display:none;padding:10px 20px;border-radius:999px;border:none;background:var(--surface-bold,#3900ad);color:#fff;font-family:'JioType',sans-serif;font-size:15px;font-weight:600;cursor:pointer">Play response</button>
+      <div id="vAgainHint" style="display:none;font-family:'JioType',sans-serif;font-size:13px;color:var(--text-low);text-align:center">Tap mic to speak again</div>
     </div>
   </div>
 
@@ -1309,6 +1406,10 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
   </div>
 </div>
 
+<script src="jbiq-config.js"></script>
+<script>
+if(window.JBIQ_CONFIG)window.JBIQ_CONFIG.TTS_PROVIDER='elevenlabs';
+</script>
 <script>
 /* ══════════════════════════════════════════════
    JYOTISH SAATHI — AI Astrology Companion
@@ -1324,6 +1425,8 @@ let onboardingStep = 0; // 0=welcome,1=dob,2=tob,3=pob,4=generating,5=done
 let userName = JIO_PROFILE.name, userDOB = null, userTOB = null, userPOB = JIO_PROFILE.city;
 let isOnboarding = true;
 let chartGenerated = false;
+/** Claude (Cloudflare proxy) + ElevenLabs/Sarvam TTS — shared text + voice history */
+let jyClaudeChatHistory = [];
 
 // ── Mock Profiles ──
 const PROFILES = {
@@ -1869,7 +1972,35 @@ function triggerChip(value) {
   }
 }
 
-function sendUserText() {
+function jyClaudeSystemPair() {
+  return [
+    { role: 'user', content: 'You are Jyotish Saathi, a warm Vedic astrology assistant on Jio Omni (Jio Bharat IQ). The user is ' + (userName || 'a seeker') + ', city ' + (userPOB || 'India') + '. Give practical guidance; Hindi or English as fits; short paragraphs; no medical or legal claims.' },
+    { role: 'assistant', content: 'Namaste! I am your Jyotish Saathi. Ask me about your chart, marriage, career, remedies, or today\'s guidance.' }
+  ];
+}
+function jyMessagesForApi() {
+  return jyClaudeSystemPair().concat(jyClaudeChatHistory);
+}
+async function sendClaudeTextMessage(text) {
+  const t = String(text || '').trim();
+  if (!t) return;
+  userMessage(t);
+  showThinking();
+  jyClaudeChatHistory.push({ role: 'user', content: t });
+  try {
+    const reply = await jyCallAnthropic(jyMessagesForApi());
+    jyClaudeChatHistory.push({ role: 'assistant', content: reply });
+    removeThinking();
+    aiMessage(jyFormatMarkdown(reply), true, true);
+  } catch (err) {
+    console.error('Claude chat:', err);
+    removeThinking();
+    aiMessage('<p>' + (err.message || 'Could not reach Claude. Check CHAT_PROXY and network.') + '</p>', true, true);
+    if (jyClaudeChatHistory.length && jyClaudeChatHistory[jyClaudeChatHistory.length - 1].role === 'user') jyClaudeChatHistory.pop();
+  }
+}
+
+async function sendUserText() {
   const inp = document.getElementById('chatInput');
   const text = inp.value.trim();
   if (!text) return;
@@ -1879,8 +2010,7 @@ function sendUserText() {
   // If still onboarding, ignore typed text (widgets handle input)
   if (isOnboarding) return;
 
-  userMessage(text);
-  processUserQuestion(text.toLowerCase());
+  await sendClaudeTextMessage(text);
 }
 
 function processUserQuestion(text) {
@@ -4396,6 +4526,323 @@ function _clearCallTimer() {
 }
 function hangUpCall()    { _clearCallTimer(); document.getElementById('callScreen').style.display='none'; }
 function continueInChat(){ _clearCallTimer(); document.getElementById('callScreen').style.display='none'; _setChatShellVisible(true); startWelcome(); }
+
+// ── Landing home bar + voice (jbiqhomepage stack: Sarvam STT, proxy chat, JBIQ_TTS / ElevenLabs) ──
+let jyVoiceState='closed';
+let jyMediaRecorder=null;
+let jyAudioChunks=[];
+let jyIsRecording=false;
+let jyCurrentAudio=null;
+let jyPlaybackCtx=null;
+let jyLastTtsBase64=null;
+
+function jyFormatMarkdown(text){
+  let html=String(text)
+    .replace(/\*\*\*(.*?)\*\*\*/g,'<strong><em>$1</em></strong>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/### (.*?)(\n|$)/g,'<h3>$1</h3>')
+    .replace(/## (.*?)(\n|$)/g,'<h3>$1</h3>')
+    .replace(/# (.*?)(\n|$)/g,'<h3>$1</h3>');
+  const lines=html.split('\n');
+  let result='',inList=false;
+  for(const line of lines){
+    const trimmed=line.trim();
+    if(/^[-•*]\s/.test(trimmed)){
+      if(!inList){result+='<ul>';inList=true;}
+      result+='<li>'+trimmed.replace(/^[-•*]\s/,'')+'</li>';
+    }else if(/^\d+\.\s/.test(trimmed)){
+      if(!inList){result+='<ol>';inList=true;}
+      result+='<li>'+trimmed.replace(/^\d+\.\s/,'')+'</li>';
+    }else{
+      if(inList){result+='</ul>';inList=false;}
+      if(trimmed)result+='<p>'+trimmed+'</p>';
+    }
+  }
+  if(inList)result+='</ul>';
+  return result||'<p>'+text+'</p>';
+}
+
+async function jyCallAnthropic(messages){
+  const proxy=typeof CHAT_PROXY!=='undefined'?CHAT_PROXY:(window.JBIQ_CONFIG&&window.JBIQ_CONFIG.CHAT_PROXY);
+  const resp=await fetch(proxy,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages})});
+  const data=await resp.json().catch(()=>({}));
+  if(!resp.ok)throw new Error((data.error&&data.error.message)||data.message||('Chat API error '+resp.status));
+  if(!data.content||!Array.isArray(data.content)||!data.content[0])throw new Error('Invalid response from chat server.');
+  return data.content[0].text||'';
+}
+
+function jySetVoiceState(state){
+  jyVoiceState=state;
+  const dots=document.getElementById('voiceDots');
+  const label=document.getElementById('voiceLabel');
+  const sub=document.getElementById('voiceSub');
+  const transcript=document.getElementById('voiceTranscript');
+  const response=document.getElementById('voiceResponse');
+  const micBtn=document.getElementById('vMicBtn');
+  const stopBtn=document.getElementById('vStopBtn');
+  const playBtn=document.getElementById('vPlayBtn');
+  const hint=document.getElementById('vAgainHint');
+  if(!dots||!label)return;
+  dots.className='v-dots v-dots--'+(state==='thinking'?'processing':state);
+  switch(state){
+    case 'idle':
+      label.textContent='Hey, '+(typeof userName!=='undefined'&&userName?userName:'there');
+      sub.textContent='Tap the mic to start speaking';
+      sub.style.display='';
+      transcript.style.display='none';transcript.textContent='';
+      response.style.display='none';response.innerHTML='';
+      micBtn.style.display='flex';micBtn.classList.remove('v-mic--pulse');
+      stopBtn.style.display='none';
+      if(playBtn)playBtn.style.display='none';
+      hint.style.display='none';
+      break;
+    case 'listening':
+      label.textContent='Listening...';
+      sub.textContent='Tap the red button when done';
+      sub.style.display='';
+      transcript.style.display='none';
+      response.style.display='none';
+      micBtn.style.display='none';
+      stopBtn.style.display='flex';
+      if(playBtn)playBtn.style.display='none';
+      hint.style.display='none';
+      break;
+    case 'processing':
+      label.textContent='Processing...';
+      sub.textContent='Converting speech to text';
+      sub.style.display='';
+      micBtn.style.display='none';
+      stopBtn.style.display='none';
+      if(playBtn)playBtn.style.display='none';
+      hint.style.display='none';
+      break;
+    case 'thinking':
+      label.textContent='Thinking...';
+      sub.style.display='none';
+      micBtn.style.display='none';
+      stopBtn.style.display='none';
+      if(playBtn)playBtn.style.display='none';
+      hint.style.display='none';
+      break;
+    case 'speaking':
+      label.textContent='';
+      sub.style.display='none';
+      micBtn.style.display='flex';micBtn.classList.add('v-mic--pulse');
+      stopBtn.style.display='none';
+      if(playBtn)playBtn.style.display=(jyLastTtsBase64||jyCurrentAudio)?'block':'none';
+      hint.style.display='block';
+      break;
+  }
+}
+
+function jyUnlockAudio(){
+  if(jyPlaybackCtx)return;
+  try{jyPlaybackCtx=new(window.AudioContext||window.webkitAudioContext)();jyPlaybackCtx.resume();}catch(e){console.warn(e);}
+}
+
+function jyBase64ToArrayBuffer(b64){
+  const bin=atob(b64);
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
+function jyPlayTtsViaContext(base64){
+  if(!jyPlaybackCtx||!base64)return;
+  try{
+    jyPlaybackCtx.resume();
+    const ab=jyBase64ToArrayBuffer(base64);
+    jyPlaybackCtx.decodeAudioData(ab).then(buf=>{
+      const src=jyPlaybackCtx.createBufferSource();
+      src.buffer=buf;
+      src.connect(jyPlaybackCtx.destination);
+      src.onended=()=>{if(jyVoiceState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle';};
+      src.start(0);
+    }).catch(e=>console.error(e));
+  }catch(e){console.error(e);}
+}
+
+function jyVoicePlayLastTts(){
+  jyUnlockAudio();
+  if(jyLastTtsBase64)jyPlayTtsViaContext(jyLastTtsBase64);
+  else if(jyCurrentAudio){jyCurrentAudio.currentTime=0;jyCurrentAudio.play().catch(()=>{});}
+}
+
+function jyOpenVoice(){
+  jyUnlockAudio();
+  const ov=document.getElementById('voiceOverlay');
+  if(ov){ov.style.display='flex';ov.setAttribute('aria-hidden','false');}
+  jySetVoiceState('idle');
+}
+
+function jyCloseVoice(){
+  if(jyMediaRecorder&&jyMediaRecorder.state==='recording')jyMediaRecorder.stop();
+  jyIsRecording=false;
+  if(jyCurrentAudio){jyCurrentAudio.pause();jyCurrentAudio=null;}
+  const ov=document.getElementById('voiceOverlay');
+  if(ov){ov.style.display='none';ov.setAttribute('aria-hidden','true');}
+  jyVoiceState='closed';
+}
+
+function jyVoiceTapMic(){
+  jyUnlockAudio();
+  if(jyCurrentAudio){jyCurrentAudio.pause();jyCurrentAudio=null;}
+  jyStartVoiceRecording();
+}
+
+function jyVoiceTapStop(){
+  if(jyIsRecording&&jyMediaRecorder&&jyMediaRecorder.state==='recording')jyMediaRecorder.stop();
+}
+
+async function jyStartVoiceRecording(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    jyAudioChunks=[];
+    jyMediaRecorder=new MediaRecorder(stream,{mimeType:'audio/webm;codecs=opus'});
+    jyMediaRecorder.ondataavailable=e=>{if(e.data.size>0)jyAudioChunks.push(e.data);};
+    jyMediaRecorder.onstop=async()=>{
+      stream.getTracks().forEach(t=>t.stop());
+      if(jyAudioChunks.length===0){jySetVoiceState('idle');return;}
+      const blob=new Blob(jyAudioChunks,{type:'audio/webm'});
+      await jyProcessVoiceBlob(blob);
+    };
+    jyMediaRecorder.start();
+    jyIsRecording=true;
+    jySetVoiceState('listening');
+  }catch(err){
+    console.error(err);
+    document.getElementById('voiceLabel').textContent='Mic access denied';
+    document.getElementById('voiceSub').textContent='Please allow microphone access and try again';
+    document.getElementById('voiceSub').style.display='';
+    document.getElementById('vMicBtn').style.display='flex';
+  }
+}
+
+async function jyProcessVoiceBlob(audioBlob){
+  jySetVoiceState('processing');
+  try{
+    const wavBlob=await jyConvertToWav(audioBlob);
+    const fd=new FormData();
+    fd.append('file',wavBlob,'audio.wav');
+    fd.append('model','saaras:v3');
+    fd.append('language_code','unknown');
+    fd.append('mode','transcribe');
+    const key=typeof SARVAM_KEY!=='undefined'?SARVAM_KEY:(window.JBIQ_CONFIG&&window.JBIQ_CONFIG.SARVAM_KEY);
+    const sttResp=await fetch('https://api.sarvam.ai/speech-to-text',{method:'POST',headers:{'api-subscription-key':key},body:fd});
+    if(!sttResp.ok){
+      const sttErr=await sttResp.json().catch(()=>({}));
+      throw new Error(sttErr.message||sttErr.error||('STT '+sttResp.status));
+    }
+    const sttData=await sttResp.json();
+    const transcript=(sttData.transcript||'').trim();
+    const detectedLang=sttData.language_code||'en';
+    if(!transcript){
+      document.getElementById('voiceLabel').textContent="Didn't catch that";
+      document.getElementById('voiceSub').textContent='Tap mic to try again';
+      document.getElementById('voiceSub').style.display='';
+      document.getElementById('vMicBtn').style.display='flex';
+      document.getElementById('vStopBtn').style.display='none';
+      return;
+    }
+    const transcriptEl=document.getElementById('voiceTranscript');
+    transcriptEl.textContent='"'+transcript+'"';
+    transcriptEl.style.display='block';
+    jySetVoiceState('thinking');
+    jyClaudeChatHistory.push({role:'user',content:transcript});
+    const aiText=await jyCallAnthropic(jyMessagesForApi());
+    jyClaudeChatHistory.push({role:'assistant',content:aiText});
+    jySetVoiceState('speaking');
+    const respEl=document.getElementById('voiceResponse');
+    respEl.style.display='block';
+    respEl.innerHTML='<div style="font-family:\'JioType\',sans-serif;font-size:15px;color:var(--text-high);line-height:1.55">'+jyFormatMarkdown(aiText)+'</div>';
+    jySpeakWithTts(aiText,detectedLang);
+  }catch(err){
+    console.error(err);
+    document.getElementById('voiceLabel').textContent='Something went wrong';
+    document.getElementById('voiceSub').textContent=err.message||'Tap mic to try again';
+    document.getElementById('voiceSub').style.display='';
+    document.getElementById('vMicBtn').style.display='flex';
+    document.getElementById('vStopBtn').style.display='none';
+    if(jyClaudeChatHistory.length&&jyClaudeChatHistory[jyClaudeChatHistory.length-1].role==='user')jyClaudeChatHistory.pop();
+  }
+}
+
+async function jySpeakWithTts(text,lang){
+  if(!window.JBIQ_TTS){console.warn('JBIQ_TTS missing');return;}
+  try{
+    const result=await window.JBIQ_TTS(text,lang);
+    if(!result)return;
+    jyLastTtsBase64=result.base64||null;
+    jyCurrentAudio=result.audio;
+    const vPlay=document.getElementById('vPlayBtn');
+    if(vPlay)vPlay.style.display='block';
+    result.audio.onended=()=>{if(jyVoiceState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle';};
+    if(jyPlaybackCtx&&result.base64)jyPlayTtsViaContext(result.base64);
+    else result.audio.play().catch(e=>console.error(e));
+  }catch(e){console.error(e);}
+}
+
+function jyConvertToWav(webmBlob){
+  return new Promise((resolve)=>{
+    const audioCtx=new(window.AudioContext||window.webkitAudioContext)({sampleRate:16000});
+    const reader=new FileReader();
+    reader.onload=async function(){
+      try{
+        const audioBuffer=await audioCtx.decodeAudioData(reader.result);
+        const numCh=1;const sampleRate=16000;
+        const offlineCtx=new OfflineAudioContext(numCh,audioBuffer.duration*sampleRate,sampleRate);
+        const src=offlineCtx.createBufferSource();src.buffer=audioBuffer;
+        src.connect(offlineCtx.destination);src.start();
+        const rendered=await offlineCtx.startRendering();
+        const pcm=rendered.getChannelData(0);
+        const wavBuffer=jyEncodeWav(pcm,sampleRate);
+        resolve(new Blob([wavBuffer],{type:'audio/wav'}));
+      }catch(e){resolve(webmBlob);}
+    };
+    reader.readAsArrayBuffer(webmBlob);
+  });
+}
+
+function jyEncodeWav(samples,sampleRate){
+  const buffer=new ArrayBuffer(44+samples.length*2);
+  const view=new DataView(buffer);
+  function writeString(offset,str){for(let i=0;i<str.length;i++)view.setUint8(offset+i,str.charCodeAt(i));}
+  writeString(0,'RIFF');
+  view.setUint32(4,36+samples.length*2,true);
+  writeString(8,'WAVE');writeString(12,'fmt ');
+  view.setUint32(16,16,true);view.setUint16(20,1,true);
+  view.setUint16(22,1,true);view.setUint32(24,sampleRate,true);
+  view.setUint32(28,sampleRate*2,true);view.setUint16(32,2,true);
+  view.setUint16(34,16,true);writeString(36,'data');
+  view.setUint32(40,samples.length*2,true);
+  for(let i=0;i<samples.length;i++){
+    const s=Math.max(-1,Math.min(1,samples[i]));
+    view.setInt16(44+i*2,s<0?s*0x8000:s*0x7FFF,true);
+  }
+  return buffer;
+}
+
+async function jySendFromLandingHomeInput(){
+  const inp=document.getElementById('jyHomeInputText');
+  if(!inp)return;
+  const msg=inp.value.trim();
+  if(!msg)return;
+  inp.value='';
+  _setChatShellVisible(true);
+  const land=document.getElementById('landingOverlay');
+  if(land)land.style.display='none';
+  await sendClaudeTextMessage(msg);
+}
+
+(function jyBindLandingHomeBar(){
+  const hi=document.getElementById('jyHomeInputText');
+  if(hi)hi.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();jySendFromLandingHomeInput();}});
+  const mb=document.getElementById('jyHomeMicBtn');
+  if(mb)mb.addEventListener('click',function(){jyOpenVoice();});
+  const sb=document.getElementById('jyHomeSpeakBtn');
+  if(sb)sb.addEventListener('click',function(){jyOpenVoice();});
+})();
 
 // ── Init ──
 showLandingScreen();
