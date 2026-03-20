@@ -751,34 +751,36 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 .ls-scroll-body { flex:1; overflow-y:auto; scrollbar-width:none; padding-bottom:8px; }
 .ls-scroll-body::-webkit-scrollbar { display:none; }
 .ls-top-header { background:#110040; padding:16px 16px 14px; }
-.ls-rashifal-header { background:linear-gradient(160deg,#1a0a5e,#4a0082,#6d17ce); padding:12px 16px 8px; }
+.ls-rashifal-header { background:#fff; padding:14px 16px 10px; border-bottom:1px solid rgba(36,38,43,0.1); }
 .ls-brand-name { font-size:24px; font-weight:900; color:#fff; letter-spacing:-0.03em; }
 .ls-brand-tagline { font-size:12px; color:rgba(255,255,255,0.55); font-weight:500; margin-top:2px; margin-bottom:14px; }
-.ls-top-title { font-size:13px; font-weight:700; color:rgba(247,171,32,0.9); letter-spacing:0.04em; text-transform:uppercase; }
-.ls-top-date { font-size:12px; color:rgba(247,171,32,0.8); font-weight:600; margin-top:3px; }
-.ls-zodiac-scroll { display:flex; gap:10px; overflow-x:auto; padding:14px 16px 12px;
+.ls-top-title { font-size:13px; font-weight:700; color:#141414; letter-spacing:0.04em; text-transform:uppercase; }
+.ls-top-date { font-size:12px; color:rgba(25,27,30,0.65); font-weight:600; margin-top:4px; }
+.ls-zodiac-wrap { background:#fff; }
+.ls-zodiac-heading { font-size:16px; font-weight:700; color:#141414; padding:12px 16px 4px; font-family:'JioType',sans-serif; letter-spacing:-0.02em; }
+.ls-zodiac-scroll { display:flex; gap:10px; overflow-x:auto; padding:8px 16px 14px;
   scrollbar-width:none; -webkit-overflow-scrolling:touch;
-  background:linear-gradient(160deg,#1a0a5e,#4a0082,#6d17ce); }
+  background:#fff; border-bottom:1px solid rgba(36,38,43,0.08); }
 .ls-zodiac-scroll::-webkit-scrollbar { display:none; }
 .ls-rashi-btn { display:flex; flex-direction:column; align-items:center; gap:4px;
   flex-shrink:0; width:52px; cursor:pointer; background:none; border:none;
   padding:6px 4px; border-radius:var(--shape-medium);
   transition:background var(--dur-quick) var(--ease-standard); }
-.ls-rashi-btn:active { background:rgba(255,255,255,0.12); }
-.ls-rashi-btn.active { background:rgba(247,171,32,0.22); }
+.ls-rashi-btn:active { background:rgba(53,53,243,0.06); }
+.ls-rashi-btn.active { background:rgba(109,23,206,0.06); }
 .ls-rashi-icon { width:40px; height:40px; border-radius:50%;
-  background:rgba(255,255,255,0.1); border:1.5px solid rgba(255,255,255,0.15);
+  background:#fff; border:1.5px solid rgba(109,23,206,0.28);
   display:flex; align-items:center; justify-content:center; font-size:18px;
   transition:background var(--dur-quick), border-color var(--dur-quick); }
-.ls-rashi-btn.active .ls-rashi-icon { background:rgba(247,171,32,0.25); border-color:rgba(247,171,32,0.7); }
-.ls-rashi-name { font-size:9px; font-weight:700; color:rgba(255,255,255,0.75);
+.ls-rashi-btn.active .ls-rashi-icon { background:rgba(109,23,206,0.08); border-color:#6d17ce; }
+.ls-rashi-name { font-size:10px; font-weight:700; color:#141414;
   text-align:center; letter-spacing:0.02em; font-family:'JioType',sans-serif; }
-.ls-rashi-btn.active .ls-rashi-name { color:rgba(247,171,32,0.95); }
+.ls-rashi-btn.active .ls-rashi-name { color:#6d17ce; }
 .ls-rashifal-result { margin:12px 16px 4px; animation:cardIn var(--spring); }
 .ls-rf-card { border:1px solid var(--stroke-subtle); border-radius:var(--shape-large); overflow:hidden; }
-.ls-rf-header { padding:12px 14px; background:linear-gradient(135deg,#1a0a5e,#4a0082); }
-.ls-rf-rashi-name { font-size:16px; font-weight:900; color:#fff; }
-.ls-rf-stars { font-size:13px; color:rgba(255,220,150,0.9); letter-spacing:2px; margin-top:3px; }
+.ls-rf-header { padding:12px 14px; background:#fff; border-bottom:1px solid var(--stroke-subtle); }
+.ls-rf-rashi-name { font-size:16px; font-weight:900; color:#141414; }
+.ls-rf-stars { font-size:13px; color:#3535f3; letter-spacing:2px; margin-top:3px; }
 .ls-rf-body { padding:12px 14px 14px; background:#fff; }
 .ls-rf-desc { font-size:13px; color:var(--text-medium,#444); line-height:1.55; margin-bottom:10px; }
 .ls-rf-mini-row { display:flex; gap:8px; margin-bottom:10px; }
@@ -1122,7 +1124,10 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
         <div class="ls-top-title">🔮 Today's Horoscope</div>
         <div class="ls-top-date" id="lsDate"></div>
       </div>
-      <div class="ls-zodiac-scroll" id="lsZodiacScroll"></div>
+      <div class="ls-zodiac-wrap">
+        <div class="ls-zodiac-heading">Zodiac Signs</div>
+        <div class="ls-zodiac-scroll" id="lsZodiacScroll"></div>
+      </div>
       <div class="ls-rashifal-result" id="lsRashifalResult" style="display:none;"></div>
       <div class="ls-section-label">For Today</div>
       <div class="ls-insight-grid" id="lsInsightGrid"></div>
