@@ -363,7 +363,7 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
       <span class="menu-page-title">Assistants</span>
     </div>
     <div class="menu-page-body">
-      <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-astrology.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Astrology</div><div class="menu-list-desc">Horoscopes, relationships, friendships</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+      <a class="menu-list-row" href="https://sunit1986.github.io/design-prototypes/jyotish-saathi.html"><img class="menu-list-avatar" src="Assets/persona-astrology.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Astrology</div><div class="menu-list-desc">Horoscopes, relationships, friendships</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-bollywood.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Bollywood</div><div class="menu-list-desc">Movies, gossip, recommendations</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="javascript:void(0)"><img class="menu-list-avatar" src="Assets/persona-cricket.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Cricket</div><div class="menu-list-desc">Scores, highlights, predictions</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
       <a class="menu-list-row" href="https://sunit1986.github.io/design-prototypes/devotion-tools.html"><img class="menu-list-avatar" src="Assets/persona-devotion.png" alt=""><div class="menu-list-text"><div class="menu-list-name">Devotion</div><div class="menu-list-desc">Bhajans, festivals, spiritual guidance</div></div><svg class="menu-list-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
@@ -425,6 +425,10 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
   <!-- YOUR ASSISTANTS -->
   <div class="section-title anim-2">Your Assistants</div>
   <div class="assistants-row anim-2">
+    <a class="assistant-item" href="https://sunit1986.github.io/design-prototypes/jyotish-saathi.html" style="text-decoration:none;color:inherit" id="assistant-astrology" data-landing="https://sunit1986.github.io/design-prototypes/jyotish-saathi.html">
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-astrology.png" alt="Astrology"></div>
+      <span class="assistant-label">Astrology</span>
+    </a>
     <a class="assistant-item" href="https://samyakshahjio.github.io/english-learning-chat/career.html" style="text-decoration:none;color:inherit">
       <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-career.png" alt="Career"></div>
       <span class="assistant-label">Career</span>
@@ -812,10 +816,9 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
 .fb-btn svg{width:18px;height:18px;color:#666}
 </style>
 
+<script src="jbiq-config.js"></script>
 <script>
-const _p=['sk','_8ajz','668k_','7FQZo','3QWwc','AQ8Sm','30SmT','t6L4'];
-const SARVAM_KEY=_p[0]+_p[1]+_p[2]+_p[3]+_p[4]+_p[5]+_p[6]+_p[7];
-const CHAT_PROXY='https://jbiq-proxy.sunit3-sharma.workers.dev';
+// SARVAM_KEY and CHAT_PROXY now loaded from jbiq-config.js
 
 let chatHistory=[];
 let mediaRecorder=null;
@@ -1073,7 +1076,8 @@ function playTtsViaContext(base64){
 
 function voicePlayLastTts(){
   unlockAudio();
-  if(lastTtsBase64)playTtsViaContext(lastTtsBase64);
+  if(lastTtsBase64){playTtsViaContext(lastTtsBase64);}
+  else if(currentAudio){currentAudio.currentTime=0;currentAudio.play().catch(()=>{});}
 }
 
 function openMenu(){
@@ -1224,6 +1228,21 @@ async function processVoice(audioBlob){
 }
 
 async function speakWithSarvam(text,lang){
+  // Use unified TTS from config (supports Sarvam/ElevenLabs switching)
+  if(window.JBIQ_TTS){
+    try{
+      const result=await window.JBIQ_TTS(text,lang);
+      if(!result)return;
+      lastTtsBase64=result.base64||null;
+      currentAudio=result.audio;
+      const vPlay=document.getElementById('vPlayBtn');
+      if(vPlay)vPlay.style.display='block';
+      result.audio.onended=()=>{if(vState==='speaking')document.getElementById('voiceDots').className='v-dots v-dots--idle';};
+      if(playbackCtx&&result.base64){playTtsViaContext(result.base64);}else{result.audio.play().catch(e=>{console.error('Audio play error:',e);});}
+    }catch(e){console.error('TTS error:',e);}
+    return;
+  }
+  // Fallback to Sarvam if config not loaded
   const ttsLang=(lang&&lang.startsWith('hi'))?'hi-IN':'en-IN';
   const cleaned=text
     .replace(/[#*_`>\[\](){}|~]/g,'')
