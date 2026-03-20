@@ -1031,6 +1031,7 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 .ls-explore-chip.disabled { opacity:.42; pointer-events:none; cursor:default; }
 .ls-explore-chip .emoji { font-size:22px; line-height:1.2; }
 .ls-explore-chip .lbl { font-size:14px; font-weight:600; color:#15253f; line-height:1.15; max-width:200px; }
+button.ls-explore-chip { appearance:none; -webkit-appearance:none; font:inherit; font-family:'JioType',sans-serif; text-align:left; cursor:pointer; }
 
 /* ── Landing: home bar + voice (same pattern as jbiqhomepage.html) ── */
 .jy-input-widget{position:absolute;bottom:0;left:0;right:0;z-index:12;padding:6px 12px 16px;background:linear-gradient(transparent,rgba(255,255,255,0.92) 22%,#fff 40%);pointer-events:none;}
@@ -1207,10 +1208,10 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
     <div class="ls-scroll-body">
       <div style="padding:16px 12px 12px;">
         <div class="ls-chips-row" aria-label="Quick links">
-          <a href="https://sunit1986.github.io/design-prototypes/jyotish-saathi.html" class="ls-explore-chip">
+          <button type="button" class="ls-explore-chip" onclick="hideLandingEntrySheet();_hideLandingAndStartChat({type:'topic_menu'});" aria-label="Talk to Jyotish Saathi — open topic menu">
             <span class="emoji" aria-hidden="true">💬</span>
             <span class="lbl">Talk to Jyotish Saathi</span>
-          </a>
+          </button>
           <span class="ls-explore-chip disabled" title="Link coming soon" role="link" aria-disabled="true">
             <span class="emoji" aria-hidden="true">💞</span>
             <span class="lbl">Match your kundali</span>
