@@ -747,13 +747,18 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 .cosmic-hero-actions { display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; width:100%; padding:0 12px 4px; }
 .cosmic-hero-actions .icon-btn-ghost { background:var(--surface-ghost,#eeeeef); }
 
-/* Chat layer on top of landing (bollywood-tools pattern: landing stays, chat is overlay) */
+/* Chat layer on top of landing — NO cosmic hero here (landing only) */
 .chat-shell {
   position:absolute; inset:0; z-index:550;
   display:none; flex-direction:column;
   background:var(--surface); overflow:hidden;
 }
-.chat-shell .cosmic-hero { flex-shrink:0; }
+.chat-shell .chat-chrome-header { flex-shrink:0; background:var(--surface); }
+.chat-shell .header-left { flex:1; min-width:0; }
+.chat-shell .header-title-area { min-width:0; }
+.chat-shell .header-nav .header-title { font-weight:700; letter-spacing:-0.02em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chat-shell .header-nav .header-domain { margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chat-shell .header-right { flex-shrink:0; align-items:center; }
 .chat-shell .chat-container { flex:1; min-height:0; overflow-y:auto; overflow-x:clip; }
 .chat-shell .bottom-widget { flex-shrink:0; }
 
@@ -989,30 +994,19 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 
 <div class="phone-frame" id="app">
   <div id="chatShell" class="chat-shell" aria-hidden="true">
-  <!-- Cosmic Astrology header (chat) -->
-  <div class="cosmic-hero" id="cosmicHeroChat">
-    <div class="cosmic-hero-wrap">
-      <div class="cosmic-status-bar">
-        <span class="time">9:30</span>
-        <span class="cosmic-camera-pill" aria-hidden="true"></span>
-        <div class="cosmic-status-icons" aria-hidden="true">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 6.567 5.567 5 7.5 5h9C18.433 5 20 6.567 20 8.5v7c0 1.933-1.567 3.5-3.5 3.5h-9C5.567 19 4 17.433 4 15.5v-7z" stroke="#fff" stroke-width="1.4"/><path d="M8 12h8" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 14l2.5-3 2 2.5L14 8l6 7" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <svg width="10" height="15" viewBox="0 0 16 24" fill="none"><rect x="2" y="4" width="12" height="16" rx="2" stroke="#fff" stroke-width="1.4"/><path d="M5 7h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+  <!-- Chat: white bar + back → landing only (cosmic hero is on landing, not here) -->
+  <div class="chat-chrome-header">
+    <div class="header-nav">
+      <div class="header-left">
+        <button type="button" class="back-btn" onclick="goBackToLanding()" aria-label="Back">
+          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <div class="header-title-area">
+          <div class="header-title">Jyotish Saathi</div>
+          <div class="header-domain">Astrology</div>
         </div>
       </div>
-      <div class="cosmic-hero-banner"></div>
-      <div class="cosmic-hero-overlay"></div>
-      <button type="button" class="cosmic-back-btn" onclick="goBackToLanding()" aria-label="Back">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-    <div class="cosmic-avatar-block">
-      <div class="cosmic-avatar-ring">
-        <img src="https://www.figma.com/api/mcp/asset/a2eae70d-3b8c-4bbd-9547-f78fa191ec34" alt="" width="120" height="120">
-      </div>
-      <h1 class="cosmic-avatar-title">Astrology</h1>
-      <div class="cosmic-hero-actions">
+      <div class="header-right">
         <button type="button" class="icon-btn-ghost" onclick="showKundaliAgain()" title="My Kundali">
           <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
         </button>
