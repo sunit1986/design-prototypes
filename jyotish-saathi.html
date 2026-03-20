@@ -726,26 +726,46 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
   background:rgba(0,0,0,0.15); margin:8px auto 0;
 }
 
-/* ── COSMIC ASTROLOGY HEADER (image 2) ── */
-.cosmic-hero { flex-shrink:0; width:100%; position:relative; }
-.cosmic-hero-wrap { position:relative; width:100%; height:137px; overflow:hidden; }
-.cosmic-hero-banner { position:absolute; inset:0; background:url('https://www.figma.com/api/mcp/asset/37e5b81e-b03f-40f4-9fc3-11595b349c24') center center / cover no-repeat; }
-.cosmic-hero-overlay { position:absolute; inset:0; background:#4802b0; opacity:0.5; pointer-events:none; }
-.cosmic-status-bar { flex-shrink:0; height:52px; padding:10px 20px 6px; display:flex; align-items:flex-end; justify-content:space-between; position:relative; z-index:8; color:#fff; }
-.cosmic-status-bar .time { font-size:14px; font-weight:500; line-height:1.3; }
-.cosmic-status-icons { display:flex; align-items:center; gap:6px; }
-.cosmic-status-icons svg { display:block; opacity:0.95; }
-.cosmic-camera-pill { position:absolute; left:50%; top:18px; transform:translateX(-50%); width:24px; height:24px; border-radius:50%; background:#000; }
-.cosmic-back-btn { position:absolute; top:52px; left:12px; z-index:9; width:46px; height:46px; border-radius:46px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:12px; text-decoration:none; }
-.cosmic-back-btn:active { opacity:0.7; }
-.cosmic-back-btn svg { width:18px; height:18px; color:#fff; }
-.cosmic-back-btn svg path { fill:none; stroke:currentColor; }
-.cosmic-avatar-block { display:flex; flex-direction:column; align-items:center; margin-top:-56px; position:relative; z-index:5; background:#fff; padding-bottom:8px; }
-.cosmic-avatar-ring { width:120px; height:120px; border-radius:50%; border:3px solid #fff; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.12); }
-.cosmic-avatar-ring img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-.cosmic-avatar-title { font-size:24px; font-weight:700; line-height:1.3; letter-spacing:-0.72px; color:#000; text-align:center; margin:8px 0 6px; font-family:'JioType',sans-serif; }
-.cosmic-hero-actions { display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; width:100%; padding:0 12px 4px; }
-.cosmic-hero-actions .icon-btn-ghost { background:var(--surface-ghost,#eeeeef); }
+/* ── LANDING HERO — same geometry as cricket-tools.html: 137px banner + overlap (no fake status bar) ── */
+.landing-hero-block { flex-shrink:0; width:100%; position:relative; }
+.landing-hero-banner {
+  position:relative; width:100%; height:137px; overflow:hidden; flex-shrink:0;
+}
+.landing-hero-banner .lhb-bg {
+  position:absolute; inset:0;
+  background:url('https://www.figma.com/api/mcp/asset/37e5b81e-b03f-40f4-9fc3-11595b349c24') center center / cover no-repeat;
+  filter:brightness(.85);
+}
+.landing-hero-banner .lhb-gradient {
+  position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.45) 100%);
+}
+.landing-hero-banner .lhb-back {
+  position:absolute; top:16px; left:12px; z-index:5;
+  width:40px; height:40px; border-radius:50%; border:none;
+  background:rgba(255,255,255,.15); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  text-decoration:none;
+}
+.landing-hero-banner .lhb-back:active { background:rgba(255,255,255,.3); }
+.landing-hero-banner .lhb-back svg { width:20px; height:20px; color:#fff; }
+.landing-hero-banner .lhb-back svg path { fill:none; stroke:currentColor; }
+.landing-avatar-section {
+  display:flex; flex-direction:column; align-items:center;
+  margin-top:-56px; position:relative; z-index:3; background:#fff;
+  padding-bottom:8px;
+}
+.landing-avatar-ring {
+  width:120px; height:120px; border-radius:50%;
+  border:3px solid #f3e8ff; background:var(--surface);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,0.08);
+}
+.landing-avatar-ring img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.landing-avatar-name {
+  font-size:24px; font-weight:700; line-height:1.3; letter-spacing:-0.72px;
+  color:#000; text-align:center; margin-top:8px; font-family:'JioType',sans-serif;
+}
 
 /* Chat layer on top of landing — NO cosmic hero here (landing only) */
 .chat-shell {
@@ -1102,28 +1122,19 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
   <!-- ── LANDING SCREEN ── -->
   <div id="landingOverlay" style="position:absolute;inset:0;z-index:500;background:#fff;display:flex;flex-direction:column;overflow:hidden;font-family:'JioType',sans-serif;">
     <div class="ls-scroll-body">
-      <div class="cosmic-hero" id="cosmicHeroLanding">
-        <div class="cosmic-hero-wrap">
-          <div class="cosmic-status-bar">
-            <span class="time">9:30</span>
-            <span class="cosmic-camera-pill" aria-hidden="true"></span>
-            <div class="cosmic-status-icons" aria-hidden="true">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 6.567 5.567 5 7.5 5h9C18.433 5 20 6.567 20 8.5v7c0 1.933-1.567 3.5-3.5 3.5h-9C5.567 19 4 17.433 4 15.5v-7z" stroke="#fff" stroke-width="1.4"/><path d="M8 12h8" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 14l2.5-3 2 2.5L14 8l6 7" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <svg width="10" height="15" viewBox="0 0 16 24" fill="none"><rect x="2" y="4" width="12" height="16" rx="2" stroke="#fff" stroke-width="1.4"/><path d="M5 7h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
-            </div>
-          </div>
-          <div class="cosmic-hero-banner"></div>
-          <div class="cosmic-hero-overlay"></div>
-          <a href="jbiqhomepage.html" class="cosmic-back-btn" aria-label="Back">
+      <div class="landing-hero-block" id="cosmicHeroLanding">
+        <div class="landing-hero-banner">
+          <div class="lhb-bg" aria-hidden="true"></div>
+          <div class="lhb-gradient" aria-hidden="true"></div>
+          <a href="jbiqhomepage.html" class="lhb-back" aria-label="Back">
             <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
-        <div class="cosmic-avatar-block">
-          <div class="cosmic-avatar-ring">
-            <img src="https://www.figma.com/api/mcp/asset/a2eae70d-3b8c-4bbd-9547-f78fa191ec34" alt="" width="120" height="120">
+        <div class="landing-avatar-section">
+          <div class="landing-avatar-ring">
+            <img src="https://www.figma.com/api/mcp/asset/a2eae70d-3b8c-4bbd-9547-f78fa191ec34" alt="Astrology">
           </div>
-          <h1 class="cosmic-avatar-title">Astrology</h1>
+          <div class="landing-avatar-name">Astrology</div>
         </div>
       </div>
       <div class="ls-rashifal-header">
