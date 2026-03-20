@@ -726,13 +726,16 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
   background:rgba(0,0,0,0.15); margin:8px auto 0;
 }
 
-/* ── LANDING HERO — same geometry as cricket-tools.html: 137px banner + overlap (no fake status bar) ── */
-.landing-hero-block { flex-shrink:0; width:100%; position:relative; }
+/* ── LANDING HERO — same geometry as cricket-tools.html (hero + avatar NOT inside scroll; flow + margin-top:-56px) ── */
+.landing-hero-block {
+  flex-shrink:0; width:100%; position:relative; background:#fff;
+}
+/* mirrors .hero-banner */
 .landing-hero-banner {
   position:relative; width:100%; height:137px; overflow:hidden; flex-shrink:0;
 }
 .landing-hero-banner .lhb-bg {
-  position:absolute; inset:0;
+  position:absolute; inset:0; width:100%; height:100%;
   background:url('https://www.figma.com/api/mcp/asset/37e5b81e-b03f-40f4-9fc3-11595b349c24') center center / cover no-repeat;
   filter:brightness(.85);
 }
@@ -750,16 +753,15 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 .landing-hero-banner .lhb-back:active { background:rgba(255,255,255,.3); }
 .landing-hero-banner .lhb-back svg { width:20px; height:20px; color:#fff; }
 .landing-hero-banner .lhb-back svg path { fill:none; stroke:currentColor; }
+/* mirrors .avatar-section — no background (avoids painting over banner in overlap) */
 .landing-avatar-section {
   display:flex; flex-direction:column; align-items:center;
-  margin-top:-56px; position:relative; z-index:3; background:#fff;
-  padding-bottom:8px;
+  margin-top:-56px; position:relative; z-index:3;
 }
 .landing-avatar-ring {
   width:120px; height:120px; border-radius:50%;
   border:3px solid #f3e8ff; background:var(--surface);
   display:flex; align-items:center; justify-content:center; overflow:hidden;
-  box-shadow:0 4px 16px rgba(0,0,0,0.08);
 }
 .landing-avatar-ring img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
 .landing-avatar-name {
@@ -783,7 +785,7 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 .chat-shell .bottom-widget { flex-shrink:0; }
 
 /* ── LANDING SCREEN ── */
-.ls-scroll-body { flex:1; overflow-y:auto; scrollbar-width:none; padding-bottom:8px; }
+.ls-scroll-body { flex:1; min-height:0; overflow-y:auto; scrollbar-width:none; padding-bottom:8px; }
 .ls-scroll-body::-webkit-scrollbar { display:none; }
 .ls-top-header { background:#110040; padding:16px 16px 14px; }
 .ls-rashifal-header { background:#fff; padding:14px 16px 10px; border-bottom:1px solid rgba(36,38,43,0.1); }
@@ -1121,22 +1123,23 @@ body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;backgroun
 
   <!-- ── LANDING SCREEN ── -->
   <div id="landingOverlay" style="position:absolute;inset:0;z-index:500;background:#fff;display:flex;flex-direction:column;overflow:hidden;font-family:'JioType',sans-serif;">
-    <div class="ls-scroll-body">
-      <div class="landing-hero-block" id="cosmicHeroLanding">
-        <div class="landing-hero-banner">
-          <div class="lhb-bg" aria-hidden="true"></div>
-          <div class="lhb-gradient" aria-hidden="true"></div>
-          <a href="jbiqhomepage.html" class="lhb-back" aria-label="Back">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-        <div class="landing-avatar-section">
-          <div class="landing-avatar-ring">
-            <img src="https://www.figma.com/api/mcp/asset/a2eae70d-3b8c-4bbd-9547-f78fa191ec34" alt="Astrology">
-          </div>
-          <div class="landing-avatar-name">Astrology</div>
-        </div>
+    <!-- Hero + avatar: same as cricket — siblings above scroll, NOT inside overflow-y (overlap works reliably) -->
+    <div class="landing-hero-block" id="cosmicHeroLanding">
+      <div class="landing-hero-banner">
+        <div class="lhb-bg" aria-hidden="true"></div>
+        <div class="lhb-gradient" aria-hidden="true"></div>
+        <a href="jbiqhomepage.html" class="lhb-back" aria-label="Back">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </div>
+      <div class="landing-avatar-section">
+        <div class="landing-avatar-ring">
+          <img src="https://www.figma.com/api/mcp/asset/a2eae70d-3b8c-4bbd-9547-f78fa191ec34" alt="Astrology">
+        </div>
+        <div class="landing-avatar-name">Astrology</div>
+      </div>
+    </div>
+    <div class="ls-scroll-body">
       <div class="ls-rashifal-header">
         <div class="ls-top-title">🔮 Today's Horoscope</div>
         <div class="ls-top-date" id="lsDate"></div>
