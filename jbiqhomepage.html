@@ -59,7 +59,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 .assistants-row{display:flex;gap:16px;padding:0 18px;overflow-x:auto}
 .assistant-item{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;cursor:pointer}
 .assistant-avatar-wrap{width:74px;height:74px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:50%}
-.assistant-ring{position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--primary-50)}
+.assistant-ring{position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--primary-50);z-index:2;pointer-events:none}
 .assistant-ring.grey{border-color:var(--grey-60)}
 .assistant-item.inactive{opacity:.8}
 .assistant-item.highlighted .assistant-ring{border-width:3px}
