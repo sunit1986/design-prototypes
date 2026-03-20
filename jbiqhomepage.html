@@ -58,12 +58,14 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 /* ASSISTANTS */
 .assistants-row{display:flex;gap:16px;padding:0 18px;overflow-x:auto}
 .assistant-item{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;cursor:pointer}
-.assistant-avatar-wrap{width:74px;height:74px;position:relative;display:flex;align-items:center;justify-content:center}
+.assistant-avatar-wrap{width:74px;height:74px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:50%}
 .assistant-ring{position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--primary-50)}
 .assistant-ring.grey{border-color:var(--grey-60)}
 .assistant-item.inactive{opacity:.8}
 .assistant-item.highlighted .assistant-ring{border-width:3px}
-.assistant-img{width:60px;height:60px;border-radius:50%;object-fit:cover;position:relative;z-index:1}
+.assistant-img{width:60px;height:60px;border-radius:50%;object-fit:cover;object-position:center;position:relative;z-index:1}
+/* Career asset has extra frame/padding — scale so inner face matches other assistants */
+#assistant-career .assistant-img{transform:scale(1.22);transform-origin:center center}
 .assistant-label{font-size:14px;font-weight:500;color:var(--text-medium);opacity:.8;text-align:center;white-space:nowrap}
 
 /* TOOLS */
@@ -429,7 +431,7 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
       <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-astrology.png" alt="Astrology"></div>
       <span class="assistant-label">Astrology</span>
     </a>
-    <a class="assistant-item" href="https://samyakshahjio.github.io/english-learning-chat/career.html" style="text-decoration:none;color:inherit">
+    <a class="assistant-item" href="https://samyakshahjio.github.io/english-learning-chat/career.html" style="text-decoration:none;color:inherit" id="assistant-career">
       <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-career.png" alt="Career"></div>
       <span class="assistant-label">Career</span>
     </a>
