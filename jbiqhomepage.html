@@ -64,9 +64,10 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 .assistant-item.inactive{opacity:.8}
 .assistant-item.highlighted .assistant-ring{border-width:3px}
 .assistant-img{width:60px;height:60px;border-radius:50%;object-fit:cover;object-position:center;position:relative;z-index:1}
-/* Astrology + Career assets have extra padding/frame — scale to match Entertainment / Cricket */
-#assistant-astrology .assistant-img,
-#assistant-career .assistant-img{transform:scale(1.26);transform-origin:center center}
+/* Inner clip keeps ~7px white band (74−60) like Entertainment/Cricket when image is scaled up */
+.assistant-img-inner{width:60px;height:60px;border-radius:50%;overflow:hidden;position:relative;z-index:1;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface,#fff)}
+#assistant-astrology .assistant-img-inner .assistant-img,
+#assistant-career .assistant-img-inner .assistant-img{transform:scale(1.26);transform-origin:center center}
 .assistant-label{font-size:14px;font-weight:500;color:var(--text-medium);opacity:.8;text-align:center;white-space:nowrap}
 
 /* TOOLS */
@@ -429,11 +430,11 @@ body.menu-open{overflow:hidden;position:fixed;width:100%}
   <div class="section-title anim-2">Your Assistants</div>
   <div class="assistants-row anim-2">
     <a class="assistant-item" href="https://sunit1986.github.io/design-prototypes/jyotish-saathi.html" style="text-decoration:none;color:inherit" id="assistant-astrology" data-landing="https://sunit1986.github.io/design-prototypes/jyotish-saathi.html">
-      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-astrology.png" alt="Astrology"></div>
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><div class="assistant-img-inner"><img class="assistant-img" src="Assets/persona-astrology.png" alt="Astrology"></div></div>
       <span class="assistant-label">Astrology</span>
     </a>
     <a class="assistant-item" href="https://samyakshahjio.github.io/english-learning-chat/career.html" style="text-decoration:none;color:inherit" id="assistant-career">
-      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><img class="assistant-img" src="Assets/persona-career.png" alt="Career"></div>
+      <div class="assistant-avatar-wrap"><div class="assistant-ring"></div><div class="assistant-img-inner"><img class="assistant-img" src="Assets/persona-career.png" alt="Career"></div></div>
       <span class="assistant-label">Career</span>
     </a>
     <a class="assistant-item" href="https://sunit1986.github.io/design-prototypes/bollywood-tools.html" style="text-decoration:none;color:inherit">
