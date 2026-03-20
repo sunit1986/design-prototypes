@@ -64,8 +64,9 @@ body{font-family:var(--font);background:var(--surface);color:var(--text-high);di
 .assistant-item.inactive{opacity:.8}
 .assistant-item.highlighted .assistant-ring{border-width:3px}
 .assistant-img{width:60px;height:60px;border-radius:50%;object-fit:cover;object-position:center;position:relative;z-index:1}
-/* Career asset has extra frame/padding — scale so inner face matches other assistants */
-#assistant-career .assistant-img{transform:scale(1.22);transform-origin:center center}
+/* Astrology + Career assets have extra padding/frame — scale to match Entertainment / Cricket */
+#assistant-astrology .assistant-img,
+#assistant-career .assistant-img{transform:scale(1.26);transform-origin:center center}
 .assistant-label{font-size:14px;font-weight:500;color:var(--text-medium);opacity:.8;text-align:center;white-space:nowrap}
 
 /* TOOLS */
