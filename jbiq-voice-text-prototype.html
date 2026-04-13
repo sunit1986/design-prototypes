@@ -612,24 +612,18 @@ async function respond(q,m){
     rb.appendChild(sp);
     spans.push(sp);
   }
-  rb.insertAdjacentHTML('beforeend','<span class="cu" id="'+cid+'"></span>');
   scr();
-  // Animate: reveal word by word
-  for(let i=0;i<spans.length;i++){
-    spans[i].className='karaoke-spoken';
-    scr();await w8(60+Math.random()*40);
+  if(spk&&!tMode){
+    // Voice mode: let TTS karaoke reveal text synced to audio — no pre-streaming
+    await ttsWithKaraoke(text,spans);
+  }else{
+    // Chat mode or muted: stream text word-by-word
+    for(let i=0;i<spans.length;i++){
+      spans[i].className='karaoke-spoken';
+      scr();await w8(60+Math.random()*40);
+    }
   }
-  const cur=$(cid);if(cur)cur.remove();
   el.innerHTML+=fbRow();scr();
-  // TTS with karaoke sync
-  if(spk){
-    // Re-highlight: all spoken initially, then highlight word-by-word during audio
-    const allSpans=rb.querySelectorAll('span:not(.cu)');
-    // Reset to upcoming
-    allSpans.forEach(s=>{s.className='karaoke-upcoming'});
-    await ttsWithKaraoke(text,allSpans);
-  }
-  // Turn off warm glow
   $('wGlow').classList.remove('on');
   st='complete';setV('idle');$('bSt').textContent='Say something...';
   setTimeout(()=>{if(st==='complete'&&!tMode)startListen()},1500);
@@ -788,12 +782,15 @@ async function runDemo(name){
     const dsp=[];
     for(let i=0;i<wds.length;i++){const sp=document.createElement('span');sp.textContent=(i?' ':'')+wds[i];sp.className='karaoke-upcoming';drb.appendChild(sp);dsp.push(sp)}
     scr();
-    // Stream in
-    for(let i=0;i<dsp.length;i++){dsp[i].className='karaoke-spoken';scr();await w8(60+Math.random()*40)}
+    if(spk){
+      // Voice: let TTS reveal text synced to audio
+      await ttsWithKaraoke(turn.a,dsp);
+    }else{
+      // No TTS: stream text
+      for(let i=0;i<dsp.length;i++){dsp[i].className='karaoke-spoken';scr();await w8(60+Math.random()*40)}
+      $('wGlow').classList.remove('on');
+    }
     el.innerHTML+=fbRow();scr();
-    // TTS with karaoke sync
-    if(spk){dsp.forEach(s=>{s.className='karaoke-upcoming'});await ttsWithKaraoke(turn.a,dsp)}
-    else{$('wGlow').classList.remove('on')}
     st='complete';setV('idle');$('bSt').textContent='Say something...';
     await w8(1500);
   }
