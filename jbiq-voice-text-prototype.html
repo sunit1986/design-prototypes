@@ -469,9 +469,9 @@ function toggleMode(){
 function updMode(){
   $('voiceDock').style.display=tMode?'none':'block';
   $('chatDock').style.display=tMode?'block':'none';
-  // No border animation in chat mode
-  if(tMode)$('ring').className='ph-ring';
-  else $('ring').className='ph-ring on purple';
+  // No border or glow in chat mode
+  if(tMode){$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';}
+  else{$('ring').className='ph-ring on purple';$('wGlow').style.display='';}
 }
 function switchToVoice(){
   tMode=false;spk=true;updMode();
@@ -713,7 +713,8 @@ function addGreeting(){
   const el=document.createElement('div');el.className='bm';
   el.innerHTML='<div class="rcb" style="padding:8px 0;font-size:15px;color:var(--g100);line-height:1.6">Hi Sunit, how can I help you today?</div>';
   $('mB').appendChild(el);scr();
-  if(spk&&!tMode)tts('Hi Sunit, how can I help you today?');
+  if(spk&&!tMode){tts('Hi Sunit, how can I help you today?');}
+  else{$('wGlow').classList.remove('on');}
 }
 
 // Edit latest user message — inline beside time
