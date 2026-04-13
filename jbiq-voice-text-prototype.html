@@ -485,22 +485,14 @@ let voiceOnly=false;
 function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on')}
 function goMode(mode){
   voiceOnly=(mode==='voiceonly');
-  if(voiceOnly){
-    // Go straight to voice screen — pure voice, no text input
-    show('S_v');$('ring').className='ph-ring on purple';tMode=false;spk=true;updMode();
-    // Hide chat dock entirely in voice-only
-    $('chatDock').style.display='none';
-    startConn();setTimeout(()=>{addGreeting()},2200);
-  }else{
-    show('S_home');
-  }
+  show('S_home');
 }
-function goH(){stopAll();reset();$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';$('wGlow').className='warm-glow';if('speechSynthesis' in window)speechSynthesis.cancel();show(voiceOnly?'S_mode':'S_home')}
-function goV(){show('S_v');$('ring').className='ph-ring on purple';tMode=false;updMode();startConn();
-  // Add greeting after connecting
-  setTimeout(()=>{addGreeting()},2200);
+function goH(){stopAll();reset();$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';$('wGlow').className='warm-glow';if('speechSynthesis' in window)speechSynthesis.cancel();show('S_home')}
+function goV(){show('S_v');$('ring').className='ph-ring on purple';tMode=false;spk=true;updMode();
+  if(voiceOnly)$('chatDock').style.display='none';
+  startConn();setTimeout(()=>{addGreeting()},2200);
 }
-function goT(pre){stopAll();tMode=true;spk=false;show('S_v');$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';updMode();addGreeting();
+function goT(pre){if(voiceOnly){goV();return}stopAll();tMode=true;spk=false;show('S_v');$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';updMode();addGreeting();
   $('spn').classList.remove('on');$('vA').style.display='';setV('idle');$('vS').textContent='Say something...';st='idle';
   if(pre){$('tF').value=pre;tIn();}$('tF').focus();}
 function reset(){st='idle';tMode=false;greeted=false;lastUserEl=null;$('vC').style.display='flex';$('vCh').classList.remove('on');$('bs').classList.remove('on');
