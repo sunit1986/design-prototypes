@@ -177,25 +177,30 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 /* Frosted glass panel */
 .bot-panel{background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);padding-bottom:0}
 
-/* === PURPLE ORGANIC GRADIENT — inspired by Claude mobile, JDS purple === */
+/* === ORGANIC GRADIENT — purple (AI) or teal (user) === */
 .warm-glow{position:absolute;bottom:0;left:0;right:0;height:450px;pointer-events:none;z-index:35;opacity:0;transition:opacity .8s ease;overflow:hidden}
 .warm-glow.on{opacity:1}
-/* Blob 1: large center-bottom purple */
-.warm-glow::before{content:'';position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:420px;height:350px;border-radius:50%;
+/* Purple blobs (AI speaking) */
+.warm-glow.purple::before{content:'';position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:420px;height:350px;border-radius:50%;
   background:radial-gradient(ellipse at center,rgba(124,58,237,.2) 0%,rgba(100,50,200,.12) 35%,rgba(80,40,180,.04) 65%,transparent 100%);
   animation:blob1 3s ease-in-out infinite}
-/* Blob 2: right-side violet */
-.warm-glow::after{content:'';position:absolute;bottom:-40px;right:-30px;width:300px;height:280px;border-radius:50%;
+.warm-glow.purple::after{content:'';position:absolute;bottom:-40px;right:-30px;width:300px;height:280px;border-radius:50%;
   background:radial-gradient(ellipse at center,rgba(147,102,255,.18) 0%,rgba(130,80,220,.1) 40%,transparent 100%);
   animation:blob2 3.5s ease-in-out infinite .5s}
-/* Blob 3: left-side indigo */
-.warm-b3{position:absolute;bottom:-30px;left:-20px;width:260px;height:250px;border-radius:50%;
-  background:radial-gradient(ellipse at center,rgba(100,60,200,.16) 0%,rgba(120,70,210,.08) 40%,transparent 100%);
-  animation:blob3 4s ease-in-out infinite .8s}
-/* Blob 4: subtle top wash */
-.warm-b4{position:absolute;bottom:100px;left:50%;transform:translateX(-40%);width:350px;height:200px;border-radius:50%;
-  background:radial-gradient(ellipse at center,rgba(124,58,237,.06) 0%,transparent 70%);
-  animation:blob1 5s ease-in-out infinite 1s}
+.warm-glow.purple .warm-b3{background:radial-gradient(ellipse at center,rgba(100,60,200,.16) 0%,rgba(120,70,210,.08) 40%,transparent 100%)}
+.warm-glow.purple .warm-b4{background:radial-gradient(ellipse at center,rgba(124,58,237,.06) 0%,transparent 70%)}
+/* Teal blobs (user speaking) */
+.warm-glow.teal::before{content:'';position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:420px;height:350px;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(30,204,176,.2) 0%,rgba(20,180,160,.12) 35%,rgba(10,160,140,.04) 65%,transparent 100%);
+  animation:blob1 3s ease-in-out infinite}
+.warm-glow.teal::after{content:'';position:absolute;bottom:-40px;right:-30px;width:300px;height:280px;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(46,236,192,.18) 0%,rgba(30,204,176,.1) 40%,transparent 100%);
+  animation:blob2 3.5s ease-in-out infinite .5s}
+.warm-glow.teal .warm-b3{background:radial-gradient(ellipse at center,rgba(20,180,160,.16) 0%,rgba(30,200,170,.08) 40%,transparent 100%)}
+.warm-glow.teal .warm-b4{background:radial-gradient(ellipse at center,rgba(30,204,176,.06) 0%,transparent 70%)}
+/* Default blob positioning */
+.warm-b3{position:absolute;bottom:-30px;left:-20px;width:260px;height:250px;border-radius:50%;animation:blob3 4s ease-in-out infinite .8s}
+.warm-b4{position:absolute;bottom:100px;left:50%;transform:translateX(-40%);width:350px;height:200px;border-radius:50%;animation:blob1 5s ease-in-out infinite 1s}
 
 @keyframes blob1{0%,100%{transform:translateX(-50%) scale(1);opacity:.7}50%{transform:translateX(-50%) scale(1.08);opacity:1}}
 @keyframes blob2{0%,100%{transform:scale(1) translateY(0);opacity:.6}50%{transform:scale(1.12) translateY(-10px);opacity:1}}
@@ -515,7 +520,7 @@ function startListen(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   rec=new SR();rec.lang='en-IN';rec.interimResults=true;rec.continuous=false;
   st='listening';setV('listen');$('vS').textContent='Listening...';
-  $('ring').className='ph-ring on teal';$('micB').classList.add('rec');
+  $('ring').className='ph-ring on teal';$('wGlow').className='warm-glow on teal';$('wGlow').style.display='';$('micB').classList.add('rec');
   let fin='';
   // Create a live bubble that fills word by word as user speaks
   let liveBubble=null;
@@ -584,7 +589,7 @@ async function respond(q,m){
   await w8(1200+Math.random()*600);
   const tk=$('_t'+m);if(tk)tk.remove();
   st='speaking';setV('speak');$('bSt').textContent=tMode?'':'Speaking...';
-  if(!tMode){$('ring').className='ph-ring on purple';$('wGlow').classList.add('on');}
+  if(!tMode){$('ring').className='ph-ring on purple';$('wGlow').className='warm-glow on purple';}
   const sid='_s'+m,cid='_c'+m;let html='';
   if(card)html+=`<div class="rc"><div class="rch"><img class="rci" src="${card.i}" onerror="this.style.background='var(--pri-l)'"><div class="rcn"><h3>${card.t}</h3><p>${card.s}</p></div></div></div>`;
   html+=`<div class="rcb" id="_rb${m}"></div>`;
@@ -645,7 +650,7 @@ async function ttsWithKaraoke(text,spans){
   if(!spk||!spans.length){spans.forEach(s=>s.className='karaoke-spoken');$('wGlow').classList.remove('on');return}
   try{
     st='speaking';setV('speak');$('bSt').textContent=tMode?'':'Speaking...';
-    if(!tMode)$('wGlow').classList.add('on');
+    if(!tMode)$('wGlow').className='warm-glow on purple';
     const url=await sarvamTTS(text);
     return new Promise(res=>{
       aud=new Audio(url);aud.volume=1.0;
@@ -670,7 +675,7 @@ async function ttsWithKaraoke(text,spans){
 async function tts(text){
   if(!spk)return;
   st='speaking';setV('speak');$('bSt').textContent=tMode?'':'Speaking...';
-  if(!tMode)$('wGlow').classList.add('on');
+  if(!tMode)$('wGlow').className='warm-glow on purple';
   try{
     const url=await sarvamTTS(text);
     return new Promise(res=>{
@@ -750,7 +755,7 @@ async function runDemo(name){
   $('hT').textContent=name==='mumbai'?'Mumbai Trip':'Trip Planner';$('bSt').textContent='';
   for(sSt=0;sSt<SCRIPTS[name].length;sSt++){
     mid++;const m=mid,turn=SCRIPTS[name][sSt];
-    $('ring').className='ph-ring on teal';$('bSt').textContent='Listening...';setV('listen');
+    $('ring').className='ph-ring on teal';$('wGlow').className='warm-glow on teal';$('wGlow').style.display='';$('bSt').textContent='Listening...';setV('listen');
     addM('u',turn.u);await w8(1500);
     st='thinking';setV('think');$('bSt').textContent='Thinking...';
     const tk=document.createElement('div');tk.className='bm';tk.id='_dt'+m;
@@ -758,7 +763,7 @@ async function runDemo(name){
     $('mB').appendChild(tk);scr();await w8(1800+Math.random()*800);
     const tkE=$('_dt'+m);if(tkE)tkE.remove();
     st='speaking';setV('speak');$('bSt').textContent=tMode?'':'Speaking...';
-    if(!tMode){$('ring').className='ph-ring on purple';$('wGlow').classList.add('on');}
+    if(!tMode){$('ring').className='ph-ring on purple';$('wGlow').className='warm-glow on purple';}
     const drbid='_drb'+m;
     const dhtml=`<div class="rcb" id="${drbid}"></div>`;
     const el=addM('b',dhtml,true);
