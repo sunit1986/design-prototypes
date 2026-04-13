@@ -410,11 +410,10 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
         <div style="display:flex;align-items:center;gap:8px;">
           <div class="b3" style="width:40px;height:40px;flex-shrink:0" onclick="showToast('Attach')"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
           <div class="tf-wrap">
-            <input type="text" class="tf" id="tF" placeholder="" oninput="tIn()" onfocus="tFoc()" onblur="tBlr()" onkeydown="if(event.key==='Enter')tSd()">
-            <div class="tf-cursor" id="tfCur">Ask anything<span>|</span></div>
+            <input type="text" class="tf" id="tF" placeholder="Ask anything" oninput="tIn()" onkeydown="if(event.key==='Enter')tSd()" style="caret-color:var(--pri)">
             <button class="ts" id="tB" onclick="tSd()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
           </div>
-          <div class="b3" style="width:40px;height:40px;flex-shrink:0;background:var(--bold)" onclick="switchToVoice()"><svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#fff"><path d="M4 15h2v-2H4v2zm0-4h2V9H4v2zm4 4h2V9H8v6zm4 0h2V5h-2v10zm4 0h2V9h-2v6zm4-6v2h2V9h-2zm0 6h2v-2h-2v2z"/></svg></div>
+          <div class="b3" style="width:40px;height:40px;flex-shrink:0;background:var(--bold);gap:2px;display:flex;align-items:center;justify-content:center" onclick="switchToVoice()"><span style="width:2.5px;height:8px;background:#fff;border-radius:2px"></span><span style="width:2.5px;height:14px;background:#fff;border-radius:2px"></span><span style="width:2.5px;height:18px;background:#fff;border-radius:2px"></span><span style="width:2.5px;height:14px;background:#fff;border-radius:2px"></span><span style="width:2.5px;height:8px;background:#fff;border-radius:2px"></span></div>
         </div>
       </div>
       <div class="sab"></div>
@@ -695,13 +694,7 @@ function interruptAI(){
   if(el)el.textContent='Say something...';
   setV('idle');st='idle';
 }
-function tIn(){
-  const has=$('tF').value.length>0;
-  $('tB').classList.toggle('on',has);
-  const cur=$('tfCur');if(cur)cur.classList.toggle('hide',has);
-}
-function tFoc(){const cur=$('tfCur');if(cur&&$('tF').value.length>0)cur.classList.add('hide')}
-function tBlr(){const cur=$('tfCur');if(cur&&$('tF').value.length===0)cur.classList.remove('hide')}
+function tIn(){$('tB').classList.toggle('on',$('tF').value.trim().length>0)}
 function tSd(){const v=$('tF').value.trim();if(!v)return;$('tF').value='';tIn();procIn(v)}
 function stopAll(){if(rec)try{rec.stop()}catch(e){};if(aud){aud.pause();aud=null};if('speechSynthesis' in window)speechSynthesis.cancel();$('micB').classList.remove('rec')}
 
