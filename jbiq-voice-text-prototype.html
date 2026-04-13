@@ -324,8 +324,42 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 <div class="ph-ring" id="ring"></div>
 <div class="notch"></div>
 
+<!-- ===== MODE SELECT ===== -->
+<div class="scr on" id="S_mode">
+  <div class="sb"><span class="sb-t">9:30</span><div class="sb-i"><svg viewBox="0 0 24 24" fill="#141414"><path d="M2 22h3V9H2v13zm5 0h3V2H7v20zm5 0h3v-7h-3v7zm5 0h3v-4h-3v4z"/></svg><svg viewBox="0 0 24 24" fill="#141414"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24" fill="#141414"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;gap:24px;">
+    <div style="margin-bottom:16px;text-align:center;">
+      <div style="width:80px;height:80px;margin:0 auto 16px;"><video autoplay loop muted playsinline src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle_state.mp4" style="width:100%;height:100%;object-fit:contain"></video></div>
+      <div style="font-size:24px;font-weight:700;color:var(--g100);">How would you like to chat?</div>
+      <div style="font-size:14px;color:var(--g60);margin-top:8px;">Choose your preferred conversation mode</div>
+    </div>
+    <!-- Chat + Voice -->
+    <div style="width:100%;padding:20px;background:#fff;border-radius:20px;border:2px solid var(--pri-l);cursor:pointer;transition:all .15s;" onclick="goMode('chatvoice')" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:14px;background:var(--pri-l);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--pri)"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg></div>
+        <div style="flex:1;">
+          <div style="font-size:16px;font-weight:700;color:var(--g100);">Chat + Voice</div>
+          <div style="font-size:13px;color:var(--g60);margin-top:2px;">Type or speak, AI responds with text & voice</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--g40)"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </div>
+    </div>
+    <!-- Voice Only -->
+    <div style="width:100%;padding:20px;background:#fff;border-radius:20px;border:2px solid rgba(30,204,176,.2);cursor:pointer;transition:all .15s;" onclick="goMode('voiceonly')" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:14px;background:rgba(30,204,176,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--teal)"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div>
+        <div style="flex:1;">
+          <div style="font-size:16px;font-weight:700;color:var(--g100);">Voice Only</div>
+          <div style="font-size:13px;color:var(--g60);margin-top:2px;">Hands-free, just speak and listen</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--g40)"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== HOME ===== -->
-<div class="scr on" id="S_home">
+<div class="scr" id="S_home">
   <div class="sb"><span class="sb-t">9:30</span><div class="sb-i"><svg viewBox="0 0 24 24" fill="#141414"><path d="M2 22h3V9H2v13zm5 0h3V2H7v20zm5 0h3v-7h-3v7zm5 0h3v-4h-3v4z"/></svg><svg viewBox="0 0 24 24" fill="#141414"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24" fill="#141414"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
   <div class="hd">
     <div class="hd-l">
@@ -447,8 +481,21 @@ let st='idle',spk=true,tMode=false,rec=null,aud=null,mid=0,sDm=null,sSt=0;
 const $=id=>document.getElementById(id);
 
 // NAV
+let voiceOnly=false;
 function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on')}
-function goH(){stopAll();reset();$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';$('wGlow').className='warm-glow';if('speechSynthesis' in window)speechSynthesis.cancel();show('S_home')}
+function goMode(mode){
+  voiceOnly=(mode==='voiceonly');
+  if(voiceOnly){
+    // Go straight to voice screen — pure voice, no text input
+    show('S_v');$('ring').className='ph-ring on purple';tMode=false;spk=true;updMode();
+    // Hide chat dock entirely in voice-only
+    $('chatDock').style.display='none';
+    startConn();setTimeout(()=>{addGreeting()},2200);
+  }else{
+    show('S_home');
+  }
+}
+function goH(){stopAll();reset();$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';$('wGlow').className='warm-glow';if('speechSynthesis' in window)speechSynthesis.cancel();show(voiceOnly?'S_mode':'S_home')}
 function goV(){show('S_v');$('ring').className='ph-ring on purple';tMode=false;updMode();startConn();
   // Add greeting after connecting
   setTimeout(()=>{addGreeting()},2200);
@@ -462,6 +509,7 @@ function reset(){st='idle';tMode=false;greeted=false;lastUserEl=null;$('vC').sty
 
 // MODE TOGGLE — Voice (speaker) ↔ Silent/Chat (mute + text)
 function toggleMode(){
+  if(voiceOnly){showToast('Voice only mode');return}
   tMode=!tMode;updMode();
   if(tMode){
     // Switching to Silent/Chat mode — stop audio, stop listening
