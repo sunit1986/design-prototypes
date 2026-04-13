@@ -199,9 +199,9 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 .live-tx.on{opacity:1}
 .live-tx p{font-size:14px;font-style:italic;color:var(--g80);line-height:1.5}
 
-/* === KARAOKE — upcoming text is bold+dark, spoken text fades to regular+lighter === */
-.karaoke-upcoming{color:var(--g100);font-weight:700}
-.karaoke-spoken{color:var(--g80);font-weight:400;transition:all .3s ease}
+/* === KARAOKE — same weight, color change only (like Claude mobile) === */
+.karaoke-upcoming{color:rgba(20,20,20,.25);font-weight:400;transition:color .3s ease}
+.karaoke-spoken{color:var(--g100);font-weight:400;transition:color .3s ease}
 
 /* Avatar strip — 4-dot MP4 */
 .bstrip{text-align:center;padding:10px 0 0;display:none}
@@ -527,7 +527,6 @@ async function respond(q,m){
     const sp=document.createElement('span');
     sp.textContent=(i?' ':'')+wds[i];
     sp.className='karaoke-upcoming';
-    if(i<firstSentWords)sp.style.fontWeight='700'; // bold first sentence
     rb.appendChild(sp);
     spans.push(sp);
   }
@@ -536,7 +535,6 @@ async function respond(q,m){
   // Animate: reveal word by word
   for(let i=0;i<spans.length;i++){
     spans[i].className='karaoke-spoken';
-    if(i<firstSentWords)spans[i].style.fontWeight='700';
     scr();await w8(60+Math.random()*40);
   }
   const cur=$(cid);if(cur)cur.remove();
@@ -546,7 +544,7 @@ async function respond(q,m){
     // Re-highlight: all spoken initially, then highlight word-by-word during audio
     const allSpans=rb.querySelectorAll('span:not(.cu)');
     // Reset to upcoming
-    allSpans.forEach(s=>{s.className='karaoke-upcoming';if(s.style.fontWeight==='700')s.dataset.bold='1'});
+    allSpans.forEach(s=>{s.className='karaoke-upcoming'});
     await ttsWithKaraoke(text,allSpans);
   }
   // Turn off warm glow
@@ -659,7 +657,7 @@ async function runDemo(name){
     const drb=$(drbid);const wds=turn.a.split(' ');
     const fEnd=turn.a.search(/[.!?]/);const fW=fEnd>0?turn.a.substring(0,fEnd+1).split(' ').length:0;
     const dsp=[];
-    for(let i=0;i<wds.length;i++){const sp=document.createElement('span');sp.textContent=(i?' ':'')+wds[i];sp.className='karaoke-upcoming';if(i<fW){sp.style.fontWeight='700';sp.dataset.bold='1';}drb.appendChild(sp);dsp.push(sp)}
+    for(let i=0;i<wds.length;i++){const sp=document.createElement('span');sp.textContent=(i?' ':'')+wds[i];sp.className='karaoke-upcoming';drb.appendChild(sp);dsp.push(sp)}
     scr();
     // Stream in
     for(let i=0;i<dsp.length;i++){dsp[i].className='karaoke-spoken';scr();await w8(60+Math.random()*40)}
