@@ -138,8 +138,9 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* Chat messages */
-.vch{flex:1;overflow-y:auto;padding:8px 20px 200px;-webkit-overflow-scrolling:touch;display:none}.vch.on{display:block}.vch::-webkit-scrollbar{display:none}
-.ms{display:flex;flex-direction:column;gap:16px}
+.vch{flex:1;overflow-y:auto;padding:8px 20px 0;-webkit-overflow-scrolling:touch;display:none}.vch.on{display:flex;flex-direction:column}.vch::-webkit-scrollbar{display:none}
+.ms{display:flex;flex-direction:column;gap:16px;margin-bottom:auto}
+.ms::after{content:'';display:block;min-height:40vh;flex-shrink:0}
 .um{align-self:flex-end;max-width:260px;padding:10px 16px;background:var(--g20);border-radius:18px 18px 4px 18px;font-size:14px;color:var(--g100);line-height:1.5;animation:su .35s ease both}
 /* User voice bubble — ChatGPT style with mic + duration */
 .um-voice{align-self:flex-end;max-width:280px;padding:0;animation:su .35s ease both;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
@@ -273,8 +274,8 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 .b3{width:48px;height:48px;border-radius:50%;background:var(--pri-l);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;border:none}
 .b3:active{transform:scale(.88)}
 .b3 svg{width:24px;height:24px;fill:#170054}
-.b3.rec{background:var(--err)!important;animation:pul 1.5s infinite}
-.b3.rec svg{fill:#fff}
+.b3.rec{background:var(--pri-l)!important}
+.b3.rec svg{fill:#170054}
 .b3.muted{background:var(--g20)!important;opacity:.6}
 .b3.muted svg{fill:var(--g40)!important}
 @keyframes pul{0%,100%{box-shadow:0 0 0 0 rgba(250,47,64,.35)}50%{box-shadow:0 0 0 14px rgba(250,47,64,0)}}
@@ -359,21 +360,17 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
     </div>
   </div>
   <div class="hcta">
-    <!-- Figma 23:24654 exact implementation -->
-    <div style="width:calc(100% - 32px);margin:0 16px;padding:8px;background:#eeeeef;border-radius:24px;display:flex;flex-direction:column;gap:8px;">
-      <!-- Row 1: Ask anything text -->
-      <div style="display:flex;align-items:center;gap:4px;padding:4px 8px;" onclick="goT('')" class="hcta-input">
-        <div style="flex:1;opacity:.65;font-size:16px;color:#191B1E;line-height:20.8px;cursor:pointer;text-align:left;">Ask anything...</div>
-      </div>
-      <!-- Row 2: + button left, Speak pill right -->
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="padding:6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="goT('')">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#3900AD"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    <div style="padding:0 16px;">
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border-radius:20px;padding:8px;box-shadow:0 -2px 16px rgba(0,0,0,.06);">
+        <!-- + button -->
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--pri-l);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0" onclick="goT('')"><svg width="20" height="20" viewBox="0 0 24 24" fill="#170054"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+        <!-- Ask anything field with send inside -->
+        <div style="flex:1;position:relative;cursor:pointer" onclick="goT('')">
+          <div style="height:44px;border-radius:22px;background:var(--ghost);display:flex;align-items:center;padding:0 44px 0 16px;"><span style="font-size:15px;color:var(--g40)">Ask anything</span></div>
+          <div style="position:absolute;right:4px;top:4px;width:36px;height:36px;border-radius:50%;background:var(--pri-l);display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="#170054"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></div>
         </div>
-        <div style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:#3900AD;border-radius:999px;cursor:pointer;" onclick="goV()">
-          <div class="speak-wave"><span></span><span></span><span></span><span></span><span></span></div>
-          <span style="font-size:14px;font-weight:700;color:#fff;line-height:14px;">Speak</span>
-        </div>
+        <!-- Waveform voice pill -->
+        <div style="width:44px;height:44px;border-radius:50%;background:#3900AD;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;gap:2px" onclick="goV()"><span style="width:2.5px;height:8px;background:#fff;border-radius:2px;display:block"></span><span style="width:2.5px;height:14px;background:#fff;border-radius:2px;display:block"></span><span style="width:2.5px;height:18px;background:#fff;border-radius:2px;display:block"></span><span style="width:2.5px;height:14px;background:#fff;border-radius:2px;display:block"></span><span style="width:2.5px;height:8px;background:#fff;border-radius:2px;display:block"></span></div>
       </div>
     </div>
   </div>
