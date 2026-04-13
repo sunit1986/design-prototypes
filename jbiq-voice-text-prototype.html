@@ -354,13 +354,16 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
     </div>
   </div>
   <div class="hcta">
-    <!-- Input row: + button, text field, Speak pill -->
-    <div style="display:flex;align-items:center;gap:10px;padding:0 20px;">
-      <div style="width:40px;height:40px;border-radius:50%;background:var(--pri-l);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0" onclick="goT('')"><svg width="20" height="20" viewBox="0 0 24 24" fill="#170054"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
-      <div style="flex:1;height:48px;border-radius:24px;background:var(--ghost);display:flex;align-items:center;padding:0 16px;cursor:pointer" onclick="goT('')"><span style="font-size:15px;color:var(--g40)">Ask anything...</span></div>
-      <div class="speak-pill" onclick="goV()">
-        <div class="speak-wave"><span></span><span></span><span></span><span></span><span></span></div>
-        <span>Speak</span>
+    <div style="padding:0 20px;">
+      <!-- Text field full width -->
+      <div style="height:48px;border-radius:24px;background:var(--ghost);display:flex;align-items:center;padding:0 16px;cursor:pointer;margin-bottom:10px" onclick="goT('')"><span style="font-size:15px;color:var(--g40)">Ask anything...</span></div>
+      <!-- + on left, Speak pill on right -->
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--pri-l);display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="goT('')"><svg width="20" height="20" viewBox="0 0 24 24" fill="#170054"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+        <div class="speak-pill" onclick="goV()">
+          <div class="speak-wave"><span></span><span></span><span></span><span></span><span></span></div>
+          <span>Speak</span>
+        </div>
       </div>
     </div>
   </div>
@@ -441,7 +444,7 @@ function goV(){show('S_v');$('ring').className='ph-ring on purple';tMode=false;u
   // Add greeting after connecting
   setTimeout(()=>{addGreeting()},2200);
 }
-function goT(pre){stopAll();tMode=true;show('S_v');$('ring').className='ph-ring';updMode();addGreeting();
+function goT(pre){stopAll();tMode=true;spk=false;show('S_v');$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';updMode();addGreeting();
   $('spn').classList.remove('on');$('vA').style.display='';setV('idle');$('vS').textContent='Say something...';st='idle';
   if(pre){$('tF').value=pre;tIn();}$('tF').focus();}
 function reset(){st='idle';tMode=false;greeted=false;lastUserEl=null;$('vC').style.display='flex';$('vCh').classList.remove('on');$('bs').classList.remove('on');
@@ -468,9 +471,25 @@ function toggleMode(){
 function updMode(){
   $('voiceDock').style.display=tMode?'none':'block';
   $('chatDock').style.display=tMode?'block':'none';
-  // No border or glow in chat mode
-  if(tMode){$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';}
-  else{$('ring').className='ph-ring on purple';$('wGlow').style.display='';}
+  if(tMode){
+    // Chat mode: kill ALL voice indicators
+    $('ring').className='ph-ring';
+    $('wGlow').classList.remove('on');$('wGlow').style.display='none';
+    // Stop any audio playing
+    if(aud){aud.pause();aud=null}
+    if('speechSynthesis' in window)speechSynthesis.cancel();
+    // Stop listening
+    if(rec)try{rec.stop()}catch(e){}
+    $('micB').classList.remove('rec');
+    // Mute TTS
+    spk=false;
+    // Hide avatar strip
+    $('bs').classList.remove('on');
+  }else{
+    $('ring').className='ph-ring on purple';
+    $('wGlow').style.display='';
+    spk=true;
+  }
 }
 function switchToVoice(){
   tMode=false;spk=true;updMode();
