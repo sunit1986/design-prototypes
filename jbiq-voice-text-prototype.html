@@ -563,9 +563,7 @@ async function respond(q,m){
   await w8(1200+Math.random()*600);
   const tk=$('_t'+m);if(tk)tk.remove();
   st='speaking';setV('speak');$('bSt').textContent=tMode?'':'Speaking...';
-  if(!tMode)$('ring').className='ph-ring on purple';
-  // Turn on warm glow (voice mode only)
-  $('wGlow').classList.add('on');
+  if(!tMode){$('ring').className='ph-ring on purple';$('wGlow').classList.add('on');}
   const sid='_s'+m,cid='_c'+m;let html='';
   if(card)html+=`<div class="rc"><div class="rch"><img class="rci" src="${card.i}" onerror="this.style.background='var(--pri-l)'"><div class="rcn"><h3>${card.t}</h3><p>${card.s}</p></div></div></div>`;
   html+=`<div class="rcb" id="_rb${m}"></div>`;
@@ -625,7 +623,8 @@ async function sarvamTTS(text){
 async function ttsWithKaraoke(text,spans){
   if(!spk||!spans.length){spans.forEach(s=>s.className='karaoke-spoken');$('wGlow').classList.remove('on');return}
   try{
-    st='speaking';setV('speak');$('bSt').textContent='Speaking...';$('wGlow').classList.add('on');
+    st='speaking';setV('speak');$('bSt').textContent=tMode?'':'Speaking...';
+    if(!tMode)$('wGlow').classList.add('on');
     const url=await sarvamTTS(text);
     return new Promise(res=>{
       aud=new Audio(url);aud.volume=1.0;
@@ -649,7 +648,8 @@ async function ttsWithKaraoke(text,spans){
 // TTS (simple, no karaoke)
 async function tts(text){
   if(!spk)return;
-  st='speaking';setV('speak');$('bSt').textContent='Speaking...';$('wGlow').classList.add('on');
+  st='speaking';setV('speak');$('bSt').textContent=tMode?'':'Speaking...';
+  if(!tMode)$('wGlow').classList.add('on');
   try{
     const url=await sarvamTTS(text);
     return new Promise(res=>{
@@ -741,8 +741,8 @@ async function runDemo(name){
     tk.innerHTML='<div class="tk"><div class="dt"><i></i><i></i><i></i></div><span class="tk-t">Thinking...</span></div>';
     $('mB').appendChild(tk);scr();await w8(1800+Math.random()*800);
     const tkE=$('_dt'+m);if(tkE)tkE.remove();
-    st='speaking';setV('speak');$('bSt').textContent='Speaking...';$('ring').className='ph-ring on purple';
-    $('wGlow').classList.add('on');
+    st='speaking';setV('speak');$('bSt').textContent=tMode?'':'Speaking...';
+    if(!tMode){$('ring').className='ph-ring on purple';$('wGlow').classList.add('on');}
     const drbid='_drb'+m;
     const dhtml=`<div class="rcb" id="${drbid}"></div>`;
     const el=addM('b',dhtml,true);
