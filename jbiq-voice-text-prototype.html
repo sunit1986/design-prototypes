@@ -451,7 +451,7 @@ const $=id=>document.getElementById(id);
 
 // NAV
 function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on')}
-function goH(){stopAll();reset();$('ring').className='ph-ring';show('S_home')}
+function goH(){stopAll();reset();$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';$('wGlow').className='warm-glow';if('speechSynthesis' in window)speechSynthesis.cancel();show('S_home')}
 function goV(){show('S_v');$('ring').className='ph-ring on purple';tMode=false;updMode();startConn();
   // Add greeting after connecting
   setTimeout(()=>{addGreeting()},2200);
