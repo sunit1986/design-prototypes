@@ -105,11 +105,18 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 .hcta{position:absolute;bottom:0;left:0;right:0;padding:0 0 36px;text-align:center;background:linear-gradient(transparent,#fff 35%);z-index:5}
 .hcta p{font-size:14px;color:var(--g60);margin-bottom:12px;font-weight:500}
 
-/* HOME AVATAR — NO CLIP, show full 4 dots */
-.ha{width:64px;height:64px;margin:0 auto;cursor:pointer;transition:transform .2s}
-.ha:hover{transform:scale(1.06)}
-.ha:active{transform:scale(.9)}
-.ha video{width:100%;height:100%;object-fit:contain;display:block}
+/* SPEAK PILL — animated waveform + elegant blink */
+.speak-pill{display:flex;align-items:center;gap:6px;padding:0 18px;height:48px;border-radius:var(--pill);background:var(--bold);color:#fff;font-size:15px;font-weight:700;cursor:pointer;flex-shrink:0;transition:all .2s;animation:speakGlow 2.5s ease-in-out infinite}
+.speak-pill:active{transform:scale(.93)}
+.speak-wave{display:flex;align-items:center;gap:2.5px;height:20px}
+.speak-wave span{width:3px;border-radius:2px;background:#fff;animation:speakBar 1.2s ease-in-out infinite}
+.speak-wave span:nth-child(1){height:8px;animation-delay:0s}
+.speak-wave span:nth-child(2){height:14px;animation-delay:.15s}
+.speak-wave span:nth-child(3){height:20px;animation-delay:.08s}
+.speak-wave span:nth-child(4){height:14px;animation-delay:.22s}
+.speak-wave span:nth-child(5){height:8px;animation-delay:.12s}
+@keyframes speakBar{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+@keyframes speakGlow{0%,100%{box-shadow:0 0 0 0 rgba(57,0,173,.3)}50%{box-shadow:0 0 0 8px rgba(57,0,173,0)}}
 
 /* VOICE */
 .vb{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;padding-bottom:0}
@@ -338,7 +345,17 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
       <button class="bf" style="flex:1;height:44px;font-size:14px;background:var(--bold)" onclick="runDemo('flight')">✈️ Book Flight</button>
     </div>
   </div>
-  <div class="hcta"><p style="font-size:13px;color:var(--g40);letter-spacing:.2px">Tap to start a voice conversation</p><div class="ha" onclick="goV()"><video autoplay loop muted playsinline src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle_state.mp4"></video></div></div>
+  <div class="hcta">
+    <!-- Input row: + button, text field, Speak pill -->
+    <div style="display:flex;align-items:center;gap:10px;padding:0 20px;">
+      <div style="width:40px;height:40px;border-radius:50%;background:var(--pri-l);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0" onclick="goT('')"><svg width="20" height="20" viewBox="0 0 24 24" fill="#170054"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+      <div style="flex:1;height:48px;border-radius:24px;background:var(--ghost);display:flex;align-items:center;padding:0 16px;cursor:pointer" onclick="goT('')"><span style="font-size:15px;color:var(--g40)">Ask anything...</span></div>
+      <div class="speak-pill" onclick="goV()">
+        <div class="speak-wave"><span></span><span></span><span></span><span></span><span></span></div>
+        <span>Speak</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ===== VOICE / CHAT ===== -->
