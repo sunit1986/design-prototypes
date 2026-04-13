@@ -381,24 +381,32 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 
   <!-- Warm organic gradient (like Claude mobile) -->
   <div class="warm-glow" id="wGlow"><div class="warm-b3"></div><div class="warm-b4"></div></div>
-  <!-- Live transcription bar -->
-  <div class="live-tx" id="liveTx"><p id="liveTxP"></p></div>
   <!-- Frosted bottom dock -->
   <div class="bot-dock" id="dock">
     <div class="bot-fade"></div>
     <div class="bot-panel">
-      <!-- Avatar strip (4-dot MP4) + waveform underneath -->
-      <div class="bstrip" id="bs">
-        <div class="bsa"><video id="bV" autoplay loop muted playsinline src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle_state.mp4"></video></div>
-        <div class="bss" id="bSt"></div>
+      <!-- VOICE MODE: avatar + 3 buttons -->
+      <div id="voiceDock">
+        <div class="bstrip" id="bs">
+          <div class="bsa"><video id="bV" autoplay loop muted playsinline src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle_state.mp4"></video></div>
+          <div class="bss" id="bSt"></div>
+        </div>
+        <div class="bar3" id="bar3">
+          <div class="b3" onclick="showToast('Attach')"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+          <div class="b3" id="micB" onclick="tapMic()"><svg id="micI" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div>
+          <div class="b3" id="kbB" onclick="toggleMode()"><svg id="kbI" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7V9zm4 0h2v2h-2V9zm4 0h2v2h-2V9z"/></svg></div>
+        </div>
       </div>
-      <!-- Text input (chat mode) -->
-      <div class="tinp" id="tI"><div class="tr"><input type="text" class="tf" id="tF" placeholder="Ask anything" oninput="tIn()" onkeydown="if(event.key==='Enter')tSd()"><button class="ts" id="tB" onclick="tSd()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button></div></div>
-      <!-- 3-button bar -->
-      <div class="bar3" id="bar3">
-        <div class="b3" onclick="showToast('Attach')"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
-        <div class="b3" id="micB" onclick="tapMic()"><svg id="micI" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div>
-        <div class="b3" id="kbB" onclick="toggleMode()"><svg id="kbI" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7V9zm4 0h2v2h-2V9zm4 0h2v2h-2V9z"/></svg></div>
+      <!-- CHAT MODE: sleek input bar — + [input] voice-icon -->
+      <div id="chatDock" style="display:none;padding:8px 16px 0;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="b3" style="width:40px;height:40px;flex-shrink:0" onclick="showToast('Attach')"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+          <div style="flex:1;position:relative">
+            <input type="text" class="tf" id="tF" placeholder="Ask anything..." oninput="tIn()" onkeydown="if(event.key==='Enter')tSd()">
+            <button class="ts" id="tB" onclick="tSd()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+          </div>
+          <div class="b3" style="width:40px;height:40px;flex-shrink:0;background:var(--bold)" onclick="switchToVoice()"><svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#fff"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div>
+        </div>
       </div>
       <div class="sab"></div>
     </div>
@@ -421,11 +429,14 @@ const $=id=>document.getElementById(id);
 // NAV
 function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on')}
 function goH(){stopAll();reset();$('ring').className='ph-ring';show('S_home')}
-function goV(){show('S_v');$('ring').className='ph-ring on purple';tMode=false;updMode();startConn()}
-function goT(pre){stopAll();tMode=true;show('S_v');$('ring').className='ph-ring on purple';updMode();
+function goV(){show('S_v');$('ring').className='ph-ring on purple';tMode=false;updMode();startConn();
+  // Add greeting after connecting
+  setTimeout(()=>{addGreeting()},2200);
+}
+function goT(pre){stopAll();tMode=true;show('S_v');$('ring').className='ph-ring on purple';updMode();addGreeting();
   $('spn').classList.remove('on');$('vA').style.display='';setV('idle');$('vS').textContent='Say something...';st='idle';
   if(pre){$('tF').value=pre;tIn();}$('tF').focus();}
-function reset(){st='idle';tMode=false;$('vC').style.display='flex';$('vCh').classList.remove('on');$('bs').classList.remove('on');
+function reset(){st='idle';tMode=false;greeted=false;lastUserEl=null;$('vC').style.display='flex';$('vCh').classList.remove('on');$('bs').classList.remove('on');
   $('hT').textContent='New chat';$('mB').innerHTML='';$('spn').classList.remove('on');$('vA').style.display='';
   setV('idle');$('vS').textContent='Say something...';$('micB').classList.remove('rec');updMode();}
 
@@ -447,11 +458,14 @@ function toggleMode(){
   }
 }
 function updMode(){
-  // Show/hide text input
-  $('tI').classList.toggle('on',tMode);
-  // Update 3rd button: keyboard (voice mode) or X (chat mode)
-  if(tMode){$('kbI').innerHTML='<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>';$('kbB').style.background='var(--pri)';$('kbI').setAttribute('fill','#fff');}
-  else{$('kbI').innerHTML='<path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7V9zm4 0h2v2h-2V9zm4 0h2v2h-2V9z"/>';$('kbB').style.background='var(--pri-l)';$('kbI').setAttribute('fill','#170054');}
+  // Voice mode: show voiceDock, hide chatDock
+  // Chat mode: show chatDock, hide voiceDock
+  $('voiceDock').style.display=tMode?'none':'block';
+  $('chatDock').style.display=tMode?'block':'none';
+}
+function switchToVoice(){
+  tMode=false;spk=true;updMode();
+  if(st==='idle'||st==='complete')startListen();
 }
 
 // VIDEO
@@ -472,19 +486,25 @@ function startListen(){
   st='listening';setV('listen');$('vS').textContent='Listening...';
   $('ring').className='ph-ring on teal';$('micB').classList.add('rec');
   let fin='';
-  // Show live transcription
-  $('liveTx').classList.add('on');$('liveTxP').textContent='';
+  // Create a live bubble that fills word by word as user speaks
+  let liveBubble=null;
   rec.onresult=e=>{let tmp='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)fin+=e.results[i][0].transcript;else tmp+=e.results[i][0].transcript}
     const d=fin||tmp;if(d){
-      // Update live transcription at bottom
-      $('liveTxP').textContent=d;
-      // Also update status
-      const el=$('vC').style.display!=='none'?$('vS'):$('bSt');el.textContent='"'+d+'"';
+      // Fill the right-aligned bubble directly
+      if(!liveBubble){
+        // Switch to chat view if not already
+        $('vC').style.display='none';$('vCh').classList.add('on');$('bs').classList.add('on');
+        liveBubble=document.createElement('div');liveBubble.className='um';liveBubble.style.opacity='.6';
+        $('mB').appendChild(liveBubble);
+      }
+      liveBubble.textContent=d;scr();
+      $('bSt').textContent='Listening...';
     }};
-  rec.onend=()=>{$('micB').classList.remove('rec');$('liveTx').classList.remove('on');
+  rec.onend=()=>{$('micB').classList.remove('rec');
+    if(liveBubble)liveBubble.remove(); // Remove temp bubble, procIn will add final one
     if(fin.trim())procIn(fin.trim());else{st='idle';setV('idle');
-    $('ring').className='ph-ring on purple';const el=$('vC').style.display!=='none'?$('vS'):$('bSt');el.textContent='Say something...'}};
-  rec.onerror=()=>{$('micB').classList.remove('rec');$('liveTx').classList.remove('on');st='idle';setV('idle');$('ring').className='ph-ring on purple'};
+    $('ring').className='ph-ring on purple';$('bSt').textContent='Say something...'}};
+  rec.onerror=()=>{$('micB').classList.remove('rec');if(liveBubble)liveBubble.remove();st='idle';setV('idle');$('ring').className='ph-ring on purple'};
   rec.start();
 }
 
@@ -500,15 +520,23 @@ function procIn(text){
   const w=text.split(' ');$('hT').textContent=w.slice(0,4).join(' ')+(w.length>4?'...':'');
   respond(text,m);
 }
+let lastUserEl=null;
 function addM(t,c,h){const e=document.createElement('div');
   if(t==='u'&&!tMode){
-    // Voice mode — ChatGPT style with quotes + mic duration
+    // Voice mode — with mic icon + duration + edit
     const dur=Math.max(2,Math.ceil(c.split(' ').length/2.5));
     const secs=String(dur).padStart(1,'0');
     e.className='um-voice';
     e.innerHTML=`<div class="uv-bubble">${c}</div><div class="uv-meta"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg><span>0:${secs<10?'0'+secs:secs}</span></div>`;
+    // Remove edit from previous user msg, add to this one
+    if(lastUserEl){const oldEb=lastUserEl.querySelector('.fb');if(oldEb)oldEb.remove()}
+    lastUserEl=e;
+    addEditBtn(e,c);
   }else if(t==='u'){
     e.className='um';e.textContent=c;
+    if(lastUserEl){const oldEb=lastUserEl.querySelector('.fb');if(oldEb)oldEb.remove()}
+    lastUserEl=e;
+    addEditBtn(e,c);
   }else{
     e.className='bm';if(h)e.innerHTML=c;
   }
@@ -660,7 +688,33 @@ function interruptAI(){
 }
 function tIn(){$('tB').classList.toggle('on',$('tF').value.trim().length>0)}
 function tSd(){const v=$('tF').value.trim();if(!v)return;$('tF').value='';tIn();procIn(v)}
-function stopAll(){if(rec)try{rec.stop()}catch(e){};if(aud){aud.pause();aud=null}$('micB').classList.remove('rec')}
+function stopAll(){if(rec)try{rec.stop()}catch(e){};if(aud){aud.pause();aud=null};if('speechSynthesis' in window)speechSynthesis.cancel();$('micB').classList.remove('rec')}
+
+// Greeting — shown first in both voice and chat
+let greeted=false;
+function addGreeting(){
+  if(greeted)return;greeted=true;
+  $('vC').style.display='none';$('vCh').classList.add('on');$('bs').classList.add('on');
+  const el=document.createElement('div');el.className='bm';
+  el.innerHTML='<div class="rcb" style="padding:8px 0;font-size:15px;color:var(--g100);line-height:1.6">Hi Sunit, how can I help you today?</div>';
+  $('mB').appendChild(el);scr();
+  if(spk&&!tMode)tts('Hi Sunit, how can I help you today?');
+}
+
+// Edit button on latest user message
+function addEditBtn(el,text){
+  const eb=document.createElement('button');
+  eb.className='fb';eb.style.cssText='opacity:.4;margin-left:auto;display:block';
+  eb.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
+  eb.onclick=()=>{
+    // Put text back in input for editing
+    tMode=true;updMode();$('tF').value=text;tIn();$('tF').focus();
+    // Remove the user message
+    el.remove();
+    showToast('Edit your message');
+  };
+  el.appendChild(eb);
+}
 function w8(ms){return new Promise(r=>setTimeout(r,ms))}
 function showToast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
