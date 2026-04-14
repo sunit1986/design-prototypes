@@ -556,16 +556,19 @@ body {
 .pred-result-bar.wrong { background:var(--error-20);color:var(--error); }
 
 /* ─── V2.1: TOP NOTIFICATION BANNER ─── */
-.notif-banner { position:absolute;top:0;left:0;right:0;z-index:200;background:#fff;border-bottom:1px solid rgba(36,38,43,0.12);padding:10px 14px;display:flex;align-items:flex-start;gap:10px;animation:notifSlideDown 0.35s ease;box-shadow:0 4px 16px rgba(0,0,0,0.10); }
-.notif-banner.hiding { animation:notifSlideUp 0.3s ease forwards; }
+.notif-card { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);padding:10px 14px;display:flex;align-items:center;gap:10px;animation:cardIn 0.3s ease;cursor:pointer; }
+.notif-card:active { transform:scale(0.98); }
+.notif-card-icon { width:32px;height:32px;border-radius:var(--shape-small);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+.notif-card-icon svg { width:14px;height:14px;fill:#fff; }
+.notif-card-body { flex:1;min-width:0; }
+.notif-card-title { font-size:10px;font-weight:800;color:var(--text-low);letter-spacing:0.04em;text-transform:uppercase; }
+.notif-card-text { font-size:12px;font-weight:600;color:var(--text-high);margin-top:1px;line-height:1.3; }
 .notif-icon { width:32px;height:32px;border-radius:var(--shape-small);background:var(--primary-50);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
 .notif-icon svg { width:14px;height:14px;fill:#fff; }
 .notif-body { flex:1;min-width:0; }
 .notif-title { font-size:11px;font-weight:800;color:var(--text-high);letter-spacing:-0.01em; }
 .notif-text { font-size:11px;color:var(--text-low);margin-top:1px;line-height:1.3; }
 .notif-time { font-size:9px;color:var(--text-low);flex-shrink:0;margin-top:2px; }
-@keyframes notifSlideDown { from { transform:translateY(-100%);opacity:0; } to { transform:translateY(0);opacity:1; } }
-@keyframes notifSlideUp { from { transform:translateY(0);opacity:1; } to { transform:translateY(-100%);opacity:0; } }
 
 /* ─── V2.1: RECAP CARD ─── */
 .postmatch { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);overflow:hidden;animation:cardIn 0.3s ease; }
@@ -1105,29 +1108,12 @@ function scheduleNotifications() {
 function clearNotifications() {
   notifTimers.forEach(function(t){ clearTimeout(t); });
   notifTimers = [];
-  var old = document.querySelector('.notif-banner');
-  if(old) old.remove();
 }
 
 function showNotifBanner(n) {
   if(matchOver) return;
-  var old = document.querySelector('.notif-banner');
-  if(old) old.remove();
-  var phone = document.querySelector('.phone-frame');
-  var el = document.createElement('div');
-  el.className = 'notif-banner';
-  el.innerHTML = '<div class="notif-icon" style="background:'+n.accent+'">'+IC[n.icon]+'</div><div class="notif-body"><div class="notif-title">'+n.title+'</div><div class="notif-text">'+n.text+'</div></div><div class="notif-time">now</div>';
-  if(n.isMatchEnd) {
-    el.onclick = function(){ el.classList.add('hiding'); setTimeout(function(){ el.remove(); renderRecapCard(); },300); };
-  } else {
-    el.onclick = function(){ el.classList.add('hiding'); setTimeout(function(){ el.remove(); },300); scrollBottom(); };
-  }
-  phone.style.position = 'relative';
-  phone.appendChild(el);
-  var dismissTime = n.isMatchEnd ? 8000 : 4000;
-  setTimeout(function(){
-    if(el.parentNode) { el.classList.add('hiding'); setTimeout(function(){ if(el.parentNode) el.remove(); },300); }
-  }, dismissTime);
+  var onclick = n.isMatchEnd ? 'renderRecapCard()' : 'scrollBottom()';
+  addWidget('<div class="notif-card" onclick="'+onclick+'"><div class="notif-card-icon" style="background:'+n.accent+'">'+IC[n.icon]+'</div><div class="notif-card-body"><div class="notif-card-title">'+n.title+'</div><div class="notif-card-text">'+n.text+'</div></div></div>');
 }
 
 /* ─── V2.1: WHATSAPP RECAP CARD ─── */
