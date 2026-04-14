@@ -307,7 +307,8 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 .ta-b.x{background:var(--pri)}.ta-b.x svg{fill:#fff}
 
 /* Safe area bottom */
-.sab{height:0px;flex-shrink:0}
+.sab{height:16px;flex-shrink:0}
+@media(max-width:500px){.sab{height:12px}}
 
 /* Toast */
 .toast{position:fixed;bottom:120px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--g100);color:#fff;padding:12px 24px;border-radius:14px;font-size:13px;font-weight:500;opacity:0;transition:all .35s ease;z-index:300;white-space:nowrap;font-family:'JioType';pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.3)}
