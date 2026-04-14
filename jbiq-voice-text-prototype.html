@@ -270,7 +270,7 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 @keyframes wvListen{0%,100%{height:6px}50%{height:22px}}
 
 /* 3-button bar: + mic keyboard (matches Figma node 22:17531) */
-.bar3{display:flex;justify-content:center;gap:20px;align-items:center;padding:8px 0;flex-shrink:0}
+.bar3{display:flex;justify-content:center;gap:20px;align-items:center;padding:8px 0 16px;flex-shrink:0}
 .b3{width:48px;height:48px;border-radius:50%;background:var(--pri-l);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;border:none}
 .b3:active{transform:scale(.88)}
 .b3 svg{width:24px;height:24px;fill:#170054}
@@ -307,8 +307,7 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 .ta-b.x{background:var(--pri)}.ta-b.x svg{fill:#fff}
 
 /* Safe area bottom */
-.sab{height:16px;flex-shrink:0}
-@media(max-width:500px){.sab{height:12px}}
+.sab{height:0;flex-shrink:0}
 
 /* Toast */
 .toast{position:fixed;bottom:120px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--g100);color:#fff;padding:12px 24px;border-radius:14px;font-size:13px;font-weight:500;opacity:0;transition:all .35s ease;z-index:300;white-space:nowrap;font-family:'JioType';pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.3)}
