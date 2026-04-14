@@ -518,8 +518,13 @@ function goMode(mode){
   show('S_home');
 }
 function newChat(){stopAll();reset();greeted=false;lastUserEl=null;$('mB').innerHTML='';$('hT').textContent='New chat';addGreeting();if(!tMode)startListen();}
-function goH(){stopAll();reset();$('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';$('wGlow').className='warm-glow';if('speechSynthesis' in window)speechSynthesis.cancel();show('S_home')}
-function goV(){show('S_v');$('ring').className='ph-ring on purple';tMode=false;spk=true;updMode();
+function goH(){stopAll();reset();if('speechSynthesis' in window)speechSynthesis.cancel();
+  // Force kill all visual indicators for home
+  $('ring').className='ph-ring';$('ring').style.display='none';
+  $('wGlow').classList.remove('on');$('wGlow').style.display='none';$('wGlow').className='warm-glow';
+  show('S_home');
+}
+function goV(){show('S_v');$('ring').style.display='';$('ring').className='ph-ring on purple';tMode=false;spk=true;updMode();
   if(voiceOnly)$('chatDock').style.display='none';
   startConn();setTimeout(()=>{addGreeting()},2200);
 }
