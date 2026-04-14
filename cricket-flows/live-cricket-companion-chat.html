@@ -898,6 +898,7 @@ function sendUserMsg() {
     else if (lower.includes('predict')) showView('predict');
     else if (lower.includes('leader') || lower.includes('board') || lower.includes('rank')) showView('board');
     else if (lower.includes('live') || lower.includes('moment') || lower.includes('wicket') || lower.includes('six')) showView('moments');
+    else if (lower.includes('pitch') || lower.includes('dew') || lower.includes('condition')) { renderPitchReport(true); }
     else { addMsg('ai', 'Kohli is batting strong at 47(31) with a strike rate of 151.6. RCB need 87 off 59 balls. Want to check live moments, make predictions, or see the leaderboard?'); setTimeout(renderViewTabs, 200); }
   }, 800);
 }
@@ -907,7 +908,12 @@ function renderScoreBanner() {
   addWidget(`<div class="score-banner"><div class="score-left"><div class="score-team">RCB 92/2 <span style="font-size:11px;color:rgba(255,255,255,0.5)">(10.3 ov)</span></div><div class="score-overs">vs MI &middot; Wankhede Stadium</div><div class="score-need">Need 87 off 59 &middot; Kohli* 47(31)</div></div><div class="score-right"><div class="live-badge"><span class="live-dot"></span> LIVE</div><div class="score-match-info">IPL 2026 &middot; Match 23</div></div></div>`);
   setTimeout(() => {
     addWidget(`<div class="points-bar"><div class="points-left"><div class="points-icon">${IC.trophy}</div><span class="points-val">${predictionPoints} pts</span><span class="points-rank">#1 in your group</span></div><div class="points-streak">${IC.fire} 7-match streak</div></div>`);
-    setTimeout(renderViewTabs, 200);
+    setTimeout(function(){
+      renderViewTabs();
+      setTimeout(function(){
+        addWidget('<div class="prompt-pills"><button class="prompt-pill" onclick="renderPitchReport(true)">'+IC.cricket+' How\'s the pitch?</button></div>');
+      }, 200);
+    }, 200);
   }, 300);
 }
 
@@ -1102,8 +1108,15 @@ function pickMatch(id) {
 }
 
 /* ─── V2.1: PITCH REPORT ─── */
-function renderPitchReport() {
-  addWidget('<div class="pitch-card"><div class="pitch-title">'+IC.cricket+' Pitch Report — Wankhede Stadium</div><div class="pitch-grid"><div class="pitch-stat"><div class="pitch-stat-val">182</div><div class="pitch-stat-label">Avg 1st innings score</div></div><div class="pitch-stat"><div class="pitch-stat-val">58%</div><div class="pitch-stat-label">Team batting 2nd wins</div></div><div class="pitch-stat"><div class="pitch-stat-val">Flat</div><div class="pitch-stat-label">Pitch type</div></div><div class="pitch-stat"><div class="pitch-stat-val">8/10</div><div class="pitch-stat-label">Batting friendly</div></div></div><div class="pitch-note">Expected dew in the 2nd innings — outfield gets slippery, spinners will struggle. Pacers with yorkers will be key. Last 5 matches here: avg score 178, team chasing has won 3 of 5.</div></div>');
+function renderPitchReport(isFollowup) {
+  if(isFollowup) {
+    addMsg('ai','Here\'s the latest on the pitch and conditions:');
+    setTimeout(function(){
+      addWidget('<div class="pitch-card"><div class="pitch-title">'+IC.cricket+' Pitch Update — Wankhede Stadium</div><div class="pitch-grid"><div class="pitch-stat"><div class="pitch-stat-val">Slowing</div><div class="pitch-stat-label">Pitch condition</div></div><div class="pitch-stat"><div class="pitch-stat-val">Heavy</div><div class="pitch-stat-label">Dew factor</div></div><div class="pitch-stat"><div class="pitch-stat-val">Wet</div><div class="pitch-stat-label">Outfield</div></div><div class="pitch-stat"><div class="pitch-stat-val">9/10</div><div class="pitch-stat-label">Chase friendly</div></div></div><div class="pitch-note">Dew has settled in — the ball is skidding on to the bat, grip is tough for bowlers. Outfield is damp, boundaries are slowing down. Spinners almost unplayable to bowl with the wet ball. Chasing team has a clear advantage from here.</div></div>');
+    },200);
+  } else {
+    addWidget('<div class="pitch-card"><div class="pitch-title">'+IC.cricket+' Pitch Report — Wankhede Stadium</div><div class="pitch-grid"><div class="pitch-stat"><div class="pitch-stat-val">182</div><div class="pitch-stat-label">Avg 1st innings score</div></div><div class="pitch-stat"><div class="pitch-stat-val">58%</div><div class="pitch-stat-label">Team batting 2nd wins</div></div><div class="pitch-stat"><div class="pitch-stat-val">Flat</div><div class="pitch-stat-label">Pitch type</div></div><div class="pitch-stat"><div class="pitch-stat-val">8/10</div><div class="pitch-stat-label">Batting friendly</div></div></div><div class="pitch-note">Expected dew in the 2nd innings — outfield gets slippery, spinners will struggle. Pacers with yorkers will be key. Last 5 matches here: avg score 178, team chasing has won 3 of 5.</div></div>');
+  }
 }
 
 /* ─── V2.1: TOP NOTIFICATION BANNERS ─── */
