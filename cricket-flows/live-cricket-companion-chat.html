@@ -1090,6 +1090,7 @@ var matchOver = false;
 var notifQueue = [
   { delay:12000, icon:'cricket', title:'JioBharatIQ', text:'🏏 Rohit Sharma walks in at 42/1 — Hitman mode loading!', accent:'var(--primary-50)' },
   { delay:30000, icon:'fire',    title:'JioBharatIQ', text:'🔥 FIFTY! Kohli reaches 50 off just 31 balls — crowd goes wild!', accent:'var(--sparkle-60)' },
+  { delay:40000, icon:'trophy',  title:'JioBharatIQ', text:'🏆 MATCH OVER! RCB beat MI by 4 wickets. Tap to see your recap!', accent:'var(--surface-bold)', isMatchEnd:true },
 ];
 var notifTimers = [];
 
@@ -1116,12 +1117,17 @@ function showNotifBanner(n) {
   var el = document.createElement('div');
   el.className = 'notif-banner';
   el.innerHTML = '<div class="notif-icon" style="background:'+n.accent+'">'+IC[n.icon]+'</div><div class="notif-body"><div class="notif-title">'+n.title+'</div><div class="notif-text">'+n.text+'</div></div><div class="notif-time">now</div>';
-  el.onclick = function(){ el.classList.add('hiding'); setTimeout(function(){ el.remove(); },300); scrollBottom(); };
+  if(n.isMatchEnd) {
+    el.onclick = function(){ el.classList.add('hiding'); setTimeout(function(){ el.remove(); renderRecapCard(); },300); };
+  } else {
+    el.onclick = function(){ el.classList.add('hiding'); setTimeout(function(){ el.remove(); },300); scrollBottom(); };
+  }
   phone.style.position = 'relative';
   phone.appendChild(el);
+  var dismissTime = n.isMatchEnd ? 8000 : 4000;
   setTimeout(function(){
     if(el.parentNode) { el.classList.add('hiding'); setTimeout(function(){ if(el.parentNode) el.remove(); },300); }
-  }, 4000);
+  }, dismissTime);
 }
 
 /* ─── V2.1: WHATSAPP RECAP CARD ─── */
@@ -1140,11 +1146,13 @@ function renderRecapCard() {
 }
 
 function scheduleAutoRecap() {
+  // Recap is now triggered by tapping the match-end notification
+  // Fallback: if user misses the notification, recap shows after 50s
   setTimeout(function(){
     if(!matchOver) {
       renderRecapCard();
     }
-  }, 65000);
+  }, 50000);
 }
 
 /* ─── START ─── */
