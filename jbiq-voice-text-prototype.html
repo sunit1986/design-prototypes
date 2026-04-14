@@ -308,6 +308,7 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 
 /* Safe area bottom */
 .sab{height:30px;flex-shrink:0}
+@media(max-width:500px){.sab{height:8px}}
 
 /* Toast */
 .toast{position:fixed;bottom:120px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--g100);color:#fff;padding:12px 24px;border-radius:14px;font-size:13px;font-weight:500;opacity:0;transition:all .35s ease;z-index:300;white-space:nowrap;font-family:'JioType';pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.3)}
@@ -582,7 +583,7 @@ function setV(s){
 
 // CONNECT
 function startConn(){st='connecting';$('vA').style.display='none';$('spn').classList.add('on');$('vS').textContent='Connecting...';
-  setTimeout(()=>{$('spn').classList.remove('on');$('vA').style.display='';setV('idle');$('vS').textContent='Say something...';st='idle';if(!tMode)startListen()},1800)}
+  setTimeout(()=>{$('spn').classList.remove('on');$('vA').style.display='';setV('idle');$('vS').textContent='Say something...';st='idle';if(!tMode&&greeted)startListen()},1800)}
 
 // SPEECH RECOGNITION
 function startListen(){
@@ -809,7 +810,7 @@ function addGreeting(){
   const el=document.createElement('div');el.className='bm';
   el.innerHTML='<div class="rcb" style="padding:8px 0;font-size:15px;color:var(--g100);line-height:1.6">Hi Sunit, how can I help you today?</div>';
   $('mB').appendChild(el);scr();
-  if(spk&&!tMode){tts('Hi Sunit, how can I help you today?');}
+  if(spk&&!tMode){tts('Hi Sunit, how can I help you today?').then(()=>{if(st==='complete'&&!tMode)startListen()});}
   else{$('wGlow').classList.remove('on');}
 }
 
