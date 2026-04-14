@@ -488,6 +488,7 @@ let voiceOnly=false;
 function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on')}
 function goMode(mode){
   voiceOnly=(mode==='voiceonly');
+  $('ring').className='ph-ring';$('wGlow').classList.remove('on');$('wGlow').style.display='none';
   $('hctaChat').style.display=voiceOnly?'none':'block';
   $('hctaVoice').style.display=voiceOnly?'block':'none';
   show('S_home');
