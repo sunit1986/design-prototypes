@@ -580,7 +580,8 @@ body {
 .pm-val.accent { color:var(--sparkle-60); }
 .pm-val.rank { color:var(--primary-50); }
 .pm-footer { display:flex;gap:8px;padding:0 14px 12px; }
-.pm-btn { flex:1;padding:9px 0;border-radius:var(--shape-pill);font-family:var(--font);font-size:12px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:transform 0.1s; }
+.pm-btn { flex:1;padding:10px 12px;border-radius:var(--shape-pill);font-family:var(--font);font-size:12px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:transform 0.1s; }
+.pm-btn svg { width:16px;height:16px;flex-shrink:0; }
 .pm-btn:active { transform:scale(0.97); }
 .pm-btn.wa { background:#25D366;color:#fff; }
 .pm-btn.copy { background:var(--grey-20);color:var(--text-high); }
@@ -1034,12 +1035,12 @@ var predictionTotal = 0;
 var predictionOutcomes = { 1: 0, 2: 2, 3: 0 };
 
 /* ─── V2.1: MATCH PICKER DATA ─── */
-const teamColors = { MI:'#004BA0', RCB:'#EC1C24', CSK:'#FFCB05', DC:'#0078BC', IND:'#0066B3', AUS:'#FFD700' };
+const teamColors = { MI:'#004BA0', RCB:'#EC1C24', CSK:'#FFCB05', DC:'#0078BC', IND:'#0066B3', AUS:'#FFD700', MUM:'#004BA0', KAR:'#E23744' };
 const watchHistory = ['MI','MI','RCB'];
 const liveMatches = [
   { id:'m1', teamA:'MI', teamB:'RCB', scoreA:'178/6 (20)', scoreB:'92/2 (10.3)', venue:'Wankhede Stadium, Mumbai', tournament:'IPL 2026 · Match 23', status:'live' },
-  { id:'m2', teamA:'CSK', teamB:'DC', scoreA:'145/3 (16.2)', scoreB:'Yet to bat', venue:'MA Chidambaram Stadium, Chennai', tournament:'IPL 2026 · Match 24', status:'live' },
-  { id:'m3', teamA:'IND', teamB:'AUS', scoreA:'', scoreB:'', venue:'Narendra Modi Stadium, Ahmedabad', tournament:'Border-Gavaskar Trophy', status:'upcoming', time:'Tomorrow, 9:30 AM' },
+  { id:'m2', teamA:'MUM', teamB:'KAR', scoreA:'287/6 (78)', scoreB:'142/3 (45)', venue:'BKC Ground, Mumbai', tournament:'Ranji Trophy · QF 2', status:'live' },
+  { id:'m3', teamA:'CSK', teamB:'DC', scoreA:'', scoreB:'', venue:'MA Chidambaram Stadium, Chennai', tournament:'IPL 2026 · Match 24', status:'upcoming', time:'Tomorrow, 7:30 PM' },
 ];
 (function(){
   var freq={};
@@ -1080,20 +1081,31 @@ function pickMatch(id) {
 }
 
 /* ─── V2.1: TOP NOTIFICATION BANNERS ─── */
+var matchOver = false;
 var notifQueue = [
-  { delay:15000, icon:'cricket', title:'Jio Cricket', text:'🏏 Rohit Sharma is at the crease!', accent:'var(--primary-50)' },
-  { delay:30000, icon:'fire',    title:'Jio Cricket', text:'🔥 Kohli hits a SIX! 52(34) — on fire!', accent:'var(--sparkle-60)' },
-  { delay:50000, icon:'target',  title:'Jio Cricket', text:'⚡ Wicket! Suryakumar caught behind for 23', accent:'var(--error)' },
+  { delay:12000, icon:'cricket', title:'JioBharatIQ', text:'🏏 Rohit Sharma walks in at 42/1 — Hitman mode loading!', accent:'var(--primary-50)' },
+  { delay:28000, icon:'fire',    title:'JioBharatIQ', text:'🔥 FIFTY! Kohli reaches 50 off just 31 balls — crowd goes wild!', accent:'var(--sparkle-60)' },
+  { delay:45000, icon:'target',  title:'JioBharatIQ', text:'⚡ GONE! Bumrah cleans up Suryakumar with a yorker — 23(18)', accent:'var(--error)' },
 ];
 var notifTimers = [];
 
 function scheduleNotifications() {
   notifQueue.forEach(function(n){
-    notifTimers.push(setTimeout(function(){ showNotifBanner(n); }, n.delay));
+    notifTimers.push(setTimeout(function(){
+      if(!matchOver) showNotifBanner(n);
+    }, n.delay));
   });
 }
 
+function clearNotifications() {
+  notifTimers.forEach(function(t){ clearTimeout(t); });
+  notifTimers = [];
+  var old = document.querySelector('.notif-banner');
+  if(old) old.remove();
+}
+
 function showNotifBanner(n) {
+  if(matchOver) return;
   var old = document.querySelector('.notif-banner');
   if(old) old.remove();
   var phone = document.querySelector('.phone-frame');
@@ -1110,20 +1122,25 @@ function showNotifBanner(n) {
 
 /* ─── V2.1: WHATSAPP RECAP CARD ─── */
 function renderRecapCard() {
-  var acc = predictionTotal > 0 ? Math.round(predictionCorrect/predictionTotal*100) : 0;
-  var accText = predictionTotal > 0 ? predictionCorrect+'/'+predictionTotal+' — '+acc+'%' : 'No predictions yet';
+  matchOver = true;
+  clearNotifications();
+  var predRow = '';
+  if(predictionTotal > 0) {
+    var acc = Math.round(predictionCorrect/predictionTotal*100);
+    predRow = '<div class="pm-row"><div class="pm-label">Your Predictions</div><div class="pm-val accent">'+predictionCorrect+'/'+predictionTotal+' — '+acc+'%</div></div>';
+  }
   addMsg('ai','Match khatam! What a game. Here\'s your recap:');
   setTimeout(function(){
-    addWidget('<div class="postmatch"><div class="pm-header"><div class="pm-result">RCB beat MI by 4 wickets</div><div class="pm-match">IPL 2026 · Match 23 · Wankhede Stadium</div></div><div class="pm-body"><div class="pm-row"><div class="pm-label">Your Predictions</div><div class="pm-val accent">'+accText+'</div></div><div class="pm-row"><div class="pm-label">Top Performer</div><div class="pm-val">Kohli: 89(48) — Player of the Match</div></div><div class="pm-row"><div class="pm-label">Your Rank</div><div class="pm-val rank">#1 in your group</div></div><div class="pm-row"><div class="pm-label">Points Earned</div><div class="pm-val">'+predictionPoints+' pts</div></div></div><div class="pm-footer"><button class="pm-btn wa" onclick="showToast(\'Shared to WhatsApp!\')">'+IC.whatsapp+' Share to WhatsApp</button><button class="pm-btn copy" onclick="showToast(\'Card copied!\')">'+IC.share+' Copy Card</button></div><div class="pm-brand">Jio Cricket Companion · IPL 2026</div></div>');
+    addWidget('<div class="postmatch"><div class="pm-header"><div class="pm-result">RCB beat MI by 4 wickets</div><div class="pm-match">IPL 2026 · Match 23 · Wankhede Stadium</div></div><div class="pm-body">'+predRow+'<div class="pm-row"><div class="pm-label">Top Performer</div><div class="pm-val">Kohli: 89(48) — Player of the Match</div></div><div class="pm-row"><div class="pm-label">Your Rank</div><div class="pm-val rank">#1 in your group</div></div><div class="pm-row"><div class="pm-label">Points Earned</div><div class="pm-val">'+predictionPoints+' pts</div></div></div><div class="pm-footer"><button class="pm-btn wa" onclick="showToast(\'Shared to WhatsApp!\')">'+IC.whatsapp+' Share to WhatsApp</button><button class="pm-btn copy" onclick="showToast(\'Card copied!\')">'+IC.share+' Copy Card</button></div><div class="pm-brand">Jio Cricket Companion · IPL 2026</div></div>');
   },300);
 }
 
 function scheduleAutoRecap() {
   setTimeout(function(){
-    if(!document.querySelector('.postmatch')) {
+    if(!matchOver) {
       renderRecapCard();
     }
-  }, 60000);
+  }, 65000);
 }
 
 /* ─── START ─── */
