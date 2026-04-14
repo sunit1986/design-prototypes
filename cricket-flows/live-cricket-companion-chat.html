@@ -536,6 +536,76 @@ body {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ─── V2.1: MATCH PICKER ─── */
+.mp-card { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);padding:14px;margin-bottom:8px;cursor:pointer;transition:transform 0.15s;position:relative;animation:cardIn 0.3s ease; }
+.mp-card:active { transform:scale(0.98); }
+.mp-card.recommended { border-color:var(--primary-30); }
+.mp-card .rec-chip { position:absolute;top:-8px;right:12px;background:var(--primary-50);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:var(--shape-pill); }
+.mp-card-row { display:flex;align-items:center;gap:10px; }
+.mp-team-logo { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;flex-shrink:0; }
+.mp-team-line { font-size:13px;font-weight:700;color:var(--text-high);flex:1; }
+.mp-team-score { font-weight:400;font-size:11px;color:var(--text-low);margin-left:6px; }
+.mp-vs { font-size:10px;color:var(--text-low);font-weight:600;margin:2px 0 2px 38px; }
+.mp-venue { font-size:10px;color:var(--text-low);margin-top:4px; }
+.mp-live { display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--error); }
+.mp-live .live-dot { width:6px;height:6px;border-radius:50%;background:var(--error);animation:livePulse 1.5s ease infinite; }
+.mp-card.upcoming { opacity:0.45;pointer-events:none;border-style:dashed; }
+
+/* ─── V2.1: PREDICTION WRONG STATE ─── */
+.pred-result-bar.wrong { background:var(--error-20);color:var(--error); }
+
+/* ─── V2.1: TOP NOTIFICATION BANNER ─── */
+#notifSlot { flex-shrink:0;overflow:hidden;max-height:0;transition:max-height 0.35s ease; }
+#notifSlot.active { max-height:70px; }
+.notif-banner { background:#fff;border-bottom:1px solid rgba(36,38,43,0.12);padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,0.08);cursor:pointer; }
+.notif-banner:active { opacity:0.8; }
+.notif-banner-icon { width:32px;height:32px;border-radius:var(--shape-small);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+.notif-banner-icon svg { width:14px;height:14px;fill:#fff; }
+.notif-banner-body { flex:1;min-width:0; }
+.notif-banner-title { font-size:10px;font-weight:800;color:var(--text-low);letter-spacing:0.04em;text-transform:uppercase; }
+.notif-banner-text { font-size:12px;font-weight:600;color:var(--text-high);margin-top:1px;line-height:1.3; }
+.notif-banner-time { font-size:9px;color:var(--text-low);flex-shrink:0; }
+.notif-icon { width:32px;height:32px;border-radius:var(--shape-small);background:var(--primary-50);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+.notif-icon svg { width:14px;height:14px;fill:#fff; }
+.notif-body { flex:1;min-width:0; }
+.notif-title { font-size:11px;font-weight:800;color:var(--text-high);letter-spacing:-0.01em; }
+.notif-text { font-size:11px;color:var(--text-low);margin-top:1px;line-height:1.3; }
+.notif-time { font-size:9px;color:var(--text-low);flex-shrink:0;margin-top:2px; }
+
+/* ─── V2.1: PITCH REPORT CARD ─── */
+.pitch-card { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);padding:14px;animation:cardIn 0.3s ease; }
+.pitch-title { font-size:13px;font-weight:800;color:var(--text-high);margin-bottom:10px;display:flex;align-items:center;gap:6px; }
+.pitch-title svg { width:14px;height:14px;fill:var(--sparkle-60); }
+.pitch-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+.pitch-stat { background:var(--surface-minimal);border-radius:var(--shape-small);padding:8px 10px; }
+.pitch-stat-val { font-size:14px;font-weight:800;color:var(--text-high); }
+.pitch-stat-label { font-size:9px;color:var(--text-low);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-top:1px; }
+.pitch-note { font-size:11px;color:var(--text-low);margin-top:10px;line-height:1.4;padding-top:8px;border-top:1px solid var(--grey-20); }
+
+/* ─── V2.1: RECAP CARD ─── */
+.postmatch { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);overflow:hidden;animation:cardIn 0.3s ease; }
+.pm-header { background:var(--surface-bold);padding:12px 14px;color:#fff; }
+.pm-result { font-size:14px;font-weight:800; }
+.pm-match { font-size:10px;opacity:0.6;margin-top:2px; }
+.pm-body { padding:12px 14px; }
+.pm-row { display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--grey-20); }
+.pm-row:last-child { border-bottom:none; }
+.pm-label { font-size:10px;color:var(--text-low); }
+.pm-val { font-size:12px;font-weight:700;color:var(--text-high);text-align:right; }
+.pm-val.accent { color:var(--sparkle-60); }
+.pm-val.rank { color:var(--primary-50); }
+.pm-footer { display:flex;gap:8px;padding:0 14px 12px; }
+.pm-btn { flex:1;padding:10px 12px;border-radius:var(--shape-pill);font-family:var(--font);font-size:12px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:transform 0.1s; }
+.pm-btn svg { width:16px;height:16px;flex-shrink:0; }
+.pm-btn:active { transform:scale(0.97); }
+.pm-btn.wa { background:#25D366;color:#fff; }
+.pm-btn.copy { background:var(--grey-20);color:var(--text-high); }
+.pm-brand { text-align:center;padding:6px 0 10px;font-size:9px;color:var(--text-low);font-weight:600;letter-spacing:0.04em; }
+.prompt-pills { display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;animation:cardIn 0.3s ease; }
+.prompt-pill { padding:7px 14px;border-radius:var(--shape-pill);border:1px solid rgba(36,38,43,0.12);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:600;color:var(--primary-50);cursor:pointer;transition:background 0.15s,transform 0.1s;display:inline-flex;align-items:center;gap:4px; }
+.prompt-pill:active { transform:scale(0.96);background:var(--primary-20); }
+.prompt-pill svg { width:13px;height:13px;fill:var(--primary-50); }
 </style>
 </head>
 <body>
@@ -561,6 +631,7 @@ body {
       <button class="icon-btn-ghost"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg></button>
     </div>
   </div>
+  <div id="notifSlot"></div>
   <div class="chat-area" id="chatArea"></div>
   <div class="input-container">
     <div class="input-field-wrap">
@@ -831,6 +902,7 @@ function sendUserMsg() {
     else if (lower.includes('predict')) showView('predict');
     else if (lower.includes('leader') || lower.includes('board') || lower.includes('rank')) showView('board');
     else if (lower.includes('live') || lower.includes('moment') || lower.includes('wicket') || lower.includes('six')) showView('moments');
+    else if (lower.includes('pitch') || lower.includes('dew') || lower.includes('condition')) { renderPitchReport(true); }
     else { addMsg('ai', 'Kohli is batting strong at 47(31) with a strike rate of 151.6. RCB need 87 off 59 balls. Want to check live moments, make predictions, or see the leaderboard?'); setTimeout(renderViewTabs, 200); }
   }, 800);
 }
@@ -839,8 +911,13 @@ function sendUserMsg() {
 function renderScoreBanner() {
   addWidget(`<div class="score-banner"><div class="score-left"><div class="score-team">RCB 92/2 <span style="font-size:11px;color:rgba(255,255,255,0.5)">(10.3 ov)</span></div><div class="score-overs">vs MI &middot; Wankhede Stadium</div><div class="score-need">Need 87 off 59 &middot; Kohli* 47(31)</div></div><div class="score-right"><div class="live-badge"><span class="live-dot"></span> LIVE</div><div class="score-match-info">IPL 2026 &middot; Match 23</div></div></div>`);
   setTimeout(() => {
-    addWidget(`<div class="points-bar"><div class="points-left"><div class="points-icon">${IC.trophy}</div><span class="points-val">${predictionPoints} pts</span><span class="points-rank">#1 in your group</span></div><div class="points-streak">${IC.fire} 7 streak</div></div>`);
-    setTimeout(renderViewTabs, 200);
+    addWidget(`<div class="points-bar"><div class="points-left"><div class="points-icon">${IC.trophy}</div><span class="points-val">${predictionPoints} pts</span><span class="points-rank">#1 in your group</span></div><div class="points-streak">${IC.fire} 7-match streak</div></div>`);
+    setTimeout(function(){
+      renderViewTabs();
+      setTimeout(function(){
+        addWidget('<div class="prompt-pills"><button class="prompt-pill" onclick="renderPitchReport(true)">'+IC.cricket+' How\'s the pitch?</button></div>');
+      }, 200);
+    }, 200);
   }, 300);
 }
 
@@ -856,7 +933,10 @@ function renderMomentsView() {
   addMsg('ai', "Here's what's happening in the match:");
   setTimeout(() => {
     addWidget(`<div class="moment-tabs-wrap"><div class="moment-tabs">${momentCards.map((mc, i) => `<button class="moment-tab${i===currentMoment?' active':''}" onclick="switchMoment(${i})">${IC[mc.icon]} ${mc.type}</button>`).join('')}</div></div>`);
-    setTimeout(() => renderMomentCard(momentCards[currentMoment]), 150);
+    setTimeout(() => {
+      renderMomentCard(momentCards[currentMoment]);
+      setTimeout(renderViewTabs, 200);
+    }, 150);
   }, 200);
 }
 
@@ -895,6 +975,7 @@ function renderPredictView() {
     });
     setTimeout(() => {
       addWidget(`<div class="pred-info-box"><div class="pred-info-title">${IC.info} How predictions work</div><div class="pred-info-text">Predict live moments during the match. Points multiply based on difficulty. Compete with your group. No real money — bragging rights only.</div></div>`);
+      setTimeout(renderViewTabs, 200);
     }, predictions.length * 180 + 100);
   }, 200);
 }
@@ -914,13 +995,38 @@ function makePrediction(predId, optIdx) {
 
 function revealPrediction(predId, optIdx, card, rb) {
   rb.remove();
-  const btns = card.querySelectorAll('.pred-opt');
-  btns[optIdx].classList.remove('picked'); btns[optIdx].classList.add('correct');
-  const bar = document.createElement('div'); bar.className = 'pred-result-bar';
-  bar.innerHTML = `${IC.check} YOU GOT IT RIGHT! +120 points`;
+  var btns = card.querySelectorAll('.pred-opt');
+  var correctIdx = predictionOutcomes[predId];
+  var isCorrect = (correctIdx !== undefined) ? (optIdx === correctIdx) : (Math.random() < 0.7);
+  predictionTotal++;
+  var bar = document.createElement('div'); bar.className = 'pred-result-bar';
+  if(isCorrect) {
+    predictionCorrect++;
+    btns[optIdx].classList.remove('picked'); btns[optIdx].classList.add('correct');
+    bar.innerHTML = IC.check + ' CORRECT! +120 points';
+    predictionPoints += 120;
+    showCelebration('celebrate', 'CORRECT! +120 points!');
+  } else {
+    btns[optIdx].classList.remove('picked'); btns[optIdx].style.opacity='0.5';
+    if(correctIdx !== undefined) { btns[correctIdx].classList.add('correct'); }
+    bar.classList.add('wrong');
+    bar.innerHTML = '✗ Wrong! The answer was ' + (correctIdx !== undefined ? btns[correctIdx].textContent : 'different');
+    showToast('Better luck on the next one!');
+  }
   card.appendChild(bar);
-  predictionPoints += 120;
-  showCelebration('celebrate', 'CORRECT! +120 points!');
+  var you = leaderboard.find(function(p){return p.isYou;});
+  if(you) { you.points = predictionPoints; you.pct = Math.round(predictionPoints / 2840 * 100); }
+  if(predictionTotal >= 2 && !document.getElementById('recapPillRow')) {
+    setTimeout(function(){
+      var el = document.createElement('div');
+      el.id = 'recapPillRow';
+      el.className = 'prompt-pills';
+      el.style.cssText = 'padding:0 16px 8px;animation:cardIn 0.3s ease';
+      el.innerHTML = '<button class="prompt-pill" onclick="renderRecapCard()">'+IC.share+' Match Recap</button>';
+      chat.appendChild(el);
+      scrollBottom();
+    }, 800);
+  }
 }
 
 /* ─── LEADERBOARD — Binance-style table with progress bars ─── */
@@ -946,16 +1052,154 @@ function renderLeaderboardView() {
         <div class="stats-grid"><div class="stat-cell"><div class="stat-val">73%</div><div class="stat-label">Accuracy</div><div class="stat-sub">Top 5%</div></div><div class="stat-cell"><div class="stat-val">12</div><div class="stat-label">Best streak</div><div class="stat-sub">All-time</div></div><div class="stat-cell"><div class="stat-val">24</div><div class="stat-label">Matches</div><div class="stat-sub">This season</div></div></div>
         <button class="share-lb-btn" onclick="showToast('Leaderboard shared!')">${IC.share} Share leaderboard</button>
       </div>`);
+      setTimeout(renderViewTabs, 200);
     }, 400);
   }, 200);
 }
 
+/* ─── V2.1: PREDICTION TRACKING ─── */
+var predictionCorrect = 0;
+var predictionTotal = 0;
+var predictionOutcomes = { 1: 0, 2: 2, 3: 0 };
+
+/* ─── V2.1: MATCH PICKER DATA ─── */
+const teamColors = { MI:'#004BA0', RCB:'#EC1C24', CSK:'#FFCB05', DC:'#0078BC', IND:'#0066B3', AUS:'#FFD700', MUM:'#004BA0', KAR:'#E23744' };
+const watchHistory = ['MI','MI','RCB'];
+const liveMatches = [
+  { id:'m1', teamA:'MI', teamB:'RCB', scoreA:'178/6 (20)', scoreB:'92/2 (10.3)', venue:'Wankhede Stadium, Mumbai', tournament:'IPL 2026 · Match 23', status:'live' },
+  { id:'m2', teamA:'MUM', teamB:'KAR', scoreA:'287/6 (78)', scoreB:'142/3 (45)', venue:'BKC Ground, Mumbai', tournament:'Ranji Trophy · QF 2', status:'live' },
+  { id:'m3', teamA:'CSK', teamB:'DC', scoreA:'', scoreB:'', venue:'MA Chidambaram Stadium, Chennai', tournament:'IPL 2026 · Match 24', status:'upcoming', time:'Tomorrow, 7:30 PM' },
+];
+(function(){
+  var freq={};
+  watchHistory.forEach(function(t){ freq[t]=(freq[t]||0)+1; });
+  var top=Object.keys(freq).sort(function(a,b){return freq[b]-freq[a];})[0];
+  liveMatches.forEach(function(m){ m.recommended=(m.status==='live'&&(m.teamA===top||m.teamB===top)); });
+})();
+
+function renderMatchPicker() {
+  addMsg('ai','Hey Deepa! 3 matches on right now. Pick one to jump in:');
+  setTimeout(function(){
+    liveMatches.forEach(function(m,i){
+      setTimeout(function(){
+        if(m.status==='upcoming'){
+          addWidget('<div class="mp-card upcoming"><div class="mp-card-row"><div class="mp-team-logo" style="background:'+teamColors[m.teamA]+'">'+m.teamA+'</div><div class="mp-team-line">'+m.teamA+' vs '+m.teamB+'</div><div style="font-size:10px;color:var(--text-low);font-weight:600">'+m.time+'</div></div><div class="mp-venue">'+m.venue+'</div></div>');
+        } else {
+          var recText = m.recommended ? 'You watched MI\'s last 2 games' : '';
+          addWidget('<div class="mp-card'+(m.recommended?' recommended':'')+'" onclick="pickMatch(\''+m.id+'\')">'+(m.recommended?'<div class="rec-chip">RECOMMENDED · '+recText+'</div>':'')+'<div class="mp-card-row"><div class="mp-team-logo" style="background:'+teamColors[m.teamA]+'">'+m.teamA+'</div><div class="mp-team-line">'+m.teamA+' <span class="mp-team-score">'+m.scoreA+'</span></div><div class="mp-live"><span class="live-dot"></span> LIVE</div></div><div class="mp-vs">vs</div><div class="mp-card-row"><div class="mp-team-logo" style="background:'+teamColors[m.teamB]+'">'+m.teamB+'</div><div class="mp-team-line">'+m.teamB+' <span class="mp-team-score">'+m.scoreB+'</span></div></div><div class="mp-venue">'+m.venue+' · '+m.tournament+'</div></div>');
+        }
+      },i*200);
+    });
+  },200);
+}
+
+function pickMatch(id) {
+  var m = liveMatches.find(function(mm){return mm.id===id;});
+  addMsg('user', m.teamA + ' vs ' + m.teamB);
+  addThinking();
+  setTimeout(function(){
+    removeThinking();
+    addMsg('ai','Welcome to Match Companion!<br><br>'+m.teamA+' vs '+m.teamB+' is <strong>LIVE</strong> at '+m.venue.split(',')[0]+'. I\'ll be your personal cricket companion — predictions, live moments, and leaderboard, all right here.');
+    setTimeout(function(){
+      renderPitchReport();
+      setTimeout(function(){
+        renderScoreBanner();
+        scheduleNotifications();
+        scheduleAutoRecap();
+      },400);
+    },600);
+  },800);
+}
+
+/* ─── V2.1: PITCH REPORT ─── */
+function renderPitchReport(isFollowup) {
+  if(isFollowup) {
+    addMsg('ai','Here\'s the latest on the pitch and conditions:');
+    setTimeout(function(){
+      addWidget('<div class="pitch-card"><div class="pitch-title">'+IC.cricket+' Pitch Update — Wankhede Stadium</div><div class="pitch-grid"><div class="pitch-stat"><div class="pitch-stat-val">Slowing</div><div class="pitch-stat-label">Pitch condition</div></div><div class="pitch-stat"><div class="pitch-stat-val">Heavy</div><div class="pitch-stat-label">Dew factor</div></div><div class="pitch-stat"><div class="pitch-stat-val">Wet</div><div class="pitch-stat-label">Outfield</div></div><div class="pitch-stat"><div class="pitch-stat-val">9/10</div><div class="pitch-stat-label">Chase friendly</div></div></div><div class="pitch-note">Dew has settled in — the ball is skidding on to the bat, grip is tough for bowlers. Outfield is damp, boundaries are slowing down. Spinners almost unplayable to bowl with the wet ball. Chasing team has a clear advantage from here.</div></div>');
+    },200);
+  } else {
+    addWidget('<div class="pitch-card"><div class="pitch-title">'+IC.cricket+' Pitch Report — Wankhede Stadium</div><div class="pitch-grid"><div class="pitch-stat"><div class="pitch-stat-val">182</div><div class="pitch-stat-label">Avg 1st innings score</div></div><div class="pitch-stat"><div class="pitch-stat-val">58%</div><div class="pitch-stat-label">Team batting 2nd wins</div></div><div class="pitch-stat"><div class="pitch-stat-val">Flat</div><div class="pitch-stat-label">Pitch type</div></div><div class="pitch-stat"><div class="pitch-stat-val">8/10</div><div class="pitch-stat-label">Batting friendly</div></div></div><div class="pitch-note">Expected dew in the 2nd innings — outfield gets slippery, spinners will struggle. Pacers with yorkers will be key. Last 5 matches here: avg score 178, team chasing has won 3 of 5.</div></div>');
+  }
+}
+
+/* ─── V2.1: TOP NOTIFICATION BANNERS ─── */
+var matchOver = false;
+var notifQueue = [
+  { delay:12000, icon:'cricket', title:'JioBharatIQ', text:'🏏 Rohit Sharma walks in at 42/1 — Hitman mode loading!', accent:'var(--primary-50)' },
+  { delay:30000, icon:'fire',    title:'JioBharatIQ', text:'🔥 FIFTY! Kohli reaches 50 off just 31 balls — crowd goes wild!', accent:'var(--sparkle-60)' },
+  { delay:40000, icon:'trophy',  title:'JioBharatIQ', text:'🏆 MATCH OVER! RCB beat MI by 4 wickets. Tap to see your recap!', accent:'var(--surface-bold)', isMatchEnd:true },
+];
+var notifTimers = [];
+
+function scheduleNotifications() {
+  notifQueue.forEach(function(n){
+    notifTimers.push(setTimeout(function(){
+      if(!matchOver) showNotifBanner(n);
+    }, n.delay));
+  });
+}
+
+function clearNotifications() {
+  notifTimers.forEach(function(t){ clearTimeout(t); });
+  notifTimers = [];
+}
+
+function showNotifBanner(n) {
+  if(matchOver) return;
+  var slot = document.getElementById('notifSlot');
+  // Clear previous
+  slot.innerHTML = '';
+  slot.classList.remove('active');
+  var el = document.createElement('div');
+  el.className = 'notif-banner';
+  el.innerHTML = '<div class="notif-banner-icon" style="background:'+n.accent+'">'+IC[n.icon]+'</div><div class="notif-banner-body"><div class="notif-banner-title">'+n.title+'</div><div class="notif-banner-text">'+n.text+'</div></div><div class="notif-banner-time">now</div>';
+  el.onclick = function(){
+    slot.classList.remove('active');
+    setTimeout(function(){ slot.innerHTML=''; }, 350);
+    if(n.isMatchEnd) setTimeout(renderRecapCard, 300);
+  };
+  slot.appendChild(el);
+  // Slide open
+  setTimeout(function(){ slot.classList.add('active'); }, 30);
+  // Auto-dismiss
+  var dismissTime = n.isMatchEnd ? 10000 : 5000;
+  setTimeout(function(){
+    if(slot.classList.contains('active') && slot.contains(el)) {
+      slot.classList.remove('active');
+      setTimeout(function(){ slot.innerHTML=''; }, 350);
+    }
+  }, dismissTime);
+}
+
+/* ─── V2.1: WHATSAPP RECAP CARD ─── */
+function renderRecapCard() {
+  matchOver = true;
+  clearNotifications();
+  var predRow = '';
+  if(predictionTotal > 0) {
+    var acc = Math.round(predictionCorrect/predictionTotal*100);
+    predRow = '<div class="pm-row"><div class="pm-label">Your Predictions</div><div class="pm-val accent">'+predictionCorrect+'/'+predictionTotal+' — '+acc+'%</div></div>';
+  }
+  addMsg('ai','Match khatam! What a game. Here\'s your recap:');
+  setTimeout(function(){
+    addWidget('<div class="postmatch"><div class="pm-header"><div class="pm-result">RCB beat MI by 4 wickets</div><div class="pm-match">IPL 2026 · Match 23 · Wankhede Stadium</div></div><div class="pm-body">'+predRow+'<div class="pm-row"><div class="pm-label">Top Performer</div><div class="pm-val">Kohli: 89(48) — Player of the Match</div></div><div class="pm-row"><div class="pm-label">Your Rank</div><div class="pm-val rank">#1 in your group</div></div><div class="pm-row"><div class="pm-label">Points Earned</div><div class="pm-val">'+predictionPoints+' pts</div></div></div><div class="pm-footer"><button class="pm-btn wa" onclick="showToast(\'Shared to WhatsApp!\')">'+IC.whatsapp+' Share to WhatsApp</button><button class="pm-btn copy" onclick="showToast(\'Card copied!\')">'+IC.share+' Copy Card</button></div><div class="pm-brand">Jio Cricket Companion · IPL 2026</div></div>');
+  },300);
+}
+
+function scheduleAutoRecap() {
+  // Recap is now triggered by tapping the match-end notification
+  // Fallback: if user misses the notification, recap shows after 50s
+  setTimeout(function(){
+    if(!matchOver) {
+      renderRecapCard();
+    }
+  }, 50000);
+}
+
 /* ─── START ─── */
 function startJourney() {
-  setTimeout(() => {
-    addMsg('ai', 'Welcome to Match Companion!<br><br>MI vs RCB is <strong>LIVE</strong> at Wankhede. I\'ll be your personal cricket companion — predictions, live moments, and leaderboard, all right here.');
-    setTimeout(renderScoreBanner, 600);
-  }, 400);
+  setTimeout(function(){ renderMatchPicker(); }, 400);
 }
 startJourney();
 </script>
