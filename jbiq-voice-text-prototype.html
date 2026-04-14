@@ -177,8 +177,8 @@ html,body{width:100%;height:100%;background:#111;display:flex;align-items:center
 .bot-dock>*{pointer-events:all}
 /* Gradient fade from transparent → white */
 .bot-fade{height:40px;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.85))}
-/* Frosted glass panel */
-.bot-panel{background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);padding-bottom:20px}
+/* Frosted glass panel — extends into bottom curve */
+.bot-panel{background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);padding-bottom:40px;margin-bottom:-20px}
 
 /* === ORGANIC GRADIENT — purple (AI) or teal (user) === */
 .warm-glow{position:absolute;bottom:0;left:0;right:0;height:450px;pointer-events:none;z-index:35;opacity:0;transition:opacity .8s ease;overflow:hidden}
