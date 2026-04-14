@@ -893,7 +893,7 @@ function sendUserMsg() {
 function renderScoreBanner() {
   addWidget(`<div class="score-banner"><div class="score-left"><div class="score-team">RCB 92/2 <span style="font-size:11px;color:rgba(255,255,255,0.5)">(10.3 ov)</span></div><div class="score-overs">vs MI &middot; Wankhede Stadium</div><div class="score-need">Need 87 off 59 &middot; Kohli* 47(31)</div></div><div class="score-right"><div class="live-badge"><span class="live-dot"></span> LIVE</div><div class="score-match-info">IPL 2026 &middot; Match 23</div></div></div>`);
   setTimeout(() => {
-    addWidget(`<div class="points-bar"><div class="points-left"><div class="points-icon">${IC.trophy}</div><span class="points-val">${predictionPoints} pts</span><span class="points-rank">#1 in your group</span></div><div class="points-streak">${IC.fire} 7 streak</div></div>`);
+    addWidget(`<div class="points-bar"><div class="points-left"><div class="points-icon">${IC.trophy}</div><span class="points-val">${predictionPoints} pts</span><span class="points-rank">#1 in your group</span></div><div class="points-streak">${IC.fire} 7-match streak</div></div>`);
     setTimeout(renderViewTabs, 200);
   }, 300);
 }
@@ -910,7 +910,10 @@ function renderMomentsView() {
   addMsg('ai', "Here's what's happening in the match:");
   setTimeout(() => {
     addWidget(`<div class="moment-tabs-wrap"><div class="moment-tabs">${momentCards.map((mc, i) => `<button class="moment-tab${i===currentMoment?' active':''}" onclick="switchMoment(${i})">${IC[mc.icon]} ${mc.type}</button>`).join('')}</div></div>`);
-    setTimeout(() => renderMomentCard(momentCards[currentMoment]), 150);
+    setTimeout(() => {
+      renderMomentCard(momentCards[currentMoment]);
+      setTimeout(renderViewTabs, 200);
+    }, 150);
   }, 200);
 }
 
@@ -949,6 +952,7 @@ function renderPredictView() {
     });
     setTimeout(() => {
       addWidget(`<div class="pred-info-box"><div class="pred-info-title">${IC.info} How predictions work</div><div class="pred-info-text">Predict live moments during the match. Points multiply based on difficulty. Compete with your group. No real money — bragging rights only.</div></div>`);
+      setTimeout(renderViewTabs, 200);
     }, predictions.length * 180 + 100);
   }, 200);
 }
@@ -1025,6 +1029,7 @@ function renderLeaderboardView() {
         <div class="stats-grid"><div class="stat-cell"><div class="stat-val">73%</div><div class="stat-label">Accuracy</div><div class="stat-sub">Top 5%</div></div><div class="stat-cell"><div class="stat-val">12</div><div class="stat-label">Best streak</div><div class="stat-sub">All-time</div></div><div class="stat-cell"><div class="stat-val">24</div><div class="stat-label">Matches</div><div class="stat-sub">This season</div></div></div>
         <button class="share-lb-btn" onclick="showToast('Leaderboard shared!')">${IC.share} Share leaderboard</button>
       </div>`);
+      setTimeout(renderViewTabs, 200);
     }, 400);
   }, 200);
 }
@@ -1084,8 +1089,7 @@ function pickMatch(id) {
 var matchOver = false;
 var notifQueue = [
   { delay:12000, icon:'cricket', title:'JioBharatIQ', text:'🏏 Rohit Sharma walks in at 42/1 — Hitman mode loading!', accent:'var(--primary-50)' },
-  { delay:28000, icon:'fire',    title:'JioBharatIQ', text:'🔥 FIFTY! Kohli reaches 50 off just 31 balls — crowd goes wild!', accent:'var(--sparkle-60)' },
-  { delay:45000, icon:'target',  title:'JioBharatIQ', text:'⚡ GONE! Bumrah cleans up Suryakumar with a yorker — 23(18)', accent:'var(--error)' },
+  { delay:30000, icon:'fire',    title:'JioBharatIQ', text:'🔥 FIFTY! Kohli reaches 50 off just 31 balls — crowd goes wild!', accent:'var(--sparkle-60)' },
 ];
 var notifTimers = [];
 
