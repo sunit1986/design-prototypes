@@ -551,6 +551,9 @@ body {
 .mp-live { display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--error); }
 .mp-live .live-dot { width:6px;height:6px;border-radius:50%;background:var(--error);animation:livePulse 1.5s ease infinite; }
 .mp-card.upcoming { opacity:0.45;pointer-events:none;border-style:dashed; }
+
+/* ─── V2.1: PREDICTION WRONG STATE ─── */
+.pred-result-bar.wrong { background:var(--error-20);color:var(--error); }
 </style>
 </head>
 <body>
@@ -929,13 +932,38 @@ function makePrediction(predId, optIdx) {
 
 function revealPrediction(predId, optIdx, card, rb) {
   rb.remove();
-  const btns = card.querySelectorAll('.pred-opt');
-  btns[optIdx].classList.remove('picked'); btns[optIdx].classList.add('correct');
-  const bar = document.createElement('div'); bar.className = 'pred-result-bar';
-  bar.innerHTML = `${IC.check} YOU GOT IT RIGHT! +120 points`;
+  var btns = card.querySelectorAll('.pred-opt');
+  var correctIdx = predictionOutcomes[predId];
+  var isCorrect = (correctIdx !== undefined) ? (optIdx === correctIdx) : (Math.random() < 0.7);
+  predictionTotal++;
+  var bar = document.createElement('div'); bar.className = 'pred-result-bar';
+  if(isCorrect) {
+    predictionCorrect++;
+    btns[optIdx].classList.remove('picked'); btns[optIdx].classList.add('correct');
+    bar.innerHTML = IC.check + ' CORRECT! +120 points';
+    predictionPoints += 120;
+    showCelebration('celebrate', 'CORRECT! +120 points!');
+  } else {
+    btns[optIdx].classList.remove('picked'); btns[optIdx].style.opacity='0.5';
+    if(correctIdx !== undefined) { btns[correctIdx].classList.add('correct'); }
+    bar.classList.add('wrong');
+    bar.innerHTML = '✗ Wrong! The answer was ' + (correctIdx !== undefined ? btns[correctIdx].textContent : 'different');
+    showToast('Better luck on the next one!');
+  }
   card.appendChild(bar);
-  predictionPoints += 120;
-  showCelebration('celebrate', 'CORRECT! +120 points!');
+  var you = leaderboard.find(function(p){return p.isYou;});
+  if(you) { you.points = predictionPoints; you.pct = Math.round(predictionPoints / 2840 * 100); }
+  if(predictionTotal >= 2 && !document.getElementById('recapPillRow')) {
+    setTimeout(function(){
+      var el = document.createElement('div');
+      el.id = 'recapPillRow';
+      el.className = 'prompt-pills';
+      el.style.cssText = 'padding:0 16px 8px;animation:cardIn 0.3s ease';
+      el.innerHTML = '<button class="prompt-pill" onclick="renderRecapCard()">'+IC.share+' Match Recap</button>';
+      chat.appendChild(el);
+      scrollBottom();
+    }, 800);
+  }
 }
 
 /* ─── LEADERBOARD — Binance-style table with progress bars ─── */
@@ -964,6 +992,11 @@ function renderLeaderboardView() {
     }, 400);
   }, 200);
 }
+
+/* ─── V2.1: PREDICTION TRACKING ─── */
+var predictionCorrect = 0;
+var predictionTotal = 0;
+var predictionOutcomes = { 1: 0, 2: 2, 3: 0 };
 
 /* ─── V2.1: MATCH PICKER DATA ─── */
 const teamColors = { MI:'#004BA0', RCB:'#EC1C24', CSK:'#FFCB05', DC:'#0078BC', IND:'#0066B3', AUS:'#FFD700' };
