@@ -536,6 +536,21 @@ body {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ─── V2.1: MATCH PICKER ─── */
+.mp-card { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);padding:14px;margin-bottom:8px;cursor:pointer;transition:transform 0.15s;position:relative;animation:cardIn 0.3s ease; }
+.mp-card:active { transform:scale(0.98); }
+.mp-card.recommended { border-color:var(--primary-30); }
+.mp-card .rec-chip { position:absolute;top:-8px;right:12px;background:var(--primary-50);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:var(--shape-pill); }
+.mp-card-row { display:flex;align-items:center;gap:10px; }
+.mp-team-logo { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;flex-shrink:0; }
+.mp-team-line { font-size:13px;font-weight:700;color:var(--text-high);flex:1; }
+.mp-team-score { font-weight:400;font-size:11px;color:var(--text-low);margin-left:6px; }
+.mp-vs { font-size:10px;color:var(--text-low);font-weight:600;margin:2px 0 2px 38px; }
+.mp-venue { font-size:10px;color:var(--text-low);margin-top:4px; }
+.mp-live { display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--error); }
+.mp-live .live-dot { width:6px;height:6px;border-radius:50%;background:var(--error);animation:livePulse 1.5s ease infinite; }
+.mp-card.upcoming { opacity:0.45;pointer-events:none;border-style:dashed; }
 </style>
 </head>
 <body>
@@ -950,12 +965,55 @@ function renderLeaderboardView() {
   }, 200);
 }
 
+/* ─── V2.1: MATCH PICKER DATA ─── */
+const teamColors = { MI:'#004BA0', RCB:'#EC1C24', CSK:'#FFCB05', DC:'#0078BC', IND:'#0066B3', AUS:'#FFD700' };
+const watchHistory = ['MI','MI','RCB'];
+const liveMatches = [
+  { id:'m1', teamA:'MI', teamB:'RCB', scoreA:'178/6 (20)', scoreB:'92/2 (10.3)', venue:'Wankhede Stadium, Mumbai', tournament:'IPL 2026 · Match 23', status:'live' },
+  { id:'m2', teamA:'CSK', teamB:'DC', scoreA:'145/3 (16.2)', scoreB:'Yet to bat', venue:'MA Chidambaram Stadium, Chennai', tournament:'IPL 2026 · Match 24', status:'live' },
+  { id:'m3', teamA:'IND', teamB:'AUS', scoreA:'', scoreB:'', venue:'Narendra Modi Stadium, Ahmedabad', tournament:'Border-Gavaskar Trophy', status:'upcoming', time:'Tomorrow, 9:30 AM' },
+];
+(function(){
+  var freq={};
+  watchHistory.forEach(function(t){ freq[t]=(freq[t]||0)+1; });
+  var top=Object.keys(freq).sort(function(a,b){return freq[b]-freq[a];})[0];
+  liveMatches.forEach(function(m){ m.recommended=(m.status==='live'&&(m.teamA===top||m.teamB===top)); });
+})();
+
+function renderMatchPicker() {
+  addMsg('ai','Hey Deepa! 3 matches on right now. Pick one to jump in:');
+  setTimeout(function(){
+    liveMatches.forEach(function(m,i){
+      setTimeout(function(){
+        if(m.status==='upcoming'){
+          addWidget('<div class="mp-card upcoming"><div class="mp-card-row"><div class="mp-team-logo" style="background:'+teamColors[m.teamA]+'">'+m.teamA+'</div><div class="mp-team-line">'+m.teamA+' vs '+m.teamB+'</div><div style="font-size:10px;color:var(--text-low);font-weight:600">'+m.time+'</div></div><div class="mp-venue">'+m.venue+'</div></div>');
+        } else {
+          var recText = m.recommended ? 'You watched MI\'s last 2 games' : '';
+          addWidget('<div class="mp-card'+(m.recommended?' recommended':'')+'" onclick="pickMatch(\''+m.id+'\')">'+(m.recommended?'<div class="rec-chip">RECOMMENDED · '+recText+'</div>':'')+'<div class="mp-card-row"><div class="mp-team-logo" style="background:'+teamColors[m.teamA]+'">'+m.teamA+'</div><div class="mp-team-line">'+m.teamA+' <span class="mp-team-score">'+m.scoreA+'</span></div><div class="mp-live"><span class="live-dot"></span> LIVE</div></div><div class="mp-vs">vs</div><div class="mp-card-row"><div class="mp-team-logo" style="background:'+teamColors[m.teamB]+'">'+m.teamB+'</div><div class="mp-team-line">'+m.teamB+' <span class="mp-team-score">'+m.scoreB+'</span></div></div><div class="mp-venue">'+m.venue+' · '+m.tournament+'</div></div>');
+        }
+      },i*200);
+    });
+  },200);
+}
+
+function pickMatch(id) {
+  var m = liveMatches.find(function(mm){return mm.id===id;});
+  addMsg('user', m.teamA + ' vs ' + m.teamB);
+  addThinking();
+  setTimeout(function(){
+    removeThinking();
+    addMsg('ai','Welcome to Match Companion!<br><br>'+m.teamA+' vs '+m.teamB+' is <strong>LIVE</strong> at '+m.venue.split(',')[0]+'. I\'ll be your personal cricket companion — predictions, live moments, and leaderboard, all right here.');
+    setTimeout(function(){
+      renderScoreBanner();
+      scheduleNotifications();
+      scheduleAutoRecap();
+    },600);
+  },800);
+}
+
 /* ─── START ─── */
 function startJourney() {
-  setTimeout(() => {
-    addMsg('ai', 'Welcome to Match Companion!<br><br>MI vs RCB is <strong>LIVE</strong> at Wankhede. I\'ll be your personal cricket companion — predictions, live moments, and leaderboard, all right here.');
-    setTimeout(renderScoreBanner, 600);
-  }, 400);
+  setTimeout(function(){ renderMatchPicker(); }, 400);
 }
 startJourney();
 </script>
