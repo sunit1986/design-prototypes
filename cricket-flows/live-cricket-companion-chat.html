@@ -570,6 +570,16 @@ body {
 .notif-text { font-size:11px;color:var(--text-low);margin-top:1px;line-height:1.3; }
 .notif-time { font-size:9px;color:var(--text-low);flex-shrink:0;margin-top:2px; }
 
+/* ─── V2.1: PITCH REPORT CARD ─── */
+.pitch-card { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);padding:14px;animation:cardIn 0.3s ease; }
+.pitch-title { font-size:13px;font-weight:800;color:var(--text-high);margin-bottom:10px;display:flex;align-items:center;gap:6px; }
+.pitch-title svg { width:14px;height:14px;fill:var(--sparkle-60); }
+.pitch-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+.pitch-stat { background:var(--surface-minimal);border-radius:var(--shape-small);padding:8px 10px; }
+.pitch-stat-val { font-size:14px;font-weight:800;color:var(--text-high); }
+.pitch-stat-label { font-size:9px;color:var(--text-low);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-top:1px; }
+.pitch-note { font-size:11px;color:var(--text-low);margin-top:10px;line-height:1.4;padding-top:8px;border-top:1px solid var(--grey-20); }
+
 /* ─── V2.1: RECAP CARD ─── */
 .postmatch { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);overflow:hidden;animation:cardIn 0.3s ease; }
 .pm-header { background:var(--surface-bold);padding:12px 14px;color:#fff; }
@@ -1081,11 +1091,19 @@ function pickMatch(id) {
     removeThinking();
     addMsg('ai','Welcome to Match Companion!<br><br>'+m.teamA+' vs '+m.teamB+' is <strong>LIVE</strong> at '+m.venue.split(',')[0]+'. I\'ll be your personal cricket companion — predictions, live moments, and leaderboard, all right here.');
     setTimeout(function(){
-      renderScoreBanner();
-      scheduleNotifications();
-      scheduleAutoRecap();
+      renderPitchReport();
+      setTimeout(function(){
+        renderScoreBanner();
+        scheduleNotifications();
+        scheduleAutoRecap();
+      },400);
     },600);
   },800);
+}
+
+/* ─── V2.1: PITCH REPORT ─── */
+function renderPitchReport() {
+  addWidget('<div class="pitch-card"><div class="pitch-title">'+IC.cricket+' Pitch Report — Wankhede Stadium</div><div class="pitch-grid"><div class="pitch-stat"><div class="pitch-stat-val">182</div><div class="pitch-stat-label">Avg 1st innings score</div></div><div class="pitch-stat"><div class="pitch-stat-val">58%</div><div class="pitch-stat-label">Team batting 2nd wins</div></div><div class="pitch-stat"><div class="pitch-stat-val">Flat</div><div class="pitch-stat-label">Pitch type</div></div><div class="pitch-stat"><div class="pitch-stat-val">8/10</div><div class="pitch-stat-label">Batting friendly</div></div></div><div class="pitch-note">Expected dew in the 2nd innings — outfield gets slippery, spinners will struggle. Pacers with yorkers will be key. Last 5 matches here: avg score 178, team chasing has won 3 of 5.</div></div>');
 }
 
 /* ─── V2.1: TOP NOTIFICATION BANNERS ─── */
