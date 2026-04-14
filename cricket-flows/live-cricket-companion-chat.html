@@ -566,6 +566,29 @@ body {
 .notif-time { font-size:9px;color:var(--text-low);flex-shrink:0;margin-top:2px; }
 @keyframes notifSlideDown { from { transform:translateY(-100%);opacity:0; } to { transform:translateY(0);opacity:1; } }
 @keyframes notifSlideUp { from { transform:translateY(0);opacity:1; } to { transform:translateY(-100%);opacity:0; } }
+
+/* ─── V2.1: RECAP CARD ─── */
+.postmatch { background:var(--surface);border:1px solid rgba(36,38,43,0.12);border-radius:var(--shape-large);overflow:hidden;animation:cardIn 0.3s ease; }
+.pm-header { background:var(--surface-bold);padding:12px 14px;color:#fff; }
+.pm-result { font-size:14px;font-weight:800; }
+.pm-match { font-size:10px;opacity:0.6;margin-top:2px; }
+.pm-body { padding:12px 14px; }
+.pm-row { display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--grey-20); }
+.pm-row:last-child { border-bottom:none; }
+.pm-label { font-size:10px;color:var(--text-low); }
+.pm-val { font-size:12px;font-weight:700;color:var(--text-high);text-align:right; }
+.pm-val.accent { color:var(--sparkle-60); }
+.pm-val.rank { color:var(--primary-50); }
+.pm-footer { display:flex;gap:8px;padding:0 14px 12px; }
+.pm-btn { flex:1;padding:9px 0;border-radius:var(--shape-pill);font-family:var(--font);font-size:12px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:transform 0.1s; }
+.pm-btn:active { transform:scale(0.97); }
+.pm-btn.wa { background:#25D366;color:#fff; }
+.pm-btn.copy { background:var(--grey-20);color:var(--text-high); }
+.pm-brand { text-align:center;padding:6px 0 10px;font-size:9px;color:var(--text-low);font-weight:600;letter-spacing:0.04em; }
+.prompt-pills { display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;animation:cardIn 0.3s ease; }
+.prompt-pill { padding:7px 14px;border-radius:var(--shape-pill);border:1px solid rgba(36,38,43,0.12);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:600;color:var(--primary-50);cursor:pointer;transition:background 0.15s,transform 0.1s;display:inline-flex;align-items:center;gap:4px; }
+.prompt-pill:active { transform:scale(0.96);background:var(--primary-20); }
+.prompt-pill svg { width:13px;height:13px;fill:var(--primary-50); }
 </style>
 </head>
 <body>
@@ -1083,6 +1106,24 @@ function showNotifBanner(n) {
   setTimeout(function(){
     if(el.parentNode) { el.classList.add('hiding'); setTimeout(function(){ if(el.parentNode) el.remove(); },300); }
   }, 4000);
+}
+
+/* ─── V2.1: WHATSAPP RECAP CARD ─── */
+function renderRecapCard() {
+  var acc = predictionTotal > 0 ? Math.round(predictionCorrect/predictionTotal*100) : 0;
+  var accText = predictionTotal > 0 ? predictionCorrect+'/'+predictionTotal+' — '+acc+'%' : 'No predictions yet';
+  addMsg('ai','Match khatam! What a game. Here\'s your recap:');
+  setTimeout(function(){
+    addWidget('<div class="postmatch"><div class="pm-header"><div class="pm-result">RCB beat MI by 4 wickets</div><div class="pm-match">IPL 2026 · Match 23 · Wankhede Stadium</div></div><div class="pm-body"><div class="pm-row"><div class="pm-label">Your Predictions</div><div class="pm-val accent">'+accText+'</div></div><div class="pm-row"><div class="pm-label">Top Performer</div><div class="pm-val">Kohli: 89(48) — Player of the Match</div></div><div class="pm-row"><div class="pm-label">Your Rank</div><div class="pm-val rank">#1 in your group</div></div><div class="pm-row"><div class="pm-label">Points Earned</div><div class="pm-val">'+predictionPoints+' pts</div></div></div><div class="pm-footer"><button class="pm-btn wa" onclick="showToast(\'Shared to WhatsApp!\')">'+IC.whatsapp+' Share to WhatsApp</button><button class="pm-btn copy" onclick="showToast(\'Card copied!\')">'+IC.share+' Copy Card</button></div><div class="pm-brand">Jio Cricket Companion · IPL 2026</div></div>');
+  },300);
+}
+
+function scheduleAutoRecap() {
+  setTimeout(function(){
+    if(!document.querySelector('.postmatch')) {
+      renderRecapCard();
+    }
+  }, 60000);
 }
 
 /* ─── START ─── */
