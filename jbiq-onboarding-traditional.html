@@ -833,26 +833,19 @@
         <div class="lang-note">You can change language later in settings</div>
         <button class="lang-save" id="langSaveBtn" disabled onclick="langSaved()">Save</button>
       </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- PHONE NUMBER SCREEN                                 -->
-  <!-- ═══════════════════════════════════════════════════ -->
-  <div class="screen" id="phoneScreen">
-    <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
-    <div class="phone-screen">
-      <div class="phone-header">
-        <div class="phone-title">Enter your mobile number</div>
+      <!-- Phone input (hidden until language saved) -->
+      <div id="tradPhoneSection" style="display:none;padding:0 20px 120px;">
+        <div style="height:1px;background:var(--bd);margin:8px 0 20px"></div>
+        <div class="phone-title" style="font-size:18px">Enter your mobile number</div>
         <div class="phone-sub">We'll send you a verification code</div>
+        <div class="phone-field-wrap" style="margin-top:16px">
+          <div class="phone-cc">+91</div>
+          <input type="tel" class="phone-input" id="tradPhoneInput" placeholder="Mobile number" maxlength="10" oninput="tradPhoneCheck()">
+        </div>
+        <button class="phone-continue" id="tradPhoneBtn" disabled onclick="tradPhoneSubmit()" style="margin-top:16px">Continue</button>
       </div>
-      <div class="phone-field-wrap">
-        <div class="phone-cc">+91</div>
-        <input type="tel" class="phone-input" id="tradPhoneInput" placeholder="Mobile number" maxlength="10" oninput="tradPhoneCheck()">
-      </div>
-      <button class="phone-continue" id="tradPhoneBtn" disabled onclick="tradPhoneSubmit()">Continue</button>
     </div>
-    <!-- OTP Modal -->
+    <!-- OTP bottom sheet (on same screen) -->
     <div class="modal-overlay" id="v1OTP">
       <div class="modal-scrim" onclick="void(0)"></div>
       <div class="modal-sheet">
@@ -2224,18 +2217,8 @@ function v1Phone(ph) {
 
 function v1Verify() {
   document.getElementById('v1OTP').classList.remove('show');
-  const msg = 'Verified! You\'re all set. Let me show you around.';
-  v1AddBubble('bot', msg + ' ' + fbRowHTML());
-  const vd = document.getElementById('v1VoiceDock'), cd = document.getElementById('v1ChatDock');
-  if (vd) vd.style.display = 'none'; if (cd) cd.style.display = 'none';
-  speak(msg, () => {
-    setTimeout(() => {
-      goHP();
-      setTimeout(() => {
-        speak('Your assistants are up top. Scroll for Updates and JioMart. Tap Speak any time you need me.', function(){});
-      }, 500);
-    }, 400);
-  });
+  // Traditional flow: no voice, go straight to homepage
+  setTimeout(goHP, 400);
 }
 
 function resetV1() {
@@ -2269,7 +2252,14 @@ function pickLang(el, langCode) {
 }
 
 function langSaved() {
-  goScreen('phoneScreen');
+  // Show phone input on same screen, scroll to it
+  document.getElementById('tradPhoneSection').style.display = 'block';
+  document.getElementById('langSaveBtn').disabled = true;
+  document.getElementById('langSaveBtn').textContent = '✓ Saved';
+  setTimeout(() => {
+    document.getElementById('tradPhoneSection').scrollIntoView({ behavior:'smooth', block:'center' });
+    document.getElementById('tradPhoneInput').focus();
+  }, 200);
 }
 
 function tradPhoneCheck() {
