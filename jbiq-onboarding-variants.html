@@ -120,24 +120,32 @@
     }
 
     /* ══════════════════════════════════
-       VALUE PROP (post-splash) — Motion MCP: fade-up stagger + M3 scroll-snap
-       Easing ref: m3-emphasized-decelerate for hero emphasis
+       VALUE PROP — Premium light-theme carousel
+       Motion: Apple spring + M3 emphasized-decelerate + staggered fade-up
     ══════════════════════════════════ */
     #valueProp {
-      background:#fafafa;
-      --vp-ease-out: cubic-bezier(0.05, 0.7, 0.1, 1);
-      --vp-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+      background:#fff;
+      --vp-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --vp-decel: cubic-bezier(0.05, 0.7, 0.1, 1);
+      --vp-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    /* Subtle radial glow behind card area */
+    #valueProp::after {
+      content:''; position:absolute; top:25%; left:50%; transform:translateX(-50%);
+      width:320px; height:320px; border-radius:50%; pointer-events:none;
+      background:radial-gradient(circle, rgba(53,53,243,0.06) 0%, rgba(109,23,206,0.03) 40%, transparent 70%);
+      z-index:0;
     }
     #valueProp .vp-skip {
       position:absolute; top:58px; right:20px; z-index:5;
       border:none; background:none; font-family:inherit;
-      font-size:14px; font-weight:600; color:var(--g6);
+      font-size:14px; font-weight:600; color:var(--g4);
       cursor:pointer; padding:8px 4px;
-      transition: color 0.2s var(--vp-ease-standard);
+      transition:color 0.2s var(--vp-smooth);
     }
     #valueProp .vp-skip:active { color:var(--g1); }
     .vp-layout {
-      flex:1; min-height:0; display:flex; flex-direction:column;
+      flex:1; min-height:0; display:flex; flex-direction:column; position:relative; z-index:1;
     }
     .vp-scroller {
       flex:1; min-height:0;
@@ -154,62 +162,59 @@
       flex:0 0 100%; width:100%; min-width:100%;
       scroll-snap-align:start; scroll-snap-stop:always;
       display:flex; flex-direction:column; align-items:center;
-      padding:8px 24px 12px;
+      padding:0 28px 12px;
       box-sizing:border-box;
     }
     .vp-hero {
       flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
       width:100%; max-width:340px;
     }
+    /* Icon card — frosted glass with colored accent */
     .vp-vid-card {
-      width:172px; height:172px; border-radius:36px;
+      width:180px; height:180px; border-radius:40px;
       display:flex; align-items:center; justify-content:center;
-      margin-bottom:20px;
-      transition: transform 0.45s var(--vp-ease-out), box-shadow 0.45s var(--vp-ease-out);
+      margin-bottom:28px; position:relative;
+      transition:transform 0.5s var(--vp-spring), box-shadow 0.5s var(--vp-decel), opacity 0.4s;
     }
-    .vp-slide.is-active .vp-vid-card { transform: scale(1); }
-    .vp-slide:not(.is-active) .vp-vid-card { transform: scale(0.94); opacity:0.85; }
-    .vp-vid-card.c1 { background:#fff; box-shadow:0 12px 40px rgba(53,53,243,0.14); border:1px solid rgba(53,53,243,0.12); }
-    .vp-vid-card.c2 { background:#fff; box-shadow:0 12px 40px rgba(30,204,176,0.12); border:1px solid rgba(30,204,176,0.22); }
-    .vp-vid-card.c3 { background:#fff; box-shadow:0 12px 40px rgba(109,23,206,0.14); border:1px solid rgba(109,23,206,0.18); }
+    .vp-slide.is-active .vp-vid-card { transform:scale(1); opacity:1; }
+    .vp-slide:not(.is-active) .vp-vid-card { transform:scale(0.88); opacity:0.5; }
+    .vp-vid-card.c1 {
+      background:linear-gradient(145deg, #f0edff 0%, #e8e4ff 100%);
+      box-shadow:0 16px 48px rgba(53,53,243,0.16), 0 4px 12px rgba(53,53,243,0.08);
+    }
+    .vp-vid-card.c2 {
+      background:linear-gradient(145deg, #e8faf7 0%, #d4f5ef 100%);
+      box-shadow:0 16px 48px rgba(30,204,176,0.16), 0 4px 12px rgba(30,204,176,0.08);
+    }
+    .vp-vid-card.c3 {
+      background:linear-gradient(145deg, #f3ecff 0%, #ece2ff 100%);
+      box-shadow:0 16px 48px rgba(109,23,206,0.16), 0 4px 12px rgba(109,23,206,0.08);
+    }
     .vp-vid-card video {
-      width:148px; height:148px; object-fit:contain; border-radius:24px;
+      width:148px; height:148px; object-fit:contain; border-radius:28px;
     }
-    /* fade-up (Motion MCP fade-up + stagger like compose_sequence seq_9e8b89) */
-    .vp-slide:not(.is-active) .vp-ttl,
-    .vp-slide:not(.is-active) .vp-body,
-    .vp-slide:not(.is-active) .vp-hint {
-      opacity:0; transform:translateY(16px);
-    }
+    /* Staggered fade-up text — Motion: m3-emphasized-decelerate + 3-step stagger */
+    .vp-ttl, .vp-body, .vp-hint { font-family:inherit; opacity:0; transform:translateY(20px); }
     .vp-slide.is-active .vp-ttl {
-      font-size:28px; font-weight:800; letter-spacing:-0.035em; color:var(--g1);
-      text-align:center; line-height:1.15; margin-bottom:10px; max-width:320px;
-      animation:vpFadeUp 0.38s cubic-bezier(0, 0, 0, 1) forwards;
-      animation-delay:0.05s;
+      font-size:26px; font-weight:900; letter-spacing:-0.035em; color:var(--g1);
+      text-align:center; line-height:1.15; margin-bottom:12px; max-width:280px;
+      animation:vpSlideUp 0.5s var(--vp-decel) 0.08s forwards;
     }
     .vp-slide.is-active .vp-body {
-      font-size:15px; font-weight:500; color:var(--g6); text-align:center;
-      line-height:1.5; max-width:300px;
-      animation:vpFadeUp 0.4s cubic-bezier(0, 0, 0, 1) forwards;
-      animation-delay:0.14s;
+      font-size:15px; font-weight:400; color:var(--g6); text-align:center;
+      line-height:1.55; max-width:280px; letter-spacing:-0.005em;
+      animation:vpSlideUp 0.5s var(--vp-decel) 0.18s forwards;
     }
     .vp-slide.is-active .vp-hint {
-      margin-top:14px; font-size:12px; font-weight:600; letter-spacing:0.12em;
+      margin-top:16px; font-size:11px; font-weight:600; letter-spacing:0.1em;
       text-transform:uppercase; color:var(--g4);
-      animation:vpFadeUp 0.35s cubic-bezier(0, 0, 0, 1) forwards;
-      animation-delay:0.72s;
+      animation:vpSlideUp 0.4s var(--vp-decel) 0.8s forwards;
     }
-    .vp-ttl, .vp-body, .vp-hint {
-      font-family:inherit;
-    }
-    .vp-ttl { max-width:320px; }
-    .vp-body { max-width:300px; }
-    @keyframes vpFadeUp {
-      to { opacity:1; transform:translateY(0); }
-    }
+    @keyframes vpSlideUp { to { opacity:1; transform:translateY(0); } }
+    /* Bottom controls */
     .vp-bottom {
-      flex-shrink:0; padding:10px 24px 36px;
-      display:flex; flex-direction:column; align-items:center; gap:16px;
+      flex-shrink:0; padding:8px 28px 40px;
+      display:flex; flex-direction:column; align-items:center; gap:20px;
     }
     .vp-dots {
       display:flex; align-items:center; justify-content:center; gap:8px;
@@ -217,19 +222,19 @@
     }
     .vp-dot {
       height:8px; border-radius:999px; border:none; padding:0; cursor:pointer;
-      background:rgba(20,20,20,0.12);
-      transition: width 0.35s var(--vp-ease-out), background 0.25s var(--vp-ease-standard);
+      background:rgba(20,20,20,0.1);
+      transition:width 0.4s var(--vp-spring), background 0.3s var(--vp-smooth);
     }
     .vp-dot.on { width:28px; background:var(--p); }
     .vp-dot:not(.on) { width:8px; }
     .vp-cta {
-      width:100%; max-width:320px; height:52px; border-radius:999px; border:none;
+      width:100%; max-width:300px; height:52px; border-radius:999px; border:none;
       font-family:inherit; font-size:17px; font-weight:700; cursor:pointer;
-      background:var(--pb); color:#fff;
-      box-shadow:0 8px 24px rgba(57,0,173,0.28);
-      transition: transform 0.15s var(--vp-ease-standard), box-shadow 0.2s;
+      background:var(--g1); color:#fff;
+      box-shadow:0 8px 28px rgba(20,20,20,0.2);
+      transition:transform 0.2s var(--vp-spring), box-shadow 0.2s;
     }
-    .vp-cta:active { transform:scale(0.98); }
+    .vp-cta:active { transform:scale(0.96); box-shadow:0 4px 16px rgba(20,20,20,0.15); }
     @media (prefers-reduced-motion: reduce) {
       .vp-scroller { scroll-behavior:auto; }
       .vp-slide.is-active .vp-ttl,
@@ -613,34 +618,38 @@
     <button type="button" class="vp-skip" onclick="vpDone()">Skip</button>
     <div class="vp-layout">
       <div class="vp-scroller" id="vpScroller">
+
         <section class="vp-slide is-active" data-vp="0" aria-label="Get Stuff Done">
           <div class="vp-hero">
             <div class="vp-vid-card c1">
               <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle_state.mp4" autoplay loop muted playsinline></video>
             </div>
             <h2 class="vp-ttl">Get Stuff Done</h2>
-            <p class="vp-body">Recharge, shop, plan travel, and knock out errands—ask once in your language and JioBharatIQ drives it end to end.</p>
-            <p class="vp-hint">Swipe for more</p>
+            <p class="vp-body">Recharge, shop, plan travel — ask once in your language and JioBharatIQ handles it end to end.</p>
+            <p class="vp-hint">Swipe to explore</p>
           </div>
         </section>
+
         <section class="vp-slide" data-vp="1" aria-label="Assistants">
           <div class="vp-hero">
             <div class="vp-vid-card c2">
-              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Listening_state.mp4" autoplay loop muted playsinline></video>
+              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Speaking_State.mp4" autoplay loop muted playsinline></video>
             </div>
-            <h2 class="vp-ttl">Assistants</h2>
-            <p class="vp-body">Cricket scores, Bollywood buzz, local news, astrology—pick an assistant that feels built for India, not generic.</p>
+            <h2 class="vp-ttl">Your Assistants</h2>
+            <p class="vp-body">Cricket, Bollywood, news, astrology — personal assistants built for India, not imported from Silicon Valley.</p>
           </div>
         </section>
-        <section class="vp-slide" data-vp="2" aria-label="Multi-modal voice">
+
+        <section class="vp-slide" data-vp="2" aria-label="Multimodal Voice">
           <div class="vp-hero">
             <div class="vp-vid-card c3">
-              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/User%20speaking%20to%20bot_state.mp4" autoplay loop muted playsinline></video>
+              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Listening_state.mp4" autoplay loop muted playsinline></video>
             </div>
-            <h2 class="vp-ttl">Multi-modal voice experience</h2>
-            <p class="vp-body">Speak naturally, type when you need quiet, or share an image—same answers in English, Hindi, हिंदी, or your regional mix.</p>
+            <h2 class="vp-ttl">Voice + Text + Vision</h2>
+            <p class="vp-body">Speak naturally in Hindi, English, or your language. Type when quiet. Share photos. Same intelligence, every mode.</p>
           </div>
         </section>
+
       </div>
       <div class="vp-bottom">
         <div class="vp-dots" id="vpDots" role="tablist" aria-label="Value slides">
@@ -648,7 +657,7 @@
           <button type="button" class="vp-dot" role="tab" aria-selected="false" aria-label="Slide 2" data-vp-dot="1"></button>
           <button type="button" class="vp-dot" role="tab" aria-selected="false" aria-label="Slide 3" data-vp-dot="2"></button>
         </div>
-        <button type="button" class="vp-cta" id="vpCta" onclick="vpNext()">Next</button>
+        <button type="button" class="vp-cta" id="vpCta" onclick="vpNext()">Continue</button>
       </div>
     </div>
   </div>
