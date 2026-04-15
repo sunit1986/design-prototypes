@@ -1300,21 +1300,14 @@
       <div class="hp2-section-title" style="padding-top:20px">Updates</div>
       <div class="hp2-updates-section">
 
-        <!-- JioMart -->
-        <div class="hp2-ucard">
-          <div class="hp2-ucard-title">JioMart</div>
+        <!-- Contextual card — personalized from conversation -->
+        <div class="hp2-ucard" id="hpContextCard" style="background:linear-gradient(145deg,#f0edff,#e8e4ff);border:1px solid rgba(53,53,243,0.1)">
+          <div class="hp2-ucard-title" style="color:var(--primary-50)" id="hpCtxTitle">Based on your conversation</div>
           <div class="hp2-ucard-row">
             <div class="hp2-ucard-text">
-              <span class="main">Order arriving by 3PM today</span>
-              <span class="sub">Lakme foundation</span>
+              <span class="main" id="hpCtxMain">We noticed you're interested in this topic</span>
+              <span class="sub" id="hpCtxSub">Tap to explore more</span>
             </div>
-            <div class="hp2-ucard-img"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=108&h=108&fit=crop" alt="Lakme"></div>
-          </div>
-          <div class="hp2-ucard-action">
-            <span>Mahesh kumar is on the way</span>
-            <button class="hp2-ucard-action-btn">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M19.44 13c-.22 0-.45-.07-.67-.12a9.44 9.44 0 01-1.31-.39 2 2 0 00-2.48 1l-.22.45a12.18 12.18 0 01-2.66-2 12.18 12.18 0 01-2-2.66l.42-.28a2 2 0 001-2.48 10.33 10.33 0 01-.39-1.31c-.05-.22-.09-.45-.12-.68a3 3 0 00-3-2.49h-3a3 3 0 00-3 3.41 19 19 0 0016.52 16.46h.38a3 3 0 002-.76 3 3 0 001-2.25v-3a3 3 0 00-2.47-2.9z" fill="currentColor"/></svg>
-            </button>
           </div>
         </div>
 
@@ -1747,8 +1740,20 @@ function goHP() {
   stopSR();
   goScreen('homepage');
   applyHomePersonalization();
-  if (activeV === 'v1') setTimeout(() => { document.getElementById('v1Nudge').classList.add('show'); }, 3000);
+  applyContextCard();
   if (activeV === 'v3') setTimeout(() => { document.getElementById('v3Sheet').classList.add('show'); }, 1200);
+}
+
+function applyContextCard() {
+  const card = document.getElementById('hpContextCard');
+  if (!card || !v1Questions.length) return;
+  const topic = v1Questions[0]; // first question the user asked
+  const titleEl = document.getElementById('hpCtxTitle');
+  const mainEl = document.getElementById('hpCtxMain');
+  const subEl = document.getElementById('hpCtxSub');
+  if (titleEl) titleEl.textContent = 'Because you asked about';
+  if (mainEl) mainEl.textContent = topic;
+  if (subEl) subEl.textContent = 'Tap to continue this conversation';
 }
 
 /* ══════════════════════════════════════════════════════
@@ -2068,6 +2073,7 @@ async function callGemini(userText) {
    Steps: 0=Q1, 1=Q2, 2=name, 3=phone, 4=OTP
 ══════════════════════════════════════════════════════ */
 let v1Step = 0;
+let v1Questions = []; // store user questions for contextual homepage card
 
 function v1Submit() {
   const v = document.getElementById('v1F').value.trim(); if (!v) return;
@@ -2084,6 +2090,7 @@ function v2Submit() {
 
 async function v1HandleQuestion(text) {
   detectLang(text);
+  v1Questions.push(text);
   v1AddBubble('user', text);
   showThinking('v1Chat');
   setAvState(activeV, 'think');
@@ -2169,7 +2176,7 @@ function v1Verify() {
 }
 
 function resetV1() {
-  v1Step = 0; userName = '';
+  v1Step = 0; userName = ''; v1Questions = [];
   if (window._v1SilenceTimer) { clearTimeout(window._v1SilenceTimer); window._v1SilenceTimer = null; }
   const chat = document.getElementById('v1Chat');
   if (chat) chat.innerHTML = '';
