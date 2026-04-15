@@ -2159,21 +2159,9 @@ async function v1HandleQuestion(text) {
   // If no topic selected yet, prompt to pick one
   if (!v1SelectedTopic) {
     v1AddBubble('user', text);
-    const msg = "Please pick a topic first — Bollywood, Cricket, or News. Tap one of the cards above!";
+    const msg = "Pick a topic first — tap Bollywood, Cricket, or News above!";
     v1AddBubble('bot', msg);
     speak(msg, ()=>{ if(micOn) startSR(); });
-    return;
-  }
-
-  // Guardrail: check if question is within allowed topics
-  const lower = text.toLowerCase();
-  const topicLower = v1SelectedTopic.toLowerCase();
-  const isOnTopic = lower.includes(topicLower) || V1_ALLOWED_TOPICS.some(t => lower.includes(t));
-  if (!isOnTopic && v1Step < 2) {
-    v1AddBubble('user', text);
-    const guard = "This is an onboarding experience — I'd love you to explore " + v1SelectedTopic + " right now! Try asking me something about " + v1SelectedTopic + ".";
-    v1AddBubble('bot', guard);
-    speak(guard, ()=>{ if(micOn) startSR(); });
     return;
   }
 
@@ -2182,7 +2170,6 @@ async function v1HandleQuestion(text) {
   showThinking('v1Chat');
   setAvState(activeV, 'think');
 
-  // Gemini still answers but with topic context
   const answer = await callGemini(text);
   removeThinking();
 
