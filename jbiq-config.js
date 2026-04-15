@@ -15,7 +15,7 @@ window.JBIQ_CONFIG = {
   CHAT_PROXY: 'https://jbiq-proxy.sunit3-sharma.workers.dev',
 
   // Gemini LLM (for V1 onboarding Q&A) — key inline in HTML
-  GEMINI_MODEL: 'gemini-2.0-flash',
+  GEMINI_MODEL: 'gemini-2.5-flash',
 
   // Text-to-Speech Provider: 'sarvam' or 'elevenlabs'
   TTS_PROVIDER: 'sarvam',  // Change to 'elevenlabs' to use ElevenLabs

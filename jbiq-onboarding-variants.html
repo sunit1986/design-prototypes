@@ -1952,7 +1952,7 @@ async function callGemini(userText) {
   const _gk = ['AQ.Ab8RN6IiP-oW1HUG','ZGj3Pjeiaxa-YUvunk','G6X7iQAYnibhGn0g'];
   const key = c.GEMINI_KEY || _gk.join('');
   if (!key) return 'That is a great question! I am still setting up — try asking me about cricket or Bollywood.';
-  const model = c.GEMINI_MODEL || 'gemini-2.0-flash';
+  const model = c.GEMINI_MODEL || 'gemini-2.5-flash';
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + key;
   try {
     const r = await fetch(url, {
@@ -1961,7 +1961,7 @@ async function callGemini(userText) {
       body: JSON.stringify({
         contents: [{ parts: [{ text: userText }] }],
         systemInstruction: { parts: [{ text: GEMINI_SYSTEM }] },
-        generationConfig: { maxOutputTokens: 150, temperature: 0.7 }
+        generationConfig: { maxOutputTokens: 512, temperature: 0.7 }
       })
     });
     if (!r.ok) throw new Error('Gemini ' + r.status);
