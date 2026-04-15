@@ -164,6 +164,15 @@ a{text-decoration:none;color:inherit}
 .v-mic-btn:active{transform:scale(.92)}.v-mic-btn.v-mic--pulse{animation:micPulse 1.5s ease-in-out infinite}
 .v-stop-btn{width:64px;height:64px;border-radius:50%;border:none;background:#fa2f40;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(250,47,64,.3)}
 .v-stop-btn:active{transform:scale(.92)}
+/* Chat overlay (text + Anthropic API) */
+.ai-avatar{width:32px;height:32px;display:grid;grid-template-columns:1fr 1fr;gap:3px;flex-shrink:0}
+.ai-avatar div{border-radius:50%;background:#6d17ce}
+.user-bubble{max-width:270px;align-self:flex-end;background:#eeeeef;border-radius:24px 24px 0 24px;padding:12px 16px;font-family:var(--font);font-size:14px;font-weight:400;color:var(--text-high);line-height:1.45;word-break:break-word}
+.ai-row{display:flex;gap:10px;align-items:flex-start}
+.ai-bubble{flex:1;font-family:var(--font);font-size:14px;font-weight:400;color:var(--text-high);line-height:1.55;word-break:break-word}
+.ai-bubble p{margin-bottom:12px}.ai-bubble p:last-child{margin-bottom:0}
+.thinking-row{display:flex;gap:10px;align-items:center}
+.thinking-label{font-family:var(--font);font-size:14px;font-weight:400;color:var(--text-low)}
 
 @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 .anim-1{animation:fadeDown .4s ease both;animation-delay:0s}
@@ -324,29 +333,184 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<!-- CHAT OVERLAY (text experience with Anthropic API) -->
+<div id="chatOverlay" style="display:none;position:fixed;inset:0;z-index:100;background:#fff;flex-direction:column;font-family:var(--font)">
+  <div style="display:flex;align-items:center;padding:10px 12px;height:56px;flex-shrink:0;border-bottom:1px solid #e3e3e4">
+    <button type="button" onclick="closeChat()" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#170054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span style="font-size:16px;font-weight:500;color:var(--text-high);margin-left:4px">Cricket</span>
+    <span style="flex:1"></span>
+  </div>
+  <div id="chatMessages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px"></div>
+  <div style="padding:6px 12px 16px;background:linear-gradient(transparent,#fff 30%)">
+    <div style="background:#eeeeef;border-radius:24px;padding:8px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:4px">
+        <input id="chatInput" type="text" placeholder="Ask anything..." style="flex:1;padding:4px 8px;font-family:var(--font);font-size:16px;font-weight:400;color:var(--text-high);border:none;outline:none;background:none;line-height:1.3" autocomplete="off">
+        <button id="chatSendBtn" type="button" onclick="sendChat()" style="display:none;width:32px;height:32px;border-radius:50%;border:none;background:#6d17ce;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;gap:2px;align-items:center">
+          <button class="input-icon-btn" aria-label="Add"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="input-mic-btn" aria-label="Mic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 19v3m-3 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <button id="chatSpeakBtn" type="button" onclick="closeChat();openVoice();" style="background:#6d17ce;border:none;border-radius:999px;padding:8px 16px;display:flex;align-items:center;gap:6px;cursor:pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z" fill="currentColor"/></svg>
+            <span style="font-family:var(--font);font-weight:700;font-size:14px;color:#fff;line-height:1">Speak</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="jbiq-config.js"></script>
 <script>
-// BOTTOM BAR & VOICE (BOTTOM-BAR-AND-VOICE-SPEC)
-document.getElementById('homeInputText').removeAttribute('readonly');
-document.getElementById('homeSpeakBtn').addEventListener('click',function(){ openVoice(); });
-var vState='closed',isRecording=false,mediaRecorder=null,audioChunks=[];
-function openVoice(){ document.getElementById('voiceOverlay').style.display='flex'; setVoiceState('idle'); }
-function closeVoice(){ if(mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop(); isRecording=false; document.getElementById('voiceOverlay').style.display='none'; vState='closed'; }
-function setVoiceState(state){
-  vState=state;
-  var dots=document.getElementById('voiceDots'),label=document.getElementById('voiceLabel'),sub=document.getElementById('voiceSub');
-  var transcript=document.getElementById('voiceTranscript'),response=document.getElementById('voiceResponse'),micBtn=document.getElementById('vMicBtn'),stopBtn=document.getElementById('vStopBtn'),hint=document.getElementById('vAgainHint');
-  dots.className='v-dots v-dots--'+state;
-  if(state==='idle'){ label.textContent='Hey, Deepa'; sub.textContent='Tap the mic to start speaking'; sub.style.display=''; transcript.style.display='none'; transcript.textContent=''; response.style.display='none'; response.innerHTML=''; micBtn.style.display='flex'; micBtn.classList.remove('v-mic--pulse'); stopBtn.style.display='none'; hint.style.display='none'; }
-  else if(state==='listening'){ label.textContent='Listening...'; sub.textContent='Tap the red button when done'; sub.style.display=''; transcript.style.display='none'; response.style.display='none'; micBtn.style.display='none'; stopBtn.style.display='flex'; hint.style.display='none'; }
-  else if(state==='speaking'){ label.textContent=''; sub.style.display='none'; micBtn.style.display='flex'; micBtn.classList.add('v-mic--pulse'); stopBtn.style.display='none'; hint.style.display='block'; }
-}
-async function voiceTapMic(){
-  if(isRecording)return;
-  try{ var stream=await navigator.mediaDevices.getUserMedia({audio:true}); audioChunks=[]; mediaRecorder=new MediaRecorder(stream,{mimeType:'audio/webm;codecs=opus'});
-    mediaRecorder.ondataavailable=function(e){if(e.data.size>0)audioChunks.push(e.data);}; mediaRecorder.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); setVoiceState('idle'); }; mediaRecorder.start(); isRecording=true; setVoiceState('listening'); }
-  catch(err){ console.error('Mic error:',err); document.getElementById('voiceLabel').textContent='Mic access denied'; document.getElementById('voiceSub').textContent='Please allow microphone and try again'; document.getElementById('voiceSub').style.display=''; document.getElementById('vMicBtn').style.display='flex'; }
-}
-function voiceTapStop(){ if(isRecording&&mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop(); isRecording=false; setVoiceState('idle'); }
+(function(){
+  'use strict';
+  // CHAT_PROXY now loaded from jbiq-config.js
+  var CRICKET_SYSTEM = 'You are the JioBharatIQ Cricket assistant. Help with live scores, match schedule, IPL, cricket trivia, and playing tips. Answer briefly and helpfully.';
+  var chatHistory = [];
+  var vState = 'closed', isRecording = false, mediaRecorder = null, audioChunks = [];
+
+  document.getElementById('homeInputText').removeAttribute('readonly');
+  document.getElementById('homeInputText').addEventListener('click', openChat);
+  document.getElementById('homeInputText').addEventListener('focus', function(e){ e.preventDefault(); this.blur(); openChat(); });
+  document.getElementById('homeSpeakBtn').addEventListener('click', openVoice);
+
+  function openChat(){
+    document.getElementById('chatOverlay').style.display = 'flex';
+    setTimeout(function(){ document.getElementById('chatInput').focus(); }, 100);
+  }
+  function closeChat(){
+    document.getElementById('chatOverlay').style.display = 'none';
+  }
+
+  document.getElementById('chatInput').addEventListener('input', function(){
+    var v = this.value.trim();
+    document.getElementById('chatSendBtn').style.display = v ? 'flex' : 'none';
+    document.getElementById('chatSpeakBtn').style.display = v ? 'none' : 'flex';
+  });
+  document.getElementById('chatInput').addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && this.value.trim()) sendChat();
+  });
+
+  function addUserBubble(text){
+    var c = document.getElementById('chatMessages');
+    var d = document.createElement('div');
+    d.className = 'user-bubble';
+    d.textContent = text;
+    c.appendChild(d);
+    scrollChat();
+  }
+  function addThinking(){
+    var c = document.getElementById('chatMessages');
+    var d = document.createElement('div');
+    d.className = 'thinking-row';
+    d.innerHTML = '<div class="ai-avatar"><div></div><div></div><div></div><div></div></div><span class="thinking-label">Thinking...</span>';
+    c.appendChild(d);
+    scrollChat();
+    return d;
+  }
+  function formatMarkdown(text){
+    var html = (text||'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>');
+    var lines = html.split('\n');
+    var out = '', inList = false;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (/^[-•*]\s/.test(line)) {
+        if (!inList) { out += '<ul>'; inList = true; }
+        out += '<li>' + line.replace(/^[-•*]\s/,'') + '</li>';
+      } else {
+        if (inList) { out += '</ul>'; inList = false; }
+        if (line) out += '<p>' + line + '</p>';
+      }
+    }
+    if (inList) out += '</ul>';
+    return out || ('<p>' + text + '</p>');
+  }
+  function addAIBubble(text){
+    var c = document.getElementById('chatMessages');
+    var row = document.createElement('div');
+    row.className = 'ai-row';
+    row.innerHTML = '<div class="ai-avatar"><div></div><div></div><div></div><div></div></div><div class="ai-bubble">' + formatMarkdown(text) + '</div>';
+    c.appendChild(row);
+    scrollChat();
+  }
+  function scrollChat(){
+    var c = document.getElementById('chatMessages');
+    setTimeout(function(){ c.scrollTop = c.scrollHeight; }, 50);
+  }
+
+  function callAnthropic(messages){
+    return fetch(CHAT_PROXY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: messages }) })
+      .then(function(resp){ return resp.json().then(function(data){ if (!resp.ok) throw new Error(data.error && data.error.message || data.message || 'Chat error ' + resp.status); return data; }); })
+      .then(function(data){
+        if (!data.content || !Array.isArray(data.content) || !data.content[0]) throw new Error('Invalid response');
+        return data.content[0].text || '';
+      });
+  }
+
+  async function sendChat(){
+    var inp = document.getElementById('chatInput');
+    var msg = inp.value.trim();
+    if (!msg) return;
+    inp.value = '';
+    document.getElementById('chatSendBtn').style.display = 'none';
+    document.getElementById('chatSpeakBtn').style.display = 'flex';
+
+    addUserBubble(msg);
+    var thinkEl = addThinking();
+    if (chatHistory.length === 0) chatHistory.push({ role: 'user', content: CRICKET_SYSTEM });
+    chatHistory.push({ role: 'user', content: msg });
+
+    try {
+      var resp = await callAnthropic(chatHistory);
+      thinkEl.remove();
+      addAIBubble(resp);
+      chatHistory.push({ role: 'assistant', content: resp });
+    } catch (err) {
+      thinkEl.remove();
+      addAIBubble('Error: ' + (err.message || 'Something went wrong. Please try again.'));
+      chatHistory.pop();
+    }
+  }
+
+  function openVoice(){ document.getElementById('voiceOverlay').style.display = 'flex'; setVoiceState('idle'); }
+  function closeVoice(){ if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop(); isRecording = false; document.getElementById('voiceOverlay').style.display = 'none'; vState = 'closed'; }
+  function setVoiceState(state){
+    vState = state;
+    var dots = document.getElementById('voiceDots'), label = document.getElementById('voiceLabel'), sub = document.getElementById('voiceSub');
+    var transcript = document.getElementById('voiceTranscript'), response = document.getElementById('voiceResponse'), micBtn = document.getElementById('vMicBtn'), stopBtn = document.getElementById('vStopBtn'), hint = document.getElementById('vAgainHint');
+    dots.className = 'v-dots v-dots--' + state;
+    if (state === 'idle') { label.textContent = 'Hey, Deepa'; sub.textContent = 'Tap the mic to start speaking'; sub.style.display = ''; transcript.style.display = 'none'; transcript.textContent = ''; response.style.display = 'none'; response.innerHTML = ''; micBtn.style.display = 'flex'; micBtn.classList.remove('v-mic--pulse'); stopBtn.style.display = 'none'; hint.style.display = 'none'; }
+    else if (state === 'listening') { label.textContent = 'Listening...'; sub.textContent = 'Tap the red button when done'; sub.style.display = ''; transcript.style.display = 'none'; response.style.display = 'none'; micBtn.style.display = 'none'; stopBtn.style.display = 'flex'; hint.style.display = 'none'; }
+    else if (state === 'speaking') { label.textContent = ''; sub.style.display = 'none'; micBtn.style.display = 'flex'; micBtn.classList.add('v-mic--pulse'); stopBtn.style.display = 'none'; hint.style.display = 'block'; }
+  }
+  async function voiceTapMic(){
+    if (isRecording) return;
+    try {
+      var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+      mediaRecorder.ondataavailable = function(e){ if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = function(){ stream.getTracks().forEach(function(t){ t.stop(); }); setVoiceState('idle'); };
+      mediaRecorder.start();
+      isRecording = true;
+      setVoiceState('listening');
+    } catch (err) {
+      console.error('Mic error:', err);
+      document.getElementById('voiceLabel').textContent = 'Mic access denied';
+      document.getElementById('voiceSub').textContent = 'Please allow microphone and try again';
+      document.getElementById('voiceSub').style.display = '';
+      document.getElementById('vMicBtn').style.display = 'flex';
+    }
+  }
+  function voiceTapStop(){ if (isRecording && mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop(); isRecording = false; setVoiceState('idle'); }
+})();
 </script>
 
 </body>

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Devotion AI — Jio Omni AI</title>
+  <style>
+    @font-face { font-family: 'JioType'; font-weight: 400; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'JioType'; font-weight: 500; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+    @font-face { font-family: 'JioType'; font-weight: 700; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+    @font-face { font-family: 'JioType'; font-weight: 900; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+    :root {
+      --surface: #ffffff;
+      --surface-ghost: #eeeeef;
+      --surface-ghost-icon: #e7e9ff;
+      --surface-bold: #3900ad;
+      --surface-minimal: #f5f5f6;
+      --surface-moderate: #e3e3e4;
+      --text-high: #0c0d10;
+      --text-medium: #191b1e;
+      --text-low: rgba(25,27,30,0.65);
+      --text-on-bold: #ffffff;
+      --icon-medium: #170054;
+      --stroke-minimal: rgba(36,38,43,0.13);
+      --stroke-subtle: rgba(36,38,43,0.12);
+      --primary-50: #3535f3;
+      --primary-20: #e8e8fc;
+      --secondary-50: #f7ab20;
+      --sparkle-50: #1eccb0;
+      --sparkle-20: #e8faf7;
+      --grey-100: #141414;
+      --grey-40: #e0e0e0;
+      --grey-20: #f5f5f5;
+      --success: #25ab21;
+      --shape-pill: 999px;
+      --shape-4xl: 23px;
+      --shape-large: 16px;
+      --spacing-2xs: 6px;
+      --spacing-m: 12px;
+      --spacing-s: 8px;
+      --font: 'JioType', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-high);
+    }
+
+    .phone-frame {
+      width: 360px;
+      height: 800px;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: 32px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.15);
+    }
+
+    @media (max-width: 768px) {
+      body { background: #fff; padding: 0; align-items: stretch; }
+      .phone-frame { width: 100%; height: 100vh; height: 100dvh; border-radius: 0; box-shadow: none; max-width: 100%; }
+    }
+
+    /* Status bar — reference */
+    .status-bar {
+      height: 52px;
+      padding: 14px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      background: var(--surface);
+    }
+    .status-bar .time { font-size: 15px; font-weight: 600; color: var(--text-high); }
+    .status-bar .icons { display: flex; gap: 6px; align-items: center; }
+    .status-bar .icons svg { width: 16px; height: 16px; fill: var(--text-high); }
+
+    /* Header — reference (Live Cricket / AI-Powered Audio) */
+    .header-nav {
+      height: 56px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--surface-moderate);
+      background: var(--surface);
+    }
+    .header-left { display: flex; align-items: center; gap: 8px; }
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+    .back-btn:active { background: var(--grey-20); }
+    .back-btn svg { width: 24px; height: 24px; fill: var(--icon-medium); }
+    .header-title-area { flex: 1; }
+    .header-title { font-size: 16px; font-weight: 500; color: var(--text-high); line-height: 1; }
+    .header-domain { font-size: 12px; color: var(--text-low); line-height: 1.3; }
+    .icon-btn-ghost {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+    .icon-btn-ghost:active { background: var(--grey-20); }
+    .icon-btn-ghost svg { width: 20px; height: 20px; fill: var(--icon-medium); }
+
+    /* Chat area */
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: var(--spacing-m);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-s);
+      scroll-behavior: smooth;
+      min-width: 0;
+    }
+    .chat-area::-webkit-scrollbar { width: 2px; }
+    .chat-area::-webkit-scrollbar-thumb { background: var(--grey-40); border-radius: 2px; }
+
+    .msg-row { display: flex; width: 100%; min-width: 0; animation: msgIn 0.3s ease-out; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.ai { justify-content: flex-start; }
+    .msg-bubble {
+      max-width: 270px;
+      padding: 12px 16px;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--text-high);
+      font-weight: 400;
+    }
+    .msg-row.user .msg-bubble {
+      background: var(--surface-ghost);
+      border-radius: 20px 20px 4px 20px;
+      font-weight: 500;
+    }
+    .msg-row.ai .msg-bubble { background: transparent; padding: 0; max-width: 100%; }
+
+    .ai-msg-wrap { display: flex; align-items: flex-start; gap: 8px; }
+    .ai-avatar {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .ai-avatar div { width: 100%; height: 100%; border-radius: 50%; }
+    .ai-avatar .d1 { background: #3535f3; }
+    .ai-avatar .d2 { background: #f7ab20; }
+    .ai-avatar .d3 { background: #6464ff; }
+    .ai-avatar .d4 { background: #1eccb0; }
+
+    .feedback-row { display: flex; gap: 2px; margin-top: 8px; }
+    .fb-btn {
+      width: 29px;
+      height: 29px;
+      border-radius: var(--shape-pill);
+      background: var(--surface);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fb-btn:active { background: var(--grey-20); }
+    .fb-btn svg { width: 16px; height: 16px; fill: var(--text-low); }
+
+    .suggestion-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 16px;
+      border-radius: var(--shape-pill);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid var(--primary-50);
+      color: var(--primary-50);
+      background: var(--surface);
+      margin: 0 6px 8px 0;
+    }
+    .suggestion-chip:hover { background: var(--primary-20); }
+    .suggestion-chip:active { background: var(--primary-50); color: #fff; }
+
+    .chip-row { display: flex; flex-wrap: wrap; margin: 4px 0 12px 36px; }
+
+    /* Widget card in chat */
+    .widget-card {
+      border: 1px solid var(--stroke-minimal);
+      border-radius: var(--shape-4xl);
+      padding: 16px;
+      margin: 8px 0 16px;
+      margin-left: 36px;
+      margin-right: 0;
+      background: var(--surface);
+      cursor: pointer;
+    }
+    .widget-card.success-widget {
+      background: linear-gradient(135deg, var(--sparkle-20) 0%, #fff 60%);
+      border-color: rgba(30,204,176,0.25);
+    }
+
+    /* Input — reference */
+    .input-container {
+      flex-shrink: 0;
+      padding: 2px 12px 8px;
+      background: var(--surface);
+    }
+    .input-field-wrap {
+      background: var(--surface-ghost);
+      border-radius: var(--shape-4xl);
+      padding: var(--spacing-2xs);
+      display: flex;
+      flex-direction: column;
+    }
+    .input-text-area { padding: 10px 8px; display: flex; align-items: center; }
+    .input-text-area input {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-high);
+      background: transparent;
+      border: none;
+      outline: none;
+      width: 100%;
+      line-height: 1.3;
+    }
+    .input-text-area input::placeholder { color: var(--text-low); }
+    .input-actions { display: flex; justify-content: space-between; align-items: center; height: 43px; }
+    .input-left-actions { display: flex; gap: 2px; }
+    .input-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--shape-pill);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-ghost-icon);
+      border: none;
+      cursor: pointer;
+    }
+    .input-icon-btn:active { opacity: 0.7; }
+    .input-icon-btn svg { width: 20px; height: 20px; fill: var(--icon-medium); }
+    .speak-btn {
+      background: var(--surface-bold);
+      border: none;
+      border-radius: var(--shape-pill);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .speak-btn:active { opacity: 0.85; }
+    .speak-btn svg { width: 18px; height: 18px; fill: var(--text-on-bold); }
+    .speak-btn span { font-family: var(--font); font-weight: 700; font-size: 14px; color: var(--text-on-bold); }
+    .send-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--shape-pill);
+      background: var(--primary-50);
+      border: none;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .send-btn.visible { display: flex; }
+    .send-btn svg { width: 18px; height: 18px; fill: #fff; }
+    .send-btn:active { opacity: 0.8; }
+
+    .screen { display: none; flex-direction: column; height: 100%; }
+    .screen.active { display: flex; }
+
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--grey-100);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 200;
+      animation: msgIn 0.3s ease-out;
+    }
+    .toast.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="phone-frame" id="app">
+  <div class="status-bar">
+    <div class="time">9:41</div>
+    <div class="icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-4 16h-2v-2h2v2zm0-4h-2V9h2v7z"/></svg>
+    </div>
+  </div>
+  <div class="header-nav">
+    <div class="header-left">
+      <button type="button" class="back-btn" id="headerBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      <div class="header-title-area">
+        <div class="header-title">Devotion AI</div>
+        <div class="header-domain">Entertainment</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn-ghost" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg></button>
+    </div>
+  </div>
+
+  <!-- CHAT (default entry) -->
+  <div class="screen active" id="screen-chat">
+    <div class="chat-area" id="chatArea"></div>
+    <div class="input-container">
+      <div class="input-field-wrap">
+        <div class="input-text-area">
+          <input type="text" id="chatInput" placeholder="Ask anything..." oninput="handleInput()" onkeydown="if(event.key==='Enter')sendUserMsg(); event.preventDefault();">
+        </div>
+        <div class="input-actions">
+          <div class="input-left-actions">
+            <button class="input-icon-btn" aria-label="Add"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            <button class="input-icon-btn" aria-label="Mic"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></button>
+          </div>
+          <button class="speak-btn" id="speakBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8.5v7a4.47 4.47 0 002.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            <span>Speak</span>
+          </button>
+          <button class="send-btn" id="sendBtn" onclick="sendUserMsg()">
+            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-el" class="toast hidden"></div>
+
+<!-- Voice overlay (reference: cricket/bollywood) -->
+<div id="voiceOverlay" style="display:none;position:fixed;inset:0;z-index:100;background:#fff;flex-direction:column;font-family:var(--font)">
+  <div style="display:flex;align-items:center;padding:10px 12px;height:56px;flex-shrink:0">
+    <button type="button" onclick="document.getElementById('voiceOverlay').style.display='none'" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#170054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span style="font-size:16px;font-weight:500;color:var(--text-high);margin-left:4px">Voice</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px">
+    <div class="v-dots v-dots--idle" style="width:148px;height:148px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="width:100%;height:100%;border-radius:50%;background:var(--primary-50);animation:dotBreath 1.5s ease-in-out infinite"></div>
+      <div style="width:100%;height:100%;border-radius:50%;background:var(--primary-50);animation:dotBreath 1.5s ease-in-out infinite;animation-delay:0.2s"></div>
+      <div style="width:100%;height:100%;border-radius:50%;background:var(--primary-50);animation:dotBreath 1.5s ease-in-out infinite;animation-delay:0.4s"></div>
+      <div style="width:100%;height:100%;border-radius:50%;background:var(--primary-50);animation:dotBreath 1.5s ease-in-out infinite;animation-delay:0.6s"></div>
+    </div>
+    <div style="margin-top:28px;font-size:20px;font-weight:700;color:var(--text-high);text-align:center">Hey, Deepa</div>
+    <div style="margin-top:8px;font-size:15px;font-weight:400;color:var(--text-low);text-align:center">Tap the mic to start speaking</div>
+  </div>
+  <div style="padding:12px 24px 28px;display:flex;flex-direction:column;align-items:center">
+    <button type="button" style="width:64px;height:64px;border-radius:50%;background:var(--surface-bold);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="document.getElementById('voiceOverlay').style.display='none';document.getElementById('toast-el').textContent='Voice — tap mic to speak';document.getElementById('toast-el').classList.remove('hidden');setTimeout(function(){document.getElementById('toast-el').classList.add('hidden');},2500)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3z" fill="#fff"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</div>
+<style>@keyframes dotBreath{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(.92);opacity:.4}}</style>
+
+<script>
+(function() {
+  const chatArea = document.getElementById('chatArea');
+  const chatInput = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const speakBtn = document.getElementById('speakBtn');
+
+  let onboardingStep = 0;
+  const onboardingAnswers = { faith: '', region: '', deity: '', duration: '', voice: '' };
+  const ONBOARDING_STEPS = ['faith', 'region', 'deity', 'duration', 'voice'];
+
+  function scrollChat() {
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function addMessage(role, content, options) {
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + role;
+    if (role === 'ai') {
+      row.innerHTML = '<div class="ai-msg-wrap"><div class="ai-avatar"><div class="d1"></div><div class="d2"></div><div class="d3"></div><div class="d4"></div></div><div class="msg-bubble">' + content + '</div></div>';
+    } else {
+      row.innerHTML = '<div class="msg-bubble">' + content + '</div>';
+    }
+    chatArea.appendChild(row);
+    scrollChat();
+    return row;
+  }
+
+  function addChips(chips, marginLeft) {
+    const row = document.createElement('div');
+    row.className = 'chip-row';
+    if (marginLeft !== undefined) row.style.marginLeft = marginLeft + 'px';
+    chips.forEach(function(c) {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'suggestion-chip';
+      chip.textContent = c.label;
+      chip.onclick = function() { c.onClick(); };
+      row.appendChild(chip);
+    });
+    chatArea.appendChild(row);
+    scrollChat();
+  }
+
+  function addWidget(html) {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = html;
+    chatArea.appendChild(wrap.firstElementChild);
+    scrollChat();
+  }
+
+  function addThinking() {
+    const row = document.createElement('div');
+    row.className = 'msg-row ai';
+    row.id = 'thinking-row';
+    row.innerHTML = '<div class="ai-msg-wrap"><div class="ai-avatar"><div class="d1"></div><div class="d2"></div><div class="d3"></div><div class="d4"></div></div><div class="msg-bubble" style="color:var(--text-low)">Thinking...</div></div>';
+    chatArea.appendChild(row);
+    scrollChat();
+    return row;
+  }
+
+  function removeThinking() {
+    const el = document.getElementById('thinking-row');
+    if (el) el.remove();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast-el');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    setTimeout(function() { t.classList.add('hidden'); }, 3000);
+  }
+
+  function sendUserMsg() {
+    const text = (chatInput && chatInput.value) ? chatInput.value.trim() : '';
+    if (!text) return;
+    chatInput.value = '';
+    sendBtn.classList.remove('visible');
+    speakBtn.style.display = 'flex';
+    addMessage('user', text);
+    if (onboardingStep <= ONBOARDING_STEPS.length) {
+      handleOnboardingReply(text);
+    } else {
+      handleNormalReply(text);
+    }
+  }
+
+  function handleOnboardingReply(text) {
+    const step = ONBOARDING_STEPS[onboardingStep];
+    if (step === 'faith') {
+      onboardingAnswers.faith = text;
+      onboardingStep++;
+      addThinking();
+      setTimeout(function() {
+        removeThinking();
+        addMessage('ai', 'Select <strong>region &amp; language</strong> so we use the right Panchang and content language.');
+        addChips([
+          { label: 'North India · Hindi', onClick: function() { setOnboardReply('North India · Hindi'); } },
+          { label: 'South India · Tamil', onClick: function() { setOnboardReply('South India · Tamil'); } },
+          { label: 'West India · Gujarati', onClick: function() { setOnboardReply('West India · Gujarati'); } },
+          { label: 'East India · Bengali', onClick: function() { setOnboardReply('East India · Bengali'); } }
+        ]);
+      }, 800);
+    } else if (step === 'region') {
+      onboardingAnswers.region = text;
+      onboardingStep++;
+      addThinking();
+      setTimeout(function() {
+        removeThinking();
+        addMessage('ai', 'Who is your <strong>family deity</strong>? We\'ll build your ritual around them.');
+        addChips([
+          { label: 'Ganesh', onClick: function() { setOnboardReply('Ganesh'); } },
+          { label: 'Hanuman', onClick: function() { setOnboardReply('Hanuman'); } },
+          { label: 'Shiva', onClick: function() { setOnboardReply('Shiva'); } },
+          { label: 'Krishna', onClick: function() { setOnboardReply('Krishna'); } },
+          { label: 'Vishnu', onClick: function() { setOnboardReply('Vishnu'); } },
+          { label: 'Devi', onClick: function() { setOnboardReply('Devi'); } }
+        ]);
+      }, 800);
+    } else if (step === 'deity') {
+      onboardingAnswers.deity = text;
+      onboardingStep++;
+      addThinking();
+      setTimeout(function() {
+        removeThinking();
+        addMessage('ai', 'How long is your <strong>ritual</strong>? Pick a duration that fits your morning.');
+        addChips([
+          { label: 'Quick (5–8 min)', onClick: function() { setOnboardReply('Quick (5–8 min)'); } },
+          { label: 'Regular (10–18 min)', onClick: function() { setOnboardReply('Regular (10–18 min)'); } },
+          { label: 'Extended (20–30 min)', onClick: function() { setOnboardReply('Extended (20–30 min)'); } }
+        ]);
+      }, 800);
+    } else if (step === 'duration') {
+      onboardingAnswers.duration = text;
+      onboardingStep++;
+      addThinking();
+      setTimeout(function() {
+        removeThinking();
+        addMessage('ai', 'Voice &amp; audio — set the tone for your devotional audio.');
+        addChips([
+          { label: 'Male voice', onClick: function() { setOnboardReply('Male voice'); } },
+          { label: 'Female voice', onClick: function() { setOnboardReply('Female voice'); } },
+          { label: 'No preference', onClick: function() { setOnboardReply('No preference'); } }
+        ]);
+      }, 800);
+    } else if (step === 'voice') {
+      onboardingAnswers.voice = text;
+      onboardingStep = 99;
+      addThinking();
+      setTimeout(function() {
+        removeThinking();
+        addMessage('ai', 'Perfect. Your ritual is being set up.');
+        addWidget(
+          '<div class="widget-card success-widget">' +
+          '<div style="display:flex;align-items:center;gap:12px;">' +
+          '<div style="width:48px;height:48px;border-radius:50%;background:rgba(37,171,33,0.12);display:flex;align-items:center;justify-content:center;">' +
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="#25ab21"><path d="M9 19a1.002 1.002 0 01-.71-.29l-5-5a1.004 1.004 0 111.42-1.42L9 16.59l10.29-10.3a1.004 1.004 0 111.42 1.42l-11 11A1 1 0 019 19z"/></svg></div>' +
+          '<div><div style="font-size:16px;font-weight:700;color:#0e5c4f;">Daily ritual setup successfully</div>' +
+          '<div style="font-size:13px;color:var(--text-low);margin-top:2px;">15 min · 4 tracks · ' + (onboardingAnswers.deity || 'Ganesh') + ' focus</div></div></div></div>'
+        );
+        addMessage('ai', 'Your daily devotion is ready. What would you like to explore?');
+        addChips([
+          { label: 'Upcoming festivals', onClick: function() { askFestivals(); } },
+          { label: "Today's ritual", onClick: function() { askTodayRitual(); } },
+          { label: 'Navratri guide', onClick: function() { askNavratri(); } },
+          { label: 'Pooja vidhi', onClick: function() { askPoojaVidhi(); } },
+          { label: 'Samagri checklist', onClick: function() { askChecklist(); } }
+        ]);
+      }, 1000);
+    }
+  }
+
+  function setOnboardReply(text) {
+    addMessage('user', text);
+    chatArea.querySelector('.chip-row:last-of-type').remove();
+    handleOnboardingReply(text);
+  }
+
+  function askFestivals() {
+    addMessage('user', 'Upcoming festivals');
+    addThinking();
+    setTimeout(function() {
+      removeThinking();
+      addMessage('ai', 'Upcoming festivals:<br><br><strong>🎨 Holi</strong> — 13 March 2026 (9 din)<br><strong>🌺 Chaitra Navratri</strong> — 30 March (26 din)<br><strong>🕉️ Ram Navami</strong> — 6 April (33 din)<br><strong>🌕 Ekadashi</strong> — 10 March (6 din)<br><br>Kisi bhi festival ki tayari ya vidhi poochhein.');
+      addChips([
+        { label: 'Holi puja vidhi', onClick: function() { addMessage('user', 'Holi puja vidhi'); showToast('Opening Holi guide'); } },
+        { label: 'Navratri tayari', onClick: function() { askNavratri(); } }
+      ]);
+    }, 900);
+  }
+
+  function askTodayRitual() {
+    addMessage('user', "Today's ritual");
+    addThinking();
+    setTimeout(function() {
+      removeThinking();
+      addMessage('ai', '<strong>Morning Ritual · 15 min</strong><br>Ganesh Vandana → Shri Ganesh Stuti → Hanuman Chalisa → Ganesh Aarti.<br><br>Tap below to start listening.');
+      addWidget(
+        '<div class="widget-card" data-toast="Sacred Mode would open here">' +
+        '<div style="font-size:14px;font-weight:700;">Ganesh Aarti · 4 tracks</div>' +
+        '<div style="font-size:12px;color:var(--text-low);margin-top:4px;">Shukla Panchami · Tap to begin</div></div>'
+      );
+    }, 900);
+  }
+
+  function askNavratri() {
+    addMessage('user', 'Navratri guide');
+    addThinking();
+    setTimeout(function() {
+      removeThinking();
+      addMessage('ai', '<strong>Navratri Day 5 · Skandamata</strong><br><br>Colour: Grey. Bhog: Banana. Mantra: ॐ ऐं ह्रीं क्लीं स्कन्दमातायै नमः<br><br>Pooja vidhi, vrat rules, ya garba events poochhein.');
+      addChips([
+        { label: 'Skandamata pooja vidhi', onClick: function() { askPoojaVidhi(); } },
+        { label: 'Vrat rules aaj', onClick: function() { addMessage('user', 'Vrat rules'); addMessage('ai', 'Aaj sabudana, kuttu, fruits, milk allowed. No grains, no onion/garlic.'); } }
+      ]);
+    }, 900);
+  }
+
+  function askPoojaVidhi() {
+    addMessage('user', 'Pooja vidhi');
+    addThinking();
+    setTimeout(function() {
+      removeThinking();
+      addMessage('ai', '<strong>Skandamata Pooja Vidhi</strong><br>1. Snaan, grey kapde<br>2. Kalash check<br>3. Diya jalaayein<br>4. Banana bhog<br>5. Mantra 108 baar<br>6. Aarti, prasad.');
+      addChips([{ label: 'Samagri checklist', onClick: function() { askChecklist(); } }]);
+    }, 900);
+  }
+
+  function askChecklist() {
+    addMessage('user', 'Samagri checklist');
+    addThinking();
+    setTimeout(function() {
+      removeThinking();
+      addMessage('ai', 'Skandamata pooja samagri: Ghee diya, camphor, phool, banana, sindoor, akshat, agarbatti, grey cloth, Devi photo.');
+      addChips([{ label: 'JioMart order', onClick: function() { showToast('Opening JioMart'); } }]);
+    }, 900);
+  }
+
+  function handleNormalReply(text) {
+    addThinking();
+    setTimeout(function() {
+      removeThinking();
+      var resp = getAIResponse(text);
+      addMessage('ai', resp);
+      addChips([
+        { label: 'Navratri tayari', onClick: function() { askNavratri(); } },
+        { label: 'Pooja vidhi', onClick: function() { askPoojaVidhi(); } },
+        { label: 'Samagri checklist', onClick: function() { askChecklist(); } }
+      ]);
+    }, 1000);
+  }
+
+  function getAIResponse(text) {
+    var t = text.toLowerCase();
+    if (t.indexOf('tayyari') >= 0 || t.indexOf('planner') >= 0) return 'Navratri ki tayari: Ghatasthapana, samagri, vrat plan, 9 rang ke kapde, daily pooja time fix. Kisi step par detail chahiye?';
+    if (t.indexOf('pooja') >= 0 || t.indexOf('vidhi') >= 0) return 'Skandamata Pooja: Snaan → grey kapde → diya → banana bhog → mantra 108 → aarti → prasad. Step-by-step chahiye?';
+    if (t.indexOf('vrat') >= 0 || t.indexOf('kha') >= 0) return 'Aaj allowed: Sabudana, kuttu, fruits, milk. Not allowed: grains, onion, garlic.';
+    if (t.indexOf('festival') >= 0) return 'Holi 13 March, Navratri 30 March, Ram Navami 6 April. Kis festival ki tayari karni hai?';
+    return 'Main aapki devotion companion hoon. Pooja vidhi, vrat, festivals, samagri — kuch bhi poochhein.';
+  }
+
+  function handleInput() {
+    if (!chatInput || !sendBtn || !speakBtn) return;
+    if (chatInput.value.trim()) {
+      sendBtn.classList.add('visible');
+      speakBtn.style.display = 'none';
+    } else {
+      sendBtn.classList.remove('visible');
+      speakBtn.style.display = 'flex';
+    }
+  }
+
+  document.getElementById('speakBtn').addEventListener('click', function() {
+    var v = document.getElementById('voiceOverlay');
+    if (v) { v.style.display = 'flex'; }
+  });
+
+  chatArea.addEventListener('click', function(e) {
+    var card = e.target.closest('.widget-card[data-toast]');
+    if (card && card.dataset.toast) showToast(card.dataset.toast);
+  });
+
+  document.getElementById('headerBack').addEventListener('click', function() {
+    showToast('Back to AI Assistant home');
+  });
+
+  // Initial state: welcome + Get started
+  addMessage('ai', 'Namaskar! I\'m your devotion companion. Set up your daily ritual in a few quick questions, or ask me anything about festivals, pooja, and vrat.');
+  addChips([
+    {
+      label: 'Get started',
+      onClick: function() {
+        addMessage('user', 'Get started');
+        chatArea.querySelector('.chip-row').remove();
+        addThinking();
+        setTimeout(function() {
+          removeThinking();
+          addMessage('ai', 'We\'ll curate your daily devotional ritual. <strong>Which faith do you follow?</strong>');
+          addChips([
+            { label: 'Hindu', onClick: function() { setOnboardReply('Hindu'); } },
+            { label: 'Muslim', onClick: function() { setOnboardReply('Muslim'); } },
+            { label: 'Sikh', onClick: function() { setOnboardReply('Sikh'); } },
+            { label: 'Jain', onClick: function() { setOnboardReply('Jain'); } },
+            { label: 'Christian', onClick: function() { setOnboardReply('Christian'); } }
+          ]);
+        }, 800);
+      }
+    },
+    { label: 'Aaj ki puja vidhi', onClick: function() { addMessage('user', 'Aaj ki puja vidhi'); askPoojaVidhi(); } },
+    { label: 'Navratri ki tayari', onClick: function() { addMessage('user', 'Navratri ki tayari'); askNavratri(); } },
+    { label: 'Upcoming festivals', onClick: function() { addMessage('user', 'Upcoming festivals'); askFestivals(); } }
+  ]);
+
+  window.sendUserMsg = sendUserMsg;
+  window.handleInput = handleInput;
+})();
+</script>
+</body>
+</html>
