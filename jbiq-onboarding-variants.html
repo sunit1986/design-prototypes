@@ -181,18 +181,17 @@
     .vp-slide:not(.is-active) .vp-icon-card svg { animation:none; opacity:0.7; transform:scale(0.85); transition:all 0.4s var(--vp-decel); }
     .vp-slide:not(.is-active) .vp-icon-card .vp-waves { display:none; }
 
-    /* Rocket: blast off fast → fade out at top → reappear at bottom */
+    /* Rocket: hover with energy — slight lift, tilt, engine glow feel */
     .vp-slide.is-active .vp-icon-card.c1 svg {
-      opacity:1; animation:vpBlastOff 2.2s cubic-bezier(0.4,0,0.2,1) infinite;
+      opacity:1; animation:vpRocketHover 2.5s cubic-bezier(0.25,0.1,0.25,1) infinite;
     }
-    @keyframes vpBlastOff {
-      0%   { transform:translateY(20px) scale(0.8) rotate(0deg); opacity:0; }
-      12%  { transform:translateY(10px) scale(1) rotate(-5deg); opacity:1; }
-      25%  { transform:translateY(-5px) scale(1.05) rotate(-8deg); opacity:1; }
-      50%  { transform:translateY(-50px) scale(0.7) rotate(-12deg); opacity:0; }
-      51%  { transform:translateY(30px) scale(0.6) rotate(0deg); opacity:0; }
-      70%  { transform:translateY(20px) scale(0.8) rotate(0deg); opacity:0; }
-      100% { transform:translateY(20px) scale(0.8) rotate(0deg); opacity:0; }
+    @keyframes vpRocketHover {
+      0%   { transform:translateY(0) rotate(0deg) scale(1); }
+      20%  { transform:translateY(-10px) rotate(-6deg) scale(1.06); }
+      40%  { transform:translateY(-6px) rotate(-3deg) scale(1.02); }
+      60%  { transform:translateY(-12px) rotate(-8deg) scale(1.08); }
+      80%  { transform:translateY(-4px) rotate(-2deg) scale(1.01); }
+      100% { transform:translateY(0) rotate(0deg) scale(1); }
     }
 
     /* Brain: synapses firing — pulses with brightness flashes */
@@ -310,8 +309,8 @@
     .vp-cta {
       width:100%; max-width:300px; height:52px; border-radius:999px; border:none;
       font-family:inherit; font-size:17px; font-weight:700; cursor:pointer;
-      background:var(--g1); color:#fff;
-      box-shadow:0 8px 28px rgba(20,20,20,0.18);
+      background:var(--p); color:#fff;
+      box-shadow:0 8px 28px rgba(53,53,243,0.3);
       transition:transform 0.2s var(--vp-spring);
     }
     .vp-cta:active { transform:scale(0.96); }
