@@ -120,8 +120,9 @@
     }
 
     /* ══════════════════════════════════
-       VALUE PROP — Premium light-theme carousel
-       Motion: Apple spring + M3 emphasized-decelerate + staggered fade-up
+       VALUE PROP — Auto-play carousel with cross-fade
+       Motion: Apple spring + M3 emphasized-decelerate
+       Easings from Sunit's Motion MCP reference
     ══════════════════════════════════ */
     #valueProp {
       background:#fff;
@@ -129,117 +130,97 @@
       --vp-decel: cubic-bezier(0.05, 0.7, 0.1, 1);
       --vp-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
     }
-    /* Subtle radial glow behind card area */
-    #valueProp::after {
-      content:''; position:absolute; top:25%; left:50%; transform:translateX(-50%);
-      width:320px; height:320px; border-radius:50%; pointer-events:none;
-      background:radial-gradient(circle, rgba(53,53,243,0.06) 0%, rgba(109,23,206,0.03) 40%, transparent 70%);
-      z-index:0;
-    }
     #valueProp .vp-skip {
       position:absolute; top:58px; right:20px; z-index:5;
       border:none; background:none; font-family:inherit;
       font-size:14px; font-weight:600; color:var(--g4);
       cursor:pointer; padding:8px 4px;
-      transition:color 0.2s var(--vp-smooth);
     }
-    #valueProp .vp-skip:active { color:var(--g1); }
-    .vp-layout {
-      flex:1; min-height:0; display:flex; flex-direction:column; position:relative; z-index:1;
+    .vp-container {
+      flex:1; display:flex; flex-direction:column; align-items:center;
+      justify-content:center; position:relative; padding:0 32px;
     }
-    .vp-scroller {
-      flex:1; min-height:0;
-      display:flex; flex-direction:row;
-      overflow-x:auto; overflow-y:hidden;
-      scroll-snap-type:x mandatory;
-      scroll-behavior:smooth;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:none;
-      overscroll-behavior-x:contain;
-    }
-    .vp-scroller::-webkit-scrollbar { display:none; }
+    /* Cross-fade slides (stacked, not scrolled) */
+    .vp-slides { position:relative; width:100%; height:440px; }
     .vp-slide {
-      flex:0 0 100%; width:100%; min-width:100%;
-      scroll-snap-align:start; scroll-snap-stop:always;
-      display:flex; flex-direction:column; align-items:center;
-      padding:0 28px 12px;
-      box-sizing:border-box;
+      position:absolute; inset:0;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      opacity:0; transform:scale(0.92) translateY(20px);
+      transition:opacity 0.6s var(--vp-decel), transform 0.6s var(--vp-spring);
+      pointer-events:none;
     }
-    .vp-hero {
-      flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-      width:100%; max-width:340px;
+    .vp-slide.is-active {
+      opacity:1; transform:scale(1) translateY(0); pointer-events:all;
     }
-    /* Icon card — frosted glass with colored accent */
-    .vp-vid-card {
-      width:180px; height:180px; border-radius:40px;
+    /* Icon card */
+    .vp-icon-card {
+      width:160px; height:160px; border-radius:36px;
       display:flex; align-items:center; justify-content:center;
-      margin-bottom:28px; position:relative;
-      transition:transform 0.5s var(--vp-spring), box-shadow 0.5s var(--vp-decel), opacity 0.4s;
+      margin-bottom:32px; position:relative;
     }
-    .vp-slide.is-active .vp-vid-card { transform:scale(1); opacity:1; }
-    .vp-slide:not(.is-active) .vp-vid-card { transform:scale(0.88); opacity:0.5; }
-    .vp-vid-card.c1 {
-      background:linear-gradient(145deg, #f0edff 0%, #e8e4ff 100%);
-      box-shadow:0 16px 48px rgba(53,53,243,0.16), 0 4px 12px rgba(53,53,243,0.08);
+    .vp-icon-card svg { width:64px; height:64px; }
+    .vp-icon-card.c1 {
+      background:linear-gradient(145deg, #f0edff, #e0dbff);
+      box-shadow:0 20px 60px rgba(53,53,243,0.18), 0 4px 16px rgba(53,53,243,0.08);
     }
-    .vp-vid-card.c2 {
-      background:linear-gradient(145deg, #e8faf7 0%, #d4f5ef 100%);
-      box-shadow:0 16px 48px rgba(30,204,176,0.16), 0 4px 12px rgba(30,204,176,0.08);
+    .vp-icon-card.c1 svg { fill:#3535f3; }
+    .vp-icon-card.c2 {
+      background:linear-gradient(145deg, #e8faf7, #d0f2ec);
+      box-shadow:0 20px 60px rgba(30,204,176,0.18), 0 4px 16px rgba(30,204,176,0.08);
     }
-    .vp-vid-card.c3 {
-      background:linear-gradient(145deg, #f3ecff 0%, #ece2ff 100%);
-      box-shadow:0 16px 48px rgba(109,23,206,0.16), 0 4px 12px rgba(109,23,206,0.08);
+    .vp-icon-card.c2 svg { fill:#1e7b74; }
+    .vp-icon-card.c3 {
+      background:linear-gradient(145deg, #f3ecff, #e6d9ff);
+      box-shadow:0 20px 60px rgba(109,23,206,0.18), 0 4px 16px rgba(109,23,206,0.08);
     }
-    .vp-vid-card video {
-      width:148px; height:148px; object-fit:contain; border-radius:28px;
+    .vp-icon-card.c3 svg { fill:#6D17CE; }
+    /* Floating ring around card */
+    .vp-icon-card::after {
+      content:''; position:absolute; inset:-8px; border-radius:44px;
+      border:1.5px solid rgba(53,53,243,0.08);
+      animation:vpRingPulse 3s ease-in-out infinite;
     }
-    /* Staggered fade-up text — Motion: m3-emphasized-decelerate + 3-step stagger */
-    .vp-ttl, .vp-body, .vp-hint { font-family:inherit; opacity:0; transform:translateY(20px); }
-    .vp-slide.is-active .vp-ttl {
-      font-size:26px; font-weight:900; letter-spacing:-0.035em; color:var(--g1);
-      text-align:center; line-height:1.15; margin-bottom:12px; max-width:280px;
-      animation:vpSlideUp 0.5s var(--vp-decel) 0.08s forwards;
+    .vp-icon-card.c2::after { border-color:rgba(30,204,176,0.1); }
+    .vp-icon-card.c3::after { border-color:rgba(109,23,206,0.1); }
+    @keyframes vpRingPulse { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.06);opacity:1} }
+    /* Text */
+    .vp-ttl {
+      font-size:28px; font-weight:900; letter-spacing:-0.04em; color:var(--g1);
+      text-align:center; line-height:1.12; margin-bottom:12px;
     }
-    .vp-slide.is-active .vp-body {
+    .vp-body {
       font-size:15px; font-weight:400; color:var(--g6); text-align:center;
       line-height:1.55; max-width:280px; letter-spacing:-0.005em;
-      animation:vpSlideUp 0.5s var(--vp-decel) 0.18s forwards;
     }
-    .vp-slide.is-active .vp-hint {
-      margin-top:16px; font-size:11px; font-weight:600; letter-spacing:0.1em;
-      text-transform:uppercase; color:var(--g4);
-      animation:vpSlideUp 0.4s var(--vp-decel) 0.8s forwards;
-    }
-    @keyframes vpSlideUp { to { opacity:1; transform:translateY(0); } }
     /* Bottom controls */
     .vp-bottom {
-      flex-shrink:0; padding:8px 28px 40px;
-      display:flex; flex-direction:column; align-items:center; gap:20px;
+      flex-shrink:0; padding:0 32px 40px;
+      display:flex; flex-direction:column; align-items:center; gap:24px; width:100%;
     }
-    .vp-dots {
-      display:flex; align-items:center; justify-content:center; gap:8px;
-      min-height:12px;
+    /* Progress bar (fills over 4s per slide) */
+    .vp-progress { display:flex; gap:6px; width:100%; max-width:300px; }
+    .vp-bar {
+      flex:1; height:4px; border-radius:2px; background:rgba(20,20,20,0.08);
+      overflow:hidden; cursor:pointer;
     }
-    .vp-dot {
-      height:8px; border-radius:999px; border:none; padding:0; cursor:pointer;
-      background:rgba(20,20,20,0.1);
-      transition:width 0.4s var(--vp-spring), background 0.3s var(--vp-smooth);
+    .vp-bar-fill {
+      height:100%; border-radius:2px; background:var(--p); width:0%;
+      transition:width 0.1s linear;
     }
-    .vp-dot.on { width:28px; background:var(--p); }
-    .vp-dot:not(.on) { width:8px; }
+    .vp-bar.done .vp-bar-fill { width:100%; background:var(--p); }
+    .vp-bar.active .vp-bar-fill { transition:none; }
+    /* CTA button */
     .vp-cta {
       width:100%; max-width:300px; height:52px; border-radius:999px; border:none;
       font-family:inherit; font-size:17px; font-weight:700; cursor:pointer;
       background:var(--g1); color:#fff;
-      box-shadow:0 8px 28px rgba(20,20,20,0.2);
-      transition:transform 0.2s var(--vp-spring), box-shadow 0.2s;
+      box-shadow:0 8px 28px rgba(20,20,20,0.18);
+      transition:transform 0.2s var(--vp-spring);
     }
-    .vp-cta:active { transform:scale(0.96); box-shadow:0 4px 16px rgba(20,20,20,0.15); }
+    .vp-cta:active { transform:scale(0.96); }
     @media (prefers-reduced-motion: reduce) {
-      .vp-scroller { scroll-behavior:auto; }
-      .vp-slide.is-active .vp-ttl,
-      .vp-slide.is-active .vp-body,
-      .vp-slide.is-active .vp-hint { animation:none; opacity:1; transform:none; }
+      .vp-slide { transition:opacity 0.3s; }
+      .vp-slide.is-active { transform:none; }
       .vp-slide:not(.is-active) .vp-ttl,
       .vp-slide:not(.is-active) .vp-body,
       .vp-slide:not(.is-active) .vp-hint { opacity:0.35; transform:none; }
@@ -616,49 +597,43 @@
   <div class="screen" id="valueProp">
     <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
     <button type="button" class="vp-skip" onclick="vpDone()">Skip</button>
-    <div class="vp-layout">
-      <div class="vp-scroller" id="vpScroller">
 
-        <section class="vp-slide is-active" data-vp="0" aria-label="Get Stuff Done">
-          <div class="vp-hero">
-            <div class="vp-vid-card c1">
-              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle_state.mp4" autoplay loop muted playsinline></video>
-            </div>
-            <h2 class="vp-ttl">Get Stuff Done</h2>
-            <p class="vp-body">Recharge, shop, plan travel — ask once in your language and JioBharatIQ handles it end to end.</p>
-            <p class="vp-hint">Swipe to explore</p>
+    <div class="vp-container">
+      <div class="vp-slides" id="vpSlides">
+        <!-- Slide 1: Get Stuff Done (rocket icon from JDS) -->
+        <div class="vp-slide is-active" data-vp="0">
+          <div class="vp-icon-card c1">
+            <svg viewBox="0 0 24 24"><path d="M4.14 16.14c-.12-.12-.27-.2-.43-.25a1.03 1.03 0 00-.94.29c-.13.11-.22.26-.27.42l-.27.81c-.03.08-.03.16-.02.23.01.08.04.15.09.22.05.06.1.11.17.15a.5.5 0 00.23.06h1.31l-1.33 2.66a.49.49 0 00.1.71.49.49 0 00.58-.05L6 20v1.31c0 .08.02.16.06.23a.5.5 0 00.37.27.5.5 0 00.23-.02l.8-.27c.16-.05.31-.15.42-.27.12-.13.2-.28.24-.44.04-.17.04-.34 0-.51a1.03 1.03 0 00-.25-.43L4.14 16.14zM20.31 2.14c-3.33.16-6.57 1.14-9.43 2.86H7.24c-.37 0-.74.1-1.05.3-.32.2-.57.48-.74.81L2.72 11.55a.86.86 0 00.9 1.45h1.57c-.06.33-.12.65-.15 1 0 .3.04.6.14.88.1.28.26.54.47.75l2.76 2.76c.21.21.46.38.74.48s.58.15.88.13c.34 0 .66-.09 1-.14v1.56c0 .17.04.34.12.49.08.15.21.28.36.37.15.09.32.14.49.15.17.01.34-.03.49-.08l5.44-2.73c.34-.17.62-.43.82-.76.2-.32.3-.7.29-1.08v-3.6c1.75-2.86 2.75-6.12 2.92-9.47a1.05 1.05 0 00-.32-.84 1.05 1.05 0 00-.84-.31zM12 14a2 2 0 110-4 2 2 0 010 4z"/></svg>
           </div>
-        </section>
-
-        <section class="vp-slide" data-vp="1" aria-label="Assistants">
-          <div class="vp-hero">
-            <div class="vp-vid-card c2">
-              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Speaking_State.mp4" autoplay loop muted playsinline></video>
-            </div>
-            <h2 class="vp-ttl">Your Assistants</h2>
-            <p class="vp-body">Cricket, Bollywood, news, astrology — personal assistants built for India, not imported from Silicon Valley.</p>
-          </div>
-        </section>
-
-        <section class="vp-slide" data-vp="2" aria-label="Multimodal Voice">
-          <div class="vp-hero">
-            <div class="vp-vid-card c3">
-              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Listening_state.mp4" autoplay loop muted playsinline></video>
-            </div>
-            <h2 class="vp-ttl">Voice + Text + Vision</h2>
-            <p class="vp-body">Speak naturally in Hindi, English, or your language. Type when quiet. Share photos. Same intelligence, every mode.</p>
-          </div>
-        </section>
-
-      </div>
-      <div class="vp-bottom">
-        <div class="vp-dots" id="vpDots" role="tablist" aria-label="Value slides">
-          <button type="button" class="vp-dot on" role="tab" aria-selected="true" aria-label="Slide 1" data-vp-dot="0"></button>
-          <button type="button" class="vp-dot" role="tab" aria-selected="false" aria-label="Slide 2" data-vp-dot="1"></button>
-          <button type="button" class="vp-dot" role="tab" aria-selected="false" aria-label="Slide 3" data-vp-dot="2"></button>
+          <h2 class="vp-ttl">Get Stuff Done</h2>
+          <p class="vp-body">Recharge, shop, plan travel — ask once in your language. JioBharatIQ handles it end to end.</p>
         </div>
-        <button type="button" class="vp-cta" id="vpCta" onclick="vpNext()">Continue</button>
+        <!-- Slide 2: Assistants (brain icon from JDS) -->
+        <div class="vp-slide" data-vp="1">
+          <div class="vp-icon-card c2">
+            <svg viewBox="0 0 24 24"><path d="M9 3C7.9 3 7 3.9 7 5c-1.45 0-2.66 1.03-2.94 2.39.6-.25 1.25-.39 1.94-.39.96 0 1.85.27 2.61.74.52.32.6 1.04.17 1.47l-.08.08c-.32.32-.8.34-1.19.11A2.99 2.99 0 006 9c-.59 0-1.14.18-1.6.47-.21.13-.4.29-.57.47-.15.17-.28.35-.39.54-.03.05-.06.1-.08.15-.08.15-.15.32-.2.49-.02.06-.04.12-.06.18-.06.23-.09.46-.09.71 0 1.07.56 2 1.4 2.53-.25.44-.4.93-.4 1.47C4 17.66 5.34 19 7 19c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2zm10.6 6.47c.25-.44.4-.93.4-1.47 0-1.66-1.34-3-3-3 0-1.1-.9-2-2-2s-2 .9-2 2v8.5c0 1.1.9 2 2 2 .38 0 .74-.11 1.05-.3.39-.24.9-.19 1.22.14.45.45.37 1.21-.17 1.55-.61.39-1.33.61-2.11.61-.73 0-1.41-.21-2-.56V19c0 1.1.9 2 2 2s2-.9 2-2c1.66 0 3-1.34 3-3 0-.15-.02-.29-.04-.44-.01-.09-.03-.17-.05-.25 0-.04-.02-.08-.03-.12-.07-.23-.16-.45-.28-.66-.39-.69-1.03-1.21-1.81-1.42-.46-.13-.8-.5-.8-.98 0-.65.62-1.14 1.25-.97 1.05.27 1.96.88 2.62 1.69.08-.27.13-.55.13-.85 0-1.07-.56-2-1.4-2.53z"/></svg>
+          </div>
+          <h2 class="vp-ttl">Your Assistants</h2>
+          <p class="vp-body">Cricket, Bollywood, news, astrology — personal assistants built for India, not imported.</p>
+        </div>
+        <!-- Slide 3: Multi-modal voice (mic icon from JDS) -->
+        <div class="vp-slide" data-vp="2">
+          <div class="vp-icon-card c3">
+            <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 003-3V5a3 3 0 10-6 0v7a3 3 0 003 3zm6-5a1 1 0 00-2 0v2a5 5 0 01-10 0v-1a1 1 0 00-2 0v1a7 7 0 006 6.93V21a1 1 0 002 0v-2.07A7 7 0 0019 12v-1a1 1 0 00-1-1z"/></svg>
+          </div>
+          <h2 class="vp-ttl">Multi-modal Voice</h2>
+          <p class="vp-body">Speak in Hindi, English, or any language. Type when quiet. Share photos. Same intelligence, every mode.</p>
+        </div>
       </div>
+    </div>
+
+    <div class="vp-bottom">
+      <div class="vp-progress" id="vpProgress">
+        <div class="vp-bar active" onclick="vpGoTo(0)"><div class="vp-bar-fill" id="vpFill0"></div></div>
+        <div class="vp-bar" onclick="vpGoTo(1)"><div class="vp-bar-fill" id="vpFill1"></div></div>
+        <div class="vp-bar" onclick="vpGoTo(2)"><div class="vp-bar-fill" id="vpFill2"></div></div>
+      </div>
+      <button type="button" class="vp-cta" id="vpCta" onclick="vpNext()">Continue</button>
     </div>
   </div>
 
@@ -1764,94 +1739,88 @@ function detectLang(text) {
   selectedLangCode = 'en-IN'; // default English
 }
 
-/* ══ Value prop carousel (splash → slides → permission) ══ */
+/* ══ Value prop — auto-play cross-fade carousel ══ */
 const VP_COUNT = 3;
-let vpIndex = 0;
+const VP_DURATION = 4000; // 4s per slide
+let vpIndex = 0, vpTimer = null, vpAnimFrame = null, vpStartTime = 0;
 
 function openValueProp() {
   goScreen('valueProp');
-  const sc = document.getElementById('vpScroller');
-  if (sc) sc.scrollLeft = 0;
   vpIndex = 0;
   vpSyncActive();
-  initVpScroller();
-  requestAnimationFrame(function () {
-    document.querySelectorAll('#valueProp .vp-slide video').forEach(function (v, idx) {
-      if (idx === 0) { try { v.play(); } catch (e) {} }
-    });
-  });
+  vpStartAutoplay();
 }
 
-function initVpScroller() {
-  const sc = document.getElementById('vpScroller');
-  if (!sc || sc._vpInit) return;
-  sc._vpInit = true;
-  let scrollEndTimer;
-  sc.addEventListener('scroll', function () {
-    clearTimeout(scrollEndTimer);
-    scrollEndTimer = setTimeout(vpReadScrollIndex, 48);
-  }, { passive: true });
-  document.querySelectorAll('[data-vp-dot]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      const i = parseInt(btn.getAttribute('data-vp-dot'), 10);
-      if (!isNaN(i)) vpGoTo(i);
-    });
-  });
-}
-
-function vpReadScrollIndex() {
-  const sc = document.getElementById('vpScroller');
-  if (!sc) return;
-  const w = sc.clientWidth || 1;
-  const i = Math.min(VP_COUNT - 1, Math.max(0, Math.round(sc.scrollLeft / w)));
-  if (i !== vpIndex) {
-    vpIndex = i;
-    vpSyncActive();
+function vpStartAutoplay() {
+  vpStopAutoplay();
+  vpStartTime = Date.now();
+  // Animate progress bar fill
+  function tickProgress() {
+    const elapsed = Date.now() - vpStartTime;
+    const pct = Math.min(100, (elapsed / VP_DURATION) * 100);
+    const fill = document.getElementById('vpFill' + vpIndex);
+    if (fill) fill.style.width = pct + '%';
+    if (pct < 100) vpAnimFrame = requestAnimationFrame(tickProgress);
   }
+  vpAnimFrame = requestAnimationFrame(tickProgress);
+  // Auto-advance after VP_DURATION
+  vpTimer = setTimeout(function() {
+    if (vpIndex < VP_COUNT - 1) {
+      vpGoTo(vpIndex + 1);
+      vpStartAutoplay();
+    } else {
+      // Last slide done — mark complete, wait for user tap
+      const fill = document.getElementById('vpFill' + vpIndex);
+      if (fill) fill.style.width = '100%';
+    }
+  }, VP_DURATION);
+}
+
+function vpStopAutoplay() {
+  clearTimeout(vpTimer); vpTimer = null;
+  cancelAnimationFrame(vpAnimFrame); vpAnimFrame = null;
 }
 
 function vpGoTo(i) {
-  const sc = document.getElementById('vpScroller');
-  if (!sc) return;
-  const w = sc.clientWidth;
-  sc.scrollTo({ left: i * w, behavior: 'smooth' });
+  vpStopAutoplay();
   vpIndex = i;
   vpSyncActive();
+  vpStartAutoplay();
 }
 
 function vpSyncActive() {
-  document.querySelectorAll('#valueProp .vp-slide').forEach(function (el, idx) {
+  document.querySelectorAll('#vpSlides .vp-slide').forEach(function(el, idx) {
     el.classList.toggle('is-active', idx === vpIndex);
   });
-  document.querySelectorAll('#valueProp .vp-slide video').forEach(function (v, idx) {
-    if (idx === vpIndex) {
-      try { v.play(); } catch (e) {}
-    } else {
-      try { v.pause(); } catch (e) {}
-    }
+  // Update progress bars
+  document.querySelectorAll('.vp-bar').forEach(function(bar, idx) {
+    const fill = bar.querySelector('.vp-bar-fill');
+    bar.classList.remove('done', 'active');
+    if (idx < vpIndex) { bar.classList.add('done'); if(fill) fill.style.width='100%'; }
+    else if (idx === vpIndex) { bar.classList.add('active'); if(fill) fill.style.width='0%'; }
+    else { if(fill) fill.style.width='0%'; }
   });
-  document.querySelectorAll('[data-vp-dot]').forEach(function (btn) {
-    const i = parseInt(btn.getAttribute('data-vp-dot'), 10);
-    const on = i === vpIndex;
-    btn.classList.toggle('on', on);
-    btn.setAttribute('aria-selected', on ? 'true' : 'false');
-  });
+  // Update CTA text
   const cta = document.getElementById('vpCta');
   if (cta) cta.textContent = vpIndex >= VP_COUNT - 1 ? 'Continue' : 'Next';
 }
 
 function vpNext() {
-  if (vpIndex < VP_COUNT - 1) vpGoTo(vpIndex + 1);
-  else vpDone();
+  vpStopAutoplay();
+  if (vpIndex < VP_COUNT - 1) {
+    vpGoTo(vpIndex + 1);
+  } else {
+    vpDone();
+  }
 }
 
 function vpDone() {
+  vpStopAutoplay();
   requestPermFlow();
 }
 
 function resetValueProp() {
-  const sc = document.getElementById('vpScroller');
-  if (sc) sc.scrollLeft = 0;
+  vpStopAutoplay();
   vpIndex = 0;
   vpSyncActive();
 }
