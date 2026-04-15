@@ -833,19 +833,22 @@
         <div class="lang-note">You can change language later in settings</div>
         <button class="lang-save" id="langSaveBtn" disabled onclick="langSaved()">Save</button>
       </div>
-      <!-- Phone input (hidden until language saved) -->
-      <div id="tradPhoneSection" style="display:none;padding:0 20px 120px;">
-        <div style="height:1px;background:var(--bd);margin:8px 0 20px"></div>
-        <div class="phone-title" style="font-size:18px">Enter your mobile number</div>
-        <div class="phone-sub">We'll send you a verification code</div>
-        <div class="phone-field-wrap" style="margin-top:16px">
+    </div>
+    <!-- Phone number bottom sheet -->
+    <div class="modal-overlay" id="tradPhoneSheet">
+      <div class="modal-scrim" onclick="void(0)"></div>
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title">Enter your mobile number</div>
+        <div class="modal-sub">We'll send you a verification code</div>
+        <div class="phone-field-wrap" style="margin:16px 0">
           <div class="phone-cc">+91</div>
           <input type="tel" class="phone-input" id="tradPhoneInput" placeholder="Mobile number" maxlength="10" oninput="tradPhoneCheck()">
         </div>
-        <button class="phone-continue" id="tradPhoneBtn" disabled onclick="tradPhoneSubmit()" style="margin-top:16px">Continue</button>
+        <button class="btn-p" id="tradPhoneBtn" style="opacity:0.4;pointer-events:none" onclick="tradPhoneSubmit()">Continue</button>
       </div>
     </div>
-    <!-- OTP bottom sheet (on same screen) -->
+    <!-- OTP bottom sheet -->
     <div class="modal-overlay" id="v1OTP">
       <div class="modal-scrim" onclick="void(0)"></div>
       <div class="modal-sheet">
@@ -2252,26 +2255,25 @@ function pickLang(el, langCode) {
 }
 
 function langSaved() {
-  // Show phone input on same screen, scroll to it
-  document.getElementById('tradPhoneSection').style.display = 'block';
-  document.getElementById('langSaveBtn').disabled = true;
-  document.getElementById('langSaveBtn').textContent = '✓ Saved';
-  setTimeout(() => {
-    document.getElementById('tradPhoneSection').scrollIntoView({ behavior:'smooth', block:'center' });
-    document.getElementById('tradPhoneInput').focus();
-  }, 200);
+  document.getElementById('tradPhoneSheet').classList.add('show');
+  setTimeout(() => document.getElementById('tradPhoneInput').focus(), 400);
 }
 
 function tradPhoneCheck() {
   const val = document.getElementById('tradPhoneInput').value.trim();
-  document.getElementById('tradPhoneBtn').disabled = val.length < 10;
+  const btn = document.getElementById('tradPhoneBtn');
+  if (val.length >= 10) { btn.style.opacity='1'; btn.style.pointerEvents='all'; }
+  else { btn.style.opacity='0.4'; btn.style.pointerEvents='none'; }
 }
 
 function tradPhoneSubmit() {
   const ph = document.getElementById('tradPhoneInput').value.trim();
   if (ph.length < 10) return;
-  document.getElementById('v1OTPNum').textContent = ph.slice(0,5) + 'XXXXX';
-  document.getElementById('v1OTP').classList.add('show');
+  document.getElementById('tradPhoneSheet').classList.remove('show');
+  setTimeout(() => {
+    document.getElementById('v1OTPNum').textContent = ph.slice(0,5) + 'XXXXX';
+    document.getElementById('v1OTP').classList.add('show');
+  }, 300);
   // Auto-fill OTP after 1.5s
   setTimeout(()=>{
     const digits = ['4','8','2','7','3','1'];
