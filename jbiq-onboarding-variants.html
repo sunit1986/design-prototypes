@@ -158,7 +158,15 @@
       display:flex; align-items:center; justify-content:center;
       margin-bottom:32px; position:relative;
     }
-    .vp-icon-card svg { width:64px; height:64px; }
+    .vp-icon-card svg { width:64px; height:64px; transform-origin:center; }
+    /* Icon animations — each unique, plays when slide is active */
+    .vp-slide.is-active .vp-icon-card.c1 svg { animation:vpFloat 2.5s ease-in-out infinite; }
+    .vp-slide.is-active .vp-icon-card.c2 svg { animation:vpPulse 2s ease-in-out infinite; }
+    .vp-slide.is-active .vp-icon-card.c3 svg { animation:vpBounce 1.8s ease-in-out infinite; }
+    .vp-slide:not(.is-active) .vp-icon-card svg { animation:none; }
+    @keyframes vpFloat { 0%,100%{transform:translateY(0) rotate(0deg)} 25%{transform:translateY(-8px) rotate(-3deg)} 75%{transform:translateY(4px) rotate(2deg)} }
+    @keyframes vpPulse { 0%,100%{transform:scale(1)} 30%{transform:scale(1.12)} 60%{transform:scale(0.95)} }
+    @keyframes vpBounce { 0%,100%{transform:translateY(0) scale(1)} 40%{transform:translateY(-10px) scale(1.08)} 70%{transform:translateY(2px) scale(0.97)} }
     .vp-icon-card.c1 {
       background:linear-gradient(145deg, #f0edff, #e0dbff);
       box-shadow:0 20px 60px rgba(53,53,243,0.18), 0 4px 16px rgba(53,53,243,0.08);
@@ -1741,7 +1749,7 @@ function detectLang(text) {
 
 /* ══ Value prop — auto-play cross-fade carousel ══ */
 const VP_COUNT = 3;
-const VP_DURATION = 4000; // 4s per slide
+const VP_DURATION = 3000; // 3s per slide
 let vpIndex = 0, vpTimer = null, vpAnimFrame = null, vpStartTime = 0;
 
 function openValueProp() {
