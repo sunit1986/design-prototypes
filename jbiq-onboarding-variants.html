@@ -446,8 +446,8 @@
       position:absolute; inset:0; z-index:200;
       display:none; flex-direction:column; justify-content:flex-end;
     }
-    #permOverlay { z-index:320; }
     .modal-overlay.show { display:flex; }
+    #permOverlay { z-index:999; }
     .modal-scrim { position:absolute; inset:0; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); }
     .modal-sheet {
       position:relative; z-index:1;
@@ -738,18 +738,6 @@
         <div class="vp-bar" onclick="vpGoTo(2)"><div class="vp-bar-fill" id="vpFill2"></div></div>
       </div>
       <button type="button" class="vp-cta" id="vpCta" onclick="vpNext()">Continue</button>
-    </div>
-  </div>
-
-  <!-- Mic permission (Flow 1: Conversation-first — PDF Track 3) -->
-  <div class="modal-overlay" id="permOverlay" aria-hidden="true">
-    <div class="modal-scrim"></div>
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-title">Hear you clearly</div>
-      <div class="modal-sub">Allow the microphone so JioBharatIQ can listen when you speak. You can switch to typing anytime from the bar below.</div>
-      <button type="button" class="btn-p" onclick="permGrant()">Allow microphone</button>
-      <button type="button" class="btn-sec" onclick="permChatOnly()">Continue with text only</button>
     </div>
   </div>
 
@@ -1448,6 +1436,17 @@
     </div>
   </div>
 
+  <!-- Mic permission — MUST be last child of .phone for z-index -->
+  <div class="modal-overlay" id="permOverlay" aria-hidden="true">
+    <div class="modal-scrim"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Hear you clearly</div>
+      <div class="modal-sub">Allow the microphone so JioBharatIQ can listen when you speak. You can switch to typing anytime from the bar below.</div>
+      <button type="button" class="btn-p" onclick="permGrant()">Allow microphone</button>
+      <button type="button" class="btn-sec" onclick="permChatOnly()">Continue with text only</button>
+    </div>
+  </div>
 </div><!-- /.phone -->
 
 <script src="jbiq-config.js"></script>
