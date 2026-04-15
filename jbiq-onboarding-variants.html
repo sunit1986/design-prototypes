@@ -136,7 +136,7 @@
     .cv-divider { flex-shrink:0; height:1px; background:var(--bd); }
 
     /* Chat area */
-    .cv-chat { flex:1; overflow-y:auto; overflow-x:hidden; padding:14px 16px 8px; display:flex; flex-direction:column; gap:10px; scroll-behavior:smooth; }
+    .cv-chat { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:14px 16px 160px; display:flex; flex-direction:column; gap:10px; scroll-behavior:smooth; }
     .cv-chat::-webkit-scrollbar { display:none; }
 
     /* JBIQ bubble */
@@ -208,11 +208,12 @@
     }
     .int-card:active { transform:scale(0.97); }
     .int-card.sel::after { content:'✓'; position:absolute; top:10px; right:12px; font-size:14px; font-weight:700; color:#fff; }
-    .ic-bollywood { background:linear-gradient(135deg,#ff6b35,#f7c059); }
-    .ic-cricket   { background:linear-gradient(135deg,#1a7a4a,#4ecb71); }
-    .ic-news      { background:linear-gradient(135deg,#1a5fb4,#4a9eff); }
-    .ic-astro     { background:linear-gradient(135deg,#6d17ce,#b44fff); }
-    .int-card-icon { font-size:28px; }
+    .ic-bollywood { background:#e85d04; }
+    .ic-cricket   { background:#1a7a4a; }
+    .ic-news      { background:#1a5fb4; }
+    .ic-astro     { background:#6d17ce; }
+    .int-card-icon { width:32px; height:32px; display:flex; align-items:center; justify-content:center; }
+    .int-card-icon svg { width:22px; height:22px; fill:#fff; opacity:0.95; }
     .int-card-name { font-size:15px; font-weight:700; color:#fff; }
     .int-card-sub  { font-size:12px; color:rgba(255,255,255,0.7); }
 
@@ -235,6 +236,7 @@
       position:absolute; inset:0; z-index:200;
       display:none; flex-direction:column; justify-content:flex-end;
     }
+    #permOverlay { z-index:320; }
     .modal-overlay.show { display:flex; }
     .modal-scrim { position:absolute; inset:0; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); }
     .modal-sheet {
@@ -451,6 +453,10 @@
       V3 · Profile First
       <span>Deep personalization</span>
     </button>
+    <button class="v-tab" id="tabHP" onclick="setVariant(0)">
+      🏠 Homepage
+      <span>Preview final screen</span>
+    </button>
   </div>
 </div>
 <div class="v-desc" id="vDesc">AI collects name and phone upfront, then gives a guided homepage tour</div>
@@ -461,7 +467,7 @@
   <!-- ═══════════════════════════════ -->
   <!-- SPLASH (shared)                -->
   <!-- ═══════════════════════════════ -->
-  <div class="screen active" id="splash" onclick="beginFlow()">
+  <div class="screen active" id="splash" onclick="requestPermFlow()">
     <div class="spl-stage">
       <div class="spl-ring"></div>
       <div class="spl-ring"></div>
@@ -472,6 +478,18 @@
         <div class="spl-tag">Your language, your assistant</div>
       </div>
       <div class="spl-tap">Tap anywhere to begin</div>
+    </div>
+  </div>
+
+  <!-- Mic permission (Flow 1: Conversation-first — PDF Track 3) -->
+  <div class="modal-overlay" id="permOverlay" aria-hidden="true">
+    <div class="modal-scrim"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Hear you clearly</div>
+      <div class="modal-sub">Allow the microphone so JioBharatIQ can listen when you speak. You can switch to typing anytime from the bar below.</div>
+      <button type="button" class="btn-p" onclick="permGrant()">Allow microphone</button>
+      <button type="button" class="btn-sec" onclick="permChatOnly()">Continue with text only</button>
     </div>
   </div>
 
@@ -495,7 +513,7 @@
       <!-- Opening: auto language detect + name -->
       <div class="jrow hidden" id="v1-nq">
         <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">Namaste! 🙏 I'm JioBharatIQ — your AI for everything Jio. <strong>Speak in any language</strong> — Hindi, English, Kannada, Telugu, anything. बस बोलिए, मैं समझ लूँगा। What's your name?</div>
+        <div class="jbub">Namaste. I'm JioBharatIQ — your AI for everything Jio. <strong>Speak in any language</strong> — Hindi, English, Kannada, Telugu, anything. बस बोलिए, मैं समझ लूँगा। What's your name?</div>
       </div>
       <!-- Step 1: Phone (after name) -->
       <div class="urow hidden" id="v1-un"><div class="ubub" id="v1-unb"></div></div>
@@ -580,10 +598,10 @@
       </div>
       <!-- 4 interest cards — hidden until language is picked -->
       <div class="interest-grid hidden" id="v2Cards">
-        <div class="int-card ic-bollywood" onclick="v2PickCard(this,'Bollywood','🎬 Trending in Bollywood')"><div class="int-card-icon">🎬</div><div class="int-card-name">Bollywood</div><div class="int-card-sub">Films, celebs, gossip</div></div>
-        <div class="int-card ic-cricket"   onclick="v2PickCard(this,'Cricket','🏏 Today in Cricket')"><div class="int-card-icon">🏏</div><div class="int-card-name">Cricket</div><div class="int-card-sub">Scores, news, previews</div></div>
-        <div class="int-card ic-news"      onclick="v2PickCard(this,'Local News','📰 Around you today')"><div class="int-card-icon">📰</div><div class="int-card-name">Local News</div><div class="int-card-sub">Your city, your state</div></div>
-        <div class="int-card ic-astro"     onclick="v2PickCard(this,'Astrology','🔮 Your daily reading')"><div class="int-card-icon">🔮</div><div class="int-card-name">Astrology</div><div class="int-card-sub">Rashifal &amp; forecasts</div></div>
+        <div class="int-card ic-bollywood" onclick="v2PickCard(this,'Bollywood','Trending in Bollywood')"><div class="int-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4V5zm2 2v10h12V7H6zm2 2h8v2H8V9zm0 3h5v2H8v-2z"/></svg></div><div class="int-card-name">Bollywood</div><div class="int-card-sub">Films, celebs, gossip</div></div>
+        <div class="int-card ic-cricket"   onclick="v2PickCard(this,'Cricket','Today in Cricket')"><div class="int-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1 17.9c-4-.5-7-3.9-7-7.9s3-7.4 7-7.9v15.8zm2 0V4.1c4 .5 7 3.9 7 7.9s-3 7.4-7 7.9z"/></svg></div><div class="int-card-name">Cricket</div><div class="int-card-sub">Scores, news, previews</div></div>
+        <div class="int-card ic-news"      onclick="v2PickCard(this,'Local News','Around you today')"><div class="int-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4V4zm0 4h10v12H4V8zm12 0h4v16h-4V8zm-8 2v2h4v-2H8zm0 4v2h4v-2H8z"/></svg></div><div class="int-card-name">Local News</div><div class="int-card-sub">Your city, your state</div></div>
+        <div class="int-card ic-astro"     onclick="v2PickCard(this,'Astrology','Your daily reading')"><div class="int-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.8H21l-5.5 4 2.1 6.7L12 15.8l-5.6 3.7 2.1-6.7L3 8.8h6.8L12 2z"/></svg></div><div class="int-card-name">Astrology</div><div class="int-card-sub">Rashifal &amp; forecasts</div></div>
       </div>
       <!-- After card selection -->
       <div class="urow hidden" id="v2-uc"><div class="ubub" id="v2-ucb"></div></div>
@@ -614,6 +632,25 @@
         <button class="btn-sec" onclick="goHP()">Skip for now</button>
       </div>
     </div>
+  <!-- V2 OTP Modal -->
+  <div class="modal-overlay" id="v2OTP">
+    <div class="modal-scrim" onclick="void(0)"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Verify your number</div>
+      <div class="modal-sub">OTP sent to +91 <span id="v2OTPNum"></span></div>
+      <div class="otp-row">
+        <div class="otp-box" id="v2ob0"></div>
+        <div class="otp-box" id="v2ob1"></div>
+        <div class="otp-box" id="v2ob2"></div>
+        <div class="otp-box" id="v2ob3" style="color:var(--g4);">—</div>
+        <div class="otp-box" id="v2ob4" style="color:var(--g4);">—</div>
+        <div class="otp-box" id="v2ob5" style="color:var(--g4);">—</div>
+      </div>
+      <div class="otp-auto" id="v2OTPAuto">Auto-detecting OTP…</div>
+      <button class="btn-p" onclick="v2Verify()">Verify &amp; Continue</button>
+    </div>
+  </div>
   <div class="bot-dock">
     <div class="bot-fade"></div>
     <div class="bot-panel">
@@ -663,7 +700,7 @@
       <!-- Step 0: Name — language auto-detected from first utterance -->
       <div class="jrow hidden" id="v3-nq">
         <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">Namaste! 🙏 I'm JioBharatIQ — here to personalise everything for your family. <strong>Speak in any language</strong>, I'll detect it. What's your name? / आपका नाम क्या है?</div>
+        <div class="jbub">Namaste. I'm JioBharatIQ — here to personalise everything for your family. <strong>Speak in any language</strong>, I'll detect it. What's your name? / आपका नाम क्या है?</div>
       </div>
       <!-- Step 1: Phone -->
       <div class="urow hidden" id="v3-un"><div class="ubub" id="v3-unb"></div></div>
@@ -965,6 +1002,11 @@
     <!-- SCROLLABLE BODY -->
     <div class="hp2-body-scroll">
 
+      <div class="hp2-hero-welcome" id="hpHeroWelcome" style="padding:8px 18px 4px">
+        <div id="hpWelcomeTitle" style="font-size:22px;font-weight:800;line-height:1.2;color:var(--text-high)">Hello.</div>
+        <div id="hpWelcomeSub" style="font-size:14px;font-weight:400;line-height:1.4;color:var(--text-low);margin-top:6px">Everything Jio, one place.</div>
+      </div>
+
       <!-- YOUR ASSISTANTS -->
       <div class="hp2-section-title">Your Assistants</div>
       <div class="hp2-assistants-row">
@@ -1008,15 +1050,15 @@
           <div class="hp2-section-title">Tools</div>
           <span class="hp2-coming-soon">Coming soon</span>
         </div>
-        <div class="hp2-tools-row">
-          <div class="hp2-tool-chip">💬 Quick Translate</div>
-          <div class="hp2-tool-chip">🎨 Create image</div>
-          <div class="hp2-tool-chip">🧑‍⚕️ Health Calculator</div>
+          <div class="hp2-tools-row">
+          <div class="hp2-tool-chip">Quick Translate</div>
+          <div class="hp2-tool-chip">Create image</div>
+          <div class="hp2-tool-chip">Health Calculator</div>
         </div>
         <div class="hp2-tools-row">
-          <div class="hp2-tool-chip">🎬 Generate videos</div>
-          <div class="hp2-tool-chip">📑 Analyse docs</div>
-          <div class="hp2-tool-chip">🛍️ Smart Shopping</div>
+          <div class="hp2-tool-chip">Generate videos</div>
+          <div class="hp2-tool-chip">Analyse docs</div>
+          <div class="hp2-tool-chip">Smart Shopping</div>
         </div>
       </div>
 
@@ -1130,7 +1172,7 @@
             </button>
           </div>
           <div class="hp2-input-right">
-            <button class="hp2-speak-btn" onclick="beginFlow()">
+            <button type="button" class="hp2-speak-btn" onclick="showToast('Tap Speak to talk to JioBharatIQ')">
               <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z" fill="currentColor"/></svg>
               <span>Speak</span>
             </button>
@@ -1163,6 +1205,7 @@
 
 </div><!-- /.phone -->
 
+<script src="jbiq-config.js"></script>
 <script>
 
 /* ══════════════════════════════════════════════════════
@@ -1221,12 +1264,10 @@ function toggleMode(prefix) {
 }
 
 /* ══════════════════════════════════════════════════════
-   TTS — ElevenLabs (primary) + Sarvam (fallback)
+   TTS — keys from jbiq-config.js (JBIQ_CONFIG + JBIQ_TTS)
 ══════════════════════════════════════════════════════ */
-const XI_KEY   = 'sk_86a2daf2318ba84afa5190ff9a2c09fcc9e7f9dafea1fe79';
-const XI_VOICE = 'pFZP5JQG7iQjIQuC4Bku';
-const SKEY     = 'sk_z4ozij0i_64u0398Xm2FbqOCRrntFlqsQ';
 let aAudio = null, isSpeaking = false;
+function jbiqCfg() { return window.JBIQ_CONFIG || {}; }
 
 // Language → Sarvam TTS language code
 const LANG_CODES = {
@@ -1236,10 +1277,12 @@ const LANG_CODES = {
 let selectedLangCode = 'hi-IN'; // default Hindi
 
 async function elevenTTS(text) {
-  const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${XI_VOICE}`, {
+  const c = jbiqCfg();
+  const voice = c.ELEVENLABS_VOICE || 'EXAVITQu4vr4xnSDxMaL';
+  const r = await fetch((c.ELEVENLABS_URL || 'https://api.elevenlabs.io/v1/text-to-speech') + '/' + voice, {
     method: 'POST',
-    headers: { 'xi-api-key': XI_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: text.substring(0,500), model_id: 'eleven_multilingual_v2',
+    headers: { 'xi-api-key': c.ELEVENLABS_KEY || '', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: text.substring(0,500), model_id: c.ELEVENLABS_MODEL || 'eleven_multilingual_v2',
       voice_settings: { stability: .5, similarity_boost: .75, style: .3 } })
   });
   if (!r.ok) throw new Error('ElevenLabs ' + r.status);
@@ -1247,31 +1290,73 @@ async function elevenTTS(text) {
 }
 
 async function sarvamTTS(text) {
-  const r = await fetch('https://api.sarvam.ai/text-to-speech', {
+  const c = jbiqCfg();
+  const r = await fetch(c.SARVAM_TTS_URL || 'https://api.sarvam.ai/text-to-speech', {
     method: 'POST',
-    headers: { 'api-subscription-key': SKEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ inputs:[text], target_language_code: selectedLangCode, speaker:'anushka', model:'bulbul:v2', enable_preprocessing:true })
+    headers: { 'api-subscription-key': c.SARVAM_KEY || '', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ inputs:[text], target_language_code: selectedLangCode, speaker: c.SARVAM_SPEAKER || 'anushka', model:'bulbul:v2', enable_preprocessing:true })
   });
   if (!r.ok) throw new Error('Sarvam ' + r.status);
   const { audios } = await r.json();
-  const bytes = Uint8Array.from(atob(audios[0]), c => c.charCodeAt(0));
+  const bytes = Uint8Array.from(atob(audios[0]), ch => ch.charCodeAt(0));
   return URL.createObjectURL(new Blob([bytes], { type:'audio/wav' }));
 }
 
 async function getTTSUrl(text) {
-  try { return await elevenTTS(text); } catch(e) { console.warn('ElevenLabs failed, trying Sarvam:', e.message); }
-  return await sarvamTTS(text);
+  const c = jbiqCfg();
+  const preferXi = (c.TTS_PROVIDER || 'sarvam') === 'elevenlabs';
+  if (preferXi) {
+    try { return await elevenTTS(text); } catch(e) { console.warn('ElevenLabs failed, trying Sarvam:', e.message); }
+    return await sarvamTTS(text);
+  }
+  try { return await sarvamTTS(text); } catch(e) { console.warn('Sarvam failed, trying ElevenLabs:', e.message); }
+  return await elevenTTS(text);
 }
 
 async function speak(text, cb) {
   if (aAudio) { try { aAudio.pause(); } catch(e){} aAudio = null; }
   stopSR(); isSpeaking = true;
   setAvState(activeV, 'think');
+  const fi = document.getElementById(activeV + 'Int');
+  const runEnded = (revokeUrl) => {
+    if (revokeUrl && typeof revokeUrl === 'string') try { URL.revokeObjectURL(revokeUrl); } catch(e){}
+    aAudio = null; isSpeaking = false;
+    if (fi) fi.innerHTML = '';
+    setAvState(activeV, 'idle');
+    if (cb) cb();
+    if (micOn && !isSpeaking) startSR();
+  };
   try {
+    if (typeof window.JBIQ_TTS === 'function') {
+      const langHint = (selectedLangCode && String(selectedLangCode).startsWith('hi')) ? 'hi-IN' : 'en-IN';
+      const result = await window.JBIQ_TTS(text, langHint);
+      if (result && result.audio) {
+        let revoke = null;
+        if (result.audio.src && result.audio.src.indexOf('blob:') === 0) revoke = result.audio.src;
+        aAudio = result.audio; aAudio.volume = 1.0;
+        setAvState(activeV, 'speak');
+        if (fi) {
+          const words = text.split(' ');
+          fi.innerHTML = words.map(w => `<span class="karaoke-upcoming">${w}</span>`).join(' ');
+          const spans = fi.querySelectorAll('span');
+          aAudio.onplay = () => {
+            const tick = () => {
+              if (!aAudio || aAudio.paused || aAudio.ended) return;
+              const wi = Math.floor((aAudio.currentTime / aAudio.duration) * spans.length);
+              spans.forEach((s,i) => s.className = i <= wi ? 'karaoke-spoken' : 'karaoke-upcoming');
+              requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          };
+        }
+        aAudio.onended = () => runEnded(revoke);
+        await aAudio.play();
+        return;
+      }
+    }
     const url = await getTTSUrl(text);
     aAudio = new Audio(url); aAudio.volume = 1.0;
     setAvState(activeV, 'speak');
-    const fi = document.getElementById(activeV + 'Int');
     if (fi) {
       const words = text.split(' ');
       fi.innerHTML = words.map(w => `<span class="karaoke-upcoming">${w}</span>`).join(' ');
@@ -1286,17 +1371,11 @@ async function speak(text, cb) {
         requestAnimationFrame(tick);
       };
     }
-    aAudio.onended = () => {
-      URL.revokeObjectURL(url); aAudio = null; isSpeaking = false;
-      if (fi) { fi.innerHTML = ''; }
-      setAvState(activeV, 'idle');
-      if (cb) cb();
-      if (micOn && !isSpeaking) startSR();
-    };
+    aAudio.onended = () => runEnded(url);
     await aAudio.play();
   } catch(e) {
     isSpeaking = false;
-    if (e.name === 'AbortError') return;
+    if (e.name === 'AbortError') { if (cb) cb(); return; }
     console.warn('TTS error:', e);
     setAvState(activeV, 'idle');
     if (cb) cb();
@@ -1375,10 +1454,10 @@ function tfe(input, btnId) {
   if (b) { if (input.value.trim()) b.classList.add('on'); else b.classList.remove('on'); }
 }
 
-function showToast() {
+function showToast(msg) {
   const t = document.createElement('div');
   t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#141414;color:#fff;font-size:13px;font-weight:500;padding:10px 20px;border-radius:12px;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;font-family:JioType,sans-serif';
-  t.textContent = 'Coming soon';
+  t.textContent = msg || 'Coming soon';
   document.body.appendChild(t);
   requestAnimationFrame(()=>{ t.style.opacity='1'; setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),300); },2200); });
 }
@@ -1402,9 +1481,27 @@ function hpCloseMenu() {
   document.getElementById('hpMenuDrawer').classList.remove('open');
 }
 
+function applyHomePersonalization() {
+  const titleEl = document.getElementById('hpWelcomeTitle');
+  const subEl = document.getElementById('hpWelcomeSub');
+  if (!titleEl || !subEl) return;
+  const nm = (userName && String(userName).trim()) ? String(userName).trim() : 'there';
+  if (activeV === 'v2' && typeof v2HomeTopic === 'string' && v2HomeTopic) {
+    titleEl.textContent = 'Hello, ' + nm;
+    subEl.textContent = 'We’ll surface more on ' + v2HomeTopic + ' in Updates and your chats.';
+  } else if (activeV === 'v3' && v3Captured && v3Captured.interest) {
+    titleEl.textContent = 'Hello, ' + nm;
+    subEl.textContent = 'Personalised for you — ' + v3Captured.interest + '.';
+  } else {
+    titleEl.textContent = 'Hello, ' + nm;
+    subEl.textContent = 'Assistants above, Updates below — tap Speak when you’re ready.';
+  }
+}
+
 function goHP() {
   stopSR();
   goScreen('homepage');
+  applyHomePersonalization();
   if (activeV === 'v1') setTimeout(() => { document.getElementById('v1Nudge').classList.add('show'); }, 3000);
   if (activeV === 'v3') setTimeout(() => { document.getElementById('v3Sheet').classList.add('show'); }, 1200);
 }
@@ -1413,13 +1510,27 @@ function goHP() {
    VARIANT SYSTEM
 ══════════════════════════════════════════════════════ */
 let activeV = 'v1';
-const vDesc = ['AI asks language, mode, name and phone — then gives a guided homepage tour','User picks language, sees value first — then optionally registers','Full personalization: language, mode, name, phone, family role and interest'];
+const vDesc = [
+  'Conversation-first · Register then explore: name, phone + OTP, then homepage (PDF Flow 1 · V1)',
+  'Conversation-first · Value first: interest cards, sample answer, then save with name + phone (PDF Flow 1 · V2)',
+  'Conversation-first · Profile depth: name, phone, family role, focus area, then personalised home + agent (PDF Flow 1 · V3)'
+];
 const vBadge = ['V1 · Register First','V2 · Value First','V3 · Profile First'];
 
 function setVariant(n) {
   if (aAudio) { try{aAudio.pause();}catch(e){} aAudio=null; }
   stopSR(); micOn = false; isSpeaking = false;
+  const po = document.getElementById('permOverlay');
+  if (po) po.classList.remove('show');
   resetV1(); resetV2(); resetV3(); resetHP();
+  if (n === 0) {
+    document.querySelectorAll('.v-tab').forEach((t,i) => t.classList.toggle('active', i===3));
+    document.getElementById('vDesc').textContent = 'Preview the homepage — what users see after completing onboarding';
+    activeV = 'v1';
+    goScreen('homepage');
+    applyHomePersonalization();
+    return;
+  }
   document.querySelectorAll('.v-tab').forEach((t,i) => t.classList.toggle('active', i===n-1));
   document.getElementById('vDesc').textContent = vDesc[n-1];
   document.getElementById('splBadge').textContent = vBadge[n-1];
@@ -1456,23 +1567,71 @@ function detectLang(text) {
   selectedLangCode = 'en-IN'; // default English
 }
 
-function beginFlow() {
-  micOn = true;
-  voiceMode[activeV] = true;
+function requestPermFlow() {
+  const po = document.getElementById('permOverlay');
+  if (po) po.classList.add('show');
+}
+
+function forceChatMode(prefix) {
+  const vd = document.getElementById(prefix + 'VoiceDock');
+  const cd = document.getElementById(prefix + 'ChatDock');
+  if (aAudio) { try { aAudio.pause(); } catch(e){} aAudio = null; isSpeaking = false; }
+  stopSR(); micOn = false; voiceMode[prefix] = false;
+  if (vd) vd.style.display = 'none';
+  if (cd) cd.style.display = '';
+  setAvState(prefix, 'idle');
+  const m = document.getElementById(prefix + 'Mic');
+  if (m) { m.classList.remove('rec'); m.classList.add('muted'); }
+}
+
+function permGrant() {
+  const po = document.getElementById('permOverlay');
+  if (po) po.classList.remove('show');
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
+      enterConversation(true);
+    }).catch(() => {
+      enterConversation(false);
+    });
+  } else {
+    enterConversation(false);
+  }
+}
+
+function permChatOnly() {
+  const po = document.getElementById('permOverlay');
+  if (po) po.classList.remove('show');
+  enterConversation(false);
+}
+
+function enterConversation(useVoice) {
+  micOn = !!useVoice;
+  voiceMode[activeV] = !!useVoice;
   goScreen(activeV);
-  updateMicUI();
+  if (!useVoice) forceChatMode(activeV);
+  else {
+    const vd = document.getElementById(activeV + 'VoiceDock');
+    const cd = document.getElementById(activeV + 'ChatDock');
+    if (vd) vd.style.display = '';
+    if (cd) cd.style.display = 'none';
+    updateMicUI();
+  }
   setAvState(activeV, 'idle');
+  runVariantOpening();
+}
+
+function runVariantOpening() {
   const openingLine = "Namaste! Main JioBharatIQ hun. Kisi bhi bhasha mein boliye — Hindi, English, Kannada, Telugu, kuch bhi. Aapka naam kya hai?";
   if (activeV === 'v1') {
     v1Step = 0;
-    setTimeout(()=>speak(openingLine, ()=>{ show('v1-nq'); startSR(); }), 300);
+    setTimeout(()=>{ show('v1-nq'); speak(openingLine, ()=>{ if(micOn) startSR(); }); }, 300);
   }
   if (activeV === 'v2') {
-    setTimeout(()=>{ show('v2-intro'); show('v2Cards'); scroll('v2Chat'); speak("Hi! I'm JioBharatIQ — your AI for everything Jio. Just speak in any language, I'll understand. Bolo, kya topic pasand hai aapko?"); }, 300);
+    setTimeout(()=>{ show('v2-intro'); show('v2Cards'); scroll('v2Chat'); speak("Hi! I'm JioBharatIQ — your AI for everything Jio. Pick a topic, or type below.", ()=>{ if(micOn) startSR(); }); }, 300);
   }
   if (activeV === 'v3') {
     v3Step = 0;
-    setTimeout(()=>speak(openingLine, ()=>{ show('v3-nq'); startSR(); }), 300);
+    setTimeout(()=>{ show('v3-nq'); speak(openingLine, ()=>{ if(micOn) startSR(); }); }, 300);
   }
 }
 
@@ -1553,7 +1712,14 @@ function v1Verify() {
   show('v1-done'); scroll('v1Chat');
   const vd = document.getElementById('v1VoiceDock'), cd = document.getElementById('v1ChatDock');
   if (vd) vd.style.display = 'none'; if (cd) cd.style.display = 'none';
-  speak(msg, ()=>setTimeout(goHP,1800));
+  speak(msg, () => {
+    setTimeout(() => {
+      goHP();
+      setTimeout(() => {
+        speak('Your assistants are up top. Scroll for Updates and JioMart. Tap Speak any time you need me.', function(){});
+      }, 500);
+    }, 400);
+  });
 }
 
 function resetV1() {
@@ -1577,28 +1743,30 @@ function resetV1() {
 /* ══════════════════════════════════════════════════════
    V2 FLOW — Value First, Then Register
 ══════════════════════════════════════════════════════ */
+let v2HomeTopic = '';
 const v2Content = {
   'Bollywood': {
     prompts: ["What's trending in Bollywood?","Stree 2 box office update","Best films releasing this week"],
-    result: { label:'🎬 Bollywood', title:'Stree 2 crosses ₹600 Cr!', body:'Shraddha Kapoor and Rajkummar Rao\'s horror-comedy continues its historic run, now the highest-grossing Hindi film ever. Next up: reviews of "Singham Returns" and "Pushpa 2: The Rule".', tag:'Updated 30 mins ago' }
+    result: { label:'Bollywood', title:'Stree 2 crosses ₹600 Cr!', body:'Shraddha Kapoor and Rajkummar Rao\'s horror-comedy continues its historic run, now the highest-grossing Hindi film ever. Next up: reviews of "Singham Returns" and "Pushpa 2: The Rule".', tag:'Updated 30 mins ago' }
   },
   'Cricket': {
     prompts: ["Today's IPL match preview","Top scorer this season","Check India's next Test schedule"],
-    result: { label:'🏏 Cricket', title:'RCB vs MI · Today 7:30 PM', body:'Royal Challengers Bengaluru host Mumbai Indians at Chinnaswamy Stadium. RCB need a win to stay in playoff contention. Virat Kohli is 48 runs away from his 100th T20 fifty.', tag:'Chinnaswamy · IPL 2025' }
+    result: { label:'Cricket', title:'RCB vs MI · Today 7:30 PM', body:'Royal Challengers Bengaluru host Mumbai Indians at Chinnaswamy Stadium. RCB need a win to stay in playoff contention. Virat Kohli is 48 runs away from his 100th T20 fifty.', tag:'Chinnaswamy · IPL 2026' }
   },
   'Local News': {
     prompts: ["Top news in my city today","Traffic and weather update","Upcoming local events"],
-    result: { label:'📰 Mumbai Today', title:'Metro Line 3 Phase 2 opens Saturday', body:'The Aarey to BKC underground corridor opens to public this weekend. Tokens priced at ₹10–50. Colaba extension expected by December 2025.', tag:'Mumbai · Just now' }
+    result: { label:'Mumbai Today', title:'Metro Line 3 Phase 2 opens Saturday', body:'The Aarey to BKC underground corridor opens to public this weekend. Tokens priced at ₹10–50. Colaba extension expected by December 2026.', tag:'Mumbai · Just now' }
   },
   'Astrology': {
     prompts: ["My daily rashifal","Lucky number and colour today","Career forecast this week"],
-    result: { label:'🔮 Rashifal Today', title:'Mesh Rashi: Good energy ahead', body:'Today is favourable for financial decisions. Venus in your 7th house brings harmony in relationships. Avoid conflicts before noon. Lucky colour: Yellow. Lucky number: 4.', tag:'Mesh · Shukravar' }
+    result: { label:'Rashifal Today', title:'Mesh Rashi: Good energy ahead', body:'Today is favourable for financial decisions. Venus in your 7th house brings harmony in relationships. Avoid conflicts before noon. Lucky colour: Yellow. Lucky number: 4.', tag:'Mesh · Shukravar' }
   }
 };
 
 // v2PickLang removed — language auto-detected. V2 starts with interest cards directly.
 
 function v2PickCard(el, topic, label) {
+  v2HomeTopic = topic;
   document.querySelectorAll('.int-card').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel');
   document.getElementById('v2-ucb').textContent = topic;
@@ -1627,18 +1795,41 @@ function v2PickPrompt(prompt, result) {
 function v2OpenReg() { document.getElementById('v2Reg').classList.add('show'); }
 function v2CompleteReg() {
   const name = document.getElementById('v2RegName').value.trim();
+  const ph   = document.getElementById('v2RegPh').value.trim();
   if (name) userName = name;
   document.getElementById('v2Reg').classList.remove('show');
+  // Show OTP step
+  document.getElementById('v2OTPNum').textContent = (ph||'XXXXXXXXXX').slice(0,5)+'XXXXX';
+  document.getElementById('v2OTP').classList.add('show');
+  setTimeout(()=>{
+    const digits = ['4','8','2','7','3','1'];
+    [0,1,2,3,4,5].forEach(i=>{
+      const b=document.getElementById('v2ob'+i);
+      if(b){b.textContent=digits[i];b.classList.add('filled');b.removeAttribute('style');}
+    });
+    const auto=document.getElementById('v2OTPAuto');
+    if(auto){auto.textContent='✓ OTP detected automatically';auto.style.color='#25ab21';}
+  },1500);
+}
+function v2Verify() {
+  document.getElementById('v2OTP').classList.remove('show');
   goHP();
 }
 
 function resetV2() {
+  v2HomeTopic = '';
   ['v2-uc','v2-prompts-intro','v2-plist','v2-result','v2-regask','v2-regbtns'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');});
   document.querySelectorAll('.int-card').forEach(c=>c.classList.remove('sel'));
   document.getElementById('v2Reg').classList.remove('show');
+  document.getElementById('v2OTP').classList.remove('show');
   const pl=document.getElementById('v2-plist'); if(pl) pl.innerHTML='';
   const regName=document.getElementById('v2RegName'); if(regName) regName.value='';
   const regPh=document.getElementById('v2RegPh'); if(regPh) regPh.value='';
+  ['v2ob0','v2ob1','v2ob2','v2ob3','v2ob4','v2ob5'].forEach((id,i)=>{
+    const b=document.getElementById(id);
+    if(b){b.textContent=i>=3?'—':'';b.classList.remove('filled');if(i>=3)b.style.color='var(--g4)';else b.removeAttribute('style');}
+  });
+  const otpAuto=document.getElementById('v2OTPAuto'); if(otpAuto){otpAuto.textContent='Auto-detecting OTP…';otpAuto.style.color='';}
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1756,6 +1947,21 @@ function resetHP() {
   document.getElementById('v1Nudge').classList.remove('show');
   document.getElementById('v3Sheet').classList.remove('show');
 }
+
+/* Deep link: ?v=1|2|3 or ?variant=… or #v1 / #1 */
+(function applyVariantFromUrl() {
+  try {
+    var sp = new URLSearchParams(location.search);
+    var v = sp.get('v') || sp.get('variant');
+    if (!v && location.hash) {
+      var h = location.hash.replace(/^#/, '');
+      var m = h.match(/^v?([123])$/i);
+      if (m) v = m[1];
+    }
+    var n = parseInt(v, 10);
+    if (n >= 1 && n <= 3) setVariant(n);
+  } catch (e) {}
+})();
 
 </script>
 </body>
