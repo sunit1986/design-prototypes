@@ -18,7 +18,7 @@ window.JBIQ_CONFIG = {
   GEMINI_MODEL: 'gemini-2.5-flash',
 
   // Text-to-Speech Provider: 'sarvam' or 'elevenlabs'
-  TTS_PROVIDER: 'sarvam',  // Change to 'elevenlabs' to use ElevenLabs
+  TTS_PROVIDER: 'elevenlabs',
 
   // Sarvam AI (used for STT always, TTS when TTS_PROVIDER='sarvam')
   SARVAM_KEY: 'sk_8ajz668k_7FQZo3QWwcAQ8Sm30SmTt6L4',
