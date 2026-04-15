@@ -37,7 +37,7 @@
     }
 
     /* ══ VARIANT TABS ══ */
-    .v-tabs-wrap { width:393px; margin-bottom:6px; }
+    .v-tabs-wrap { width:375px; margin-bottom:6px; }
     .v-tabs {
       display:flex; gap:4px; padding:4px;
       background:rgba(255,255,255,0.07); border-radius:14px;
@@ -58,12 +58,17 @@
       letter-spacing:0.04em; margin:8px 0 14px; min-height:16px;
     }
 
-    /* ══ PHONE FRAME ══ */
+    /* ══ PHONE FRAME (from voice-text-prototype) ══ */
     .phone {
-      width:393px; height:852px; background:#fff; border-radius:54px;
-      border:10px solid #1c1c1e;
-      box-shadow:0 0 0 1px #333, 0 40px 90px rgba(0,0,0,0.95), inset 0 0 0 1px #2c2c2e;
+      width:375px; height:812px; background:#fff; border-radius:44px;
       position:relative; overflow:hidden; flex-shrink:0;
+      font-family:'JioType',-apple-system,sans-serif;
+      box-shadow:0 24px 80px rgba(0,0,0,.15);
+    }
+    .notch {
+      position:absolute; top:0; left:50%; transform:translateX(-50%);
+      width:126px; height:34px; background:#111;
+      border-radius:0 0 22px 22px; z-index:200;
     }
 
     /* ══ SCREEN SYSTEM ══ */
@@ -77,8 +82,8 @@
     .screen.active { opacity:1; pointer-events:all; }
 
     /* ══ STATUS BAR ══ */
-    .sb { height:50px; flex-shrink:0; display:flex; align-items:center; padding:0 26px; justify-content:space-between; }
-    .sbt { font-size:15px; font-weight:600; letter-spacing:-0.3px; color:var(--g1); }
+    .sb { height:54px; flex-shrink:0; display:flex; align-items:center; padding:14px 24px 0; justify-content:space-between; position:relative; z-index:30; }
+    .sbt { font-size:15px; font-weight:700; color:var(--g1); }
     .sbr { display:flex; gap:5px; align-items:center; }
 
     /* ══ ANIMATIONS ══ */
@@ -115,6 +120,128 @@
     }
 
     /* ══════════════════════════════════
+       VALUE PROP (post-splash) — Motion MCP: fade-up stagger + M3 scroll-snap
+       Easing ref: m3-emphasized-decelerate for hero emphasis
+    ══════════════════════════════════ */
+    #valueProp {
+      background:#fafafa;
+      --vp-ease-out: cubic-bezier(0.05, 0.7, 0.1, 1);
+      --vp-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    }
+    #valueProp .vp-skip {
+      position:absolute; top:58px; right:20px; z-index:5;
+      border:none; background:none; font-family:inherit;
+      font-size:14px; font-weight:600; color:var(--g6);
+      cursor:pointer; padding:8px 4px;
+      transition: color 0.2s var(--vp-ease-standard);
+    }
+    #valueProp .vp-skip:active { color:var(--g1); }
+    .vp-layout {
+      flex:1; min-height:0; display:flex; flex-direction:column;
+    }
+    .vp-scroller {
+      flex:1; min-height:0;
+      display:flex; flex-direction:row;
+      overflow-x:auto; overflow-y:hidden;
+      scroll-snap-type:x mandatory;
+      scroll-behavior:smooth;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      overscroll-behavior-x:contain;
+    }
+    .vp-scroller::-webkit-scrollbar { display:none; }
+    .vp-slide {
+      flex:0 0 100%; width:100%; min-width:100%;
+      scroll-snap-align:start; scroll-snap-stop:always;
+      display:flex; flex-direction:column; align-items:center;
+      padding:8px 24px 12px;
+      box-sizing:border-box;
+    }
+    .vp-hero {
+      flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      width:100%; max-width:340px;
+    }
+    .vp-vid-card {
+      width:172px; height:172px; border-radius:36px;
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:20px;
+      transition: transform 0.45s var(--vp-ease-out), box-shadow 0.45s var(--vp-ease-out);
+    }
+    .vp-slide.is-active .vp-vid-card { transform: scale(1); }
+    .vp-slide:not(.is-active) .vp-vid-card { transform: scale(0.94); opacity:0.85; }
+    .vp-vid-card.c1 { background:#fff; box-shadow:0 12px 40px rgba(53,53,243,0.14); border:1px solid rgba(53,53,243,0.12); }
+    .vp-vid-card.c2 { background:#fff; box-shadow:0 12px 40px rgba(30,204,176,0.12); border:1px solid rgba(30,204,176,0.22); }
+    .vp-vid-card.c3 { background:#fff; box-shadow:0 12px 40px rgba(109,23,206,0.14); border:1px solid rgba(109,23,206,0.18); }
+    .vp-vid-card video {
+      width:148px; height:148px; object-fit:contain; border-radius:24px;
+    }
+    /* fade-up (Motion MCP fade-up + stagger like compose_sequence seq_9e8b89) */
+    .vp-slide:not(.is-active) .vp-ttl,
+    .vp-slide:not(.is-active) .vp-body,
+    .vp-slide:not(.is-active) .vp-hint {
+      opacity:0; transform:translateY(16px);
+    }
+    .vp-slide.is-active .vp-ttl {
+      font-size:28px; font-weight:800; letter-spacing:-0.035em; color:var(--g1);
+      text-align:center; line-height:1.15; margin-bottom:10px; max-width:320px;
+      animation:vpFadeUp 0.38s cubic-bezier(0, 0, 0, 1) forwards;
+      animation-delay:0.05s;
+    }
+    .vp-slide.is-active .vp-body {
+      font-size:15px; font-weight:500; color:var(--g6); text-align:center;
+      line-height:1.5; max-width:300px;
+      animation:vpFadeUp 0.4s cubic-bezier(0, 0, 0, 1) forwards;
+      animation-delay:0.14s;
+    }
+    .vp-slide.is-active .vp-hint {
+      margin-top:14px; font-size:12px; font-weight:600; letter-spacing:0.12em;
+      text-transform:uppercase; color:var(--g4);
+      animation:vpFadeUp 0.35s cubic-bezier(0, 0, 0, 1) forwards;
+      animation-delay:0.72s;
+    }
+    .vp-ttl, .vp-body, .vp-hint {
+      font-family:inherit;
+    }
+    .vp-ttl { max-width:320px; }
+    .vp-body { max-width:300px; }
+    @keyframes vpFadeUp {
+      to { opacity:1; transform:translateY(0); }
+    }
+    .vp-bottom {
+      flex-shrink:0; padding:10px 24px 36px;
+      display:flex; flex-direction:column; align-items:center; gap:16px;
+    }
+    .vp-dots {
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      min-height:12px;
+    }
+    .vp-dot {
+      height:8px; border-radius:999px; border:none; padding:0; cursor:pointer;
+      background:rgba(20,20,20,0.12);
+      transition: width 0.35s var(--vp-ease-out), background 0.25s var(--vp-ease-standard);
+    }
+    .vp-dot.on { width:28px; background:var(--p); }
+    .vp-dot:not(.on) { width:8px; }
+    .vp-cta {
+      width:100%; max-width:320px; height:52px; border-radius:999px; border:none;
+      font-family:inherit; font-size:17px; font-weight:700; cursor:pointer;
+      background:var(--pb); color:#fff;
+      box-shadow:0 8px 24px rgba(57,0,173,0.28);
+      transition: transform 0.15s var(--vp-ease-standard), box-shadow 0.2s;
+    }
+    .vp-cta:active { transform:scale(0.98); }
+    @media (prefers-reduced-motion: reduce) {
+      .vp-scroller { scroll-behavior:auto; }
+      .vp-slide.is-active .vp-ttl,
+      .vp-slide.is-active .vp-body,
+      .vp-slide.is-active .vp-hint { animation:none; opacity:1; transform:none; }
+      .vp-slide:not(.is-active) .vp-ttl,
+      .vp-slide:not(.is-active) .vp-body,
+      .vp-slide:not(.is-active) .vp-hint { opacity:0.35; transform:none; }
+      .vp-slide:not(.is-active) .vp-vid-card { transform:none; }
+    }
+
+    /* ══════════════════════════════════
        SHARED CONVERSATION COMPONENTS
     ══════════════════════════════════ */
 
@@ -140,13 +267,14 @@
     .cv-chat::-webkit-scrollbar { display:none; }
 
     /* JBIQ bubble */
-    .jrow { display:flex; align-items:flex-end; gap:7px; }
+    .jrow { display:flex; align-items:flex-end; gap:7px; animation:su 0.35s ease both; }
     .jav  { width:28px; height:28px; border-radius:50%; flex-shrink:0; background:var(--lp); display:flex; align-items:center; justify-content:center; }
-    .jbub { background:var(--g2); border-radius:4px 16px 16px 16px; padding:10px 13px; font-size:15px; font-weight:500; color:var(--g1); line-height:1.55; max-width:252px; animation:fadeUp 0.32s ease both; }
+    .jbub { background:linear-gradient(145deg,#f0edff,#e8e4ff); border-radius:18px 18px 18px 4px; padding:14px 18px; font-size:15px; font-weight:400; color:var(--g1); line-height:1.55; letter-spacing:-0.005em; max-width:calc(100% - 28px); }
+    .jbub strong { font-weight:600; }
 
     /* User bubble */
-    .urow { display:flex; justify-content:flex-end; }
-    .ubub { background:var(--p); border-radius:16px 4px 16px 16px; padding:10px 13px; font-size:15px; color:#fff; line-height:1.55; max-width:230px; animation:fadeUp 0.3s ease both; }
+    .urow { display:flex; justify-content:flex-end; animation:su 0.35s ease both; }
+    .ubub { background:#f5f5f5; border-radius:18px 18px 4px 18px; padding:12px 16px; font-size:14px; font-weight:500; color:var(--g1); line-height:1.5; max-width:260px; }
 
     /* Chips */
     .qrow { display:flex; flex-wrap:wrap; gap:7px; padding-left:35px; animation:fadeUp 0.33s ease both; }
@@ -355,18 +483,18 @@
     .as-pmt    { padding:11px 14px; border-radius:14px; border:1.5px solid var(--bd); background:#fff; font-family:inherit; font-size:13px; font-weight:500; color:var(--g1); cursor:pointer; text-align:left; }
     .as-pmt:active { background:var(--gh); }
 
-    /* ══ ANIMATED BORDER RING (exact from reference) ══ */
-    .scr-ring{position:absolute;inset:0;border-radius:54px;z-index:100;pointer-events:none;opacity:0;transition:opacity .5s;overflow:hidden}
-    .scr-ring.on{opacity:1}
-    .scr-ring::before{content:'';position:absolute;inset:0;border-radius:54px;
+    /* ══ ANIMATED BORDER RING (from voice-text-prototype) ══ */
+    .ph-ring{position:absolute;inset:0;border-radius:44px;z-index:100;pointer-events:none;opacity:0;transition:opacity .5s;overflow:hidden}
+    .ph-ring.on{opacity:1}
+    .ph-ring::before{content:'';position:absolute;inset:0;border-radius:44px;
       border:4px solid var(--ring-c,#7c3aed);
       -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,.06) 20%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.75) 75%,rgba(0,0,0,1) 100%);
       mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,.06) 20%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.75) 75%,rgba(0,0,0,1) 100%);
       animation:borderBreathe 3s ease-in-out infinite}
-    .scr-ring::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;border-radius:0 0 54px 54px;
+    .ph-ring::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;border-radius:0 0 44px 44px;
       background:linear-gradient(to top,var(--ring-c,#7c3aed),transparent);opacity:.12;animation:glowBreathe 3s ease-in-out infinite}
-    .scr-ring.purple{--ring-c:#7c3aed;animation:brFade 3s ease-in-out infinite}
-    .scr-ring.teal{--ring-c:#1eccb0;animation:brFade 3s ease-in-out infinite}
+    .ph-ring.purple{--ring-c:#7c3aed}
+    .ph-ring.teal{--ring-c:#1eccb0}
     @keyframes brFade{0%,100%{opacity:.2}30%,70%{opacity:1}}
     @keyframes borderBreathe{0%,100%{border-width:2px}30%,70%{border-width:8px}}
     @keyframes glowBreathe{0%,100%{opacity:.06;height:80px}30%,70%{opacity:.18;height:140px}}
@@ -400,7 +528,7 @@
     .bot-dock{position:absolute;bottom:0;left:0;right:0;z-index:40;pointer-events:none}
     .bot-dock>*{pointer-events:all}
     .bot-fade{height:40px;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.85))}
-    .bot-panel{background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+    .bot-panel{background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);padding-bottom:40px;margin-bottom:-20px}
 
     /* ══ AVATAR STRIP (exact from reference) ══ */
     .bstrip{text-align:center;padding:10px 0 0;display:none}
@@ -429,6 +557,25 @@
     .ts.on svg{fill:#fff}
     .ts svg{fill:#170054;width:18px;height:18px}
     .sab{height:30px;flex-shrink:0}
+
+    /* ══ THINKING INDICATOR (from voice-text-prototype) ══ */
+    .tk{display:flex;align-items:center;gap:10px;padding:4px 0}
+    .tk-t{font-size:14px;color:var(--g6);font-weight:500}
+    .dt{display:flex;gap:5px}
+    .dt i{width:7px;height:7px;border-radius:50%;background:var(--p);display:block;animation:db 1.4s infinite both}
+    .dt i:nth-child(2){animation-delay:.15s}
+    .dt i:nth-child(3){animation-delay:.3s}
+    @keyframes db{0%,80%,100%{transform:scale(.5);opacity:.3}40%{transform:scale(1);opacity:1}}
+
+    /* ══ FEEDBACK ROW (from sachin-chat-response) ══ */
+    .fr{display:flex;gap:8px;padding:10px 0 4px}
+    .fb{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.5;border:none;background:transparent;transition:all .15s}
+    .fb:hover{background:var(--g2);opacity:.8}
+    .fb:active{transform:scale(.85);opacity:1}
+    .fb svg{width:18px;height:18px;fill:var(--g6)}
+
+    /* ══ ENTRANCE ANIMATION (from voice-text-prototype) ══ */
+    @keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
     /* ══ KARAOKE TEXT (exact from reference) ══ */
     .karaoke-upcoming{color:rgba(20,20,20,.25);font-weight:400;transition:color .3s ease}
@@ -463,11 +610,12 @@
 
 <!-- ══ PHONE ══ -->
 <div class="phone">
+  <div class="notch"></div>
 
   <!-- ═══════════════════════════════ -->
   <!-- SPLASH (shared)                -->
   <!-- ═══════════════════════════════ -->
-  <div class="screen active" id="splash" onclick="requestPermFlow()">
+  <div class="screen active" id="splash" onclick="openValueProp()">
     <div class="spl-stage">
       <div class="spl-ring"></div>
       <div class="spl-ring"></div>
@@ -478,6 +626,52 @@
         <div class="spl-tag">Your language, your assistant</div>
       </div>
       <div class="spl-tap">Tap anywhere to begin</div>
+    </div>
+  </div>
+
+  <!-- Value proposition carousel (CDN: JioBharatIQ voice-state + HelloJio MP4s) -->
+  <div class="screen" id="valueProp">
+    <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
+    <button type="button" class="vp-skip" onclick="vpDone()">Skip</button>
+    <div class="vp-layout">
+      <div class="vp-scroller" id="vpScroller">
+        <section class="vp-slide is-active" data-vp="0" aria-label="Get Stuff Done">
+          <div class="vp-hero">
+            <div class="vp-vid-card c1">
+              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle_state.mp4" autoplay loop muted playsinline></video>
+            </div>
+            <h2 class="vp-ttl">Get Stuff Done</h2>
+            <p class="vp-body">Recharge, shop, plan travel, and knock out errands—ask once in your language and JioBharatIQ drives it end to end.</p>
+            <p class="vp-hint">Swipe for more</p>
+          </div>
+        </section>
+        <section class="vp-slide" data-vp="1" aria-label="Assistants">
+          <div class="vp-hero">
+            <div class="vp-vid-card c2">
+              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Listening_state.mp4" autoplay loop muted playsinline></video>
+            </div>
+            <h2 class="vp-ttl">Assistants</h2>
+            <p class="vp-body">Cricket scores, Bollywood buzz, local news, astrology—pick an assistant that feels built for India, not generic.</p>
+          </div>
+        </section>
+        <section class="vp-slide" data-vp="2" aria-label="Multi-modal voice">
+          <div class="vp-hero">
+            <div class="vp-vid-card c3">
+              <video src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/User%20speaking%20to%20bot_state.mp4" autoplay loop muted playsinline></video>
+            </div>
+            <h2 class="vp-ttl">Multi-modal voice experience</h2>
+            <p class="vp-body">Speak naturally, type when you need quiet, or share an image—same answers in English, Hindi, हिंदी, or your regional mix.</p>
+          </div>
+        </section>
+      </div>
+      <div class="vp-bottom">
+        <div class="vp-dots" id="vpDots" role="tablist" aria-label="Value slides">
+          <button type="button" class="vp-dot on" role="tab" aria-selected="true" aria-label="Slide 1" data-vp-dot="0"></button>
+          <button type="button" class="vp-dot" role="tab" aria-selected="false" aria-label="Slide 2" data-vp-dot="1"></button>
+          <button type="button" class="vp-dot" role="tab" aria-selected="false" aria-label="Slide 3" data-vp-dot="2"></button>
+        </div>
+        <button type="button" class="vp-cta" id="vpCta" onclick="vpNext()">Next</button>
+      </div>
     </div>
   </div>
 
@@ -498,7 +692,7 @@
   <!-- ═══════════════════════════════════════════════════ -->
   <div class="screen" id="v1">
     <div class="warm-glow" id="v1Glow"><div class="wb3"></div><div class="wb4"></div></div>
-    <div class="scr-ring" id="v1Ring"></div>
+    <div class="ph-ring" id="v1Ring"></div>
     <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
     <div class="cv-top">
       <div class="cv-brand">
@@ -581,7 +775,7 @@
   <!-- ═══════════════════════════════════════════════════ -->
   <div class="screen" id="v2">
     <div class="warm-glow" id="v2Glow"><div class="wb3"></div><div class="wb4"></div></div>
-    <div class="scr-ring" id="v2Ring"></div>
+    <div class="ph-ring" id="v2Ring"></div>
     <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
     <div class="cv-top">
       <div class="cv-brand">
@@ -686,7 +880,7 @@
   <!-- ═══════════════════════════════════════════════════════ -->
   <div class="screen" id="v3">
     <div class="warm-glow" id="v3Glow"><div class="wb3"></div><div class="wb4"></div></div>
-    <div class="scr-ring" id="v3Ring"></div>
+    <div class="ph-ring" id="v3Ring"></div>
     <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
     <div class="cv-top">
       <div class="cv-brand">
@@ -1230,9 +1424,9 @@ function setAvState(prefix, state) {
     glow.className = 'warm-glow' + col + (col ? ' on' : '');
   }
   if (ring) {
-    if (state==='speak'||state==='think') ring.className = 'scr-ring purple on';
-    else if (state==='listen')            ring.className = 'scr-ring teal on';
-    else                                  ring.className = 'scr-ring';
+    if (state==='speak'||state==='think') ring.className = 'ph-ring on purple';
+    else if (state==='listen')            ring.className = 'ph-ring on teal';
+    else                                  ring.className = 'ph-ring';
   }
   if (status) {
     const labels = { idle:'Tap mic to begin', listen:'Listening…', think:'Thinking…', speak:'Speaking…' };
@@ -1517,12 +1711,36 @@ const vDesc = [
 ];
 const vBadge = ['V1 · Register First','V2 · Value First','V3 · Profile First'];
 
+/* ── Thinking indicator + Feedback row helpers ── */
+const JIO_AV_SVG = '<svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.65H10.77c-1.01 0-1.57.57-1.57 1.71v5.51c0 1.42-.48 1.92-1.6 1.92-.88 0-1.6-.39-2.17-1.09-.06-.07-1.22.48-1.22 1.84 0 1.47 1.38 2.38 3.94 2.38 3.11 0 4.75-1.57 4.75-4.99v-5.56c0-1.14-.55-1.71-1.6-1.71zM23.7 12.34c-3.02 0-5.03 1.91-5.03 4.77 0 2.93 1.93 4.81 4.97 4.81s4.98-1.88 4.98-4.79c0-2.87-1.97-4.79-4.98-4.79zm-.04 6.87c-1.18 0-1.99-.87-1.99-2.1s.83-2.08 1.99-2.08 1.99.87 1.99 2.1-.85 2.08-1.99 2.08zm-7.54-6.78h-.37c-.9 0-1.58.42-1.58 1.71v5.89c0 1.31.66 1.71 1.62 1.71h.37c.9 0 1.55-.44 1.55-1.71v-5.89c0-1.33-.63-1.71-1.59-1.71zm-.2-4.27c-1.14 0-1.86.64-1.86 1.66 0 1.03.74 1.67 1.92 1.67s1.86-.64 1.86-1.67-.74-1.66-1.92-1.66z" fill="white"/></svg>';
+
+function showThinking(chatId) {
+  removeThinking();
+  const chat = document.getElementById(chatId);
+  if (!chat) return;
+  const tk = document.createElement('div');
+  tk.className = 'jrow'; tk.id = 'thinkingRow';
+  tk.innerHTML = '<div class="jav">' + JIO_AV_SVG + '</div><div class="tk"><div class="dt"><i></i><i></i><i></i></div><span class="tk-t">Thinking...</span></div>';
+  chat.appendChild(tk);
+  scroll(chatId);
+}
+function removeThinking() { const tk = document.getElementById('thinkingRow'); if (tk) tk.remove(); }
+
+function fbRowHTML() {
+  return '<div class="fr">' +
+    '<button class="fb" onclick="showToast(\'Liked!\')"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></button>' +
+    '<button class="fb" onclick="showToast(\'Noted\')"><svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button>' +
+    '<button class="fb" onclick="showToast(\'Copied!\')"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>' +
+    '<button class="fb" onclick="showToast(\'Shared\')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>' +
+    '</div>';
+}
+
 function setVariant(n) {
   if (aAudio) { try{aAudio.pause();}catch(e){} aAudio=null; }
   stopSR(); micOn = false; isSpeaking = false;
   const po = document.getElementById('permOverlay');
   if (po) po.classList.remove('show');
-  resetV1(); resetV2(); resetV3(); resetHP();
+  resetV1(); resetV2(); resetV3(); resetHP(); resetValueProp();
   if (n === 0) {
     document.querySelectorAll('.v-tab').forEach((t,i) => t.classList.toggle('active', i===3));
     document.getElementById('vDesc').textContent = 'Preview the homepage — what users see after completing onboarding';
@@ -1565,6 +1783,98 @@ function detectLang(text) {
     selectedLangCode = 'hi-IN'; return;
   }
   selectedLangCode = 'en-IN'; // default English
+}
+
+/* ══ Value prop carousel (splash → slides → permission) ══ */
+const VP_COUNT = 3;
+let vpIndex = 0;
+
+function openValueProp() {
+  goScreen('valueProp');
+  const sc = document.getElementById('vpScroller');
+  if (sc) sc.scrollLeft = 0;
+  vpIndex = 0;
+  vpSyncActive();
+  initVpScroller();
+  requestAnimationFrame(function () {
+    document.querySelectorAll('#valueProp .vp-slide video').forEach(function (v, idx) {
+      if (idx === 0) { try { v.play(); } catch (e) {} }
+    });
+  });
+}
+
+function initVpScroller() {
+  const sc = document.getElementById('vpScroller');
+  if (!sc || sc._vpInit) return;
+  sc._vpInit = true;
+  let scrollEndTimer;
+  sc.addEventListener('scroll', function () {
+    clearTimeout(scrollEndTimer);
+    scrollEndTimer = setTimeout(vpReadScrollIndex, 48);
+  }, { passive: true });
+  document.querySelectorAll('[data-vp-dot]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const i = parseInt(btn.getAttribute('data-vp-dot'), 10);
+      if (!isNaN(i)) vpGoTo(i);
+    });
+  });
+}
+
+function vpReadScrollIndex() {
+  const sc = document.getElementById('vpScroller');
+  if (!sc) return;
+  const w = sc.clientWidth || 1;
+  const i = Math.min(VP_COUNT - 1, Math.max(0, Math.round(sc.scrollLeft / w)));
+  if (i !== vpIndex) {
+    vpIndex = i;
+    vpSyncActive();
+  }
+}
+
+function vpGoTo(i) {
+  const sc = document.getElementById('vpScroller');
+  if (!sc) return;
+  const w = sc.clientWidth;
+  sc.scrollTo({ left: i * w, behavior: 'smooth' });
+  vpIndex = i;
+  vpSyncActive();
+}
+
+function vpSyncActive() {
+  document.querySelectorAll('#valueProp .vp-slide').forEach(function (el, idx) {
+    el.classList.toggle('is-active', idx === vpIndex);
+  });
+  document.querySelectorAll('#valueProp .vp-slide video').forEach(function (v, idx) {
+    if (idx === vpIndex) {
+      try { v.play(); } catch (e) {}
+    } else {
+      try { v.pause(); } catch (e) {}
+    }
+  });
+  document.querySelectorAll('[data-vp-dot]').forEach(function (btn) {
+    const i = parseInt(btn.getAttribute('data-vp-dot'), 10);
+    const on = i === vpIndex;
+    btn.classList.toggle('on', on);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  const cta = document.getElementById('vpCta');
+  if (cta) cta.textContent = vpIndex >= VP_COUNT - 1 ? 'Continue' : 'Next';
+}
+
+function vpNext() {
+  if (vpIndex < VP_COUNT - 1) vpGoTo(vpIndex + 1);
+  else vpDone();
+}
+
+function vpDone() {
+  requestPermFlow();
+}
+
+function resetValueProp() {
+  const sc = document.getElementById('vpScroller');
+  if (sc) sc.scrollLeft = 0;
+  vpIndex = 0;
+  vpSyncActive();
 }
 
 function requestPermFlow() {
@@ -1671,24 +1981,34 @@ function v2Submit() {
 }
 
 function v1Name(name) {
-  detectLang(name); // auto-detect language from what the user said
+  detectLang(name);
   v1Step = 1; userName = name;
   document.getElementById('v1-unb').textContent = name;
   show('v1-un'); addChip('v1Info','👤',name,'name');
-  document.getElementById('v1-q2t').textContent = 'Nice to meet you, '+name+'! To keep your data safe, I need your mobile number.';
-  setTimeout(()=>{ show('v1-q2'); scroll('v1Chat'); speak('Nice to meet you, '+name+'! I just need your mobile number to save your progress.',()=>{ if(micOn) startSR(); }); },300);
-  const fi = document.getElementById('v1Int'); if(fi) fi.textContent = 'Say your number…';
-  const ff = document.getElementById('v1F'); if(ff) ff.placeholder = 'Enter mobile number…';
+  scroll('v1Chat');
+  showThinking('v1Chat');
+  setTimeout(()=>{
+    removeThinking();
+    const msg = 'Nice to meet you, '+name+'! To keep your data safe, I need your mobile number.';
+    document.getElementById('v1-q2t').textContent = msg;
+    show('v1-q2'); scroll('v1Chat');
+    speak(msg, ()=>{ if(micOn) startSR(); });
+    const ff = document.getElementById('v1F'); if(ff) ff.placeholder = 'Enter mobile number…';
+  }, 800);
 }
 
 function v1Phone(ph) {
   v1Step = 2;
   document.getElementById('v1-upb').textContent = '+91 ' + ph;
   show('v1-up');
-  clearInterim();
-  document.getElementById('v1OTPNum').textContent = ph.slice(0,5)+'XXXXX';
-  document.getElementById('v1OTP').classList.add('show');
-  speak('Got it! Sending OTP to your number.');
+  clearInterim(); scroll('v1Chat');
+  showThinking('v1Chat');
+  setTimeout(()=>{
+    removeThinking();
+    document.getElementById('v1OTPNum').textContent = ph.slice(0,5)+'XXXXX';
+    document.getElementById('v1OTP').classList.add('show');
+    speak('Got it! Sending OTP to your number.');
+  }, 600);
   // Auto-fill OTP after 1.5s
   setTimeout(()=>{
     const digits = ['4','8','2','7','3','1'];
@@ -1710,6 +2030,8 @@ function v1Verify() {
   const msg = 'Verified! You\'re all set. Let me show you around.';
   document.getElementById('v1-donet').textContent = msg;
   show('v1-done'); scroll('v1Chat');
+  const doneEl = document.getElementById('v1-done');
+  if (doneEl && !doneEl.querySelector('.fr')) doneEl.insertAdjacentHTML('beforeend', fbRowHTML());
   const vd = document.getElementById('v1VoiceDock'), cd = document.getElementById('v1ChatDock');
   if (vd) vd.style.display = 'none'; if (cd) cd.style.display = 'none';
   speak(msg, () => {
