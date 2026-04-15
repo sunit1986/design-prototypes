@@ -490,35 +490,12 @@
     </div>
     <div class="cv-info" id="v1Info"></div>
     <div class="cv-divider"></div>
-    <!-- V1 Chat: Step -2=lang, -1=mode, 0=name, 1=phone -->
+    <!-- V1 Chat: Step 0=name, 1=phone -->
     <div class="cv-chat" id="v1Chat">
-      <!-- Step -2: Language selection -->
-      <div class="jrow" id="v1-lq">
+      <!-- Opening: auto language detect + name -->
+      <div class="jrow" id="v1-nq">
         <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">Namaste! 🙏 आप किस भाषा में बात करना चाहेंगे?</div>
-      </div>
-      <div class="qrow" id="v1-lchips">
-        <div class="qr" onclick="v1PickLang(this,'English')">🇬🇧 English</div>
-        <div class="qr" onclick="v1PickLang(this,'हिंदी')">🇮🇳 हिंदी</div>
-        <div class="qr" onclick="v1PickLang(this,'ಕನ್ನಡ')">🌸 Kannada</div>
-        <div class="qr" onclick="v1PickLang(this,'मराठी')">🌟 Marathi</div>
-        <div class="qr" onclick="v1PickLang(this,'Hinglish')">🔥 Hinglish</div>
-      </div>
-      <!-- Step -1: Voice or Text -->
-      <div class="urow hidden" id="v1-ul"><div class="ubub" id="v1-ulb"></div></div>
-      <div class="jrow hidden" id="v1-mq">
-        <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">How would you like to talk with me?</div>
-      </div>
-      <div class="qrow hidden" id="v1-mchips">
-        <div class="qr" onclick="v1PickMode(this,'voice')">🎤 Voice</div>
-        <div class="qr" onclick="v1PickMode(this,'text')">⌨️ Type</div>
-      </div>
-      <!-- Step 0: Name -->
-      <div class="urow hidden" id="v1-um"><div class="ubub" id="v1-umb"></div></div>
-      <div class="jrow hidden" id="v1-nq">
-        <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">I'm JioBharatIQ, your personal AI for everything Jio. What's your name?</div>
+        <div class="jbub">Namaste! 🙏 I'm JioBharatIQ — your AI for everything Jio. <strong>Speak in any language</strong> — Hindi, English, Kannada, Telugu, anything. बस बोलिए, मैं समझ लूँगा। What's your name?</div>
       </div>
       <!-- Step 1: Phone (after name) -->
       <div class="urow hidden" id="v1-un"><div class="ubub" id="v1-unb"></div></div>
@@ -594,21 +571,8 @@
     </div>
     <div class="cv-divider"></div>
     <div class="cv-chat" id="v2Chat">
-      <!-- Step -2: Language selection -->
-      <div class="jrow" id="v2-lq">
-        <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">Namaste! 🙏 आप किस भाषा में बात करना चाहेंगे?</div>
-      </div>
-      <div class="qrow" id="v2-lchips">
-        <div class="qr" onclick="v2PickLang(this,'English')">🇬🇧 English</div>
-        <div class="qr" onclick="v2PickLang(this,'हिंदी')">🇮🇳 हिंदी</div>
-        <div class="qr" onclick="v2PickLang(this,'ಕನ್ನಡ')">🌸 Kannada</div>
-        <div class="qr" onclick="v2PickLang(this,'मराठी')">🌟 Marathi</div>
-        <div class="qr" onclick="v2PickLang(this,'Hinglish')">🔥 Hinglish</div>
-      </div>
-      <div class="urow hidden" id="v2-ul"><div class="ubub" id="v2-ulb"></div></div>
-      <!-- Intro bubble — hidden until language is picked -->
-      <div class="jrow hidden" id="v2-intro">
+      <!-- Intro bubble — language auto-detected from first utterance -->
+      <div class="jrow" id="v2-intro">
         <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
         <div class="jbub">Hi! I'm JioBharatIQ. Let me show you what I can do — what are you into?</div>
       </div>
@@ -667,33 +631,10 @@
     <div class="cv-info" id="v3Info"></div>
     <div class="cv-divider"></div>
     <div class="cv-chat" id="v3Chat">
-      <!-- Step -2: Language selection -->
-      <div class="jrow" id="v3-lq">
+      <!-- Step 0: Name — language auto-detected from first utterance -->
+      <div class="jrow" id="v3-nq">
         <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">Namaste! 🙏 आप किस भाषा में बात करना चाहेंगे?</div>
-      </div>
-      <div class="qrow" id="v3-lchips">
-        <div class="qr" onclick="v3PickLang(this,'English')">🇬🇧 English</div>
-        <div class="qr" onclick="v3PickLang(this,'हिंदी')">🇮🇳 हिंदी</div>
-        <div class="qr" onclick="v3PickLang(this,'ಕನ್ನಡ')">🌸 Kannada</div>
-        <div class="qr" onclick="v3PickLang(this,'मराठी')">🌟 Marathi</div>
-        <div class="qr" onclick="v3PickLang(this,'Hinglish')">🔥 Hinglish</div>
-      </div>
-      <!-- Step -1: Voice or Text -->
-      <div class="urow hidden" id="v3-ul"><div class="ubub" id="v3-ulb"></div></div>
-      <div class="jrow hidden" id="v3-mq">
-        <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">How would you like to talk with me?</div>
-      </div>
-      <div class="qrow hidden" id="v3-mchips">
-        <div class="qr" onclick="v3PickMode(this,'voice')">🎤 Voice</div>
-        <div class="qr" onclick="v3PickMode(this,'text')">⌨️ Type</div>
-      </div>
-      <!-- Step 0: Name -->
-      <div class="urow hidden" id="v3-um"><div class="ubub" id="v3-umb"></div></div>
-      <div class="jrow hidden" id="v3-nq">
-        <div class="jav"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#6D17CE"/><path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/></svg></div>
-        <div class="jbub">I'm here to help your whole family. What's your name?</div>
+        <div class="jbub">Namaste! 🙏 I'm JioBharatIQ — here to personalise everything for your family. <strong>Speak in any language</strong>, I'll detect it. What's your name? / आपका नाम क्या है?</div>
       </div>
       <!-- Step 1: Phone -->
       <div class="urow hidden" id="v3-un"><div class="ubub" id="v3-unb"></div></div>
@@ -1158,22 +1099,40 @@ function addChip(barId,emoji,text,key) {
 /* ══════════════════════════════════════════════════════
    BEGIN FLOW (splash tap)
 ══════════════════════════════════════════════════════ */
+/* ── Language auto-detection from STT transcript ── */
+function detectLang(text) {
+  if (!text) return;
+  // Script-based detection (Unicode ranges)
+  if (/[\u0900-\u097F]/.test(text)) { selectedLangCode = 'hi-IN'; return; } // Devanagari: Hindi/Marathi
+  if (/[\u0C80-\u0CFF]/.test(text)) { selectedLangCode = 'kn-IN'; return; } // Kannada
+  if (/[\u0C00-\u0C7F]/.test(text)) { selectedLangCode = 'te-IN'; return; } // Telugu
+  if (/[\u0B80-\u0BFF]/.test(text)) { selectedLangCode = 'ta-IN'; return; } // Tamil
+  if (/[\u0980-\u09FF]/.test(text)) { selectedLangCode = 'bn-IN'; return; } // Bengali
+  if (/[\u0A80-\u0AFF]/.test(text)) { selectedLangCode = 'gu-IN'; return; } // Gujarati
+  // Hinglish detection from common romanized Hindi words
+  if (/\b(aap|main|mera|tera|kya|kahan|nahi|haan|bilkul|theek|yaar|bhai|didi|bolo|mujhe|apna|naam|hai)\b/i.test(text)) {
+    selectedLangCode = 'hi-IN'; return;
+  }
+  selectedLangCode = 'en-IN'; // default English
+}
+
 function beginFlow() {
-  micOn = false;
-  voiceMode[activeV] = false;
+  micOn = true;
+  voiceMode[activeV] = true;
   goScreen(activeV);
   updateMicUI();
   setAvState(activeV, 'idle');
+  const openingLine = "Namaste! Main JioBharatIQ hun. Kisi bhi bhasha mein boliye — Hindi, English, Kannada, Telugu, kuch bhi. Aapka naam kya hai?";
   if (activeV === 'v1') {
-    v1Step = -2;
-    setTimeout(()=>speak("Namaste! Aap kaun si bhasha mein baat karna chahenge?"),300);
+    v1Step = 0;
+    setTimeout(()=>speak(openingLine, ()=>startSR()), 300);
   }
   if (activeV === 'v2') {
-    setTimeout(()=>speak("Namaste! Aap kaun si bhasha mein baat karna chahenge?"),300);
+    setTimeout(()=>{ show('v2Cards'); scroll('v2Chat'); speak("Hi! I'm JioBharatIQ — your AI for everything Jio. Just speak in any language, I'll understand. Bolo, kya topic pasand hai aapko?"); }, 300);
   }
   if (activeV === 'v3') {
-    v3Step = -2;
-    setTimeout(()=>speak("Namaste! Aap kaun si bhasha mein baat karna chahenge?"),300);
+    v3Step = 0;
+    setTimeout(()=>speak(openingLine, ()=>startSR()), 300);
   }
 }
 
@@ -1197,32 +1156,7 @@ function handleVoice(text) {
 ══════════════════════════════════════════════════════ */
 let v1Step = -2;
 
-function v1PickLang(el, lang) {
-  document.querySelectorAll('#v1-lchips .qr').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
-  selectedLangCode = LANG_CODES[lang] || 'en-IN';
-  document.getElementById('v1-ulb').textContent = lang;
-  show('v1-ul'); addChip('v1Info','🌐',lang,'lang');
-  v1Step = -1;
-  setTimeout(()=>{ show('v1-mq'); show('v1-mchips'); scroll('v1Chat'); speak('How would you like to talk with me?'); },280);
-}
-
-function v1PickMode(el, mode) {
-  document.querySelectorAll('#v1-mchips .qr').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
-  const label = mode === 'voice' ? '🎤 Voice' : '⌨️ Type';
-  document.getElementById('v1-umb').textContent = label;
-  show('v1-um');
-  v1Step = 0;
-  if (mode === 'voice') {
-    micOn = true; voiceMode.v1 = true;
-    updateMicUI();
-    setTimeout(()=>{ show('v1-nq'); scroll('v1Chat'); speak("I'm JioBharatIQ, your personal AI for everything Jio. What's your name?",()=>startSR()); },280);
-  } else {
-    toggleMode('v1');
-    setTimeout(()=>{ show('v1-nq'); scroll('v1Chat'); speak("I'm JioBharatIQ, your personal AI for everything Jio. What's your name?"); },280);
-  }
-}
+// v1PickLang and v1PickMode removed — language is auto-detected from first utterance
 
 function v1Submit() {
   const v = document.getElementById('v1F').value.trim(); if (!v) return;
@@ -1232,6 +1166,7 @@ function v1Submit() {
 }
 
 function v1Name(name) {
+  detectLang(name); // auto-detect language from what the user said
   v1Step = 1; userName = name;
   document.getElementById('v1-unb').textContent = name;
   show('v1-un'); addChip('v1Info','👤',name,'name');
@@ -1276,9 +1211,8 @@ function v1Verify() {
 }
 
 function resetV1() {
-  v1Step=-2;
-  ['v1-ul','v1-mq','v1-mchips','v1-um','v1-nq','v1-un','v1-q2','v1-up','v1-done'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');});
-  document.querySelectorAll('#v1-lchips .qr, #v1-mchips .qr').forEach(c=>c.classList.remove('sel'));
+  v1Step=0;
+  ['v1-un','v1-q2','v1-up','v1-done'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');});
   const bar=document.getElementById('v1Info'); if(bar){bar.innerHTML='';bar.classList.remove('on');}
   document.getElementById('v1OTP').classList.remove('show');
   // Reset OTP boxes
@@ -1316,14 +1250,7 @@ const v2Content = {
   }
 };
 
-function v2PickLang(el, lang) {
-  document.querySelectorAll('#v2-lchips .qr').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
-  selectedLangCode = LANG_CODES[lang] || 'en-IN';
-  document.getElementById('v2-ulb').textContent = lang;
-  show('v2-ul');
-  setTimeout(()=>{ show('v2-intro'); show('v2Cards'); scroll('v2Chat'); speak("Hi! I'm JioBharatIQ. Let me show you what I can do — what are you into?"); },280);
-}
+// v2PickLang removed — language auto-detected. V2 starts with interest cards directly.
 
 function v2PickCard(el, topic, label) {
   document.querySelectorAll('.int-card').forEach(c=>c.classList.remove('sel'));
@@ -1360,10 +1287,7 @@ function v2CompleteReg() {
 }
 
 function resetV2() {
-  ['v2-ul','v2-intro','v2-uc','v2-prompts-intro','v2-plist','v2-result','v2-regask','v2-regbtns'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');});
-  // v2Cards starts hidden
-  const cards=document.getElementById('v2Cards'); if(cards) cards.classList.add('hidden');
-  document.querySelectorAll('#v2-lchips .qr').forEach(c=>c.classList.remove('sel'));
+  ['v2-uc','v2-prompts-intro','v2-plist','v2-result','v2-regask','v2-regbtns'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');});
   document.querySelectorAll('.int-card').forEach(c=>c.classList.remove('sel'));
   document.getElementById('v2Reg').classList.remove('show');
   const pl=document.getElementById('v2-plist'); if(pl) pl.innerHTML='';
@@ -1386,32 +1310,7 @@ const v3AgentData = {
   'Shopping deals': { title:'Shopping Agent', sub:'Deals & savings', prompts:['Best deals on JioMart today','Compare prices for iPhone','Sale events this week'] }
 };
 
-function v3PickLang(el, lang) {
-  document.querySelectorAll('#v3-lchips .qr').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
-  selectedLangCode = LANG_CODES[lang] || 'en-IN';
-  document.getElementById('v3-ulb').textContent = lang;
-  show('v3-ul'); addChip('v3Info','🌐',lang,'lang');
-  v3Step = -1;
-  setTimeout(()=>{ show('v3-mq'); show('v3-mchips'); scroll('v3Chat'); speak('How would you like to talk with me?'); },280);
-}
-
-function v3PickMode(el, mode) {
-  document.querySelectorAll('#v3-mchips .qr').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
-  const label = mode === 'voice' ? '🎤 Voice' : '⌨️ Type';
-  document.getElementById('v3-umb').textContent = label;
-  show('v3-um');
-  v3Step = 0;
-  if (mode === 'voice') {
-    micOn = true; voiceMode.v3 = true;
-    updateMicUI();
-    setTimeout(()=>{ show('v3-nq'); scroll('v3Chat'); speak("I'm here to help your whole family. What's your name?",()=>startSR()); },280);
-  } else {
-    toggleMode('v3');
-    setTimeout(()=>{ show('v3-nq'); scroll('v3Chat'); speak("I'm here to help your whole family. What's your name?"); },280);
-  }
-}
+// v3PickLang and v3PickMode removed — language auto-detected from first utterance
 
 function v3Submit() {
   const v = document.getElementById('v3F').value.trim(); if (!v) return;
@@ -1421,6 +1320,7 @@ function v3Submit() {
 }
 
 function v3Name(name) {
+  detectLang(name); // auto-detect language from what user said
   v3Step = 1; userName = name; v3Captured.name = name;
   document.getElementById('v3-unb').textContent = name;
   show('v3-un'); addChip('v3Info','👤',name,'name');
@@ -1487,9 +1387,9 @@ function v3PickInterest(el) {
 }
 
 function resetV3() {
-  v3Step=-2; v3Captured={name:'',role:'',interest:''};
-  ['v3-ul','v3-mq','v3-mchips','v3-um','v3-nq','v3-un','v3-phoneq','v3-up','v3-q2','v3-cq2','v3-ur','v3-q3','v3-cq3','v3-ui','v3-done'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');});
-  document.querySelectorAll('#v3-lchips .qr, #v3-mchips .qr, #v3-cq2 .qr, #v3-cq3 .qr').forEach(c=>c.classList.remove('sel'));
+  v3Step=0; v3Captured={name:'',role:'',interest:''};
+  ['v3-un','v3-phoneq','v3-up','v3-q2','v3-cq2','v3-ur','v3-q3','v3-cq3','v3-ui','v3-done'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');});
+  document.querySelectorAll('#v3-cq2 .qr, #v3-cq3 .qr').forEach(c=>c.classList.remove('sel'));
   document.getElementById('v3OTP').classList.remove('show');
   // Reset OTP boxes
   ['v3ob0','v3ob1','v3ob2','v3ob3','v3ob4','v3ob5'].forEach((id,i)=>{
