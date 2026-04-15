@@ -726,10 +726,389 @@
   <!-- ═══════════════════════════════ -->
   <!-- HOMEPAGE (inline, no iframe)   -->
   <!-- ═══════════════════════════════ -->
-  <div class="screen" id="homepage" style="padding:0;overflow:hidden">
-    <iframe src="https://sunit1986.github.io/design-prototypes/jbiqhomepage.html"
-            style="width:100%;height:100%;border:none;display:block"
-            title="JioBharatIQ Home"></iframe>
+  <div class="screen" id="homepage">
+  <style>
+  /* ─── HOMEPAGE SCOPED STYLES (from jbiqhomepage.html) ─── */
+  #homepage{
+    --surface:#fff;--surface-ghost:#eeeeef;--surface-ghost-icon:#e7e9ff;--surface-bold:#3900ad;
+    --surface-subtle:#eeeeef;--surface-minimal:#f8f8f9;
+    --text-high:#0c0d10;--text-medium:#191b1e;--text-low:rgba(25,27,30,.65);
+    --icon-medium:#170054;--stroke-subtle:rgba(36,38,43,.12);
+    --primary-50:#3535f3;--primary-20:#e8e8fc;
+    --error:#fa2f40;--success:#25ab21;--grey-60:#b5b5b5;
+    --shape-pill:999px;--shape-4xl:24px;--shape-l:16px;--shape-m:12px;--shape-s:8px;--shape-xs:4px;
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    transform:translateZ(0);/* contain fixed children */
+    overflow:hidden;font-family:'JioType',sans-serif;background:#fff;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #homepage ::-webkit-scrollbar{display:none}
+  #homepage .hp2-header{
+    position:sticky;top:0;z-index:20;background:var(--surface);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 12px;height:56px;flex-shrink:0;
+  }
+  #homepage .hp2-header-start{display:flex;align-items:center;gap:8px}
+  #homepage .hp2-header-end{display:flex;align-items:center;gap:8px}
+  #homepage .hp2-icon-btn{width:40px;height:40px;border-radius:999px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  #homepage .hp2-icon-btn:active{background:var(--grey-20)}
+  #homepage .hp2-icon-btn svg{width:24px;height:24px;color:var(--icon-medium)}
+  #homepage .hp2-jio-logo{width:32px;height:32px;border-radius:50%;object-fit:cover}
+  #homepage .hp2-profile-avatar{width:40px;height:40px;border-radius:50%;position:relative;cursor:pointer;background:linear-gradient(135deg,#f7ab20,#e8940a)}
+  #homepage .hp2-profile-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  #homepage .hp2-notif-badge{
+    position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;border-radius:50%;
+    background:#3db88c;color:#fff;font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;border:2.5px solid var(--surface);z-index:2;
+  }
+  #homepage .hp2-body-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:120px}
+  #homepage .hp2-section-title{font-size:20px;font-weight:900;line-height:1;padding:16px 18px 12px;color:var(--text-high)}
+  /* ASSISTANTS */
+  #homepage .hp2-assistants-row{display:flex;gap:16px;padding:0 18px;overflow-x:auto}
+  #homepage .hp2-assistant-item{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;cursor:pointer;text-decoration:none;color:inherit}
+  #homepage .hp2-assistant-item.inactive{opacity:.8}
+  #homepage .hp2-av-wrap{width:74px;height:74px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:50%}
+  #homepage .hp2-ring{position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--primary-50);z-index:2;pointer-events:none}
+  #homepage .hp2-ring.grey{border-color:var(--grey-60)}
+  #homepage .hp2-av-inner{width:60px;height:60px;border-radius:50%;overflow:hidden;position:relative;z-index:1;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff}
+  #homepage .hp2-av-img{width:60px;height:60px;border-radius:50%;object-fit:cover;object-position:center;position:relative;z-index:1}
+  #homepage .hp2-assistant-label{font-size:14px;font-weight:500;color:var(--text-medium);opacity:.8;text-align:center;white-space:nowrap}
+  /* TOOLS */
+  #homepage .hp2-tools-section{display:flex;flex-direction:column;gap:8px}
+  #homepage .hp2-section-title-row{display:flex;align-items:baseline;gap:8px;padding:16px 18px 12px}
+  #homepage .hp2-section-title-row .hp2-section-title{padding:0}
+  #homepage .hp2-coming-soon{font-size:11px;font-weight:500;color:var(--primary-50);text-transform:lowercase;letter-spacing:.02em;opacity:.9}
+  #homepage .hp2-tools-row{display:flex;gap:8px;padding:0 18px;overflow-x:auto;flex-wrap:nowrap}
+  #homepage .hp2-tool-chip{
+    flex-shrink:0;display:flex;align-items:center;gap:6px;
+    padding:8px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--stroke-subtle);
+    font-family:'JioType',sans-serif;font-size:14px;font-weight:500;color:var(--text-medium);
+    cursor:pointer;white-space:nowrap;opacity:.8;
+  }
+  #homepage .hp2-tool-chip:active{background:var(--primary-20);border-color:var(--primary-50)}
+  /* UPDATE CARDS */
+  #homepage .hp2-updates-section{display:flex;flex-direction:column;gap:10px;padding:0 16px}
+  #homepage .hp2-ucard{background:var(--surface-subtle);border-radius:var(--shape-l);padding:16px;display:flex;flex-direction:column;gap:6px}
+  #homepage .hp2-ucard-title{font-size:16px;font-weight:700;line-height:1.1;color:var(--text-high)}
+  #homepage .hp2-ucard-row{display:flex;gap:10px;align-items:flex-start}
+  #homepage .hp2-ucard-text{flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center;min-height:54px}
+  #homepage .hp2-ucard-text .main{font-size:14px;font-weight:500;line-height:1.3;color:var(--text-high)}
+  #homepage .hp2-ucard-text .sub{font-size:10px;font-weight:400;line-height:1.3;color:var(--text-low)}
+  #homepage .hp2-ucard-img{width:54px;height:54px;border-radius:var(--shape-xs);overflow:hidden;flex-shrink:0}
+  #homepage .hp2-ucard-img img{width:100%;height:100%;object-fit:cover}
+  #homepage .hp2-ucard-action{display:flex;align-items:center;justify-content:space-between;background:var(--surface-minimal);border-radius:var(--shape-4xl);padding:4px 8px 4px 14px}
+  #homepage .hp2-ucard-action span{font-size:12px;font-weight:500;color:var(--text-high)}
+  #homepage .hp2-ucard-action-btn{width:32px;height:32px;border-radius:50%;border:none;background:var(--primary-50);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  #homepage .hp2-ucard-action-btn svg{width:16px;height:16px;color:#fff}
+  /* CRICKET */
+  #homepage .hp2-cricket{background:var(--surface-subtle);border-radius:var(--shape-l);padding:16px;display:flex;flex-direction:column;gap:8px;align-items:center}
+  #homepage .hp2-cricket-scores{display:flex;align-items:center;justify-content:space-between;width:100%}
+  #homepage .hp2-cricket-team{display:flex;align-items:center;gap:7px;flex:1}
+  #homepage .hp2-cricket-team.right{flex-direction:row-reverse;text-align:right;justify-content:flex-start}
+  #homepage .hp2-cricket-flag{width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0}
+  #homepage .hp2-cricket-flag img{width:100%;height:100%;object-fit:contain}
+  #homepage .hp2-cricket-info{display:flex;flex-direction:column;gap:2px}
+  #homepage .hp2-cricket-name{font-size:16px;font-weight:500;line-height:1.1}
+  #homepage .hp2-cricket-score{font-size:16px;font-weight:700;line-height:1.1}
+  #homepage .hp2-cricket-overs{font-size:14px;font-weight:400;line-height:1.2;color:rgba(12,13,16,.46)}
+  #homepage .hp2-cricket-vs{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:var(--surface-minimal);color:var(--text-medium)}
+  #homepage .hp2-cricket-divider{width:100%;height:1px;background:#e0e1e2}
+  #homepage .hp2-cricket-live{display:flex;align-items:center;gap:4px;background:#fa2f40;border-radius:2px;padding:0 7px}
+  #homepage .hp2-cricket-live-dot{width:6px;height:6px;border-radius:50%;background:#fff}
+  #homepage .hp2-cricket-live span{font-size:10px;font-weight:500;color:#fff;line-height:1.3}
+  #homepage .hp2-cricket-bottom{display:flex;gap:8px;align-items:center;justify-content:center}
+  #homepage .hp2-cricket-status{font-size:12px;font-weight:400;color:rgba(12,13,16,.66)}
+  /* NEWS */
+  #homepage .hp2-news-item{display:flex;gap:10px;align-items:flex-start}
+  #homepage .hp2-news-item .text-col{flex:1;display:flex;flex-direction:column;gap:4px;min-height:54px;justify-content:center}
+  #homepage .hp2-news-item .title{font-size:14px;font-weight:500;line-height:1.3;color:var(--text-high);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  #homepage .hp2-news-item .source{font-size:10px;font-weight:400;color:var(--text-low)}
+  #homepage .hp2-news-item .thumb{width:52px;height:52px;border-radius:var(--shape-s);overflow:hidden;flex-shrink:0}
+  #homepage .hp2-news-item .thumb img{width:100%;height:100%;object-fit:cover}
+  /* SONGS */
+  #homepage .hp2-song-item{display:flex;gap:10px;align-items:center}
+  #homepage .hp2-song-item .art{width:52px;height:52px;border-radius:var(--shape-s);overflow:hidden;flex-shrink:0}
+  #homepage .hp2-song-item .art img{width:100%;height:100%;object-fit:cover}
+  #homepage .hp2-song-item .meta{flex:1;display:flex;flex-direction:column;gap:2px}
+  #homepage .hp2-song-item .meta .name{font-size:14px;font-weight:500;line-height:1.3;color:var(--text-high)}
+  #homepage .hp2-song-item .meta .artist{font-size:12px;font-weight:400;line-height:1.3;color:var(--text-low)}
+  #homepage .hp2-song-play{width:20px;height:20px;opacity:.8;flex-shrink:0}
+  /* FLOATING INPUT */
+  #homepage .hp2-input-widget{
+    position:fixed;bottom:0;left:0;right:0;z-index:30;
+    padding:6px 12px 16px;
+    background:linear-gradient(transparent,var(--surface) 30%);
+  }
+  #homepage .hp2-input-field{background:#eeeeef;border-radius:24px;padding:8px;display:flex;flex-direction:column;gap:8px}
+  #homepage .hp2-input-top{display:flex;align-items:center;gap:4px}
+  #homepage .hp2-input-text{
+    flex:1;padding:4px 8px;font-family:'JioType',sans-serif;font-size:16px;font-weight:400;
+    color:var(--text-low);opacity:.65;border:none;outline:none;background:none;line-height:1.3;
+  }
+  #homepage .hp2-input-actions{display:flex;justify-content:space-between;align-items:center}
+  #homepage .hp2-input-left{display:flex;gap:2px;align-items:center}
+  #homepage .hp2-input-icon-btn{width:32px;height:32px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  #homepage .hp2-input-icon-btn svg{width:20px;height:20px;color:var(--text-low);opacity:.45}
+  #homepage .hp2-input-right{display:flex;gap:8px;align-items:center}
+  #homepage .hp2-speak-btn{background:#6d17ce;border:none;border-radius:999px;padding:8px 16px;display:flex;align-items:center;gap:6px;cursor:pointer}
+  #homepage .hp2-speak-btn svg{width:14px;height:14px;color:#fff}
+  #homepage .hp2-speak-btn span{font-family:'JioType',sans-serif;font-weight:700;font-size:14px;color:#fff;line-height:1}
+  #homepage .hp2-speak-btn:active{opacity:.85;transform:scale(.97)}
+  /* MENU */
+  #homepage .hp2-menu-backdrop{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.4);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+  #homepage .hp2-menu-backdrop.open{opacity:1;visibility:visible}
+  #homepage .hp2-menu-drawer{
+    position:fixed;top:0;bottom:0;left:0;z-index:95;
+    width:100%;height:100%;background:var(--surface);
+    transform:translateX(-100%);transition:transform .3s ease;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  #homepage .hp2-menu-drawer.open{transform:translateX(0)}
+  #homepage .hp2-menu-top{display:flex;align-items:center;justify-content:flex-end;padding:10px 16px 0;height:48px;flex-shrink:0}
+  #homepage .hp2-menu-close{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#e0d6ff;border:none;cursor:pointer}
+  #homepage .hp2-menu-close svg{width:24px;height:24px;color:var(--icon-medium)}
+  #homepage .hp2-menu-body{flex:1;overflow-y:auto;padding:0 8px 16px}
+  #homepage .hp2-menu-nav{list-style:none;padding:0;margin:0}
+  #homepage .hp2-menu-nav a{display:flex;align-items:center;gap:12px;padding:12px 16px;font-size:16px;font-weight:500;color:var(--text-high);text-decoration:none;border-radius:14px;cursor:pointer;font-family:'JioType',sans-serif}
+  #homepage .hp2-menu-nav a:active{background:var(--grey-20)}
+  #homepage .hp2-menu-nav-icon{width:40px;height:40px;border-radius:50%;background:#e0d6ff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  #homepage .hp2-menu-nav-icon svg{width:22px;height:22px;color:#170054}
+  #homepage .hp2-menu-nav-label{flex:1}
+  #homepage .hp2-menu-nav-chev{width:20px;height:20px;color:var(--text-low);flex-shrink:0}
+  #homepage .hp2-menu-section-title{padding:20px 16px 8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-low);font-family:'JioType',sans-serif}
+  #homepage .hp2-menu-chat-list{padding:0 8px 16px}
+  #homepage .hp2-menu-chat-item{display:block;padding:12px 16px;border-radius:14px;text-decoration:none;color:inherit;cursor:pointer;margin-bottom:2px}
+  #homepage .hp2-menu-chat-item:active{background:var(--grey-20)}
+  #homepage .hp2-menu-chat-title{font-size:14px;font-weight:600;color:var(--text-high);line-height:1.3;font-family:'JioType',sans-serif}
+  #homepage .hp2-menu-chat-domain{font-size:12px;font-weight:400;color:var(--text-low);margin-top:4px;opacity:.65;font-family:'JioType',sans-serif}
+  #homepage .hp2-menu-footer{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 24px;flex-shrink:0;border-top:1px solid var(--stroke-subtle)}
+  #homepage .hp2-menu-settings{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--text-high);cursor:pointer;font-family:'JioType',sans-serif;background:none;border:none;padding:0}
+  #homepage .hp2-menu-settings svg{width:22px;height:22px;color:#170054}
+  #homepage .hp2-menu-new-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;background:#e0d6ff;border:none;font-size:16px;font-weight:700;color:#170054;cursor:pointer;font-family:'JioType',sans-serif}
+  #homepage .hp2-menu-new-btn svg{width:20px;height:20px}
+  </style>
+
+    <!-- HEADER -->
+    <div class="hp2-header">
+      <div class="hp2-header-start">
+        <button class="hp2-icon-btn" onclick="hpOpenMenu()">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16a1 1 0 100-2H4a1 1 0 000 2zm16 10H4a1 1 0 000 2h16a1 1 0 000-2zm0-6H4a1 1 0 000 2h16a1 1 0 000-2z" fill="currentColor"/></svg>
+        </button>
+        <img class="hp2-jio-logo" src="Assets/jio-logo.png" alt="Jio">
+      </div>
+      <div class="hp2-header-end">
+        <div class="hp2-profile-avatar" id="hpAvatarLabel">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Profile">
+          <div class="hp2-notif-badge">9</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENU -->
+    <div id="hpMenuBackdrop" class="hp2-menu-backdrop" onclick="hpCloseMenu()"></div>
+    <div id="hpMenuDrawer" class="hp2-menu-drawer">
+      <div class="hp2-menu-top">
+        <button class="hp2-menu-close" onclick="hpCloseMenu()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="hp2-menu-body">
+        <ul class="hp2-menu-nav">
+          <li><a href="javascript:void(0)"><span class="hp2-menu-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/></svg></span><span class="hp2-menu-nav-label">Assistant</span><svg class="hp2-menu-nav-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a></li>
+          <li><a href="javascript:void(0)"><span class="hp2-menu-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span><span class="hp2-menu-nav-label">Tools</span><svg class="hp2-menu-nav-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a></li>
+          <li><a href="javascript:void(0)"><span class="hp2-menu-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span><span class="hp2-menu-nav-label">Chats</span><svg class="hp2-menu-nav-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a></li>
+        </ul>
+        <div class="hp2-menu-section-title">Recent</div>
+        <div class="hp2-menu-chat-list">
+          <a class="hp2-menu-chat-item" href="javascript:void(0)" onclick="hpCloseMenu()"><div class="hp2-menu-chat-title">Plan Goa trip</div><div class="hp2-menu-chat-domain">Travel • 9 minutes ago</div></a>
+          <a class="hp2-menu-chat-item" href="javascript:void(0)" onclick="hpCloseMenu()"><div class="hp2-menu-chat-title">IND vs AUS live score</div><div class="hp2-menu-chat-domain">Cricket • 9 minutes ago</div></a>
+          <a class="hp2-menu-chat-item" href="javascript:void(0)" onclick="hpCloseMenu()"><div class="hp2-menu-chat-title">Translate Hindi to English</div><div class="hp2-menu-chat-domain">General • 9 minutes ago</div></a>
+          <a class="hp2-menu-chat-item" href="javascript:void(0)" onclick="hpCloseMenu()"><div class="hp2-menu-chat-title">Diwali poster image</div><div class="hp2-menu-chat-domain">Create image • 9 minutes ago</div></a>
+          <a class="hp2-menu-chat-item" href="javascript:void(0)" onclick="hpCloseMenu()"><div class="hp2-menu-chat-title">December budget summary</div><div class="hp2-menu-chat-domain">Finance • 9 minutes ago</div></a>
+        </div>
+      </div>
+      <div class="hp2-menu-footer">
+        <button class="hp2-menu-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg> Settings</button>
+        <button class="hp2-menu-new-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> New</button>
+      </div>
+    </div>
+
+    <!-- SCROLLABLE BODY -->
+    <div class="hp2-body-scroll">
+
+      <!-- YOUR ASSISTANTS -->
+      <div class="hp2-section-title">Your Assistants</div>
+      <div class="hp2-assistants-row">
+        <a class="hp2-assistant-item" href="javascript:void(0)">
+          <div class="hp2-av-wrap"><div class="hp2-ring"></div><div class="hp2-av-inner"><img class="hp2-av-img" src="Assets/persona-astrology.png" alt="Astrology"></div></div>
+          <span class="hp2-assistant-label">Astrology</span>
+        </a>
+        <a class="hp2-assistant-item" href="javascript:void(0)">
+          <div class="hp2-av-wrap"><div class="hp2-ring"></div><img class="hp2-av-img" src="Assets/persona-companion.png" alt="Companion"></div>
+          <span class="hp2-assistant-label">Companion</span>
+        </a>
+        <a class="hp2-assistant-item" href="javascript:void(0)">
+          <div class="hp2-av-wrap"><div class="hp2-ring"></div><div class="hp2-av-inner"><img class="hp2-av-img" src="Assets/persona-career.png" alt="Career"></div></div>
+          <span class="hp2-assistant-label">Career</span>
+        </a>
+        <a class="hp2-assistant-item" href="javascript:void(0)">
+          <div class="hp2-av-wrap"><div class="hp2-ring"></div><img class="hp2-av-img" src="Assets/persona-bollywood.png" alt="Entertainment"></div>
+          <span class="hp2-assistant-label">Entertainment</span>
+        </a>
+        <a class="hp2-assistant-item" href="javascript:void(0)">
+          <div class="hp2-av-wrap"><div class="hp2-ring"></div><img class="hp2-av-img" src="Assets/persona-cricket.png" alt="Cricket"></div>
+          <span class="hp2-assistant-label">Cricket</span>
+        </a>
+        <a class="hp2-assistant-item" href="javascript:void(0)">
+          <div class="hp2-av-wrap"><div class="hp2-ring"></div><img class="hp2-av-img" src="Assets/persona-devotion.png" alt="Devotion"></div>
+          <span class="hp2-assistant-label">Devotion</span>
+        </a>
+        <div class="hp2-assistant-item inactive">
+          <div class="hp2-av-wrap"><div class="hp2-ring grey"></div><img class="hp2-av-img" src="Assets/persona-finance.png" alt="Finance"></div>
+          <span class="hp2-assistant-label">Finance</span>
+        </div>
+        <div class="hp2-assistant-item inactive">
+          <div class="hp2-av-wrap"><div class="hp2-ring grey"></div><img class="hp2-av-img" src="Assets/persona-health.png" alt="Health"></div>
+          <span class="hp2-assistant-label">Health</span>
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div class="hp2-tools-section">
+        <div class="hp2-section-title-row">
+          <div class="hp2-section-title">Tools</div>
+          <span class="hp2-coming-soon">Coming soon</span>
+        </div>
+        <div class="hp2-tools-row">
+          <div class="hp2-tool-chip">💬 Quick Translate</div>
+          <div class="hp2-tool-chip">🎨 Create image</div>
+          <div class="hp2-tool-chip">🧑‍⚕️ Health Calculator</div>
+        </div>
+        <div class="hp2-tools-row">
+          <div class="hp2-tool-chip">🎬 Generate videos</div>
+          <div class="hp2-tool-chip">📑 Analyse docs</div>
+          <div class="hp2-tool-chip">🛍️ Smart Shopping</div>
+        </div>
+      </div>
+
+      <!-- UPDATES -->
+      <div class="hp2-section-title" style="padding-top:20px">Updates</div>
+      <div class="hp2-updates-section">
+
+        <!-- JioMart -->
+        <div class="hp2-ucard">
+          <div class="hp2-ucard-title">JioMart</div>
+          <div class="hp2-ucard-row">
+            <div class="hp2-ucard-text">
+              <span class="main">Order arriving by 3PM today</span>
+              <span class="sub">Lakme foundation</span>
+            </div>
+            <div class="hp2-ucard-img"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=108&h=108&fit=crop" alt="Lakme"></div>
+          </div>
+          <div class="hp2-ucard-action">
+            <span>Mahesh kumar is on the way</span>
+            <button class="hp2-ucard-action-btn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M19.44 13c-.22 0-.45-.07-.67-.12a9.44 9.44 0 01-1.31-.39 2 2 0 00-2.48 1l-.22.45a12.18 12.18 0 01-2.66-2 12.18 12.18 0 01-2-2.66l.42-.28a2 2 0 001-2.48 10.33 10.33 0 01-.39-1.31c-.05-.22-.09-.45-.12-.68a3 3 0 00-3-2.49h-3a3 3 0 00-3 3.41 19 19 0 0016.52 16.46h.38a3 3 0 002-.76 3 3 0 001-2.25v-3a3 3 0 00-2.47-2.9z" fill="currentColor"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Cricket -->
+        <div class="hp2-cricket">
+          <div class="hp2-cricket-scores">
+            <div class="hp2-cricket-team">
+              <div class="hp2-cricket-flag"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png" alt="IND"></div>
+              <div class="hp2-cricket-info">
+                <span class="hp2-cricket-name">IND</span>
+                <span class="hp2-cricket-score">227/4</span>
+                <span class="hp2-cricket-overs">20.0</span>
+              </div>
+            </div>
+            <div class="hp2-cricket-vs">vs</div>
+            <div class="hp2-cricket-team right">
+              <div class="hp2-cricket-info" style="align-items:flex-end">
+                <span class="hp2-cricket-name">AUS</span>
+                <span class="hp2-cricket-score">157/1</span>
+                <span class="hp2-cricket-overs">17.4</span>
+              </div>
+              <div class="hp2-cricket-flag"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/1200px-Flag_of_Australia_%28converted%29.svg.png" alt="AUS"></div>
+            </div>
+          </div>
+          <div class="hp2-cricket-divider"></div>
+          <div class="hp2-cricket-bottom">
+            <div class="hp2-cricket-live"><div class="hp2-cricket-live-dot"></div><span>Live</span></div>
+            <span class="hp2-cricket-status">AUS need 70 more runs to win</span>
+          </div>
+        </div>
+
+        <!-- Breaking News -->
+        <div class="hp2-ucard" style="gap:20px">
+          <div class="hp2-ucard-title">Breaking news</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="hp2-news-item">
+              <div class="text-col">
+                <span class="title">Trump gives State of the Union address — key takeaways</span>
+                <span class="source">BBC News</span>
+              </div>
+              <div class="thumb"><img src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=104&h=104&fit=crop" alt="News"></div>
+            </div>
+            <div class="hp2-news-item">
+              <div class="text-col">
+                <span class="title">IDFC First Bank returns ₹583 crore to Haryana government</span>
+                <span class="source">Money Control</span>
+              </div>
+              <div class="thumb"><img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=104&h=104&fit=crop" alt="Finance"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending Songs -->
+        <div class="hp2-ucard" style="gap:20px">
+          <div class="hp2-ucard-title">Trending songs</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="hp2-song-item">
+              <div class="art"><img src="Assets/song-rockstar.png" alt="Rockstar"></div>
+              <div class="meta"><span class="name">Phir Se Ud Chala</span><span class="artist">Mohit Chauhan</span></div>
+              <svg class="hp2-song-play" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v14l11-7-11-7z" fill="currentColor" opacity=".8"/></svg>
+            </div>
+            <div class="hp2-song-item">
+              <div class="art"><img src="Assets/song-andhadhun.png" alt="Andhadhun"></div>
+              <div class="meta"><span class="name">Naina Da Kya Kasoor</span><span class="artist">Amit Trivedi</span></div>
+              <svg class="hp2-song-play" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v14l11-7-11-7z" fill="currentColor" opacity=".8"/></svg>
+            </div>
+            <div class="hp2-song-item">
+              <div class="art"><img src="Assets/song-border2.png" alt="Border 2"></div>
+              <div class="meta"><span class="name">Mohabbat Ho Gayi Hai</span><span class="artist">Anu Malik</span></div>
+              <svg class="hp2-song-play" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v14l11-7-11-7z" fill="currentColor" opacity=".8"/></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div style="height:32px"></div>
+    </div>
+
+    <!-- FLOATING INPUT -->
+    <div class="hp2-input-widget">
+      <div class="hp2-input-field">
+        <div class="hp2-input-top">
+          <input class="hp2-input-text" type="text" placeholder="Ask anything…" readonly onfocus="this.blur()">
+        </div>
+        <div class="hp2-input-actions">
+          <div class="hp2-input-left">
+            <button class="hp2-input-icon-btn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <div class="hp2-input-right">
+            <button class="hp2-speak-btn" onclick="beginFlow()">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a1 1 0 00-1 1v18a1 1 0 002 0V3a1 1 0 00-1-1zM4 9a1 1 0 00-1 1v4a1 1 0 102 0v-4a1 1 0 00-1-1zm4-3a1 1 0 00-1 1v10a1 1 0 102 0V7a1 1 0 00-1-1zm12 3a1 1 0 00-1 1v4a1 1 0 002 0v-4a1 1 0 00-1-1zm-4-3a1 1 0 00-1 1v10a1 1 0 002 0V7a1 1 0 00-1-1z" fill="currentColor"/></svg>
+              <span>Speak</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- V1: First task nudge -->
     <div class="nudge-toast" id="v1Nudge">
       <div class="nudge-row">
@@ -985,18 +1364,17 @@ function goScreen(id) {
   currentScreen = id;
 }
 
+function hpOpenMenu() {
+  document.getElementById('hpMenuBackdrop').classList.add('open');
+  document.getElementById('hpMenuDrawer').classList.add('open');
+}
+function hpCloseMenu() {
+  document.getElementById('hpMenuBackdrop').classList.remove('open');
+  document.getElementById('hpMenuDrawer').classList.remove('open');
+}
+
 function goHP() {
   stopSR();
-  // Set personalized greeting
-  const greet = document.getElementById('hpGreeting');
-  const hour = new Date().getHours();
-  const tod = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
-  if (greet) greet.textContent = 'Good ' + tod + (userName ? ', ' + userName + '!' : '!') + ' 👋';
-  // Set avatar initial in top-right
-  const avatarLabel = document.getElementById('hpAvatarLabel');
-  if (avatarLabel && userName) {
-    avatarLabel.innerHTML = userName.charAt(0).toUpperCase() + '<div class="hp-notif">3</div>';
-  }
   goScreen('homepage');
   if (activeV === 'v1') setTimeout(() => { document.getElementById('v1Nudge').classList.add('show'); }, 3000);
   if (activeV === 'v3') setTimeout(() => { document.getElementById('v3Sheet').classList.add('show'); }, 1200);
