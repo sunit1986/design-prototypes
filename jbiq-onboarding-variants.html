@@ -2099,7 +2099,7 @@ async function v1HandleQuestion(text) {
     v1AddBubble('bot', answer);
     speak(answer, ()=>{
       setTimeout(()=>{
-        const nudge = "Great questions! I can do a lot more — news updates, reminders, Jio services. Want to save your preferences? Just takes your name and number.";
+        const nudge = "Great questions! I can do a lot more — news updates, reminders, Jio services. Want to save your preferences? What's your name?";
         v1AddBubble('bot', nudge);
         v1Step = 2;
         speak(nudge, ()=>{ if(micOn) startSR(); });
