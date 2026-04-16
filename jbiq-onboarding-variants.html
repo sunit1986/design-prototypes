@@ -71,6 +71,18 @@
       border-radius:0 0 22px 22px; z-index:200;
     }
 
+    /* ══ MOBILE: fill viewport on real phones ══ */
+    @media (max-width: 430px) {
+      body { background:#fff; padding:0; margin:0; min-height:100dvh; justify-content:flex-start; }
+      .v-tabs-wrap, .v-desc { display:none !important; }
+      .phone {
+        width:100vw !important; height:100dvh !important; max-height:100dvh;
+        border-radius:0 !important; box-shadow:none !important;
+      }
+      .notch { display:none !important; }
+      .sb { padding-top:env(safe-area-inset-top, 14px); }
+    }
+
     /* ══ SCREEN SYSTEM ══ */
     .screen {
       position:absolute; inset:0; background:#fff;
@@ -1500,6 +1512,38 @@ function toggleMode(prefix) {
     updateMicUI(); startSR();
   }
 }
+
+/* ══════════════════════════════════════════════════════
+   MOBILE AUDIO UNLOCK — iOS Safari requires a user-gesture-
+   initiated play() before any programmatic audio works.
+   We unlock on the very first tap/touch anywhere on the page.
+══════════════════════════════════════════════════════ */
+let _audioUnlocked = false;
+function unlockAudio() {
+  if (_audioUnlocked) return;
+  _audioUnlocked = true;
+  // 1. Unlock Web Audio API context
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf; src.connect(ctx.destination); src.start(0);
+    if (ctx.state === 'suspended') ctx.resume();
+  } catch(e){}
+  // 2. Unlock HTML5 Audio element
+  try {
+    const s = new Audio();
+    s.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+    s.volume = 0;
+    s.play().then(()=>s.pause()).catch(()=>{});
+  } catch(e){}
+  document.removeEventListener('touchstart', unlockAudio, true);
+  document.removeEventListener('touchend', unlockAudio, true);
+  document.removeEventListener('click', unlockAudio, true);
+}
+document.addEventListener('touchstart', unlockAudio, true);
+document.addEventListener('touchend', unlockAudio, true);
+document.addEventListener('click', unlockAudio, true);
 
 /* ══════════════════════════════════════════════════════
    TTS — keys from jbiq-config.js (JBIQ_CONFIG + JBIQ_TTS)
