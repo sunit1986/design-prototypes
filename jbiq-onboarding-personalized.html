@@ -956,81 +956,106 @@
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- INTEREST SELECTION (after language)                 -->
   <!-- ═══════════════════════════════════════════════════ -->
-  <div class="screen" id="interestScreen">
-    <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
-    <div class="interest-screen">
-      <div class="interest-header">
-        <div class="interest-step">Step 1 of 2</div>
-        <div class="interest-title">What interests you?</div>
-        <div class="interest-sub">Pick topics you care about — we'll personalise your assistants and updates</div>
-      </div>
-      <div class="interest-grid2" id="interestGrid">
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="Bollywood" data-assistant="Entertainment"><span class="ic-emoji">🎬</span><span>Bollywood</span><div class="ic-check"></div></div>
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="Astrology" data-assistant="Astrology"><span class="ic-emoji">🔮</span><span>Astrology</span><div class="ic-check"></div></div>
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="Finance" data-assistant="Finance"><span class="ic-emoji">💰</span><span>Finance</span><div class="ic-check"></div></div>
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="Entertainment" data-assistant="Entertainment"><span class="ic-emoji">🎵</span><span>Entertainment</span><div class="ic-check"></div></div>
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="Career" data-assistant="Career"><span class="ic-emoji">💼</span><span>Career</span><div class="ic-check"></div></div>
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="Devotion" data-assistant="Devotion"><span class="ic-emoji">🙏</span><span>Devotion</span><div class="ic-check"></div></div>
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="Education" data-assistant="Companion"><span class="ic-emoji">📚</span><span>Education</span><div class="ic-check"></div></div>
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="Cricket" data-assistant="Cricket"><span class="ic-emoji">🏏</span><span>Cricket</span><div class="ic-check"></div></div>
-        <div class="interest-chip" onclick="pickInterestChip(this)" data-interest="News" data-assistant="Companion"><span class="ic-emoji">📰</span><span>News</span><div class="ic-check"></div></div>
-      </div>
-      <div class="interest-bottom">
-        <div class="interest-count" id="interestCount">Select at least 2 topics</div>
-        <button class="btn-p" id="interestContinueBtn" style="opacity:0.4;pointer-events:none;max-width:300px" onclick="interestContinue()">Continue</button>
+<div class="screen" id="nameScreen">
+  <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
+  <div class="interest-screen">
+    <div class="interest-header" style="text-align:center; padding-top:48px;">
+      <div style="font-size:64px; margin-bottom:16px; animation:fadeUp 0.5s ease both;">🙏</div>
+      <div class="interest-step">Step 1 of 3</div>
+      <div class="interest-title">What should we call you?</div>
+      <div class="interest-sub">We'd love to know your name so we can make this feel personal</div>
+    </div>
+    <div style="padding:32px 24px 120px; flex:1;">
+      <div style="background:var(--gh); border-radius:16px; padding:0 18px; height:56px; display:flex; align-items:center;">
+        <input type="text" id="onbNameInput" placeholder="Your name" style="flex:1; border:none; background:none; font-family:inherit; font-size:17px; font-weight:500; color:var(--g1); outline:none;" oninput="onbNameCheck()">
       </div>
     </div>
+    <div class="interest-bottom">
+      <button class="btn-p" id="onbNameBtn" style="opacity:0.4;pointer-events:none;max-width:300px" onclick="onbNameContinue()">Continue</button>
+    </div>
   </div>
+</div>
 
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- PROFESSION SELECTION (after interests)              -->
-  <!-- ═══════════════════════════════════════════════════ -->
-  <div class="screen" id="professionScreen">
-    <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
-    <div class="prof-screen">
-      <div class="prof-header">
-        <div class="prof-step">Step 2 of 2</div>
-        <div class="prof-title">What do you do?</div>
-        <div class="prof-sub">This helps me tailor recommendations — from career tips to family deals</div>
+<div class="screen" id="ageScreen">
+  <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
+  <div class="prof-screen">
+    <div class="prof-header" style="text-align:left; padding-top:24px;">
+      <div class="prof-step">Step 2 of 3</div>
+      <div class="prof-title">How old are you?</div>
+      <div class="prof-sub">This helps us tune content — from study tips to retirement planning</div>
+    </div>
+    <div class="prof-list" id="ageList" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:20px 20px 140px;">
+      <div class="prof-card" onclick="pickAge(this)" data-age="13-17" style="flex-direction:column; align-items:center; text-align:center; padding:20px 12px;">
+        <span class="prof-icon" style="font-size:36px;">🎒</span>
+        <div class="prof-info" style="text-align:center;"><div class="prof-name" style="font-size:15px;">13 – 17</div><div class="prof-desc">Teen</div></div>
       </div>
-      <div class="prof-list" id="profList">
-        <div class="prof-card" onclick="pickProf(this)" data-prof="Student">
-          <span class="prof-icon">🎓</span>
-          <div class="prof-info"><div class="prof-name">Student</div><div class="prof-desc">School, college, or preparing for exams</div></div>
-          <div class="prof-radio"></div>
-        </div>
-        <div class="prof-card" onclick="pickProf(this)" data-prof="Working Professional">
-          <span class="prof-icon">👨‍💻</span>
-          <div class="prof-info"><div class="prof-name">Working Professional</div><div class="prof-desc">Employed in IT, banking, govt, or other sectors</div></div>
-          <div class="prof-radio"></div>
-        </div>
-        <div class="prof-card" onclick="pickProf(this)" data-prof="Business Owner">
-          <span class="prof-icon">🏪</span>
-          <div class="prof-info"><div class="prof-name">Business Owner</div><div class="prof-desc">Running a shop, startup, or enterprise</div></div>
-          <div class="prof-radio"></div>
-        </div>
-        <div class="prof-card" onclick="pickProf(this)" data-prof="Homemaker">
-          <span class="prof-icon">🏠</span>
-          <div class="prof-info"><div class="prof-name">Homemaker</div><div class="prof-desc">Managing home, family, and daily needs</div></div>
-          <div class="prof-radio"></div>
-        </div>
-        <div class="prof-card" onclick="pickProf(this)" data-prof="Freelancer">
-          <span class="prof-icon">🎨</span>
-          <div class="prof-info"><div class="prof-name">Freelancer / Creator</div><div class="prof-desc">Independent work — design, writing, consulting</div></div>
-          <div class="prof-radio"></div>
-        </div>
-        <div class="prof-card" onclick="pickProf(this)" data-prof="Retired">
-          <span class="prof-icon">🌿</span>
-          <div class="prof-info"><div class="prof-name">Retired</div><div class="prof-desc">Enjoying life, staying updated, health focus</div></div>
-          <div class="prof-radio"></div>
-        </div>
+      <div class="prof-card" onclick="pickAge(this)" data-age="18-24" style="flex-direction:column; align-items:center; text-align:center; padding:20px 12px;">
+        <span class="prof-icon" style="font-size:36px;">🎓</span>
+        <div class="prof-info" style="text-align:center;"><div class="prof-name" style="font-size:15px;">18 – 24</div><div class="prof-desc">Young adult</div></div>
       </div>
-      <div class="prof-bottom">
-        <button class="btn-p" id="profContinueBtn" style="opacity:0.4;pointer-events:none;max-width:300px" onclick="profContinue()">Let's Go!</button>
-        <button class="btn-sec" style="max-width:300px" onclick="profContinue()">Skip for now</button>
+      <div class="prof-card" onclick="pickAge(this)" data-age="25-34" style="flex-direction:column; align-items:center; text-align:center; padding:20px 12px;">
+        <span class="prof-icon" style="font-size:36px;">💼</span>
+        <div class="prof-info" style="text-align:center;"><div class="prof-name" style="font-size:15px;">25 – 34</div><div class="prof-desc">Building life</div></div>
+      </div>
+      <div class="prof-card" onclick="pickAge(this)" data-age="35-49" style="flex-direction:column; align-items:center; text-align:center; padding:20px 12px;">
+        <span class="prof-icon" style="font-size:36px;">🏠</span>
+        <div class="prof-info" style="text-align:center;"><div class="prof-name" style="font-size:15px;">35 – 49</div><div class="prof-desc">Settled</div></div>
+      </div>
+      <div class="prof-card" onclick="pickAge(this)" data-age="50-64" style="flex-direction:column; align-items:center; text-align:center; padding:20px 12px;">
+        <span class="prof-icon" style="font-size:36px;">🌟</span>
+        <div class="prof-info" style="text-align:center;"><div class="prof-name" style="font-size:15px;">50 – 64</div><div class="prof-desc">Experienced</div></div>
+      </div>
+      <div class="prof-card" onclick="pickAge(this)" data-age="65+" style="flex-direction:column; align-items:center; text-align:center; padding:20px 12px;">
+        <span class="prof-icon" style="font-size:36px;">🌿</span>
+        <div class="prof-info" style="text-align:center;"><div class="prof-name" style="font-size:15px;">65+</div><div class="prof-desc">Golden years</div></div>
       </div>
     </div>
+    <div class="prof-bottom">
+      <button class="btn-p" id="ageContinueBtn" style="opacity:0.4;pointer-events:none;max-width:300px" onclick="ageContinue()">Continue</button>
+    </div>
   </div>
+</div>
+
+<div class="screen" id="characterScreen">
+  <div class="sb"><span class="sbt">9:41</span><div class="sbr"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#141414" opacity=".4"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#141414" opacity=".6"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#141414" opacity=".8"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#141414"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="2.5" stroke="#141414" stroke-width="1" opacity=".35"/><path d="M22 4v4a2 2 0 000-4z" fill="#141414" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#141414" opacity=".88"/></svg></div></div>
+  <div class="prof-screen">
+    <div class="prof-header" style="text-align:left; padding-top:24px;">
+      <div class="prof-step">Step 3 of 3</div>
+      <div class="prof-title">What best describes you?</div>
+      <div class="prof-sub">Pick one — it shapes your entire experience</div>
+    </div>
+    <div class="prof-list" id="charList">
+      <div class="prof-card" onclick="pickChar(this)" data-char="Working Women">
+        <span class="prof-icon">👩‍💻</span>
+        <div class="prof-info"><div class="prof-name">Working Women</div><div class="prof-desc">Balancing career, family, and everything in between</div></div>
+        <div class="prof-radio"></div>
+      </div>
+      <div class="prof-card" onclick="pickChar(this)" data-char="Student">
+        <span class="prof-icon">📖</span>
+        <div class="prof-info"><div class="prof-name">Student</div><div class="prof-desc">Learning, exams, career prep — always growing</div></div>
+        <div class="prof-radio"></div>
+      </div>
+      <div class="prof-card" onclick="pickChar(this)" data-char="Small Business Owner">
+        <span class="prof-icon">🏪</span>
+        <div class="prof-info"><div class="prof-name">Small Business Owner</div><div class="prof-desc">Running a shop, restaurant, or local service</div></div>
+        <div class="prof-radio"></div>
+      </div>
+      <div class="prof-card" onclick="pickChar(this)" data-char="Homemaker">
+        <span class="prof-icon">🏠</span>
+        <div class="prof-info"><div class="prof-name">Homemaker</div><div class="prof-desc">Heart of the house — cooking, caring, managing it all</div></div>
+        <div class="prof-radio"></div>
+      </div>
+      <div class="prof-card" onclick="pickChar(this)" data-char="Working Professional">
+        <span class="prof-icon">👨‍💼</span>
+        <div class="prof-info"><div class="prof-name">Working Professional</div><div class="prof-desc">Office, remote, or hybrid — building a career</div></div>
+        <div class="prof-radio"></div>
+      </div>
+    </div>
+    <div class="prof-bottom">
+      <button class="btn-p" id="charContinueBtn" style="opacity:0.4;pointer-events:none;max-width:300px" onclick="charContinue()">Let's Go!</button>
+    </div>
+  </div>
+</div>
 
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- V2 CONVERSATION — Value First, Then Register       -->
@@ -2004,10 +2029,10 @@ function applyContextCard() {
   const titleEl = document.getElementById('hpCtxTitle');
   const mainEl = document.getElementById('hpCtxMain');
   const subEl = document.getElementById('hpCtxSub');
-  if (selectedInterests.length > 0) {
+  if (selectedChar) {
     if (titleEl) titleEl.textContent = 'Personalised for you';
-    if (mainEl) mainEl.textContent = selectedInterests.join(', ');
-    if (subEl) subEl.textContent = selectedProfession ? selectedProfession + ' · Tap to explore your interests' : 'Tap to explore your interests';
+    if (mainEl) mainEl.textContent = selectedChar + (selectedAge ? ' · ' + selectedAge + ' years' : '');
+    if (subEl) subEl.textContent = userName ? 'Welcome, ' + userName + '! Tap to explore' : 'Tap to explore your interests';
   } else if (v1Questions.length) {
     const topic = v1Questions[0];
     if (titleEl) titleEl.textContent = 'Because you asked about';
@@ -2428,13 +2453,13 @@ function resetV1() {
   const chat = document.getElementById('v1Chat');
   if (chat) chat.innerHTML = '';
   const bar = document.getElementById('v1Info'); if(bar){bar.innerHTML='';bar.classList.remove('on');}
-  // Reset interest screen
-  document.querySelectorAll('.interest-chip').forEach(c => c.classList.remove('sel'));
-  const ic = document.getElementById('interestCount'); if(ic){ic.textContent='Select at least 2 topics';ic.classList.remove('enough');}
-  const ib = document.getElementById('interestContinueBtn'); if(ib){ib.style.opacity='0.4';ib.style.pointerEvents='none';}
-  // Reset profession screen
+  // Reset name/age/character screens
+  const ni = document.getElementById('onbNameInput'); if(ni) ni.value='';
+  const nb = document.getElementById('onbNameBtn'); if(nb){nb.style.opacity='0.4';nb.style.pointerEvents='none';}
+  selectedAge=''; selectedChar='';
   document.querySelectorAll('.prof-card').forEach(c => c.classList.remove('sel'));
-  const pb = document.getElementById('profContinueBtn'); if(pb){pb.style.opacity='0.4';pb.style.pointerEvents='none';}
+  const ab = document.getElementById('ageContinueBtn'); if(ab){ab.style.opacity='0.4';ab.style.pointerEvents='none';}
+  const cb = document.getElementById('charContinueBtn'); if(cb){cb.style.opacity='0.4';cb.style.pointerEvents='none';}
   const vd=document.getElementById('v1VoiceDock'); if(vd) vd.style.display='';
   const cd=document.getElementById('v1ChatDock'); if(cd) cd.style.display='none';
   const fi=document.getElementById('v1Int'); if(fi){fi.textContent='';fi.innerHTML='';}
@@ -2454,51 +2479,64 @@ function pickLang(el, langCode) {
 }
 
 function langSaved() {
-  goScreen('interestScreen');
+  goScreen('nameScreen');
+  setTimeout(() => document.getElementById('onbNameInput').focus(), 400);
 }
 
 /* ══════════════════════════════════════════════════════
-   INTEREST + PROFESSION SELECTION
+   NAME → AGE → CHARACTER SELECTION
 ══════════════════════════════════════════════════════ */
 let selectedInterests = [];
 let selectedProfession = '';
+let selectedAge = '';
+let selectedChar = '';
 
-function pickInterestChip(el) {
-  el.classList.toggle('sel');
-  const interest = el.dataset.interest;
-  if (el.classList.contains('sel')) {
-    if (!selectedInterests.includes(interest)) selectedInterests.push(interest);
-  } else {
-    selectedInterests = selectedInterests.filter(i => i !== interest);
-  }
-  const count = selectedInterests.length;
-  const countEl = document.getElementById('interestCount');
-  const btn = document.getElementById('interestContinueBtn');
-  if (count >= 2) {
-    countEl.textContent = count + ' topics selected';
-    countEl.classList.add('enough');
-    btn.style.opacity = '1'; btn.style.pointerEvents = 'all';
-  } else {
-    countEl.textContent = 'Select at least 2 topics';
-    countEl.classList.remove('enough');
-    btn.style.opacity = '0.4'; btn.style.pointerEvents = 'none';
-  }
+function onbNameCheck() {
+  const val = document.getElementById('onbNameInput').value.trim();
+  const btn = document.getElementById('onbNameBtn');
+  if (val.length >= 2) { btn.style.opacity='1'; btn.style.pointerEvents='all'; }
+  else { btn.style.opacity='0.4'; btn.style.pointerEvents='none'; }
 }
 
-function interestContinue() {
-  if (selectedInterests.length < 2) return;
-  goScreen('professionScreen');
+function onbNameContinue() {
+  const name = document.getElementById('onbNameInput').value.trim();
+  if (name.length < 2) return;
+  userName = name;
+  goScreen('ageScreen');
 }
 
-function pickProf(el) {
-  document.querySelectorAll('.prof-card').forEach(c => c.classList.remove('sel'));
+function pickAge(el) {
+  document.querySelectorAll('#ageList .prof-card').forEach(c => c.classList.remove('sel'));
   el.classList.add('sel');
-  selectedProfession = el.dataset.prof;
-  const btn = document.getElementById('profContinueBtn');
+  selectedAge = el.dataset.age;
+  const btn = document.getElementById('ageContinueBtn');
   btn.style.opacity = '1'; btn.style.pointerEvents = 'all';
 }
 
-function profContinue() {
+function ageContinue() {
+  if (!selectedAge) return;
+  goScreen('characterScreen');
+}
+
+function pickChar(el) {
+  document.querySelectorAll('#charList .prof-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedChar = el.dataset.char;
+  selectedProfession = selectedChar;
+  const btn = document.getElementById('charContinueBtn');
+  btn.style.opacity = '1'; btn.style.pointerEvents = 'all';
+}
+
+function charContinue() {
+  // Map character to matching assistants for homepage reorder
+  const charToAssistants = {
+    'Working Women': ['Career','Finance','Health'],
+    'Student': ['Career','Entertainment','Companion'],
+    'Small Business Owner': ['Finance','Career','Companion'],
+    'Homemaker': ['Devotion','Health','Entertainment'],
+    'Working Professional': ['Career','Finance','Entertainment']
+  };
+  selectedInterests = charToAssistants[selectedChar] || ['Companion','Career'];
   reorderAssistants();
   goHP();
 }
@@ -2507,32 +2545,22 @@ function reorderAssistants() {
   const row = document.getElementById('hpAssistantsRow');
   if (!row) return;
   const items = Array.from(row.querySelectorAll('[data-assistant]'));
-  // Build set of matched assistant labels from selected interests
-  const matchedSet = new Set();
-  selectedInterests.forEach(interest => {
-    const chip = document.querySelector('#interestGrid [data-interest="'+interest+'"]');
-    if (chip && chip.dataset.assistant) matchedSet.add(chip.dataset.assistant);
-  });
-  // Sort: matched first, rest after
+  const matchedSet = new Set(selectedInterests);
   items.sort((a, b) => {
     const aMatch = matchedSet.has(a.dataset.assistant) ? 0 : 1;
     const bMatch = matchedSet.has(b.dataset.assistant) ? 0 : 1;
     return aMatch - bMatch;
   });
-  // Re-append in new order + set ring colors
   items.forEach((item, i) => {
     const ring = item.querySelector('.hp2-ring');
     const isMatched = matchedSet.has(item.dataset.assistant);
-    if (ring) {
-      ring.classList.toggle('grey', !isMatched);
-    }
+    if (ring) ring.classList.toggle('grey', !isMatched);
     item.classList.remove('inactive');
     if (!isMatched) item.classList.add('inactive');
     item.classList.add('glow-in');
     item.style.animationDelay = (i * 0.08) + 's';
     row.appendChild(item);
   });
-  // Scroll row to start
   row.scrollLeft = 0;
 }
 

@@ -2041,18 +2041,58 @@ function enterConversation(useVoice) {
 function runVariantOpening() {
   const openingLine = "Namaste! Main JioBharatIQ hun. Kisi bhi bhasha mein boliye — Hindi, English, Kannada, Telugu, kuch bhi. Aapka naam kya hai?";
   if (activeV === 'v1') {
-    v1Step = 0;
-    const greeting = "Hi! I'm JioBharatIQ — your AI assistant. You can ask me anything — cricket scores, Bollywood news, weather, anything. Just speak or type. Try it!";
+    v1Step = -1; // -1 = language selection state
     setTimeout(()=>{
-      v1AddBubble('bot', greeting);
-      speak(greeting, ()=>{ if(micOn) startSR(); });
-      // Silence hint after 15s
-      clearTimeout(window._v1SilenceTimer);
-      window._v1SilenceTimer = setTimeout(()=>{
-        if (v1Step === 0 && !srActive && !isSpeaking) {
-          v1AddBubble('bot', 'Try asking: "What is the cricket score today?" or "Tell me about Shah Rukh Khan"');
-        }
-      }, 15000);
+      // Show Namaste greeting + language pills
+      const chat = document.getElementById('v1Chat');
+      if (!chat) return;
+      // Namaste row
+      const namasteRow = document.createElement('div');
+      namasteRow.className = 'jrow';
+      namasteRow.id = 'v1NamasteRow';
+      namasteRow.innerHTML = '<div class="jav">' + JIO_AV_SVG + '</div><div class="jbub" style="text-align:center;"><div style="font-size:48px;margin-bottom:8px;">🙏</div><div style="font-size:18px;font-weight:700;margin-bottom:4px;">Namaste!</div><div style="font-size:14px;color:var(--g6);">Select a language to start talking</div></div>';
+      chat.appendChild(namasteRow);
+      scroll('v1Chat');
+      // Language pills
+      const pillRow = document.createElement('div');
+      pillRow.className = 'qrow';
+      pillRow.id = 'v1LangPills';
+      pillRow.style.paddingLeft = '35px';
+      pillRow.style.marginTop = '4px';
+      const langs = [
+        {label:'Hindi', code:'hi-IN', greeting:'Namaste! Main JioBharatIQ hun. Aap mujhse kuch bhi pooch sakte hain — cricket score, Bollywood news, mausam, kuch bhi. Boliye ya type kariye!'},
+        {label:'English', code:'en-IN', greeting:"Hi! I'm JioBharatIQ — your AI assistant. You can ask me anything — cricket scores, Bollywood news, weather, anything. Just speak or type. Try it!"},
+        {label:'Kannada', code:'kn-IN', greeting:'ನಮಸ್ಕಾರ! ನಾನು JioBharatIQ. ನೀವು ನನ್ನನ್ನು ಏನು ಬೇಕಾದರೂ ಕೇಳಬಹುದು — ಕ್ರಿಕೆಟ್ ಸ್ಕೋರ್, ಬಾಲಿವುಡ್ ಸುದ್ದಿ, ಹವಾಮಾನ. ಮಾತನಾಡಿ ಅಥವಾ ಟೈಪ್ ಮಾಡಿ!'},
+        {label:'Marathi', code:'mr-IN', greeting:'नमस्कार! मी JioBharatIQ आहे. तुम्ही मला काहीही विचारू शकता — क्रिकेट स्कोअर, बॉलिवूड बातम्या, हवामान. बोला किंवा टाइप करा!'}
+      ];
+      langs.forEach(lang => {
+        const pill = document.createElement('div');
+        pill.className = 'qr';
+        pill.textContent = lang.label;
+        pill.onclick = function() {
+          // Select this pill
+          pillRow.querySelectorAll('.qr').forEach(p => p.classList.remove('sel'));
+          pill.classList.add('sel');
+          selectedLangCode = lang.code;
+          // Move to step 0 and start conversation
+          v1Step = 0;
+          // Show greeting in selected language
+          setTimeout(()=>{
+            v1AddBubble('bot', lang.greeting);
+            speak(lang.greeting, ()=>{ if(micOn) startSR(); });
+            // Silence hint after 15s
+            clearTimeout(window._v1SilenceTimer);
+            window._v1SilenceTimer = setTimeout(()=>{
+              if (v1Step === 0 && !srActive && !isSpeaking) {
+                v1AddBubble('bot', 'Try asking: "What is the cricket score today?" or "Tell me about Shah Rukh Khan"');
+              }
+            }, 15000);
+          }, 300);
+        };
+        pillRow.appendChild(pill);
+      });
+      chat.appendChild(pillRow);
+      scroll('v1Chat');
     }, 300);
   }
   if (activeV === 'v2') {
@@ -2070,6 +2110,7 @@ function runVariantOpening() {
 function handleVoice(text) {
   if (window._v1SilenceTimer) { clearTimeout(window._v1SilenceTimer); window._v1SilenceTimer = null; }
   if (activeV==='v1') {
+    if (v1Step === -1) return; // waiting for language selection
     if (v1Step === 0 || v1Step === 1) v1HandleQuestion(text);
     else if (v1Step === 2) v1Name(text);
     else if (v1Step === 3) v1Phone(text);
@@ -2220,7 +2261,7 @@ function v1Verify() {
 }
 
 function resetV1() {
-  v1Step = 0; userName = ''; v1Questions = [];
+  v1Step = -1; userName = ''; v1Questions = [];
   if (window._v1SilenceTimer) { clearTimeout(window._v1SilenceTimer); window._v1SilenceTimer = null; }
   const chat = document.getElementById('v1Chat');
   if (chat) chat.innerHTML = '';
