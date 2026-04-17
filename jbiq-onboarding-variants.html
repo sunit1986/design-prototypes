@@ -801,6 +801,22 @@
         <div class="sab"></div>
       </div>
     </div>
+    <!-- V1 Phone Input Modal -->
+    <div class="modal-overlay" id="v1PhoneModal">
+      <div class="modal-scrim" onclick="void(0)"></div>
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title">Enter your mobile number</div>
+        <div class="modal-sub">We'll send an OTP to verify.</div>
+        <div class="ph-wrap">
+          <div class="ph-cc">+91</div>
+          <input class="ph-field" id="v1PhoneInp" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="Mobile number" maxlength="10"
+                 oninput="this.value=this.value.replace(/\D/g,'')"
+                 onkeydown="if(event.key==='Enter')v1SubmitPhone()">
+        </div>
+        <button class="btn-p" onclick="v1SubmitPhone()">Send OTP</button>
+      </div>
+    </div>
     <!-- V1 OTP Modal -->
     <div class="modal-overlay" id="v1OTP">
       <div class="modal-scrim" onclick="void(0)"></div>
@@ -1012,6 +1028,22 @@
           </div>
         </div>
         <div class="sab"></div>
+      </div>
+    </div>
+    <!-- V3 Phone Input Modal -->
+    <div class="modal-overlay" id="v3PhoneModal">
+      <div class="modal-scrim" onclick="void(0)"></div>
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title">Enter your mobile number</div>
+        <div class="modal-sub">We'll send an OTP to verify.</div>
+        <div class="ph-wrap">
+          <div class="ph-cc">+91</div>
+          <input class="ph-field" id="v3PhoneInp" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="Mobile number" maxlength="10"
+                 oninput="this.value=this.value.replace(/\D/g,'')"
+                 onkeydown="if(event.key==='Enter')v3SubmitPhone()">
+        </div>
+        <button class="btn-p" onclick="v3SubmitPhone()">Send OTP</button>
       </div>
     </div>
     <!-- V3 OTP Modal -->
@@ -2217,9 +2249,27 @@ function v1Name(name) {
     const msg = 'Nice to meet you, ' + name + '! To keep your account safe, I need your mobile number.';
     v1AddBubble('bot', msg);
     v1Step = 3;
-    speak(msg, ()=>{ if(micOn) startSR(); });
-    const ff = document.getElementById('v1F'); if(ff) ff.placeholder = 'Enter mobile number…';
+    speak(msg, ()=>{ v1OpenPhone(); });
   }, 800);
+}
+
+function v1OpenPhone() {
+  try { stopSR(); } catch(e) {}
+  micOn = false;
+  try { clearInterim(); } catch(e) {}
+  const m = document.getElementById('v1PhoneModal');
+  if (m) m.classList.add('show');
+  setTimeout(() => { const f = document.getElementById('v1PhoneInp'); if (f) f.focus(); }, 350);
+}
+
+function v1SubmitPhone() {
+  const f = document.getElementById('v1PhoneInp');
+  const ph = ((f && f.value) || '').replace(/\D/g, '');
+  if (ph.length < 10) { if (f) f.focus(); return; }
+  const m = document.getElementById('v1PhoneModal');
+  if (m) m.classList.remove('show');
+  if (f) f.value = '';
+  v1Phone(ph);
 }
 
 function v1Phone(ph) {
@@ -2267,6 +2317,8 @@ function resetV1() {
   if (chat) chat.innerHTML = '';
   const bar = document.getElementById('v1Info'); if(bar){bar.innerHTML='';bar.classList.remove('on');}
   document.getElementById('v1OTP').classList.remove('show');
+  const v1pm=document.getElementById('v1PhoneModal'); if(v1pm) v1pm.classList.remove('show');
+  const v1pi=document.getElementById('v1PhoneInp'); if(v1pi) v1pi.value='';
   ['v1ob0','v1ob1','v1ob2','v1ob3','v1ob4','v1ob5'].forEach((id,i)=>{
     const b=document.getElementById(id);
     if(b){b.textContent=i>=3?'—':'';b.classList.remove('filled');if(i>=3)b.style.color='var(--g4)';else b.removeAttribute('style');}
@@ -2404,10 +2456,28 @@ function v3Name(name) {
   document.getElementById('v3-phoneqt').textContent = 'Nice to meet you, '+name+'! To keep your profile safe, I need your mobile number.';
   setTimeout(()=>{
     show('v3-phoneq'); scroll('v3Chat');
-    speak('Nice to meet you, '+name+'! To keep your profile safe, I need your mobile number.',()=>{ if(micOn) startSR(); });
+    speak('Nice to meet you, '+name+'! To keep your profile safe, I need your mobile number.',()=>{ v3OpenPhone(); });
   },300);
-  const fi=document.getElementById('v3Int'); if(fi) fi.textContent='Say your number…';
-  const ff=document.getElementById('v3F'); if(ff) ff.placeholder='Enter mobile number…';
+  const fi=document.getElementById('v3Int'); if(fi) fi.textContent='';
+}
+
+function v3OpenPhone() {
+  try { stopSR(); } catch(e) {}
+  micOn = false;
+  try { clearInterim(); } catch(e) {}
+  const m = document.getElementById('v3PhoneModal');
+  if (m) m.classList.add('show');
+  setTimeout(() => { const f = document.getElementById('v3PhoneInp'); if (f) f.focus(); }, 350);
+}
+
+function v3SubmitPhone() {
+  const f = document.getElementById('v3PhoneInp');
+  const ph = ((f && f.value) || '').replace(/\D/g, '');
+  if (ph.length < 10) { if (f) f.focus(); return; }
+  const m = document.getElementById('v3PhoneModal');
+  if (m) m.classList.remove('show');
+  if (f) f.value = '';
+  v3Phone(ph);
 }
 
 function v3Phone(ph) {
@@ -2468,6 +2538,8 @@ function resetV3() {
   ['v3-un','v3-phoneq','v3-up','v3-q2','v3-cq2','v3-ur','v3-q3','v3-cq3','v3-ui','v3-done'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');});
   document.querySelectorAll('#v3-cq2 .qr, #v3-cq3 .qr').forEach(c=>c.classList.remove('sel'));
   document.getElementById('v3OTP').classList.remove('show');
+  const v3pm=document.getElementById('v3PhoneModal'); if(v3pm) v3pm.classList.remove('show');
+  const v3pi=document.getElementById('v3PhoneInp'); if(v3pi) v3pi.value='';
   // Reset OTP boxes
   ['v3ob0','v3ob1','v3ob2','v3ob3','v3ob4','v3ob5'].forEach((id,i)=>{
     const b=document.getElementById(id);
