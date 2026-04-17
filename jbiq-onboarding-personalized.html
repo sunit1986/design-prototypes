@@ -2471,6 +2471,260 @@ function resetV1() {
 /* ══════════════════════════════════════════════════════
    TRADITIONAL FLOW — Language → Phone → OTP → Homepage
 ══════════════════════════════════════════════════════ */
+/* Onboarding-step translations (name / age / character screens).
+   Bhojpuri maps to hi-IN (same lang code wired in the HTML). */
+const ONBOARDING_I18N = {
+  'en-IN': {
+    nameStep:'Step 1 of 3', nameTitle:'What should we call you?',
+    nameSub:"We'd love to know your name so we can make this feel personal",
+    namePlaceholder:'Your name',
+    ageStep:'Step 2 of 3', ageTitle:'How old are you?',
+    ageSub:'This helps us tune content — from study tips to retirement planning',
+    ageTeen:'Teen', ageYoung:'Young adult', ageBuilding:'Building life',
+    ageSettled:'Settled', ageExperienced:'Experienced', ageGolden:'Golden years',
+    charStep:'Step 3 of 3', charTitle:'What best describes you?',
+    charSub:'Pick one — it shapes your entire experience',
+    charWW:'Working Women', charWWDesc:'Balancing career, family, and everything in between',
+    charSt:'Student', charStDesc:'Learning, exams, career prep — always growing',
+    charSBO:'Small Business Owner', charSBODesc:'Running a shop, restaurant, or local service',
+    charHM:'Homemaker', charHMDesc:'Heart of the house — cooking, caring, managing it all',
+    charWP:'Working Professional', charWPDesc:'Office, remote, or hybrid — building a career',
+    btnContinue:'Continue', btnLetsGo:"Let's Go!"
+  },
+  'hi-IN': {
+    nameStep:'चरण 1 / 3', nameTitle:'हम आपको क्या कहकर बुलाएँ?',
+    nameSub:'हमें अपना नाम बताएँ ताकि अनुभव आपके अनुसार बन सके',
+    namePlaceholder:'आपका नाम',
+    ageStep:'चरण 2 / 3', ageTitle:'आपकी उम्र क्या है?',
+    ageSub:'इससे हम आपके लिए सही कंटेंट चुन पाएँगे — पढ़ाई से लेकर रिटायरमेंट तक',
+    ageTeen:'किशोर', ageYoung:'युवा', ageBuilding:'जीवन बनाते',
+    ageSettled:'स्थिर', ageExperienced:'अनुभवी', ageGolden:'सुनहरा दौर',
+    charStep:'चरण 3 / 3', charTitle:'आप अपने आप को कैसा मानते हैं?',
+    charSub:'एक चुनें — यह आपके पूरे अनुभव को तय करेगा',
+    charWW:'कामकाजी महिला', charWWDesc:'करियर, परिवार और सब कुछ का संतुलन',
+    charSt:'विद्यार्थी', charStDesc:'पढ़ाई, परीक्षाएँ, करियर की तैयारी',
+    charSBO:'छोटा व्यवसायी', charSBODesc:'दुकान, रेस्टोरेंट या स्थानीय सेवा',
+    charHM:'गृहिणी', charHMDesc:'घर की जान — खाना, देखभाल, प्रबंधन',
+    charWP:'कामकाजी पेशेवर', charWPDesc:'ऑफिस, रिमोट या हाइब्रिड — करियर बनाते',
+    btnContinue:'आगे बढ़ें', btnLetsGo:'चलिए शुरू करें!'
+  },
+  'te-IN': {
+    nameStep:'దశ 1 / 3', nameTitle:'మిమ్మల్ని ఏమని పిలవాలి?',
+    nameSub:'మీ పేరు చెప్పండి — అనుభవం మీకు అనుగుణంగా ఉంటుంది',
+    namePlaceholder:'మీ పేరు',
+    ageStep:'దశ 2 / 3', ageTitle:'మీ వయసు ఎంత?',
+    ageSub:'మీ కోసం సరైన కంటెంట్‌ను ఎంచుకోవడంలో ఇది సహాయపడుతుంది',
+    ageTeen:'యువత', ageYoung:'యువకుడు', ageBuilding:'జీవితం కడుతున్న',
+    ageSettled:'స్థిరపడిన', ageExperienced:'అనుభవజ్ఞుడు', ageGolden:'బంగారు సంవత్సరాలు',
+    charStep:'దశ 3 / 3', charTitle:'మిమ్మల్ని ఏది బాగా వర్ణిస్తుంది?',
+    charSub:'ఒకదాన్ని ఎంచుకోండి — ఇది మీ అనుభవాన్ని తీర్చిదిద్దుతుంది',
+    charWW:'ఉద్యోగిని', charWWDesc:'కెరీర్, కుటుంబం — అన్నిటినీ సమతుల్యం చేస్తూ',
+    charSt:'విద్యార్థి', charStDesc:'అధ్యయనం, పరీక్షలు, కెరీర్ సిద్ధత',
+    charSBO:'చిన్న వ్యాపారి', charSBODesc:'దుకాణం, రెస్టారెంట్ లేదా స్థానిక సేవ',
+    charHM:'గృహిణి', charHMDesc:'ఇంటి హృదయం — వంట, సంరక్షణ, నిర్వహణ',
+    charWP:'ఉద్యోగి', charWPDesc:'ఆఫీస్, రిమోట్ లేదా హైబ్రిడ్ — కెరీర్ నిర్మిస్తూ',
+    btnContinue:'కొనసాగించు', btnLetsGo:'ప్రారంభిద్దాం!'
+  },
+  'bn-IN': {
+    nameStep:'ধাপ ১ / ৩', nameTitle:'আপনাকে কী নামে ডাকব?',
+    nameSub:'আপনার নামটা বলুন — অভিজ্ঞতা আপনার মতো হোক',
+    namePlaceholder:'আপনার নাম',
+    ageStep:'ধাপ ২ / ৩', ageTitle:'আপনার বয়স কত?',
+    ageSub:'এটি আপনার জন্য সঠিক কনটেন্ট বেছে নিতে সাহায্য করে',
+    ageTeen:'কিশোর', ageYoung:'তরুণ', ageBuilding:'জীবন গড়ছেন',
+    ageSettled:'স্থিত', ageExperienced:'অভিজ্ঞ', ageGolden:'সোনালি বছর',
+    charStep:'ধাপ ৩ / ৩', charTitle:'আপনাকে কোনটা সবচেয়ে ভালো বর্ণনা করে?',
+    charSub:'একটি বেছে নিন — এটি আপনার পুরো অভিজ্ঞতা গড়বে',
+    charWW:'কর্মজীবী মহিলা', charWWDesc:'কেরিয়ার, পরিবার — সব কিছুর ভারসাম্য রাখছেন',
+    charSt:'শিক্ষার্থী', charStDesc:'পড়াশোনা, পরীক্ষা, কেরিয়ার প্রস্তুতি',
+    charSBO:'ছোট ব্যবসায়ী', charSBODesc:'দোকান, রেস্টুরেন্ট বা স্থানীয় সেবা',
+    charHM:'গৃহিণী', charHMDesc:'ঘরের হৃদয় — রান্না, যত্ন, সব সামলানো',
+    charWP:'কর্মজীবী পেশাদার', charWPDesc:'অফিস, রিমোট বা হাইব্রিড — কেরিয়ার গড়ছেন',
+    btnContinue:'এগিয়ে যান', btnLetsGo:'চলুন শুরু করি!'
+  },
+  'mr-IN': {
+    nameStep:'पायरी 1 / 3', nameTitle:'आम्ही तुम्हाला काय म्हणून हाक मारावी?',
+    nameSub:'तुमचे नाव सांगा — अनुभव तुमच्यासाठी योग्य होईल',
+    namePlaceholder:'तुमचे नाव',
+    ageStep:'पायरी 2 / 3', ageTitle:'तुमचे वय किती आहे?',
+    ageSub:'हे आम्हाला तुमच्यासाठी योग्य कंटेंट निवडायला मदत करते',
+    ageTeen:'किशोर', ageYoung:'तरुण', ageBuilding:'जीवन घडवताना',
+    ageSettled:'स्थिरावलेले', ageExperienced:'अनुभवी', ageGolden:'सुवर्ण वर्षे',
+    charStep:'पायरी 3 / 3', charTitle:'तुम्हाला कोणते वर्णन जास्त लागू?',
+    charSub:'एक निवडा — हे तुमचा संपूर्ण अनुभव ठरवेल',
+    charWW:'नोकरदार महिला', charWWDesc:'करिअर, कुटुंब — सगळ्याचा समतोल',
+    charSt:'विद्यार्थी', charStDesc:'अभ्यास, परीक्षा, करिअर तयारी',
+    charSBO:'छोटे व्यावसायिक', charSBODesc:'दुकान, रेस्टॉरंट किंवा स्थानिक सेवा',
+    charHM:'गृहिणी', charHMDesc:'घराचं हृदय — स्वयंपाक, काळजी, व्यवस्थापन',
+    charWP:'नोकरदार व्यावसायिक', charWPDesc:'ऑफिस, रिमोट किंवा हायब्रिड — करिअर घडवताना',
+    btnContinue:'पुढे चला', btnLetsGo:'चला सुरू करूया!'
+  },
+  'ml-IN': {
+    nameStep:'ഘട്ടം 1 / 3', nameTitle:'നിങ്ങളെ എന്തു വിളിക്കണം?',
+    nameSub:'നിങ്ങളുടെ പേര് പറയൂ — അനുഭവം നിങ്ങൾക്കായി ഒത്തുചേരും',
+    namePlaceholder:'നിങ്ങളുടെ പേര്',
+    ageStep:'ഘട്ടം 2 / 3', ageTitle:'നിങ്ങൾക്ക് എത്ര വയസ്സായി?',
+    ageSub:'ശരിയായ ഉള്ളടക്കം തെരഞ്ഞെടുക്കാൻ ഇത് സഹായിക്കുന്നു',
+    ageTeen:'കൗമാരം', ageYoung:'യുവാവ്', ageBuilding:'ജീവിതം കെട്ടിപ്പടുക്കുന്ന',
+    ageSettled:'സ്ഥിരത', ageExperienced:'അനുഭവസമ്പന്നൻ', ageGolden:'സ്വർണ്ണ വർഷങ്ങൾ',
+    charStep:'ഘട്ടം 3 / 3', charTitle:'നിങ്ങളെ ഏറ്റവും നന്നായി വിവരിക്കുന്നത് എന്താണ്?',
+    charSub:'ഒന്ന് തിരഞ്ഞെടുക്കൂ — ഇത് നിങ്ങളുടെ അനുഭവം രൂപപ്പെടുത്തും',
+    charWW:'ജോലിക്കാരി', charWWDesc:'കരിയർ, കുടുംബം — എല്ലാം സമതുലനം ചെയ്യുന്നു',
+    charSt:'വിദ്യാർഥി', charStDesc:'പഠനം, പരീക്ഷകൾ, കരിയർ തയ്യാറെടുപ്പ്',
+    charSBO:'ചെറുകിട വ്യാപാരി', charSBODesc:'കട, റെസ്റ്റോറന്റ് അല്ലെങ്കിൽ പ്രാദേശിക സേവനം',
+    charHM:'ഗൃഹനാഥ', charHMDesc:'വീടിന്റെ ഹൃദയം — പാചകം, പരിചരണം, നിയന്ത്രണം',
+    charWP:'ജോലിക്കാരൻ', charWPDesc:'ഓഫീസ്, റിമോട്ട് അല്ലെങ്കിൽ ഹൈബ്രിഡ് — കരിയർ പണിയുന്നു',
+    btnContinue:'തുടരുക', btnLetsGo:'തുടങ്ങാം!'
+  },
+  'gu-IN': {
+    nameStep:'પગલું 1 / 3', nameTitle:'અમે તમને શું કહીને બોલાવીએ?',
+    nameSub:'તમારું નામ જણાવો — અનુભવ તમને અનુરૂપ બનશે',
+    namePlaceholder:'તમારું નામ',
+    ageStep:'પગલું 2 / 3', ageTitle:'તમારી ઉંમર કેટલી છે?',
+    ageSub:'આ અમને તમારા માટે યોગ્ય કન્ટેન્ટ પસંદ કરવામાં મદદ કરે છે',
+    ageTeen:'કિશોર', ageYoung:'યુવા', ageBuilding:'જીવન ઘડતા',
+    ageSettled:'સ્થિર', ageExperienced:'અનુભવી', ageGolden:'સુવર્ણ વર્ષો',
+    charStep:'પગલું 3 / 3', charTitle:'તમને કયું વર્ણન સૌથી સારું લાગે છે?',
+    charSub:'એક પસંદ કરો — આ તમારો સમગ્ર અનુભવ ઘડશે',
+    charWW:'કામ કરતી મહિલા', charWWDesc:'કરિયર, પરિવાર — બધું સંતુલિત કરતી',
+    charSt:'વિદ્યાર્થી', charStDesc:'અભ્યાસ, પરીક્ષાઓ, કારકિર્દી તૈયારી',
+    charSBO:'નાનો વ્યવસાયી', charSBODesc:'દુકાન, રેસ્ટોરન્ટ કે સ્થાનિક સેવા',
+    charHM:'ગૃહિણી', charHMDesc:'ઘરનું હૃદય — રસોઈ, કાળજી, સંચાલન',
+    charWP:'કામ કરતા વ્યાવસાયિક', charWPDesc:'ઓફિસ, રિમોટ કે હાઇબ્રિડ — કરિયર ઘડતા',
+    btnContinue:'આગળ વધો', btnLetsGo:'ચાલો શરૂ કરીએ!'
+  },
+  'or-IN': {
+    nameStep:'ପଦକ୍ଷେପ ୧ / ୩', nameTitle:'ଆମେ ଆପଣଙ୍କୁ କ\'ଣ କହି ଡାକିବା?',
+    nameSub:'ଆପଣଙ୍କ ନାମ କୁହନ୍ତୁ — ଅନୁଭବ ଆପଣଙ୍କ ପାଇଁ ବନିବ',
+    namePlaceholder:'ଆପଣଙ୍କ ନାମ',
+    ageStep:'ପଦକ୍ଷେପ ୨ / ୩', ageTitle:'ଆପଣଙ୍କ ବୟସ କେତେ?',
+    ageSub:'ଏହା ଆପଣଙ୍କ ପାଇଁ ଉପଯୁକ୍ତ ବିଷୟବସ୍ତୁ ବଛିବାରେ ସାହାଯ୍ୟ କରେ',
+    ageTeen:'କିଶୋର', ageYoung:'ଯୁବ', ageBuilding:'ଜୀବନ ଗଢ଼ୁଛନ୍ତି',
+    ageSettled:'ସ୍ଥିର', ageExperienced:'ଅନୁଭବୀ', ageGolden:'ସୁବର୍ଣ୍ଣ ବର୍ଷ',
+    charStep:'ପଦକ୍ଷେପ ୩ / ୩', charTitle:'ଆପଣଙ୍କୁ କେଉଁଟି ସବୁଠୁ ଭଲ ଭାବରେ ବର୍ଣ୍ଣନା କରେ?',
+    charSub:'ଗୋଟିଏ ବାଛନ୍ତୁ — ଏହା ଆପଣଙ୍କ ଅନୁଭବକୁ ଗଢିବ',
+    charWW:'କାର୍ଯ୍ୟରତ ମହିଳା', charWWDesc:'କ୍ୟାରିଅର, ପରିବାର — ସବୁକିଛି ସନ୍ତୁଳନ',
+    charSt:'ଛାତ୍ର', charStDesc:'ପଢ଼ା, ପରୀକ୍ଷା, କ୍ୟାରିଅର ପ୍ରସ୍ତୁତି',
+    charSBO:'ଛୋଟ ବ୍ୟବସାୟୀ', charSBODesc:'ଦୋକାନ, ରେଷ୍ଟୁରାଣ୍ଟ ବା ସ୍ଥାନୀୟ ସେବା',
+    charHM:'ଗୃହିଣୀ', charHMDesc:'ଘରର ହୃଦୟ — ରନ୍ଧନ, ଯତ୍ନ, ପରିଚାଳନା',
+    charWP:'କାର୍ଯ୍ୟରତ ପେଶାଦାର', charWPDesc:'ଅଫିସ, ରିମୋଟ ବା ହାଇବ୍ରିଡ୍ — କ୍ୟାରିଅର ଗଢ଼ୁଛନ୍ତି',
+    btnContinue:'ଆଗକୁ ଯାଆନ୍ତୁ', btnLetsGo:'ଆରମ୍ଭ କରିବା!'
+  },
+  'kn-IN': {
+    nameStep:'ಹಂತ ೧ / ೩', nameTitle:'ನಾವು ನಿಮ್ಮನ್ನು ಏನೆಂದು ಕರೆಯಬೇಕು?',
+    nameSub:'ನಿಮ್ಮ ಹೆಸರು ಹೇಳಿ — ಅನುಭವ ನಿಮ್ಮದಾಗಿ ಬದಲಾಗುತ್ತದೆ',
+    namePlaceholder:'ನಿಮ್ಮ ಹೆಸರು',
+    ageStep:'ಹಂತ ೨ / ೩', ageTitle:'ನಿಮ್ಮ ವಯಸ್ಸು ಎಷ್ಟು?',
+    ageSub:'ನಿಮಗೆ ಸೂಕ್ತ ವಿಷಯವನ್ನು ಆಯ್ಕೆ ಮಾಡಲು ಇದು ಸಹಾಯಕ',
+    ageTeen:'ಹದಿಹರೆಯ', ageYoung:'ಯುವಕ', ageBuilding:'ಜೀವನ ಕಟ್ಟುತ್ತಿರುವ',
+    ageSettled:'ನೆಲೆ', ageExperienced:'ಅನುಭವಿ', ageGolden:'ಸುವರ್ಣ ವರ್ಷ',
+    charStep:'ಹಂತ ೩ / ೩', charTitle:'ನಿಮ್ಮನ್ನು ಯಾವುದು ಉತ್ತಮವಾಗಿ ವಿವರಿಸುತ್ತದೆ?',
+    charSub:'ಒಂದನ್ನು ಆಯ್ಕೆ ಮಾಡಿ — ಇದು ನಿಮ್ಮ ಅನುಭವವನ್ನು ರೂಪಿಸುತ್ತದೆ',
+    charWW:'ಉದ್ಯೋಗಸ್ಥ ಮಹಿಳೆ', charWWDesc:'ಕರಿಯರ್, ಕುಟುಂಬ — ಎಲ್ಲವನ್ನೂ ಸಮತೋಲನ',
+    charSt:'ವಿದ್ಯಾರ್ಥಿ', charStDesc:'ಅಧ್ಯಯನ, ಪರೀಕ್ಷೆ, ಕರಿಯರ್ ಸಿದ್ಧತೆ',
+    charSBO:'ಸಣ್ಣ ವ್ಯಾಪಾರಿ', charSBODesc:'ಅಂಗಡಿ, ರೆಸ್ಟೋರೆಂಟ್ ಅಥವಾ ಸ್ಥಳೀಯ ಸೇವೆ',
+    charHM:'ಗೃಹಿಣಿ', charHMDesc:'ಮನೆಯ ಹೃದಯ — ಅಡುಗೆ, ಆರೈಕೆ, ನಿರ್ವಹಣೆ',
+    charWP:'ಉದ್ಯೋಗಸ್ಥ ವೃತ್ತಿಪರ', charWPDesc:'ಆಫೀಸ್, ರಿಮೋಟ್ ಅಥವಾ ಹೈಬ್ರಿಡ್ — ಕರಿಯರ್ ಕಟ್ಟುತ್ತಿರುವ',
+    btnContinue:'ಮುಂದುವರಿಯಿರಿ', btnLetsGo:'ಶುರು ಮಾಡೋಣ!'
+  },
+  'as-IN': {
+    nameStep:'পদক্ষেপ ১ / ৩', nameTitle:'আমি আপোনাক কি নামেৰে মাতিম?',
+    nameSub:'আপোনাৰ নাম কওক — অভিজ্ঞতা আপোনাৰ হিচাপে হব',
+    namePlaceholder:'আপোনাৰ নাম',
+    ageStep:'পদক্ষেপ ২ / ৩', ageTitle:'আপোনাৰ বয়স কিমান?',
+    ageSub:'এইটোৱে আপোনালৈ উচিত বিষয়বস্তু বাছিবলৈ সহায় কৰে',
+    ageTeen:'কিশোৰ', ageYoung:'যুৱক', ageBuilding:'জীৱন গঢ়িছে',
+    ageSettled:'স্থিৰ', ageExperienced:'অভিজ্ঞ', ageGolden:'সোণালী বছৰ',
+    charStep:'পদক্ষেপ ৩ / ৩', charTitle:'আপোনাক কিহে শ্ৰেষ্ঠভাৱে বৰ্ণনা কৰে?',
+    charSub:'এটা বাছনি কৰক — ই আপোনাৰ অভিজ্ঞতা গঢ়িব',
+    charWW:'কৰ্মৰত মহিলা', charWWDesc:'কেৰিয়াৰ, পৰিয়াল — সকলো সমতা',
+    charSt:'শিক্ষাৰ্থী', charStDesc:'অধ্যয়ন, পৰীক্ষা, কেৰিয়াৰ প্ৰস্তুতি',
+    charSBO:'সৰু ব্যৱসায়ী', charSBODesc:'দোকান, ৰেষ্টুৰাণ্ট বা স্থানীয় সেৱা',
+    charHM:'গৃহিণী', charHMDesc:'ঘৰৰ হৃদয় — ৰান্ধন, যত্ন, পৰিচালনা',
+    charWP:'কৰ্মৰত পেছাদাৰী', charWPDesc:'অফিচ, ৰিমট বা হাইব্ৰিড — কেৰিয়াৰ গঢ়িছে',
+    btnContinue:'আগুৱাই যাওক', btnLetsGo:'আৰম্ভ কৰোঁ!'
+  },
+  'pa-IN': {
+    nameStep:'ਪੜਾਅ 1 / 3', nameTitle:'ਅਸੀਂ ਤੁਹਾਨੂੰ ਕੀ ਕਹਿ ਕੇ ਬੁਲਾਈਏ?',
+    nameSub:'ਆਪਣਾ ਨਾਮ ਦੱਸੋ — ਅਨੁਭਵ ਤੁਹਾਡੇ ਲਈ ਬਣੇਗਾ',
+    namePlaceholder:'ਤੁਹਾਡਾ ਨਾਮ',
+    ageStep:'ਪੜਾਅ 2 / 3', ageTitle:'ਤੁਹਾਡੀ ਉਮਰ ਕਿੰਨੀ ਹੈ?',
+    ageSub:'ਇਹ ਸਾਨੂੰ ਤੁਹਾਡੇ ਲਈ ਸਹੀ ਸਮੱਗਰੀ ਚੁਣਨ ਵਿੱਚ ਮਦਦ ਕਰਦਾ ਹੈ',
+    ageTeen:'ਨੌਜਵਾਨ', ageYoung:'ਜਵਾਨ', ageBuilding:'ਜ਼ਿੰਦਗੀ ਉਸਾਰਦੇ',
+    ageSettled:'ਸਥਿਰ', ageExperienced:'ਤਜਰਬੇਕਾਰ', ageGolden:'ਸੁਨਹਿਰੇ ਸਾਲ',
+    charStep:'ਪੜਾਅ 3 / 3', charTitle:'ਤੁਹਾਨੂੰ ਸਭ ਤੋਂ ਬਿਹਤਰ ਕੀ ਦਰਸਾਉਂਦਾ ਹੈ?',
+    charSub:'ਇੱਕ ਚੁਣੋ — ਇਹ ਤੁਹਾਡਾ ਸਾਰਾ ਅਨੁਭਵ ਬਣਾਵੇਗਾ',
+    charWW:'ਕੰਮਕਾਜੀ ਔਰਤ', charWWDesc:'ਕਰੀਅਰ, ਪਰਿਵਾਰ — ਸਭ ਕੁਝ ਸੰਤੁਲਿਤ ਕਰਦੀ',
+    charSt:'ਵਿਦਿਆਰਥੀ', charStDesc:'ਪੜ੍ਹਾਈ, ਪਰੀਖਿਆਵਾਂ, ਕਰੀਅਰ ਤਿਆਰੀ',
+    charSBO:'ਛੋਟਾ ਕਾਰੋਬਾਰੀ', charSBODesc:'ਦੁਕਾਨ, ਰੈਸਟੋਰੈਂਟ ਜਾਂ ਸਥਾਨਕ ਸੇਵਾ',
+    charHM:'ਗ੍ਰਹਿਣੀ', charHMDesc:'ਘਰ ਦਾ ਦਿਲ — ਰਸੋਈ, ਦੇਖਭਾਲ, ਪ੍ਰਬੰਧ',
+    charWP:'ਕੰਮਕਾਜੀ ਪੇਸ਼ੇਵਰ', charWPDesc:'ਦਫ਼ਤਰ, ਰਿਮੋਟ ਜਾਂ ਹਾਈਬ੍ਰਿਡ — ਕਰੀਅਰ ਬਣਾਉਂਦੇ',
+    btnContinue:'ਅੱਗੇ ਵਧੋ', btnLetsGo:'ਆਓ ਸ਼ੁਰੂ ਕਰੀਏ!'
+  },
+  'ta-IN': {
+    nameStep:'படி 1 / 3', nameTitle:'உங்களை நாங்கள் என்ன அழைப்போம்?',
+    nameSub:'உங்கள் பெயரைச் சொல்லுங்கள் — அனுபவம் உங்களுக்கேற்ப இருக்கும்',
+    namePlaceholder:'உங்கள் பெயர்',
+    ageStep:'படி 2 / 3', ageTitle:'உங்கள் வயது என்ன?',
+    ageSub:'உங்களுக்கான சரியான உள்ளடக்கத்தை தேர்வு செய்ய இது உதவும்',
+    ageTeen:'இளம்', ageYoung:'இளைஞர்', ageBuilding:'வாழ்க்கையை கட்டமைக்கிறீர்கள்',
+    ageSettled:'நிலையானவர்', ageExperienced:'அனுபவசாலி', ageGolden:'பொன்னான ஆண்டுகள்',
+    charStep:'படி 3 / 3', charTitle:'உங்களை எது சிறப்பாக விவரிக்கிறது?',
+    charSub:'ஒன்றை தேர்ந்தெடுங்கள் — இது உங்கள் அனுபவத்தை வடிவமைக்கும்',
+    charWW:'பணியாற்றும் பெண்', charWWDesc:'தொழில், குடும்பம் — அனைத்தையும் சமநிலைப்படுத்துபவர்',
+    charSt:'மாணவர்', charStDesc:'படிப்பு, தேர்வுகள், தொழில் தயாரிப்பு',
+    charSBO:'சிறு தொழிலதிபர்', charSBODesc:'கடை, உணவகம் அல்லது உள்ளூர் சேவை',
+    charHM:'இல்லத்தரசி', charHMDesc:'வீட்டின் இதயம் — சமையல், பராமரிப்பு, நிர்வாகம்',
+    charWP:'பணியாற்றும் நிபுணர்', charWPDesc:'அலுவலகம், ரிமோட் அல்லது ஹைப்ரிட் — தொழில் கட்டுபவர்',
+    btnContinue:'தொடரவும்', btnLetsGo:'தொடங்குவோம்!'
+  }
+};
+
+function applyOnboardingI18n(lang) {
+  const t = ONBOARDING_I18N[lang] || ONBOARDING_I18N['en-IN'];
+  if (!t) return;
+  const ns = document.getElementById('nameScreen');
+  if (ns) {
+    const step = ns.querySelector('.interest-step');   if (step)  step.textContent  = t.nameStep;
+    const title= ns.querySelector('.interest-title');  if (title) title.textContent = t.nameTitle;
+    const sub  = ns.querySelector('.interest-sub');    if (sub)   sub.textContent   = t.nameSub;
+    const inp  = document.getElementById('onbNameInput'); if (inp) inp.placeholder = t.namePlaceholder;
+    const btn  = document.getElementById('onbNameBtn');   if (btn) btn.textContent  = t.btnContinue;
+  }
+  const as = document.getElementById('ageScreen');
+  if (as) {
+    const step = as.querySelector('.prof-step');   if (step)  step.textContent  = t.ageStep;
+    const title= as.querySelector('.prof-title');  if (title) title.textContent = t.ageTitle;
+    const sub  = as.querySelector('.prof-sub');    if (sub)   sub.textContent   = t.ageSub;
+    const ageMap = { '13-17':t.ageTeen, '18-24':t.ageYoung, '25-34':t.ageBuilding, '35-49':t.ageSettled, '50-64':t.ageExperienced, '65+':t.ageGolden };
+    as.querySelectorAll('.prof-card[data-age]').forEach(c => {
+      const desc = c.querySelector('.prof-desc');
+      const label = ageMap[c.dataset.age];
+      if (desc && label) desc.textContent = label;
+    });
+    const btn = document.getElementById('ageContinueBtn'); if (btn) btn.textContent = t.btnContinue;
+  }
+  const cs = document.getElementById('characterScreen');
+  if (cs) {
+    const step = cs.querySelector('.prof-step');   if (step)  step.textContent  = t.charStep;
+    const title= cs.querySelector('.prof-title');  if (title) title.textContent = t.charTitle;
+    const sub  = cs.querySelector('.prof-sub');    if (sub)   sub.textContent   = t.charSub;
+    const charMap = {
+      'Working Women':        [t.charWW,  t.charWWDesc],
+      'Student':              [t.charSt,  t.charStDesc],
+      'Small Business Owner': [t.charSBO, t.charSBODesc],
+      'Homemaker':            [t.charHM,  t.charHMDesc],
+      'Working Professional': [t.charWP,  t.charWPDesc]
+    };
+    cs.querySelectorAll('.prof-card[data-char]').forEach(c => {
+      const m = charMap[c.dataset.char]; if (!m) return;
+      const nm = c.querySelector('.prof-name'); if (nm) nm.textContent = m[0];
+      const ds = c.querySelector('.prof-desc'); if (ds) ds.textContent = m[1];
+    });
+    const btn = document.getElementById('charContinueBtn'); if (btn) btn.textContent = t.btnLetsGo;
+  }
+}
+
 function pickLang(el, langCode) {
   selectedLangCode = langCode;
   document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('sel'));
@@ -2479,6 +2733,7 @@ function pickLang(el, langCode) {
 }
 
 function langSaved() {
+  applyOnboardingI18n(selectedLangCode);
   goScreen('nameScreen');
   setTimeout(() => document.getElementById('onbNameInput').focus(), 400);
 }
