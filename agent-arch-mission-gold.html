@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission Gold — Agent Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f8f7f5;
+      --surface: #ffffff;
+      --border: #e8e5e1;
+      --text: #141414;
+      --text2: #5c5651;
+      --text3: #a09890;
+      --gold: #f7ab20;
+      --gold-d: #c8840d;
+      --gold-l: #fff8ed;
+      --purple: #3535f3;
+      --purple-l: #eeeeff;
+      --teal: #1eccb0;
+      --teal-l: #e6faf7;
+      --red-l: #fff0f0;
+      --radius: 20px;
+      --font: 'Outfit', system-ui, sans-serif;
+    }
+
+    body { font-family: var(--font); background: var(--bg); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    .page { max-width: 980px; margin: 0 auto; padding: 48px 24px 96px; }
+
+    /* ── HEADER ── */
+    .header { margin-bottom: 52px; animation: fadeUp 0.5s ease both; }
+
+    .agent-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--gold-l); border: 1.5px solid rgba(247,171,32,0.35);
+      color: var(--gold-d); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 999px; margin-bottom: 22px;
+    }
+    .badge-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: pulse 2s ease infinite; }
+
+    .header-title {
+      font-size: clamp(40px, 7vw, 68px); font-weight: 900;
+      letter-spacing: -2.5px; line-height: 1.0;
+      color: var(--text); margin-bottom: 14px;
+    }
+    .header-title .accent { color: var(--gold); }
+
+    .header-desc {
+      font-size: 17px; color: var(--text2);
+      max-width: 580px; line-height: 1.6; margin-bottom: 36px;
+    }
+
+    .stats-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .stat-chip {
+      display: flex; flex-direction: column; gap: 3px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 14px 20px; min-width: 100px;
+    }
+    .stat-chip.hi .stat-value { color: var(--gold); }
+
+    .stat-value { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); }
+    .stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); }
+
+    /* ── SECTION LABEL ── */
+    .sec-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text3);
+      margin-bottom: 16px; margin-top: 52px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── ARCH DIAGRAM ── */
+    .arch-wrap {
+      background: #0c0c14; border-radius: 24px;
+      padding: 40px 36px; position: relative; overflow: hidden;
+      animation: fadeUp 0.5s ease 0.1s both;
+    }
+    .arch-wrap::before {
+      content: ''; position: absolute; top: -80px; right: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(247,171,32,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .arch-wrap::after {
+      content: ''; position: absolute; bottom: -60px; left: 100px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(53,53,243,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .arch-row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 6px; position: relative; z-index: 1; }
+
+    .row-tag { width: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; }
+    .row-tag span {
+      font-size: 8.5px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.22); text-align: right;
+    }
+
+    .row-nodes { flex: 1; display: flex; gap: 8px; }
+
+    .node {
+      flex: 1; border-radius: 13px; padding: 15px 14px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.04);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .node:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.14); }
+
+    .node-ico { font-size: 18px; margin-bottom: 8px; display: block; }
+    .node-name { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.82); margin-bottom: 4px; letter-spacing: -0.2px; }
+    .node-sub { font-size: 10px; color: rgba(255,255,255,0.32); line-height: 1.4; }
+
+    .node.g { border-color: rgba(247,171,32,0.28); background: rgba(247,171,32,0.08); }
+    .node.g .node-name { color: #f7c44a; }
+    .node.p { border-color: rgba(100,100,255,0.28); background: rgba(100,100,255,0.08); }
+    .node.p .node-name { color: #9898ff; }
+    .node.t { border-color: rgba(30,204,176,0.28); background: rgba(30,204,176,0.08); }
+    .node.t .node-name { color: #1eccb0; }
+    .node.r { border-color: rgba(255,100,100,0.22); background: rgba(255,100,100,0.06); }
+    .node.r .node-name { color: #ff9090; }
+
+    .arch-sep { display: flex; gap: 12px; height: 28px; align-items: center; position: relative; z-index: 1; }
+    .sep-spacer { width: 72px; flex-shrink: 0; }
+    .sep-line {
+      flex: 1; display: flex; justify-content: center;
+    }
+    .arrow-wrap { display: flex; flex-direction: column; align-items: center; }
+    .arrow-stem { width: 1.5px; height: 14px; background: linear-gradient(to bottom, rgba(247,171,32,0.5), rgba(247,171,32,0.1)); }
+    .arrow-head { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid rgba(247,171,32,0.4); }
+
+    /* ── FLOW ── */
+    .flow-list { display: flex; flex-direction: column; animation: fadeUp 0.5s ease 0.15s both; }
+
+    .flow-item { display: flex; gap: 20px; }
+    .flow-left { display: flex; flex-direction: column; align-items: center; width: 38px; flex-shrink: 0; }
+    .flow-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800;
+      background: var(--gold-l); color: var(--gold-d);
+      border: 2px solid rgba(247,171,32,0.35); flex-shrink: 0;
+    }
+    .flow-stem { width: 1.5px; flex: 1; min-height: 24px; background: linear-gradient(to bottom, rgba(247,171,32,0.25), transparent); margin-top: 6px; }
+    .flow-item:last-child .flow-stem { display: none; }
+    .flow-body { flex: 1; padding-bottom: 28px; padding-top: 6px; }
+    .flow-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; margin-bottom: 5px; }
+    .flow-desc { font-size: 13px; color: var(--text2); line-height: 1.55; }
+
+    /* ── COMPONENT CARDS ── */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 14px;
+      animation: fadeUp 0.5s ease 0.2s both;
+    }
+
+    .comp-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; padding: 22px; }
+    .comp-top { display: flex; align-items: center; gap: 13px; margin-bottom: 12px; }
+    .comp-ico {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px; flex-shrink: 0;
+    }
+    .ico-g { background: var(--gold-l); }
+    .ico-p { background: var(--purple-l); }
+    .ico-t { background: var(--teal-l); }
+    .ico-r { background: var(--red-l); }
+
+    .comp-name { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+    .comp-type { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-top: 2px; }
+    .comp-desc { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 14px; }
+    .comp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ctag {
+      font-size: 10px; font-weight: 600; color: var(--text3);
+      background: var(--bg); border: 1px solid var(--border);
+      padding: 2px 8px; border-radius: 999px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 72px; padding-top: 24px;
+      border-top: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-brand { font-size: 13px; font-weight: 700; color: var(--text3); }
+    .footer-ver { font-size: 12px; color: var(--text3); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="agent-badge"><div class="badge-dot"></div>Agent Architecture</div>
+    <h1 class="header-title">Mission <span class="accent">Gold</span></h1>
+    <p class="header-desc">A strategic goal-execution agent that decomposes complex missions into verified, actionable subtasks — delivering high-confidence outcomes through multi-stage planning and adaptive tool orchestration.</p>
+    <div class="stats-row">
+      <div class="stat-chip hi"><span class="stat-value">6</span><span class="stat-label">Layers</span></div>
+      <div class="stat-chip"><span class="stat-value">14</span><span class="stat-label">Components</span></div>
+      <div class="stat-chip"><span class="stat-value">Vector</span><span class="stat-label">Memory</span></div>
+      <div class="stat-chip"><span class="stat-value">ReAct</span><span class="stat-label">Planning</span></div>
+      <div class="stat-chip"><span class="stat-value">v1.2</span><span class="stat-label">Version</span></div>
+    </div>
+  </div>
+
+  <!-- ARCH DIAGRAM -->
+  <div class="sec-label">Architecture Diagram</div>
+  <div class="arch-wrap">
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Input</span></div>
+      <div class="row-nodes">
+        <div class="node g"><span class="node-ico">🎯</span><div class="node-name">Mission Brief</div><div class="node-sub">User intent, goals &amp; constraints ingestion</div></div>
+        <div class="node g"><span class="node-ico">🧠</span><div class="node-name">Context Injector</div><div class="node-sub">Session history, user profile, env state</div></div>
+        <div class="node g"><span class="node-ico">📚</span><div class="node-name">Memory Recall</div><div class="node-sub">Long-term embeddings, prior missions</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Planning</span></div>
+      <div class="row-nodes">
+        <div class="node p"><span class="node-ico">🔍</span><div class="node-name">Goal Decomposer</div><div class="node-sub">Breaks mission into sub-goals &amp; DAG</div></div>
+        <div class="node p"><span class="node-ico">🗺️</span><div class="node-name">Strategy Planner</div><div class="node-sub">Selects execution path via ReAct loop</div></div>
+        <div class="node p"><span class="node-ico">📊</span><div class="node-name">Priority Queue</div><div class="node-sub">Scores and orders tasks by confidence</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Memory</span></div>
+      <div class="row-nodes">
+        <div class="node"><span class="node-ico">⚡</span><div class="node-name">Working Memory</div><div class="node-sub">Active task state, short-term cache</div></div>
+        <div class="node"><span class="node-ico">🗄️</span><div class="node-name">Vector Store</div><div class="node-sub">Semantic search over knowledge base</div></div>
+        <div class="node"><span class="node-ico">🔄</span><div class="node-name">Mission State</div><div class="node-sub">Progress tracker, rollback snapshots</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Execution</span></div>
+      <div class="row-nodes">
+        <div class="node t"><span class="node-ico">🛠️</span><div class="node-name">Tool Router</div><div class="node-sub">Selects and invokes registered tools/APIs</div></div>
+        <div class="node t"><span class="node-ico">🤖</span><div class="node-name">Sub-Agent Spawner</div><div class="node-sub">Delegates parallel tasks to child agents</div></div>
+        <div class="node t"><span class="node-ico">📋</span><div class="node-name">Action Queue</div><div class="node-sub">Ordered execution with retry logic</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Validation</span></div>
+      <div class="row-nodes">
+        <div class="node r"><span class="node-ico">✅</span><div class="node-name">Success Criteria</div><div class="node-sub">Checks completion against acceptance tests</div></div>
+        <div class="node r"><span class="node-ico">🛡️</span><div class="node-name">Guardrails</div><div class="node-sub">Safety constraints, policy enforcement</div></div>
+        <div class="node r"><span class="node-ico">📈</span><div class="node-name">Confidence Scorer</div><div class="node-sub">Probability-weighted quality assessment</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Output</span></div>
+      <div class="row-nodes">
+        <div class="node g"><span class="node-ico">📝</span><div class="node-name">Response Synthesizer</div><div class="node-sub">Compiles final answer with citations</div></div>
+        <div class="node g"><span class="node-ico">⚡</span><div class="node-name">Action Emitter</div><div class="node-sub">Pushes side-effects to downstream systems</div></div>
+        <div class="node g"><span class="node-ico">📡</span><div class="node-name">Status Reporter</div><div class="node-sub">Real-time progress stream to client</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REQUEST FLOW -->
+  <div class="sec-label">Request Flow</div>
+  <div class="flow-list">
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">1</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Mission Ingestion</div>
+        <div class="flow-desc">User submits a natural-language mission. Context Injector enriches it with session history and retrieved memories from the Vector Store.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">2</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Goal Decomposition</div>
+        <div class="flow-desc">Goal Decomposer breaks the mission into a directed acyclic graph of sub-goals. Strategy Planner assigns execution modes: tool-call, LLM-generate, or delegate to sub-agent.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">3</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Parallel Execution</div>
+        <div class="flow-desc">Tool Router dispatches independent tasks concurrently. Sub-Agent Spawner handles long-horizon tasks requiring dedicated context windows. All results are written to Mission State.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">4</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Validation Loop</div>
+        <div class="flow-desc">Each result is scored by Confidence Scorer. Low-confidence outputs trigger a re-plan cycle back to the Strategy Planner. Guardrails block policy-violating actions before emission.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">5</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Output Synthesis</div>
+        <div class="flow-desc">Response Synthesizer merges all sub-results into a coherent, citation-backed answer. Action Emitter fires committed side-effects. Status Reporter streams completion events to the client.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTS -->
+  <div class="sec-label">Key Components</div>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-g">🎯</div><div><div class="comp-name">Mission Brief</div><div class="comp-type">Input · Parser</div></div></div>
+      <div class="comp-desc">Normalizes free-form user intent into a structured mission schema with explicit success criteria and constraint fields.</div>
+      <div class="comp-tags"><span class="ctag">NLU</span><span class="ctag">Schema Validation</span><span class="ctag">Intent Extraction</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-p">🔍</div><div><div class="comp-name">Goal Decomposer</div><div class="comp-type">Planning · Core</div></div></div>
+      <div class="comp-desc">Converts high-level goals into a DAG of atomic tasks. Identifies blockers, parallelizable branches, and the critical execution path.</div>
+      <div class="comp-tags"><span class="ctag">DAG</span><span class="ctag">Dependency Analysis</span><span class="ctag">Tree-of-Thought</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-t">🛠️</div><div><div class="comp-name">Tool Router</div><div class="comp-type">Execution · Dispatcher</div></div></div>
+      <div class="comp-desc">Matches task requirements to registered tool capabilities using semantic similarity scoring. Handles retries with exponential backoff.</div>
+      <div class="comp-tags"><span class="ctag">Semantic Match</span><span class="ctag">Retry Logic</span><span class="ctag">Tool Registry</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-r">🛡️</div><div><div class="comp-name">Guardrails</div><div class="comp-type">Validation · Safety</div></div></div>
+      <div class="comp-desc">Multi-layer policy enforcement: content filtering, rate limiting, PII detection, and domain-specific constraint checking before any output is emitted.</div>
+      <div class="comp-tags"><span class="ctag">PII Detection</span><span class="ctag">Content Filter</span><span class="ctag">Rate Limit</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-p">🗄️</div><div><div class="comp-name">Vector Store</div><div class="comp-type">Memory · Retrieval</div></div></div>
+      <div class="comp-desc">Persistent semantic memory using cosine-similarity search over embedded documents. Enables recall of relevant context across sessions.</div>
+      <div class="comp-tags"><span class="ctag">Embeddings</span><span class="ctag">ANN Search</span><span class="ctag">Persistent</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-g">📝</div><div><div class="comp-name">Response Synthesizer</div><div class="comp-type">Output · Generator</div></div></div>
+      <div class="comp-desc">Merges outputs from multiple sub-tasks into a coherent, citation-backed response. Adapts tone and format to user preferences and downstream channel.</div>
+      <div class="comp-tags"><span class="ctag">Multi-source Merge</span><span class="ctag">Citations</span><span class="ctag">Format Adapt</span></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">JBIQ Agent System</div>
+    <div class="footer-ver">Mission Gold · v1.2 · Architecture Spec · 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
