@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2UI — Agent Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f8f7f5;
+      --surface: #ffffff;
+      --border: #e8e5e1;
+      --text: #141414;
+      --text2: #5c5651;
+      --text3: #a09890;
+      --teal: #1eccb0;
+      --teal-d: #0da88c;
+      --teal-l: #e6faf7;
+      --purple: #3535f3;
+      --purple-l: #eeeeff;
+      --gold: #f7ab20;
+      --gold-l: #fff8ed;
+      --red-l: #fff0f0;
+      --radius: 20px;
+      --font: 'Outfit', system-ui, sans-serif;
+    }
+
+    body { font-family: var(--font); background: var(--bg); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    .page { max-width: 980px; margin: 0 auto; padding: 48px 24px 96px; }
+
+    /* ── HEADER ── */
+    .header { margin-bottom: 52px; animation: fadeUp 0.5s ease both; }
+
+    .agent-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--teal-l); border: 1.5px solid rgba(30,204,176,0.35);
+      color: var(--teal-d); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 999px; margin-bottom: 22px;
+    }
+    .badge-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: pulse 2s ease infinite; }
+
+    .header-eyebrow {
+      font-size: 13px; font-weight: 600; color: var(--text3);
+      letter-spacing: -0.1px; margin-bottom: 8px;
+    }
+
+    .header-title {
+      font-size: clamp(40px, 7vw, 68px); font-weight: 900;
+      letter-spacing: -2.5px; line-height: 1.0;
+      color: var(--text); margin-bottom: 14px;
+    }
+    .header-title .a1 { color: var(--teal); }
+    .header-title .a2 { color: var(--purple); }
+
+    .header-desc {
+      font-size: 17px; color: var(--text2);
+      max-width: 580px; line-height: 1.6; margin-bottom: 36px;
+    }
+
+    .stats-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .stat-chip {
+      display: flex; flex-direction: column; gap: 3px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 14px 20px; min-width: 100px;
+    }
+    .stat-chip.hi .stat-value { color: var(--teal); }
+
+    .stat-value { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); }
+    .stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); }
+
+    /* ── SECTION LABEL ── */
+    .sec-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text3);
+      margin-bottom: 16px; margin-top: 52px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── ARCH DIAGRAM ── */
+    .arch-wrap {
+      background: #080d12; border-radius: 24px;
+      padding: 40px 36px; position: relative; overflow: hidden;
+      animation: fadeUp 0.5s ease 0.1s both;
+    }
+    .arch-wrap::before {
+      content: ''; position: absolute; top: -80px; right: -40px;
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(30,204,176,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .arch-wrap::after {
+      content: ''; position: absolute; bottom: -40px; left: 60px;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(53,53,243,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .arch-row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 6px; position: relative; z-index: 1; }
+
+    .row-tag { width: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; }
+    .row-tag span {
+      font-size: 8.5px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.22); text-align: right;
+    }
+
+    .row-nodes { flex: 1; display: flex; gap: 8px; }
+
+    .node {
+      flex: 1; border-radius: 13px; padding: 15px 14px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.04);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .node:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.14); }
+
+    .node-ico { font-size: 18px; margin-bottom: 8px; display: block; }
+    .node-name { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.82); margin-bottom: 4px; letter-spacing: -0.2px; }
+    .node-sub { font-size: 10px; color: rgba(255,255,255,0.32); line-height: 1.4; }
+
+    .node.t { border-color: rgba(30,204,176,0.28); background: rgba(30,204,176,0.07); }
+    .node.t .node-name { color: #1eccb0; }
+    .node.p { border-color: rgba(100,100,255,0.28); background: rgba(100,100,255,0.08); }
+    .node.p .node-name { color: #9898ff; }
+    .node.g { border-color: rgba(247,171,32,0.25); background: rgba(247,171,32,0.07); }
+    .node.g .node-name { color: #f7c44a; }
+    .node.r { border-color: rgba(255,100,100,0.22); background: rgba(255,100,100,0.06); }
+    .node.r .node-name { color: #ff9090; }
+
+    .arch-sep { display: flex; gap: 12px; height: 28px; align-items: center; position: relative; z-index: 1; }
+    .sep-spacer { width: 72px; flex-shrink: 0; }
+    .sep-line { flex: 1; display: flex; justify-content: center; }
+    .arrow-wrap { display: flex; flex-direction: column; align-items: center; }
+    .arrow-stem { width: 1.5px; height: 14px; background: linear-gradient(to bottom, rgba(30,204,176,0.55), rgba(30,204,176,0.1)); }
+    .arrow-head { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid rgba(30,204,176,0.45); }
+
+    /* ── TRANSFORM BANNER ── */
+    .transform-banner {
+      background: linear-gradient(135deg, rgba(30,204,176,0.1) 0%, rgba(53,53,243,0.1) 100%);
+      border: 1.5px solid rgba(30,204,176,0.2);
+      border-radius: 16px; padding: 18px 24px;
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 52px;
+    }
+    .tb-stage {
+      flex: 1; text-align: center;
+      font-size: 12px; font-weight: 700; color: var(--text2);
+    }
+    .tb-stage span {
+      display: block; font-size: 22px;
+      font-weight: 900; letter-spacing: -0.5px;
+      color: var(--text); margin-bottom: 3px;
+    }
+    .tb-arrow {
+      font-size: 20px; color: var(--teal); flex-shrink: 0;
+      font-weight: 300;
+    }
+
+    /* ── FLOW ── */
+    .flow-list { display: flex; flex-direction: column; animation: fadeUp 0.5s ease 0.15s both; }
+
+    .flow-item { display: flex; gap: 20px; }
+    .flow-left { display: flex; flex-direction: column; align-items: center; width: 38px; flex-shrink: 0; }
+    .flow-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800;
+      background: var(--teal-l); color: var(--teal-d);
+      border: 2px solid rgba(30,204,176,0.35); flex-shrink: 0;
+    }
+    .flow-stem { width: 1.5px; flex: 1; min-height: 24px; background: linear-gradient(to bottom, rgba(30,204,176,0.25), transparent); margin-top: 6px; }
+    .flow-item:last-child .flow-stem { display: none; }
+    .flow-body { flex: 1; padding-bottom: 28px; padding-top: 6px; }
+    .flow-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; margin-bottom: 5px; }
+    .flow-desc { font-size: 13px; color: var(--text2); line-height: 1.55; }
+
+    /* ── COMPONENT CARDS ── */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 14px;
+      animation: fadeUp 0.5s ease 0.2s both;
+    }
+
+    .comp-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; padding: 22px; }
+    .comp-top { display: flex; align-items: center; gap: 13px; margin-bottom: 12px; }
+    .comp-ico {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px; flex-shrink: 0;
+    }
+    .ico-t { background: var(--teal-l); }
+    .ico-p { background: var(--purple-l); }
+    .ico-g { background: var(--gold-l); }
+    .ico-r { background: var(--red-l); }
+
+    .comp-name { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+    .comp-type { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-top: 2px; }
+    .comp-desc { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 14px; }
+    .comp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ctag {
+      font-size: 10px; font-weight: 600; color: var(--text3);
+      background: var(--bg); border: 1px solid var(--border);
+      padding: 2px 8px; border-radius: 999px;
+    }
+
+    /* ── OUTPUT TYPES ── */
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      animation: fadeUp 0.5s ease 0.25s both;
+    }
+
+    .out-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 18px 16px; text-align: center;
+    }
+    .out-card:hover { border-color: rgba(30,204,176,0.4); }
+
+    .out-ico { font-size: 24px; margin-bottom: 8px; }
+    .out-name { font-size: 12px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; margin-bottom: 3px; }
+    .out-desc { font-size: 10px; color: var(--text3); }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 72px; padding-top: 24px;
+      border-top: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-brand { font-size: 13px; font-weight: 700; color: var(--text3); }
+    .footer-ver { font-size: 12px; color: var(--text3); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="agent-badge"><div class="badge-dot"></div>Agent Architecture</div>
+    <h1 class="header-title"><span class="a1">A2</span><span class="a2">UI</span></h1>
+    <p class="header-desc">Agent-to-UI: a real-time translation layer that converts structured agent outputs — JSON, tool results, streaming tokens — into live, accessible UI components without manual wiring.</p>
+    <div class="stats-row">
+      <div class="stat-chip hi"><span class="stat-value">6</span><span class="stat-label">Layers</span></div>
+      <div class="stat-chip"><span class="stat-value">12</span><span class="stat-label">Components</span></div>
+      <div class="stat-chip"><span class="stat-value">Stream</span><span class="stat-label">Input Mode</span></div>
+      <div class="stat-chip"><span class="stat-value">SSR+CSR</span><span class="stat-label">Render Mode</span></div>
+      <div class="stat-chip"><span class="stat-value">v2.0</span><span class="stat-label">Version</span></div>
+    </div>
+  </div>
+
+  <!-- TRANSFORM BANNER -->
+  <div class="transform-banner">
+    <div class="tb-stage"><span>Agent</span>Structured output</div>
+    <div class="tb-arrow">→</div>
+    <div class="tb-stage"><span>A2UI</span>Translation engine</div>
+    <div class="tb-arrow">→</div>
+    <div class="tb-stage"><span>UI</span>Live components</div>
+  </div>
+
+  <!-- ARCH DIAGRAM -->
+  <div class="sec-label">Architecture Diagram</div>
+  <div class="arch-wrap">
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Input</span></div>
+      <div class="row-nodes">
+        <div class="node t"><span class="node-ico">📦</span><div class="node-name">Agent JSON</div><div class="node-sub">Structured tool results &amp; agent outputs</div></div>
+        <div class="node t"><span class="node-ico">🌊</span><div class="node-name">Token Stream</div><div class="node-sub">Streaming LLM output via SSE</div></div>
+        <div class="node t"><span class="node-ico">💬</span><div class="node-name">NL Response</div><div class="node-sub">Free-form natural language passages</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Parse</span></div>
+      <div class="row-nodes">
+        <div class="node p"><span class="node-ico">🔎</span><div class="node-name">Intent Classifier</div><div class="node-sub">Identifies display intent: list, chart, form, text</div></div>
+        <div class="node p"><span class="node-ico">📐</span><div class="node-name">Schema Extractor</div><div class="node-sub">Pulls fields, types, and structure from JSON</div></div>
+        <div class="node p"><span class="node-ico">🏷️</span><div class="node-name">Entity Mapper</div><div class="node-sub">Tags semantic entities for component binding</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Spec</span></div>
+      <div class="row-nodes">
+        <div class="node g"><span class="node-ico">🗂️</span><div class="node-name">Layout Planner</div><div class="node-sub">Decides page/card/inline layout hierarchy</div></div>
+        <div class="node g"><span class="node-ico">🧩</span><div class="node-name">Component Selector</div><div class="node-sub">Picks best-fit component from design system</div></div>
+        <div class="node g"><span class="node-ico">⚙️</span><div class="node-name">Prop Builder</div><div class="node-sub">Generates typed props and default values</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Design</span></div>
+      <div class="row-nodes">
+        <div class="node"><span class="node-ico">🎨</span><div class="node-name">Token Mapper</div><div class="node-sub">Applies design tokens: color, spacing, type</div></div>
+        <div class="node"><span class="node-ico">📱</span><div class="node-name">Responsive Adapter</div><div class="node-sub">Breakpoint rules, container queries</div></div>
+        <div class="node"><span class="node-ico">🏷️</span><div class="node-name">Theme Resolver</div><div class="node-sub">Brand palette, dark/light mode, overrides</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Render</span></div>
+      <div class="row-nodes">
+        <div class="node r"><span class="node-ico">🌳</span><div class="node-name">Virtual DOM Builder</div><div class="node-sub">Constructs diffable component tree</div></div>
+        <div class="node r"><span class="node-ico">✨</span><div class="node-name">Animation Engine</div><div class="node-sub">Transition choreography, skeleton loaders</div></div>
+        <div class="node r"><span class="node-ico">♿</span><div class="node-name">A11y Layer</div><div class="node-sub">ARIA roles, focus management, contrast</div></div>
+      </div>
+    </div>
+    <div class="arch-sep"><div class="sep-spacer"></div><div class="sep-line"><div class="arrow-wrap"><div class="arrow-stem"></div><div class="arrow-head"></div></div></div></div>
+
+    <div class="arch-row">
+      <div class="row-tag"><span>Output</span></div>
+      <div class="row-nodes">
+        <div class="node t"><span class="node-ico">⚡</span><div class="node-name">Live Component</div><div class="node-sub">Hydrated, interactive UI rendered in-page</div></div>
+        <div class="node t"><span class="node-ico">📤</span><div class="node-name">Code Export</div><div class="node-sub">React / Vue / Web Component source</div></div>
+        <div class="node t"><span class="node-ico">👁️</span><div class="node-name">Preview Stream</div><div class="node-sub">Real-time iframe preview as tokens arrive</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REQUEST FLOW -->
+  <div class="sec-label">Translation Flow</div>
+  <div class="flow-list">
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">1</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Input Reception</div>
+        <div class="flow-desc">A2UI receives agent output in one of three forms: structured JSON from tool calls, a streaming SSE token feed, or a complete NL response string. All three are normalized to an internal event stream.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">2</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Intent &amp; Schema Parse</div>
+        <div class="flow-desc">Intent Classifier determines the display category (data table, action card, narrative prose, etc). Schema Extractor then walks the payload to build a typed field map. Entity Mapper annotates domain-specific values.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">3</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">UI Spec Generation</div>
+        <div class="flow-desc">Layout Planner chooses the right spatial structure. Component Selector queries the design system registry for the best-fit component. Prop Builder generates a fully typed props object ready for rendering.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">4</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Design Token Application</div>
+        <div class="flow-desc">Token Mapper injects the active design token set. Responsive Adapter adds breakpoint rules. Theme Resolver applies brand overrides and resolves the current color scheme.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left"><div class="flow-num">5</div><div class="flow-stem"></div></div>
+      <div class="flow-body">
+        <div class="flow-name">Render &amp; Emit</div>
+        <div class="flow-desc">Virtual DOM Builder constructs a diffable tree for efficient updates. Animation Engine adds entrance transitions and streaming skeleton loaders. A11y Layer enforces ARIA compliance. Final output is emitted as a live component, exportable code, and a preview stream.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTS -->
+  <div class="sec-label">Key Components</div>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-t">🌊</div><div><div class="comp-name">Token Stream</div><div class="comp-type">Input · Ingestion</div></div></div>
+      <div class="comp-desc">Consumes SSE events from the LLM provider. Buffers partial tokens and emits complete semantic units downstream so the render pipeline never blocks on an incomplete word.</div>
+      <div class="comp-tags"><span class="ctag">SSE</span><span class="ctag">Buffering</span><span class="ctag">Backpressure</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-p">🔎</div><div><div class="comp-name">Intent Classifier</div><div class="comp-type">Parse · Core</div></div></div>
+      <div class="comp-desc">Lightweight classifier (fine-tuned on display intent labels) that routes each payload to the correct rendering pathway in under 10 ms, enabling near-instant UI decisions.</div>
+      <div class="comp-tags"><span class="ctag">Classification</span><span class="ctag">Low-latency</span><span class="ctag">Routing</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-g">🧩</div><div><div class="comp-name">Component Selector</div><div class="comp-type">Spec · Matching</div></div></div>
+      <div class="comp-desc">Queries a component registry using semantic + constraint matching. Scores candidates on data shape fit, interaction requirements, and accessibility compliance before selecting the winner.</div>
+      <div class="comp-tags"><span class="ctag">Registry</span><span class="ctag">Semantic Match</span><span class="ctag">Scoring</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-t">🎨</div><div><div class="comp-name">Token Mapper</div><div class="comp-type">Design · Styling</div></div></div>
+      <div class="comp-desc">Maps abstract design tokens (color-primary, space-4, etc.) to resolved CSS custom properties at build time. Supports runtime token swaps for multi-brand and theme switching.</div>
+      <div class="comp-tags"><span class="ctag">Design Tokens</span><span class="ctag">CSS Custom Props</span><span class="ctag">Multi-brand</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-r">🌳</div><div><div class="comp-name">Virtual DOM Builder</div><div class="comp-type">Render · Core</div></div></div>
+      <div class="comp-desc">Constructs an immutable VDOM tree from the UI spec. Diffs against the previous tree on each streaming update to minimize DOM mutations and eliminate visual flicker during live rendering.</div>
+      <div class="comp-tags"><span class="ctag">VDOM</span><span class="ctag">Diffing</span><span class="ctag">Immutable</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-top"><div class="comp-ico ico-r">♿</div><div><div class="comp-name">A11y Layer</div><div class="comp-type">Render · Compliance</div></div></div>
+      <div class="comp-desc">Automatically infers and injects ARIA roles, live-region attributes, and focus management rules. Runs a WCAG 2.2 AA contrast check on every generated color pairing before output.</div>
+      <div class="comp-tags"><span class="ctag">ARIA</span><span class="ctag">WCAG AA</span><span class="ctag">Focus Management</span></div>
+    </div>
+  </div>
+
+  <!-- OUTPUT TYPES -->
+  <div class="sec-label">Output Formats</div>
+  <div class="output-grid">
+    <div class="out-card"><div class="out-ico">⚛️</div><div class="out-name">React</div><div class="out-desc">JSX + TypeScript</div></div>
+    <div class="out-card"><div class="out-ico">💚</div><div class="out-name">Vue 3</div><div class="out-desc">Composition API SFC</div></div>
+    <div class="out-card"><div class="out-ico">🌐</div><div class="out-name">Web Component</div><div class="out-desc">Custom Elements v1</div></div>
+    <div class="out-card"><div class="out-ico">📄</div><div class="out-name">HTML</div><div class="out-desc">Static markup + CSS</div></div>
+    <div class="out-card"><div class="out-ico">👁️</div><div class="out-name">Preview</div><div class="out-desc">Live iframe stream</div></div>
+    <div class="out-card"><div class="out-ico">📋</div><div class="out-name">JSON Spec</div><div class="out-desc">Serialised UI tree</div></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">JBIQ Agent System</div>
+    <div class="footer-ver">A2UI · v2.0 · Architecture Spec · 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
