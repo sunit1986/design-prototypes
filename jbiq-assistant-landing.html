@@ -3,65 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>JBIQ · Assistant Landing · Day 0 / Day 7 / Day 30</title>
+<title>JBIQ · Assistant Landing · Day 0 / 7 / 30</title>
 
 <style>
-/* ── JioType Font ─────────────────────────────────────────────────── */
+/* ═══ FONTS ═══ */
 @font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
 @font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
 @font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
 @font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&display=swap');
 
-/* ── Reset ────────────────────────────────────────────────────────── */
+/* ═══ RESET ═══ */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-/* ── JDS Tokens ───────────────────────────────────────────────────── */
+/* ═══ JDS TOKENS ═══ */
 :root {
   --p:   #3535f3;
   --pb:  #3900ad;
   --lp:  #6D17CE;
   --sp:  #1eccb0;
   --am:  #f7ab20;
-  --gh:  #eeeeef;
+  --gh:  #f4f4f6;
   --gi:  #e7e9ff;
   --g1:  #141414;
   --g6:  rgba(20,20,20,0.65);
   --g4:  rgba(20,20,20,0.38);
   --g2:  #f5f5f5;
-  --bd:  rgba(36,38,43,0.12);
+  --bd:  rgba(36,38,43,0.10);
   --err: #fa2f40;
   --suc: #25ab21;
   --bg:  #f0eff4;
-  --ease-gentle:  cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-snappy:  cubic-bezier(0.2, 0, 0, 1);
-  --ease-spring:  cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-emp-dec: cubic-bezier(0.05, 0.7, 0.1, 1);
-  --ease-smooth:  cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-gentle: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-emp:    cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
-/* ── Assistant Accent Themes ──────────────────────────────────────── */
-[data-ast="cricket"] { --ast:#25ab21; --ast-dark:#1a7a18; --ast-tint:rgba(37,171,33,0.08); --ast-ring:rgba(37,171,33,0.25); }
-[data-ast="astro"]   { --ast:#6D17CE; --ast-dark:#4c0f96; --ast-tint:rgba(109,23,206,0.08); --ast-ring:rgba(109,23,206,0.25); }
-[data-ast="finance"] { --ast:#3535f3; --ast-dark:#2020c0; --ast-tint:rgba(53,53,243,0.08); --ast-ring:rgba(53,53,243,0.20); }
+/* ═══ PER-ASSISTANT BRAND THEMES ═══ */
+[data-ast="cricket"] {
+  --ast:        #1a7e3a;
+  --ast-ink:    #0b2e18;
+  --ast-soft:   #eaf4ed;
+  --ast-ring:   rgba(26,126,58,0.22);
+  --ast-tint:   rgba(26,126,58,0.07);
+  --hero-1:     #0a2e18;
+  --hero-2:     #15582c;
+  --hero-3:     #1a7e3a;
+  --page-bg:    #ecf2ed;
+}
+[data-ast="astro"] {
+  --ast:        #3a1e8c;
+  --ast-ink:    #120944;
+  --ast-soft:   #efeaf9;
+  --ast-ring:   rgba(58,30,140,0.22);
+  --ast-tint:   rgba(58,30,140,0.07);
+  --hero-1:     #0a052b;
+  --hero-2:     #1f1263;
+  --hero-3:     #4a2eae;
+  --page-bg:    #ece6f4;
+}
+[data-ast="finance"] {
+  --ast:        #0a3d62;
+  --ast-ink:    #051f33;
+  --ast-soft:   #e8eff5;
+  --ast-ring:   rgba(10,61,98,0.22);
+  --ast-tint:   rgba(10,61,98,0.07);
+  --hero-1:     #04182a;
+  --hero-2:     #0a3d62;
+  --hero-3:     #3c6e8f;
+  --page-bg:    #e8eef2;
+}
 
-/* ── Page Layout ──────────────────────────────────────────────────── */
+/* ═══ PAGE LAYOUT ═══ */
 body {
   font-family: 'JioType', -apple-system, sans-serif;
-  background: var(--bg); min-height: 100vh;
+  background: var(--page-bg); min-height: 100vh;
   display: flex; flex-direction: column; align-items: center;
-  padding: 24px 16px 40px; -webkit-font-smoothing: antialiased;
+  padding: 24px 16px 48px; -webkit-font-smoothing: antialiased;
   user-select: none; color: var(--g1);
-  transition: background 350ms var(--ease-gentle);
+  transition: background 420ms var(--ease-gentle);
 }
-body[data-ast="cricket"] { background: #eef7ee; }
-body[data-ast="astro"]   { background: #f3ecfb; }
-body[data-ast="finance"] { background: #eef0fb; }
 
 .page-header { width: 100%; max-width: 520px; margin: 0 auto 10px; }
-.page-header h1 { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; color: var(--g1); }
+.page-header h1 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 800; letter-spacing: -0.015em; }
 .page-header p { font-size: 11px; color: var(--g6); font-weight: 500; margin-top: 2px; }
 
-/* ── Control Panels ───────────────────────────────────────────────── */
 .controls { display: flex; gap: 8px; max-width: 520px; width: 100%; margin: 0 auto 10px; }
 .toggle-group {
   display: flex; gap: 3px; padding: 3px; flex: 1;
@@ -69,7 +95,7 @@ body[data-ast="finance"] { background: #eef0fb; }
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 .tog {
-  flex: 1; padding: 7px 6px; border-radius: 9px; border: none;
+  flex: 1; padding: 8px 6px; border-radius: 9px; border: none;
   font-family: inherit; font-size: 11px; font-weight: 600;
   color: var(--g6); background: transparent; cursor: pointer;
   text-align: center; transition: all 0.16s var(--ease-snappy); white-space: nowrap;
@@ -79,396 +105,537 @@ body[data-ast="finance"] { background: #eef0fb; }
 .tog.on { background: var(--g1); color: #fff; }
 .tog.on small { opacity: 0.6; }
 
-/* ── Logic Legend ─────────────────────────────────────────────────── */
-.legend {
-  max-width: 520px; width: 100%; margin: 0 auto 12px;
-  display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+.logic-line {
+  max-width: 520px; width: 100%; margin: 0 auto 14px;
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  font-size: 10.5px; color: var(--g6); font-weight: 500;
 }
-.leg-label { font-size: 10px; font-weight: 700; color: var(--g4); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 2px; }
-.leg-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 4px 9px; border-radius: 999px; font-size: 10px; font-weight: 600; border: 1px solid;
+.logic-line strong { color: var(--g1); font-weight: 700; }
+.logic-line .pip {
+  display: inline-block; padding: 3px 8px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--bd); font-weight: 600; color: var(--g1);
 }
-.leg-pill.e { background: #fff8ea; border-color: rgba(247,171,32,0.45); color: #a05a00; }
-.leg-pill.f { background: var(--g2); border-color: var(--bd); color: var(--g6); }
-.leg-pill.i { background: var(--gi); border-color: rgba(109,23,206,0.25); color: var(--lp); }
-.leg-pill.d { background: rgba(37,171,33,0.08); border-color: rgba(37,171,33,0.25); color: #1a7a18; }
-.leg-dot { width: 7px; height: 7px; border-radius: 50%; }
-.leg-pill.e .leg-dot { background: var(--am); }
-.leg-pill.f .leg-dot { background: #bbb; }
-.leg-pill.i .leg-dot { background: var(--lp); }
-.leg-pill.d .leg-dot { background: var(--suc); }
 
-/* ── Phone Frame ──────────────────────────────────────────────────── */
+/* ═══ PHONE FRAME ═══ */
 .phone {
   width: 360px; height: 800px;
   border-radius: 44px; border: 8px solid #1c1c1e;
-  box-shadow: 0 0 0 1px #333, 0 28px 60px rgba(0,0,0,0.3), inset 0 0 0 1px #2c2c2e;
+  box-shadow: 0 0 0 1px #333, 0 32px 64px rgba(0,0,0,0.28), inset 0 0 0 1px #2c2c2e;
   position: relative; overflow: hidden; background: #fff;
 }
-
-/* Notch */
 .notch {
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 120px; height: 32px; background: #1c1c1e;
-  border-radius: 0 0 18px 18px; z-index: 20; pointer-events: none;
+  border-radius: 0 0 18px 18px; z-index: 100; pointer-events: none;
 }
-
-/* Screen */
 .screen {
   position: absolute; inset: 0; background: #fff;
   display: flex; flex-direction: column; overflow: hidden;
-  transition: opacity 150ms var(--ease-gentle);
+  transition: opacity 140ms var(--ease-gentle);
 }
-.screen.fade-out { opacity: 0; }
+.screen.switching { opacity: 0; }
 
-/* ── Status Bar ───────────────────────────────────────────────────── */
+/* ═══ STATUS BAR (floats over hero) ═══ */
 .sb {
   height: 44px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 22px 0 26px;
+  position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+  color: #fff;
 }
-.sbt { font-size: 14px; font-weight: 700; }
+.sbt { font-size: 14px; font-weight: 700; color: inherit; }
 .sbr { display: flex; gap: 5px; align-items: center; }
-.sbr svg { width: 14px; height: 14px; fill: var(--g1); }
+.sbr svg { width: 14px; height: 14px; fill: currentColor; }
 
-/* ── App Header ───────────────────────────────────────────────────── */
-.hd {
-  height: 54px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 12px; border-bottom: 1px solid var(--bd);
-}
-.hd-btn {
-  width: 36px; height: 36px; border-radius: 50%; background: var(--gh);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; border: none; transition: background 120ms;
-  flex-shrink: 0;
-}
-.hd-btn:active { background: #ddd; }
-.hd-btn svg { width: 20px; height: 20px; fill: var(--g1); }
-.hd-center { flex: 1; text-align: center; }
-.hd-name { font-size: 16px; font-weight: 800; letter-spacing: -0.015em; }
-.hd-live { font-size: 11px; color: var(--g6); font-weight: 500; margin-top: 1px; display: flex; align-items: center; justify-content: center; gap: 4px; }
-.live-dot {
-  display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--suc);
-  animation: livepulse 2s ease-in-out infinite;
-}
-@keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.55;transform:scale(0.85)} }
-
-/* ── Assistant Hero ───────────────────────────────────────────────── */
-.ast-hero {
-  flex-shrink: 0; padding: 18px 18px 14px;
-  display: flex; align-items: center; gap: 14px;
+/* ═══ HERO (visual-heavy top) ═══ */
+.hero {
+  height: 248px; flex-shrink: 0;
   position: relative; overflow: hidden;
-  border-bottom: 1px solid var(--bd);
-  transition: background 300ms;
+  color: #fff;
+  transition: background 450ms var(--ease-gentle);
 }
-.ast-hero::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--ast-tint); pointer-events: none;
-  transition: background 300ms;
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 80% at 30% 10%, var(--hero-3) 0%, var(--hero-2) 45%, var(--hero-1) 100%);
+  transition: background 450ms var(--ease-gentle);
+}
+.hero-pattern {
+  position: absolute; inset: 0; opacity: 0.55;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.hero-glow {
+  position: absolute; width: 240px; height: 240px;
+  border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 65%);
+  animation: glowFloat 8s ease-in-out infinite;
+}
+.hero-glow.a { top: -60px; right: -50px; animation-delay: 0s; }
+.hero-glow.b { bottom: -80px; left: -80px; width: 320px; height: 320px; animation-delay: 2s; opacity: 0.7; }
+@keyframes glowFloat {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%     { transform: translate(20px,-15px) scale(1.1); }
+}
+.hero-fade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 80px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%);
+  pointer-events: none; z-index: 3;
 }
 
-.ast-ring {
-  width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
-  padding: 3px; background: var(--ast);
-  box-shadow: 0 0 0 3px var(--ast-ring), 0 4px 14px rgba(0,0,0,0.1);
-  transition: background 300ms, box-shadow 300ms;
-  position: relative; z-index: 1;
+/* Hero content */
+.hero-nav {
+  position: absolute; top: 56px; left: 14px; right: 14px; z-index: 5;
+  display: flex; justify-content: space-between; align-items: center;
 }
-.ast-inner {
+.glass-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.16);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 150ms;
+}
+.glass-btn:active { background: rgba(255,255,255,0.28); }
+.glass-btn svg { width: 18px; height: 18px; fill: #fff; }
+
+.hero-eyebrow {
+  position: absolute; top: 108px; left: 0; right: 0; z-index: 4;
+  text-align: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(255,255,255,0.75);
+}
+.hero-title {
+  position: absolute; top: 126px; left: 0; right: 0; z-index: 4;
+  text-align: center;
+  font-family: 'Fraunces', serif;
+  font-size: 42px; font-weight: 600;
+  letter-spacing: -0.035em; line-height: 1;
+  color: #fff;
+}
+.hero-desc {
+  position: absolute; top: 176px; left: 0; right: 0; z-index: 4;
+  text-align: center;
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.78);
+}
+.hero-avatar {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  width: 92px; height: 92px; border-radius: 50%;
+  background: #fff; padding: 4px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.04);
+  z-index: 5;
+}
+.hero-avatar-inner {
   width: 100%; height: 100%; border-radius: 50%;
-  background: #fff; overflow: hidden;
+  background: var(--ast-soft); overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
-.ast-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+.hero-avatar-inner svg { width: 44px; height: 44px; fill: var(--ast); }
 
-.ast-info { flex: 1; position: relative; z-index: 1; }
-.ast-title { font-size: 18px; font-weight: 900; letter-spacing: -0.02em; }
-.ast-desc { font-size: 12px; color: var(--g6); font-weight: 500; margin-top: 2px; line-height: 1.35; }
-.ast-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  margin-top: 6px; padding: 3px 8px; border-radius: 999px;
-  background: var(--ast-tint); border: 1px solid var(--ast-ring);
-  font-size: 10px; font-weight: 700; color: var(--ast);
-}
-
-/* ── Scroll Content ───────────────────────────────────────────────── */
+/* ═══ SCROLL AREA ═══ */
 .scroll {
   flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none;
-  padding: 10px 0 96px;
+  padding: 44px 0 108px;
+  position: relative;
 }
 .scroll::-webkit-scrollbar { display: none; }
 
-.section { padding: 4px 14px; margin-bottom: 4px; }
-.sec-label {
-  display: flex; align-items: center; gap: 5px; margin-bottom: 7px;
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--g4);
+/* Section heading — editorial pattern */
+.section {
+  padding: 18px 20px 0; margin-bottom: 4px;
 }
-.sec-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.sec-label.emph .dot { background: var(--am); }
-.sec-label.emph { color: #a05a00; }
-.sec-label.fyi .dot { background: #bbb; }
-.sec-label.imm .dot { background: var(--lp); }
-.sec-label.imm { color: var(--lp); }
-.sec-label.disc .dot { background: var(--ast); }
-.sec-label.disc { color: var(--ast); }
-.sec-label.start .dot { background: var(--p); }
+.section.tight { padding-top: 4px; }
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.sh-left { flex: 1; }
+.sh-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--g4); margin-bottom: 4px;
+}
+.sh-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 600;
+  letter-spacing: -0.02em; line-height: 1.1; color: var(--g1);
+}
+.sh-sub {
+  font-size: 12px; color: var(--g6); font-weight: 500;
+  margin-top: 3px;
+}
 
-/* ── EMPHASIS CARD ────────────────────────────────────────────────── */
-.card-e {
+/* ═══ CARD: EMPHASIS ═══ */
+.card-emph {
   background: #fff;
-  border: 1px solid var(--ast-ring);
-  border-top: 4px solid var(--ast);
-  border-radius: 16px;
-  padding: 14px;
+  border-radius: 20px;
+  padding: 20px 20px 18px;
   cursor: pointer;
   position: relative; overflow: hidden;
-  transition: transform 180ms var(--ease-snappy);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-.card-e::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--ast-tint); pointer-events: none;
-  transition: background 300ms;
-}
-.card-e:active { transform: scale(0.99); }
-
-.ce-tag {
-  display: flex; align-items: center; gap: 5px; margin-bottom: 8px;
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--ast); position: relative;
-}
-.ce-pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--ast); animation: livepulse 1.8s ease-in-out infinite; }
-.ce-title { font-size: 17px; font-weight: 900; letter-spacing: -0.025em; line-height: 1.2; position: relative; }
-.ce-sub { font-size: 12px; font-weight: 500; color: var(--g6); margin-top: 3px; position: relative; }
-
-/* Countdown */
-.countdown { display: flex; align-items: flex-end; gap: 0; margin: 10px 0 6px; position: relative; }
-.cd-block { text-align: center; flex: 1; }
-.cd-num {
-  font-size: 30px; font-weight: 900; letter-spacing: -0.05em;
-  font-variant-numeric: tabular-nums; color: var(--ast); line-height: 1;
-  transition: color 300ms;
-}
-.cd-lbl { font-size: 9px; font-weight: 600; color: var(--g4); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 2px; }
-.cd-sep { font-size: 26px; font-weight: 900; color: var(--ast); opacity: 0.4; padding: 0 1px; padding-bottom: 8px; }
-
-/* Personal context note */
-.ce-note {
-  display: flex; align-items: center; gap: 5px; position: relative;
-  font-size: 11px; font-weight: 500; color: var(--g6);
-  margin: 6px 0 2px; padding: 5px 8px; background: rgba(255,255,255,0.6);
-  border-radius: 8px; border: 1px solid var(--ast-ring);
-}
-.ce-note svg { width: 12px; height: 12px; fill: var(--ast); flex-shrink: 0; }
-
-/* Action buttons */
-.ce-actions { display: flex; gap: 8px; margin-top: 10px; position: relative; }
-.btn-solid {
-  flex: 1; padding: 10px 8px; border-radius: 999px;
-  background: var(--ast); color: #fff;
-  border: none; font-family: inherit; font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: opacity 150ms; text-align: center;
-}
-.btn-solid:active { opacity: 0.85; }
-.btn-outline {
-  flex: 1; padding: 10px 8px; border-radius: 999px;
-  border: 1.5px solid var(--ast); color: var(--ast); background: transparent;
-  font-family: inherit; font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: background 150ms; text-align: center;
-}
-.btn-outline:active { background: var(--ast-tint); }
-
-/* ── FYI CARD ─────────────────────────────────────────────────────── */
-.card-f {
-  background: #fff; border: 1px solid var(--bd); border-radius: 16px;
-  padding: 12px 14px; cursor: pointer;
-  transition: transform 180ms var(--ease-snappy);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.card-f:active { transform: scale(0.99); }
-
-.cf-head { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-.cf-icon {
-  width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
-  background: var(--g2); display: flex; align-items: center; justify-content: center;
-}
-.cf-icon svg { width: 17px; height: 17px; fill: var(--g6); }
-.cf-tag { font-size: 9.5px; font-weight: 700; color: var(--g4); text-transform: uppercase; letter-spacing: 0.08em; }
-.cf-title { font-size: 14px; font-weight: 700; margin-top: 1px; line-height: 1.25; }
-.cf-time { font-size: 10px; color: var(--g4); font-weight: 500; flex-shrink: 0; }
-
-.cf-rows { display: flex; flex-direction: column; gap: 0; }
-.cf-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 0; border-bottom: 1px solid var(--g2);
-}
-.cf-row:last-child { border-bottom: none; }
-.cf-left { font-size: 13px; font-weight: 500; color: var(--g1); }
-.cf-right { font-size: 12px; color: var(--g6); font-weight: 500; }
-.cf-seeall {
-  margin-top: 9px; font-size: 12px; font-weight: 700; color: var(--ast);
-  display: flex; align-items: center; gap: 3px; cursor: pointer;
-  transition: color 300ms;
-}
-
-/* ── IMMERSIVE CARD ───────────────────────────────────────────────── */
-.card-i {
-  background: var(--ast-tint);
+  transition: transform 200ms var(--ease-snappy);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 8px 24px -6px rgba(0,0,0,0.08);
   border: 1px solid var(--ast-ring);
-  border-radius: 16px; padding: 14px;
-  cursor: pointer; overflow: hidden; position: relative;
-  transition: transform 180ms var(--ease-snappy), background 300ms, border-color 300ms;
 }
-.card-i:active { transform: scale(0.99); }
+.card-emph::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(80% 60% at 100% 0%, var(--ast-tint) 0%, transparent 60%);
+  pointer-events: none;
+}
+.card-emph:active { transform: scale(0.994); }
 
-.ci-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-.ci-title { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
-.ci-sub { font-size: 11px; color: var(--g6); font-weight: 500; margin-top: 2px; }
-.ci-badge {
-  padding: 4px 9px; border-radius: 999px; font-size: 10px; font-weight: 700;
-  background: var(--ast); color: #fff; flex-shrink: 0; margin-left: 8px; margin-top: 2px;
-  transition: background 300ms;
+.ce-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; position: relative; }
+.ce-live {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border-radius: 999px;
+  background: var(--ast); color: #fff;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.ce-live-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #fff;
+  animation: livepulse 1.6s ease-in-out infinite;
+}
+@keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.55;transform:scale(0.8)} }
+
+.ce-title {
+  font-family: 'Fraunces', serif;
+  font-size: 24px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.08;
+  color: var(--g1); position: relative;
+}
+.ce-title .accent { color: var(--ast); }
+.ce-sub { font-size: 12.5px; font-weight: 500; color: var(--g6); margin-top: 6px; position: relative; line-height: 1.4; }
+
+.countdown {
+  display: flex; align-items: flex-end; gap: 10px;
+  margin: 16px 0 4px; position: relative;
+  padding: 14px; border-radius: 14px;
+  background: var(--ast-soft);
+}
+.cd-block { text-align: center; min-width: 46px; }
+.cd-num {
+  font-family: 'Fraunces', serif;
+  font-size: 34px; font-weight: 600; letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums; color: var(--ast-ink); line-height: 0.95;
+}
+.cd-lbl { font-size: 9.5px; font-weight: 700; color: var(--ast); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 5px; }
+.cd-sep { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 400; color: var(--ast); opacity: 0.4; padding: 0 4px; padding-bottom: 14px; }
+.cd-meta { margin-left: auto; text-align: right; padding-bottom: 8px; }
+.cd-meta-lbl { font-size: 10px; font-weight: 700; color: var(--ast); text-transform: uppercase; letter-spacing: 0.08em; }
+.cd-meta-val { font-size: 11px; font-weight: 600; color: var(--g6); margin-top: 2px; }
+
+.ce-personal {
+  display: flex; align-items: center; gap: 8px; position: relative;
+  font-size: 11.5px; font-weight: 500; color: var(--g6);
+  margin: 12px 0 0; padding: 8px 12px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 10px;
+}
+.ce-personal svg { width: 14px; height: 14px; fill: var(--ast); flex-shrink: 0; }
+
+.ce-cta-row { display: flex; gap: 8px; margin-top: 14px; position: relative; }
+.ce-btn {
+  flex: 1; padding: 13px 10px; border-radius: 999px;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; text-align: center; border: none;
+  transition: opacity 150ms, transform 150ms;
+}
+.ce-btn:active { transform: scale(0.98); }
+.ce-btn.solid { background: var(--ast); color: #fff; }
+.ce-btn.solid:active { opacity: 0.9; }
+.ce-btn.ghost {
+  border: 1.5px solid var(--ast-ring); color: var(--ast); background: transparent;
+}
+.ce-btn.ghost:active { background: var(--ast-tint); }
+
+/* ═══ CARD: FYI (compact, visual, non-wireframe) ═══ */
+.card-fyi {
+  background: #fff; border: 1px solid var(--bd);
+  border-radius: 18px; padding: 16px;
+  cursor: pointer; display: flex; gap: 14px; align-items: center;
+  transition: transform 180ms var(--ease-snappy);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.card-fyi:active { transform: scale(0.994); }
+
+.fyi-visual {
+  width: 58px; height: 58px; border-radius: 14px;
+  background: var(--ast-soft); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.fyi-visual svg { width: 26px; height: 26px; fill: var(--ast); position: relative; z-index: 1; }
+.fyi-visual::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(80% 70% at 100% 0%, rgba(255,255,255,0.6) 0%, transparent 70%),
+    radial-gradient(80% 70% at 0% 100%, var(--ast-tint) 0%, transparent 60%);
+}
+.fyi-visual.data { background: var(--ast); }
+.fyi-visual.data svg { fill: #fff; }
+.fyi-visual.data::before {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18) 0%, transparent 50%);
 }
 
-.ci-stats { display: flex; margin-bottom: 12px; }
-.ci-stat { flex: 1; text-align: center; padding: 0 4px; border-right: 1px solid var(--ast-ring); }
-.ci-stat:last-child { border-right: none; }
-.ci-stat-num { font-size: 20px; font-weight: 900; letter-spacing: -0.04em; color: var(--g1); line-height: 1; }
-.ci-stat-lbl { font-size: 9px; font-weight: 600; color: var(--g6); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.fyi-body { flex: 1; min-width: 0; }
+.fyi-tag { font-size: 10px; font-weight: 700; color: var(--ast); letter-spacing: 0.1em; text-transform: uppercase; }
+.fyi-title { font-size: 15px; font-weight: 700; color: var(--g1); margin-top: 2px; line-height: 1.25; }
+.fyi-headline {
+  font-family: 'Fraunces', serif;
+  font-size: 20px; font-weight: 600; letter-spacing: -0.02em;
+  color: var(--g1); margin-top: 4px; line-height: 1.1;
+}
+.fyi-sub { font-size: 11.5px; color: var(--g6); font-weight: 500; margin-top: 4px; line-height: 1.35; }
 
-.ci-form-lbl { font-size: 9.5px; font-weight: 700; color: var(--g4); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
-.ci-form { display: flex; gap: 4px; }
-.ci-dot {
-  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+/* ═══ CARD: IMMERSIVE (Behance-inspired big stats) ═══ */
+.card-immersive {
+  background: linear-gradient(180deg, var(--ast-ink) 0%, var(--hero-2) 100%);
+  border-radius: 22px; padding: 20px;
+  color: #fff; cursor: pointer; position: relative; overflow: hidden;
+  transition: transform 200ms var(--ease-snappy);
+  box-shadow: 0 12px 36px -8px rgba(0,0,0,0.3);
+}
+.card-immersive:active { transform: scale(0.994); }
+.card-immersive::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+}
+
+.im-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 16px; position: relative;
+}
+.im-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+.im-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 600; letter-spacing: -0.025em;
+  margin-top: 4px; line-height: 1.1;
+}
+.im-sub { font-size: 11.5px; color: rgba(255,255,255,0.65); font-weight: 500; margin-top: 4px; }
+.im-badge {
+  padding: 5px 10px; border-radius: 999px;
+  background: rgba(255,255,255,0.16); color: #fff;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+  flex-shrink: 0; backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.im-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  position: relative; margin-bottom: 14px;
+}
+.im-stat {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 12px 10px; text-align: center;
+  backdrop-filter: blur(8px);
+}
+.im-stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 26px; font-weight: 600; letter-spacing: -0.04em;
+  line-height: 1; color: #fff;
+}
+.im-stat-lbl { font-size: 9.5px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+.im-form { display: flex; gap: 5px; position: relative; margin-bottom: 12px; }
+.im-form-lbl { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; position: relative; }
+.im-dot {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: 800;
 }
-.ci-dot.W { background: var(--ast); color: #fff; transition: background 300ms; }
-.ci-dot.L { background: var(--err); color: #fff; }
-.ci-dot.NR { background: var(--g2); color: var(--g6); }
+.im-dot.W { background: var(--ast); color: #fff; }
+.im-dot.L { background: var(--err); color: #fff; }
+.im-dot.NR { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
 
-.ci-prog-head { display: flex; justify-content: space-between; margin: 10px 0 4px; font-size: 11px; color: var(--g6); font-weight: 500; }
-.ci-prog-bar { height: 6px; background: rgba(0,0,0,0.08); border-radius: 999px; overflow: hidden; }
-.ci-prog-fill { height: 100%; border-radius: 999px; background: var(--ast); transition: width 800ms var(--ease-emp-dec), background 300ms; }
-.ci-prog-note { font-size: 11px; color: var(--g6); margin-top: 5px; }
+.im-prog {
+  padding: 12px 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+}
+.im-prog-row { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.75); font-weight: 600; margin-bottom: 6px; }
+.im-prog-bar { height: 5px; background: rgba(255,255,255,0.14); border-radius: 999px; overflow: hidden; }
+.im-prog-fill { height: 100%; background: #fff; border-radius: 999px; transition: width 900ms var(--ease-emp); }
+.im-prog-note { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 500; margin-top: 8px; }
 
-/* ── DISCOVER PILLS ───────────────────────────────────────────────── */
+/* Alternate immersive for Astro (chart style) */
+.im-chart-area {
+  position: relative; height: 140px; margin: 8px 0 12px;
+  border-radius: 14px; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.im-chart-area svg { width: 130px; height: 130px; }
+
+/* ═══ CARD: ONBOARDING (Day 0 only) ═══ */
+.card-onboard {
+  background: #fff; border: 1px dashed var(--ast-ring);
+  border-radius: 20px; padding: 22px 20px;
+  cursor: pointer; text-align: center;
+  transition: transform 200ms var(--ease-snappy);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.card-onboard:active { transform: scale(0.994); }
+
+.ob-icon-wrap {
+  width: 64px; height: 64px; border-radius: 20px;
+  background: var(--ast-soft); margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.ob-icon-wrap::before {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: 24px; border: 1.5px dashed var(--ast-ring);
+  animation: obSpin 20s linear infinite;
+}
+@keyframes obSpin { to { transform: rotate(360deg); } }
+.ob-icon-wrap svg { width: 30px; height: 30px; fill: var(--ast); }
+
+.ob-title {
+  font-family: 'Fraunces', serif;
+  font-size: 21px; font-weight: 600; letter-spacing: -0.02em;
+  color: var(--g1); line-height: 1.15;
+}
+.ob-sub { font-size: 12.5px; color: var(--g6); font-weight: 500; margin-top: 6px; line-height: 1.45; max-width: 280px; margin-left: auto; margin-right: auto; }
+
+.ob-steps {
+  display: flex; gap: 6px; justify-content: center; margin: 14px 0 4px;
+}
+.ob-step {
+  padding: 5px 10px; border-radius: 999px;
+  background: var(--ast-soft); color: var(--ast);
+  font-size: 10.5px; font-weight: 700;
+}
+.ob-step.done { background: var(--ast); color: #fff; }
+
+.ob-cta {
+  margin-top: 16px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 12px 22px; border-radius: 999px;
+  background: var(--ast); color: #fff;
+  border: none; font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: opacity 150ms;
+}
+.ob-cta:active { opacity: 0.9; }
+.ob-cta svg { width: 14px; height: 14px; fill: currentColor; }
+
+/* ═══ DISCOVER ═══ */
 .discover-scroll {
-  display: flex; gap: 7px; overflow-x: auto;
-  padding: 2px 14px 8px; scrollbar-width: none;
-  margin: 0 -14px;
+  display: flex; gap: 8px; overflow-x: auto;
+  padding: 2px 20px 10px; scrollbar-width: none;
+  margin: 0 -20px;
 }
 .discover-scroll::-webkit-scrollbar { display: none; }
 .disc-pill {
-  flex-shrink: 0; padding: 8px 14px; border-radius: 999px;
-  border: 1.5px solid var(--ast-ring);
-  background: #fff; color: var(--ast);
-  font-size: 12px; font-weight: 700; font-family: inherit;
-  cursor: pointer; white-space: nowrap;
-  transition: background 130ms, transform 130ms;
+  flex-shrink: 0; padding: 9px 16px; border-radius: 999px;
+  border: 1px solid var(--bd); background: #fff;
+  color: var(--g1); font-size: 12.5px; font-weight: 600;
+  font-family: inherit; cursor: pointer; white-space: nowrap;
+  transition: all 130ms;
+  display: inline-flex; align-items: center; gap: 6px;
 }
-.disc-pill:active { background: var(--ast-tint); transform: scale(0.97); }
-.disc-pill.new-feat {
-  background: var(--ast); color: #fff; border-color: transparent;
+.disc-pill:active { background: var(--ast-soft); border-color: var(--ast-ring); transform: scale(0.97); }
+.disc-pill svg { width: 13px; height: 13px; fill: var(--ast); }
+.disc-pill.feat { background: var(--ast-ink); color: #fff; border-color: transparent; }
+.disc-pill.feat svg { fill: #fff; }
+.disc-pill .new-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--am); margin-right: 2px;
 }
-.disc-pill.new-feat::before { content: '✦ '; font-size: 9px; vertical-align: 1px; opacity: 0.85; }
 
-/* ── JOURNEY STARTERS ─────────────────────────────────────────────── */
-.starters { display: flex; flex-direction: column; gap: 7px; }
+/* ═══ STARTERS ═══ */
+.starters { display: flex; flex-direction: column; gap: 8px; }
 .starter {
-  display: flex; align-items: center; gap: 10px;
-  padding: 11px 12px; border-radius: 13px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: 14px;
   background: #fff; border: 1px solid var(--bd);
   cursor: pointer; font-family: inherit; text-align: left;
-  transition: transform 150ms var(--ease-snappy), border-color 150ms;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: all 160ms var(--ease-snappy);
 }
-.starter:active { transform: scale(0.99); border-color: var(--ast-ring); }
-.starter-ic {
-  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
-  background: var(--ast-tint); display: flex; align-items: center; justify-content: center;
-  transition: background 300ms;
+.starter:active { transform: scale(0.993); border-color: var(--ast-ring); }
+.starter-icon {
+  width: 34px; height: 34px; border-radius: 11px; flex-shrink: 0;
+  background: var(--ast-soft); display: flex; align-items: center; justify-content: center;
 }
-.starter-ic svg { width: 16px; height: 16px; fill: var(--ast); transition: fill 300ms; }
-.starter-txt { flex: 1; font-size: 13px; font-weight: 600; color: var(--g1); line-height: 1.3; }
-.starter-arr svg { width: 16px; height: 16px; fill: var(--g4); }
+.starter-icon svg { width: 16px; height: 16px; fill: var(--ast); }
+.starter-text { flex: 1; font-size: 13.5px; font-weight: 500; color: var(--g1); line-height: 1.35; }
+.starter-arrow svg { width: 16px; height: 16px; fill: var(--g4); }
 
-/* ── BOTTOM MULTIMODAL BOX ────────────────────────────────────────── */
+/* ═══ BOTTOM BOX ═══ */
 .bottom-box {
   position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 8px 14px 22px;
-  background: #fff; border-top: 1px solid var(--bd);
+  padding: 10px 14px 22px;
+  background: #fff;
+  border-top: 1px solid var(--bd);
+  box-shadow: 0 -8px 24px rgba(0,0,0,0.05);
 }
 .bm-inner {
-  background: var(--gh); border-radius: 23px;
-  display: flex; align-items: center; padding: 5px 5px 5px 14px; gap: 7px;
-  min-height: 52px;
+  background: var(--gh); border-radius: 26px;
+  display: flex; align-items: center; padding: 5px 5px 5px 16px; gap: 8px;
+  min-height: 56px;
 }
 .bm-text { flex: 1; min-width: 0; }
-.bm-placeholder { font-size: 14px; color: var(--g4); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bm-last-query { font-size: 10px; color: var(--g6); font-weight: 500; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bm-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.bm-placeholder { font-size: 14px; color: var(--g4); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bm-last-query { font-size: 10.5px; color: var(--g6); font-weight: 500; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bm-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .bm-icon-btn {
-  width: 36px; height: 36px; border-radius: 50%; border: none;
+  width: 38px; height: 38px; border-radius: 50%; border: none;
   background: rgba(0,0,0,0.06); cursor: pointer;
   display: flex; align-items: center; justify-content: center; transition: background 120ms;
 }
 .bm-icon-btn:active { background: rgba(0,0,0,0.12); }
 .bm-icon-btn svg { width: 18px; height: 18px; fill: var(--g6); }
 .bm-mic {
-  width: 44px; height: 44px; border-radius: 50%; border: none;
+  width: 46px; height: 46px; border-radius: 50%; border: none;
   background: var(--pb); cursor: pointer; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 3px 10px rgba(57,0,173,0.28); transition: transform 150ms, opacity 150ms;
+  box-shadow: 0 3px 12px rgba(57,0,173,0.3); transition: transform 150ms, opacity 150ms;
 }
 .bm-mic:active { transform: scale(0.94); opacity: 0.85; }
 .bm-mic svg { width: 22px; height: 22px; fill: #fff; }
 
-/* ── Toast ────────────────────────────────────────────────────────── */
+/* ═══ TOAST ═══ */
 .toast {
-  position: absolute; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(10px);
+  position: absolute; bottom: 92px; left: 50%; transform: translateX(-50%) translateY(10px);
   background: var(--g1); color: #fff; border-radius: 12px;
-  padding: 9px 16px; font-size: 12px; font-weight: 600;
+  padding: 10px 18px; font-size: 12px; font-weight: 600;
   white-space: nowrap; opacity: 0; pointer-events: none; z-index: 99;
-  transition: opacity 220ms, transform 220ms var(--ease-emp-dec);
+  transition: opacity 220ms, transform 220ms var(--ease-emp);
   max-width: 280px; text-align: center;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── Animations ───────────────────────────────────────────────────── */
-.fin { opacity: 0; animation: fadeUp 0.28s var(--ease-emp-dec) forwards; }
-.fin.d1 { animation-delay: 0.04s; }
-.fin.d2 { animation-delay: 0.09s; }
-.fin.d3 { animation-delay: 0.14s; }
-.fin.d4 { animation-delay: 0.19s; }
-.fin.d5 { animation-delay: 0.24s; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+/* ═══ ANIMATIONS ═══ */
+.fin { opacity: 0; animation: fadeUp 0.34s var(--ease-emp) forwards; }
+.fin.d1 { animation-delay: 0.05s; }
+.fin.d2 { animation-delay: 0.12s; }
+.fin.d3 { animation-delay: 0.19s; }
+.fin.d4 { animation-delay: 0.26s; }
+.fin.d5 { animation-delay: 0.33s; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-/* ── Mobile Native ────────────────────────────────────────────────── */
+/* ═══ MOBILE NATIVE ═══ */
 @media (max-width: 768px) {
   body { background: #fff !important; padding: 0 !important; align-items: stretch !important; }
   .phone { width:100% !important; height:100vh !important; height:100dvh !important; border-radius:0 !important; box-shadow:none !important; border:none !important; max-width:100% !important; }
-  .notch, .page-header, .controls, .legend { display: none !important; }
+  .notch, .page-header, .controls, .logic-line { display: none !important; }
 }
 </style>
 </head>
 
 <body data-state="d7" data-ast="cricket">
 
-<!-- Page Controls (outside phone) -->
 <div class="page-header">
-  <h1>JBIQ · Assistant Landing</h1>
-  <p>Tapping any assistant on homepage → this page · Day 0 / Day 7 / Day 30 states</p>
+  <h1>Assistant Landing — Day 0 · Day 7 · Day 30</h1>
+  <p>Cricket · Astrology · Finance · Each assistant has its own brand identity. Day 0 knows nothing about you.</p>
 </div>
 
 <div class="controls">
   <div class="toggle-group" id="state-group">
-    <button class="tog" data-val="d0" onclick="setState('d0')">Day 0<small>New user</small></button>
-    <button class="tog" data-val="d7" onclick="setState('d7')">Day 7<small>Engaged</small></button>
-    <button class="tog" data-val="d30" onclick="setState('d30')">Day 30<small>Power user</small></button>
+    <button class="tog" data-val="d0" onclick="setState('d0')">Day 0<small>Onboarding</small></button>
+    <button class="tog" data-val="d7" onclick="setState('d7')">Day 7<small>Basic data</small></button>
+    <button class="tog" data-val="d30" onclick="setState('d30')">Day 30<small>Deep data</small></button>
   </div>
   <div class="toggle-group" id="ast-group">
     <button class="tog" data-val="cricket" onclick="setAst('cricket')">🏏 Cricket</button>
@@ -477,59 +644,61 @@ body[data-ast="finance"] { background: #eef0fb; }
   </div>
 </div>
 
-<div class="legend">
-  <span class="leg-label">Card type:</span>
-  <div class="leg-pill e"><div class="leg-dot"></div>Emphasis · Need now</div>
-  <div class="leg-pill f"><div class="leg-dot"></div>FYI · Background</div>
-  <div class="leg-pill i"><div class="leg-dot"></div>Immersive · Day 7+</div>
-  <div class="leg-pill d"><div class="leg-dot"></div>Discover + Starters</div>
+<div class="logic-line">
+  <strong>Logic:</strong>
+  <span class="pip" id="pip-tier">Tier 0</span>
+  <span class="pip" id="pip-emph">0 emphasis</span>
+  <span class="pip" id="pip-fyi">1 fyi</span>
+  <span class="pip" id="pip-im">immersive: hidden</span>
+  <span style="margin-left:auto">Max 4 cards · 5–8 pills · 3–4 starters</span>
 </div>
 
-<!-- Phone -->
+<!-- ═══ PHONE ═══ -->
 <div class="phone">
   <div class="notch"></div>
 
   <div class="screen" id="screen">
 
-    <!-- Status Bar -->
+    <!-- Status bar (floating) -->
     <div class="sb">
       <span class="sbt">9:41</span>
       <div class="sbr">
-        <svg viewBox="0 0 24 24"><rect x="1" y="9" width="3" height="15" rx="1"/><rect x="6" y="5" width="3" height="19" rx="1"/><rect x="11" y="1" width="3" height="23" rx="1" opacity=".45"/><rect x="16" y="1" width="3" height="23" rx="1" opacity=".2"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="1" y="9" width="3" height="15" rx="1"/><rect x="6" y="5" width="3" height="19" rx="1"/><rect x="11" y="1" width="3" height="23" rx="1" opacity=".5"/><rect x="16" y="1" width="3" height="23" rx="1" opacity=".25"/></svg>
         <svg viewBox="0 0 24 24"><path d="M1.5 8.43C4.17 5.8 7.91 4.25 12 4.25S19.83 5.8 22.5 8.43l-1.68 1.68C18.77 7.95 15.53 6.5 12 6.5S5.23 7.95 3.18 10.11zm3.37 3.37C6.6 9.97 9.2 8.75 12 8.75s5.4 1.22 7.13 3.05l-1.68 1.69C16.12 12.08 14.13 11 12 11s-4.12 1.08-5.45 2.49zm3.36 3.37c.97-.88 2.25-1.42 3.77-1.42s2.8.54 3.77 1.42l-1.68 1.69C13.6 16.44 12.83 16 12 16s-1.6.44-2.09.92zm3.77 2.8c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/></svg>
         <svg viewBox="0 0 24 24"><rect x="1.5" y="7" width="17" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="19.5" y="10" width="2.5" height="4" rx="1"/><rect x="3.5" y="9" width="11" height="6" rx="1"/></svg>
       </div>
     </div>
 
-    <!-- Header -->
-    <div class="hd">
-      <button class="hd-btn" id="back-btn" onclick="showToast('← Back to JBIQ Home')">
-        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      </button>
-      <div class="hd-center">
-        <div class="hd-name" id="hd-name">Cricket</div>
-        <div class="hd-live"><span class="live-dot"></span><span id="hd-live-txt">IPL 2025 · Live updates</span></div>
-      </div>
-      <button class="hd-btn" onclick="showToast('Settings & preferences')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
-      </button>
-    </div>
+    <!-- Visual-heavy hero -->
+    <div class="hero" id="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-pattern" id="hero-pattern"></div>
+      <div class="hero-glow a"></div>
+      <div class="hero-glow b"></div>
 
-    <!-- Assistant Hero -->
-    <div class="ast-hero">
-      <div class="ast-ring">
-        <div class="ast-inner">
-          <img id="ast-img" src="" alt="Assistant" onerror="this.style.display='none'">
+      <div class="hero-nav">
+        <button class="glass-btn" onclick="showToast('← Back to JBIQ Home')">
+          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <button class="glass-btn" onclick="showToast('Assistant settings')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+        </button>
+      </div>
+
+      <div class="hero-eyebrow" id="hero-eyebrow">YOUR ASSISTANT</div>
+      <div class="hero-title" id="hero-title">Cricket</div>
+      <div class="hero-desc" id="hero-desc">IPL 2025 · Scores, stats & match alerts</div>
+
+      <div class="hero-avatar">
+        <div class="hero-avatar-inner">
+          <img id="hero-img" src="" alt="" onerror="this.style.display='none'">
         </div>
       </div>
-      <div class="ast-info">
-        <div class="ast-title" id="ast-title">Cricket</div>
-        <div class="ast-desc" id="ast-desc">IPL 2025 · Scores, stats & more</div>
-        <div class="ast-badge" id="ast-badge"><span class="live-dot"></span><span id="ast-badge-txt">Live now</span></div>
-      </div>
+
+      <div class="hero-fade"></div>
     </div>
 
-    <!-- Scroll area - built by JS -->
+    <!-- Scrollable content -->
     <div class="scroll" id="scroll"></div>
 
     <!-- Bottom multimodal box -->
@@ -550,114 +719,217 @@ body[data-ast="finance"] { background: #eef0fb; }
       </div>
     </div>
 
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
-
-  </div><!-- /screen -->
-</div><!-- /phone -->
+  </div>
+</div>
 
 <script>
-// ── Data ─────────────────────────────────────────────────────────────
-const BASE = 'https://sunit1986.github.io/design-prototypes/Assets/';
+// ═══ HERO PATTERNS (SVG, per assistant) ═══
+const HERO_PATTERNS = {
+  cricket: `<svg width="100%" height="100%" viewBox="0 0 360 248" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="cricketLight" cx="50%" cy="0%" r="60%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.3)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+    </defs>
+    <rect x="0" y="0" width="360" height="248" fill="url(#cricketLight)"/>
+    <circle cx="40" cy="50" r="2" fill="rgba(255,255,255,0.5)"/>
+    <circle cx="320" cy="70" r="2.5" fill="rgba(255,255,255,0.7)"/>
+    <circle cx="180" cy="30" r="1.5" fill="rgba(255,255,255,0.4)"/>
+    <circle cx="290" cy="140" r="1.8" fill="rgba(255,255,255,0.35)"/>
+    <circle cx="70" cy="160" r="1.2" fill="rgba(255,255,255,0.3)"/>
+    <!-- pitch lines -->
+    <ellipse cx="180" cy="260" rx="280" ry="40" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <ellipse cx="180" cy="280" rx="340" ry="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <!-- cricket ball stitching hint -->
+    <g transform="translate(310,45)" opacity="0.15">
+      <circle r="22" fill="#ffeecc" stroke="#fff" stroke-width="1"/>
+      <path d="M-22,0 Q0,3 22,0" fill="none" stroke="#8a2e1f" stroke-width="1.5" stroke-dasharray="2 2"/>
+    </g>
+  </svg>`,
 
+  astro: `<svg width="100%" height="100%" viewBox="0 0 360 248" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- Stars field -->
+    <g fill="#fff">
+      <circle cx="30" cy="30" r="1" opacity="0.9"/>
+      <circle cx="80" cy="50" r="0.6" opacity="0.6"/>
+      <circle cx="140" cy="25" r="1.2" opacity="1"/>
+      <circle cx="220" cy="40" r="0.8" opacity="0.7"/>
+      <circle cx="300" cy="20" r="1.4" opacity="0.95"/>
+      <circle cx="340" cy="70" r="0.7" opacity="0.6"/>
+      <circle cx="60" cy="90" r="0.9" opacity="0.75"/>
+      <circle cx="260" cy="95" r="0.6" opacity="0.5"/>
+      <circle cx="330" cy="130" r="1" opacity="0.8"/>
+      <circle cx="20" cy="150" r="0.8" opacity="0.65"/>
+      <circle cx="100" cy="170" r="1.1" opacity="0.9"/>
+      <circle cx="200" cy="180" r="0.6" opacity="0.5"/>
+      <circle cx="280" cy="200" r="0.9" opacity="0.7"/>
+      <circle cx="45" cy="210" r="0.7" opacity="0.55"/>
+    </g>
+    <!-- Twinkle stars -->
+    <g fill="#fff">
+      <path d="M170,60 l1,-6 l1,6 l6,1 l-6,1 l-1,6 l-1,-6 l-6,-1 z" opacity="0.9"/>
+      <path d="M50,130 l0.6,-4 l0.6,4 l4,0.6 l-4,0.6 l-0.6,4 l-0.6,-4 l-4,-0.6 z" opacity="0.8"/>
+      <path d="M310,160 l0.8,-5 l0.8,5 l5,0.8 l-5,0.8 l-0.8,5 l-0.8,-5 l-5,-0.8 z" opacity="0.85"/>
+    </g>
+    <!-- Moon crescent -->
+    <g transform="translate(300, 55)" opacity="0.35">
+      <circle r="26" fill="#fff"/>
+      <circle cx="8" r="24" fill="#1a1054"/>
+    </g>
+    <!-- Constellation lines -->
+    <g stroke="rgba(255,255,255,0.18)" stroke-width="0.6" fill="none">
+      <path d="M30,30 L80,50 L140,25"/>
+      <path d="M140,25 L220,40 L260,95"/>
+    </g>
+  </svg>`,
+
+  finance: `<svg width="100%" height="100%" viewBox="0 0 360 248" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- Grid pattern -->
+    <defs>
+      <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+      </pattern>
+    </defs>
+    <rect width="360" height="248" fill="url(#grid)"/>
+    <!-- Chart line -->
+    <path d="M0,180 Q50,160 90,155 T150,140 T210,115 T270,100 T360,80"
+          fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+    <path d="M0,180 Q50,160 90,155 T150,140 T210,115 T270,100 T360,80 L360,248 L0,248 Z"
+          fill="url(#chartGrad)" opacity="0.3"/>
+    <defs>
+      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fff" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <!-- Data points -->
+    <g fill="#fff">
+      <circle cx="90" cy="155" r="3" opacity="0.7"/>
+      <circle cx="210" cy="115" r="3" opacity="0.85"/>
+      <circle cx="340" cy="84" r="3.5" opacity="1"/>
+    </g>
+    <!-- Candle hint -->
+    <g opacity="0.3">
+      <rect x="40" y="180" width="3" height="20" fill="rgba(255,255,255,0.4)"/>
+      <rect x="41" y="176" width="1" height="28" fill="rgba(255,255,255,0.4)"/>
+      <rect x="280" y="160" width="3" height="16" fill="rgba(255,255,255,0.5)"/>
+      <rect x="281" y="156" width="1" height="24" fill="rgba(255,255,255,0.5)"/>
+    </g>
+  </svg>`,
+};
+
+const PERSONA = 'https://sunit1986.github.io/design-prototypes/Assets/';
+
+// ═══ DATA ═══
 const DB = {
   cricket: {
     meta: {
       name: 'Cricket',
-      desc: 'IPL 2025 · Scores, stats & match alerts',
-      img: BASE + 'persona-cricket.png',
-      live: 'IPL 2025 · 8 matches this week',
-      badge: '10 teams active',
+      desc: 'Scores · Stats · Match alerts',
+      img: PERSONA + 'persona-cricket.png',
+      eyebrow: 'YOUR ASSISTANT',
     },
     d0: {
-      emphasis: {
-        tag: 'MATCH TODAY',
-        title: 'MI vs CSK · Tonight',
-        sub: 'Wankhede Stadium, Mumbai · 7:30 PM IST',
-        countdown: '19:30',
-        note: null,
-        ctas: ['Set Reminder', 'Match Preview'],
-      },
-      fyi: {
-        icon: 'trophy',
-        tag: 'FYI · SEASON OVERVIEW',
-        title: 'IPL 2025 at a Glance',
-        meta: 'Matchday 23 of 74',
-        rows: [
-          { l: 'Teams playing', r: '10 franchises' },
-          { l: 'Matches done', r: '22 of 74' },
-          { l: 'Current #1', r: 'Mumbai Indians' },
-        ],
-        seeall: 'View full points table',
-      },
+      tier: 0,
+      emphasis: null,
+      fyi: null,
       immersive: null,
-      discover: ['Today\'s Match', 'IPL Schedule', 'Team Standings', 'Top Batsmen', 'Fantasy Guide'],
-      discoverNew: [],
-      starters: [
-        { t: 'Who\'s playing tonight?', ic: 'q' },
-        { t: 'How does IPL points table work?', ic: 'i' },
-        { t: 'Top performing team in 2025?', ic: 'c' },
+      onboard: {
+        title: 'Let\'s get you set up',
+        sub: 'Pick your favorite team, get live scores, match reminders, and player stats — all in one place.',
+        steps: [
+          { t: 'Team', done: false },
+          { t: 'Alerts', done: false },
+          { t: 'Stats', done: false },
+        ],
+        cta: 'Pick your team',
+      },
+      discover: [
+        { t: 'How IPL works', i: 'info', feat: false },
+        { t: 'Today\'s matches', i: 'play', feat: false },
+        { t: 'Top batsmen', i: 'trophy', feat: false },
+        { t: 'All teams', i: 'team', feat: false },
+        { t: 'IPL schedule', i: 'cal', feat: false },
       ],
-      ph: 'Ask me anything about cricket · IPL, players, teams',
+      starters: [
+        { t: 'How does the IPL work?', i: 'q' },
+        { t: 'Who is playing today?', i: 'play' },
+        { t: 'Tell me about Virat Kohli', i: 'person' },
+      ],
+      ph: 'Ask about cricket · teams, players, rules',
       last: null,
     },
     d7: {
+      tier: 1,
       emphasis: {
-        tag: 'YOUR MATCH TONIGHT',
-        title: 'MI vs CSK · 7:30 PM',
-        sub: 'Wankhede Stadium · You\'ve watched 4 MI matches',
-        countdown: '19:30',
-        note: 'Following Mumbai Indians all season',
-        ctas: ['Set Reminder', 'Fantasy Tips'],
+        live: 'MATCH TODAY',
+        title: 'MI vs CSK tonight',
+        sub: 'Wankhede Stadium · 7:30 PM IST',
+        cd: '19:30',
+        cdMeta: { lbl: 'Venue', val: 'Mumbai' },
+        personal: 'You picked Mumbai Indians as your team',
+        ctas: ['Set Reminder', 'Match Preview'],
       },
-      fyi: {
-        icon: 'bar',
-        tag: 'FYI · POINTS TABLE',
-        title: 'IPL 2025 Standings',
-        meta: 'Updated 2 hours ago',
-        rows: [
-          { l: '1.  Mumbai Indians', r: '14 pts · NRR +0.84' },
-          { l: '2.  Chennai Super Kings', r: '12 pts · NRR +0.61' },
-          { l: '3.  Royal Challengers', r: '10 pts · NRR +0.22' },
-        ],
-        seeall: 'See all 10 teams →',
-      },
+      fyi: [{
+        tag: 'YESTERDAY',
+        title: 'Quick recap',
+        headline: 'MI won by 6 wickets',
+        sub: 'Rohit Sharma 67*(42) · Match played at Wankhede',
+        icon: 'trophy',
+      }],
       immersive: null,
-      discover: ['MI Next Match', 'Head-to-Head: MI vs CSK', 'Kohli Stats', 'Fantasy XI', 'Highlights'],
-      discoverNew: [],
-      starters: [
-        { t: 'How is MI doing in IPL 2025?', ic: 'c' },
-        { t: 'Kohli vs Rohit: last 5 innings', ic: 'v' },
-        { t: 'Best fantasy team for tonight?', ic: 's' },
+      discover: [
+        { t: 'MI next match', i: 'play', feat: true },
+        { t: 'Head-to-Head MI·CSK', i: 'vs', feat: false },
+        { t: 'Kohli stats', i: 'person', feat: false },
+        { t: 'Fantasy XI', i: 'star', feat: false },
+        { t: 'Points table', i: 'trophy', feat: false },
+        { t: 'Match highlights', i: 'play', feat: false },
       ],
-      ph: 'Ask about tonight\'s match · predictions, stats, fantasy',
-      last: 'MI vs SRH score',
+      starters: [
+        { t: 'How is MI doing this season?', i: 'chart' },
+        { t: 'Who\'s the best pick for fantasy tonight?', i: 'star' },
+        { t: 'Kohli vs Rohit this season', i: 'vs' },
+      ],
+      ph: 'Ask about MI vs CSK · your team, your match',
+      last: 'Points table update',
     },
     d30: {
+      tier: 3,
       emphasis: {
-        tag: 'MATCH TONIGHT · YOUR TEAM',
-        title: 'MI vs CSK · 7:30 PM',
-        sub: 'Wankhede · Rohit on 98 T20 captain wins',
-        countdown: '19:30',
-        note: 'You\'ve watched 12 MI matches this season',
+        live: 'MATCH IN FEW HOURS',
+        title: '<span class="accent">MI vs CSK</span> tonight',
+        sub: 'Wankhede · Rohit on 98 T20 captain wins · your 13th live match',
+        cd: '19:30',
+        cdMeta: { lbl: 'Your Record', val: '9W / 3L watched' },
+        personal: 'You\'ve watched 12 MI matches this season — this is your team',
         ctas: ['Join Watch Party', 'Predict & Win'],
       },
-      fyi: {
-        icon: 'check',
-        tag: 'FYI · YESTERDAY\'S RESULT',
-        title: 'MI beat SRH by 6 wickets',
-        meta: 'You watched this match live',
-        rows: [
-          { l: 'Rohit Sharma', r: '67*(42) · Player of Match' },
-          { l: 'Hardik Pandya', r: '3/22 · 4 overs' },
-          { l: 'Target chased', r: '152 in 18.2 overs' },
-        ],
-        seeall: 'Full scorecard →',
-      },
+      fyi: [
+        {
+          tag: 'YESTERDAY · YOU WATCHED',
+          title: 'MI beat SRH by 6 wickets',
+          headline: 'Rohit: 67*(42) · MoM',
+          sub: 'Hardik 3/22 in 4 overs · Target 152 chased in 18.2',
+          icon: 'trophy',
+          data: true,
+        },
+        {
+          tag: 'HEADING UP',
+          title: 'Rohit on 98 captain wins',
+          headline: 'History at 100?',
+          sub: 'One more win = century as T20 captain',
+          icon: 'star',
+        },
+      ],
       immersive: {
-        title: 'Mumbai Indians · IPL 2025',
-        sub: 'Season overview · Matchday 23',
-        badge: '2nd Place',
+        type: 'stats',
+        eyebrow: 'YOUR CRICKET LIFE',
+        title: 'Mumbai Indians, IPL 2025',
+        sub: 'Matchday 23 of 74 · Your team\'s journey',
+        badge: '2nd place',
         stats: [
           { n: '7', l: 'Wins' },
           { n: '3', l: 'Losses' },
@@ -665,18 +937,25 @@ const DB = {
         ],
         form: ['W','W','L','W','W'],
         progLabel: 'Playoff qualification',
-        progNote: 'Win 2 of next 4 to qualify',
-        prog: 68,
+        progPct: 68,
+        progNote: 'Win 2 of next 4 to confirm a spot',
       },
-      discover: ['Live Score', 'Playoff Scenarios', 'MI Season Stats', 'Compare Players', 'My Predictions'],
-      discoverNew: ['Live Score', 'Playoff Scenarios'],
-      starters: [
-        { t: 'Will MI qualify for playoffs?', ic: 'trophy' },
-        { t: 'Recap yesterday\'s MI win', ic: 'play' },
-        { t: 'Rohit Sharma\'s season stats', ic: 'c' },
-        { t: 'Best XI for tonight\'s fantasy?', ic: 's' },
+      discover: [
+        { t: 'Live score', i: 'play', feat: true },
+        { t: 'Playoff scenarios', i: 'trophy', feat: true },
+        { t: 'MI season stats', i: 'chart', feat: false },
+        { t: 'Compare players', i: 'vs', feat: false },
+        { t: 'My predictions', i: 'star', feat: false },
+        { t: 'Fantasy XI', i: 'star', feat: false },
+        { t: 'Watch party', i: 'play', feat: false },
       ],
-      ph: 'Namasté Priya · What\'s happening in IPL today?',
+      starters: [
+        { t: 'Will MI qualify for playoffs?', i: 'trophy' },
+        { t: 'Recap yesterday\'s win for me', i: 'play' },
+        { t: 'Best fantasy team for tonight', i: 'star' },
+        { t: 'Rohit Sharma\'s form this season', i: 'person' },
+      ],
+      ph: 'Namasté Priya · What\'s on your cricket mind?',
       last: 'MI vs SRH highlights',
     },
   },
@@ -684,237 +963,266 @@ const DB = {
   astro: {
     meta: {
       name: 'Astrology',
-      desc: 'Rashifal · Muhurat · Kundali · Predictions',
-      img: BASE + 'persona-astrology.png',
-      live: 'Daily readings updated at midnight',
-      badge: 'Scorpio · Apr 21',
+      desc: 'Rashifal · Muhurat · Kundali',
+      img: PERSONA + 'persona-astrology.png',
+      eyebrow: 'YOUR ASSISTANT',
     },
     d0: {
-      emphasis: {
-        tag: 'YOUR LUCKY WINDOW TODAY',
-        title: 'Scorpio · 2:00 PM – 4:00 PM',
-        sub: 'Best time for new beginnings and important decisions',
-        countdown: null,
-        note: null,
-        ctas: ['Set Alarm', 'Know More'],
-      },
-      fyi: {
-        icon: 'star',
-        tag: 'FYI · TODAY\'S RASHIFAL',
-        title: 'Scorpio · April 21, 2026',
-        meta: 'Daily reading · refreshes at midnight',
-        rows: [
-          { l: 'Career', r: '★★★★☆  Focus on pending work' },
-          { l: 'Love', r: '★★★☆☆  Heart matters settle' },
-          { l: 'Health', r: '★★★★☆  Good energy all day' },
-        ],
-        seeall: 'Read full rashifal →',
-      },
+      tier: 0,
+      emphasis: null,
+      fyi: null,
       immersive: null,
-      discover: ['Daily Rashifal', 'Weekly Outlook', 'Lucky Numbers', 'Compatibility', 'Numerology'],
-      discoverNew: [],
-      starters: [
-        { t: 'What\'s my rashifal today?', ic: 'q' },
-        { t: 'Good time to make decisions?', ic: 'clock' },
-        { t: 'My lucky color for Scorpio today?', ic: 's' },
+      onboard: {
+        title: 'Unlock your stars',
+        sub: 'Share your birth details (date, time, place) to get personalised rashifal, muhurat timings, and kundali insights.',
+        steps: [
+          { t: 'Birth date', done: false },
+          { t: 'Birth time', done: false },
+          { t: 'Birth place', done: false },
+        ],
+        cta: 'Enter birth details',
+      },
+      discover: [
+        { t: 'Daily rashifal', i: 'star', feat: false },
+        { t: 'Today\'s muhurat', i: 'cal', feat: false },
+        { t: 'Numerology', i: 'info', feat: false },
+        { t: 'Zodiac 101', i: 'q', feat: false },
+        { t: 'Gem guide', i: 'star', feat: false },
       ],
-      ph: 'Ask about your rashifal · muhurat · kundali',
+      starters: [
+        { t: 'What is Vedic astrology?', i: 'q' },
+        { t: 'Show today\'s auspicious times', i: 'cal' },
+        { t: 'Explain the 12 houses', i: 'info' },
+      ],
+      ph: 'Ask about rashifal, muhurat, kundali',
       last: null,
     },
     d7: {
+      tier: 1,
       emphasis: {
-        tag: 'PLANETARY EVENT TOMORROW',
-        title: 'Saturn Retrograde Ends',
-        sub: 'Career boost incoming for Scorpio · April 22, 2026',
-        countdown: null,
-        note: 'High-impact day for your rising sign too',
-        ctas: ['Detailed Reading', 'Set Reminder'],
+        live: 'LUCKY WINDOW',
+        title: 'Scorpio · <span class="accent">2:00–4:00 PM</span>',
+        sub: 'Best window today for new beginnings and important decisions',
+        cd: null,
+        cdMeta: null,
+        personal: 'Based on your Sun sign · Scorpio',
+        ctas: ['Set Alarm', 'Know Why'],
       },
-      fyi: {
+      fyi: [{
+        tag: 'TODAY\'S READING',
+        title: 'Your rashifal',
+        headline: 'Career ★★★★ · Love ★★★',
+        sub: 'Focus on pending work · communicate clearly with partner',
         icon: 'star',
-        tag: 'FYI · THIS WEEK',
-        title: 'Weekly Outlook · Apr 21–27',
-        meta: 'Scorpio personalised reading',
-        rows: [
-          { l: 'Career', r: '★★★★☆  Strong momentum' },
-          { l: 'Love', r: '★★★☆☆  Communicate clearly' },
-          { l: 'Finance', r: '★★★★★  Ideal week to invest' },
-        ],
-        seeall: 'Full weekly forecast →',
-      },
+      }],
       immersive: null,
-      discover: ['Today\'s Muhurat', 'My Month Ahead', 'Birth Chart', 'Compatibility', 'Gem Advice'],
-      discoverNew: [],
-      starters: [
-        { t: 'What do stars say about my career?', ic: 'c' },
-        { t: 'Best muhurat this week?', ic: 'clock' },
-        { t: 'Is Wednesday good for travel?', ic: 'q' },
+      discover: [
+        { t: 'Today\'s muhurat', i: 'cal', feat: true },
+        { t: 'My month ahead', i: 'cal', feat: false },
+        { t: 'Weekly outlook', i: 'chart', feat: false },
+        { t: 'Compatibility', i: 'vs', feat: false },
+        { t: 'Gem advice', i: 'star', feat: false },
+        { t: 'Birth chart', i: 'info', feat: false },
       ],
-      ph: 'Ask about planets, muhurat · Scorpio weekly outlook',
-      last: 'Lucky muhurat for property deal',
+      starters: [
+        { t: 'What do stars say about my career?', i: 'chart' },
+        { t: 'Best muhurat this week?', i: 'cal' },
+        { t: 'Is Wednesday good for travel?', i: 'q' },
+      ],
+      ph: 'Ask about your sign · muhurat · this week',
+      last: 'Lucky muhurat for property',
     },
     d30: {
+      tier: 3,
       emphasis: {
-        tag: 'MAJOR PLANETARY EVENT',
-        title: 'Venus Transit · Next 48 Hours',
-        sub: 'Strong influence on finance & relationships for Scorpio',
-        countdown: null,
-        note: 'Your rising sign (Virgo) is also affected',
+        live: 'NEXT 48 HOURS',
+        title: '<span class="accent">Venus Transit</span> ahead',
+        sub: 'Strong influence on finances & relationships for your sign',
+        cd: null,
+        cdMeta: null,
+        personal: 'Affects your Virgo rising too · significant 2-day window',
         ctas: ['Full Forecast', 'Consult Astrologer'],
       },
-      fyi: {
-        icon: 'star',
-        tag: 'FYI · YOUR WEEKLY READING',
-        title: 'Personalised · Apr 21–27',
-        meta: 'Based on your birth chart · Pune rising',
-        rows: [
-          { l: 'Key focus', r: 'Financial decisions this week' },
-          { l: 'Power day', r: 'Wednesday, April 23' },
-          { l: 'Avoid', r: 'Long-term commitments on Monday' },
-        ],
-        seeall: 'Full personalised forecast →',
-      },
+      fyi: [
+        {
+          tag: 'WEEK AHEAD',
+          title: 'Your personalised reading',
+          headline: 'Key focus: finance',
+          sub: 'Power day Wed Apr 23 · avoid commitments on Monday',
+          icon: 'cal',
+          data: true,
+        },
+        {
+          tag: 'QUIET BACKGROUND',
+          title: 'Mercury goes direct',
+          headline: 'Communication clears',
+          sub: 'April 27 · good week to restart stalled conversations',
+          icon: 'info',
+        },
+      ],
       immersive: {
-        title: 'Your Birth Chart · Priya Sharma',
-        sub: 'Scorpio Sun · Pisces Moon · Virgo Rising',
+        type: 'chart',
+        eyebrow: 'YOUR BIRTH CHART',
+        title: 'Priya · Scorpio rising Virgo',
+        sub: 'Sun · Moon · Rising · the three foundation stones',
         badge: 'Personalised',
         stats: [
-          { n: 'Scorp', l: 'Sun Sign' },
-          { n: 'Pisces', l: 'Moon Sign' },
-          { n: 'Virgo', l: 'Rising' },
+          { n: 'Scor', l: 'Sun' },
+          { n: 'Pisc', l: 'Moon' },
+          { n: 'Virg', l: 'Rising' },
         ],
-        form: null,
-        progLabel: 'Peak months in 2026',
+        progLabel: 'Power months in 2026',
+        progPct: 74,
         progNote: 'April, July & November are your strongest months',
-        prog: 74,
       },
-      discover: ['My 2026 Forecast', 'Venus Transit', 'Birth Chart Deep-dive', 'Kundali Match', 'Gem Therapy'],
-      discoverNew: ['Venus Transit', 'My 2026 Forecast'],
-      starters: [
-        { t: 'How does Venus transit affect Scorpio?', ic: 'q' },
-        { t: 'My financial outlook this month?', ic: 'c' },
-        { t: 'When should I sign that contract?', ic: 'clock' },
-        { t: 'Compatibility with Virgo partner?', ic: 's' },
+      discover: [
+        { t: 'Venus transit guide', i: 'star', feat: true },
+        { t: 'My 2026 forecast', i: 'cal', feat: true },
+        { t: 'Birth chart deep-dive', i: 'info', feat: false },
+        { t: 'Kundali match', i: 'vs', feat: false },
+        { t: 'Gem therapy', i: 'star', feat: false },
+        { t: 'Monthly calendar', i: 'cal', feat: false },
+        { t: 'Career forecast', i: 'chart', feat: false },
       ],
-      ph: 'Ask anything · personalised for Scorpio rising, Pune',
-      last: 'Venus transit and my finances',
+      starters: [
+        { t: 'How does Venus transit affect me?', i: 'q' },
+        { t: 'Best time to sign a contract this week', i: 'cal' },
+        { t: 'My financial outlook this month', i: 'chart' },
+        { t: 'Compatibility with Virgo partner', i: 'vs' },
+      ],
+      ph: 'Namasté Priya · Ask anything — Scorpio rising',
+      last: 'Venus transit and finances',
     },
   },
 
   finance: {
     meta: {
       name: 'Finance',
-      desc: 'Spending · SIP · Portfolio · Tax filing',
-      img: BASE + 'persona-finance.png',
-      live: 'BSE open · Portfolio synced',
-      badge: 'SENSEX 82,450',
+      desc: 'Spending · Investments · Tax',
+      img: PERSONA + 'persona-finance.png',
+      eyebrow: 'YOUR ASSISTANT',
     },
     d0: {
-      emphasis: {
-        tag: 'MARKET OPEN NOW',
-        title: 'SENSEX · 82,450.30',
-        sub: 'BSE · +0.8% today · IT sector leading gains',
-        countdown: null,
-        note: null,
-        ctas: ['View Markets', 'Start Tracking'],
-      },
-      fyi: {
-        icon: 'money',
-        tag: 'FYI · POWER OF SIP',
-        title: 'Start small, grow big',
-        meta: 'Financial tip for you',
-        rows: [
-          { l: '₹2,000/month SIP', r: '→ ₹50L in 20 years' },
-          { l: 'Avg MF return (hist.)', r: '12% per year' },
-          { l: 'Tax saving — ELSS', r: 'Up to ₹1.5L/year' },
-        ],
-        seeall: 'Calculate my SIP →',
-      },
+      tier: 0,
+      emphasis: null,
+      fyi: null,
       immersive: null,
-      discover: ['Track Spending', 'SENSEX Today', 'SIP Calculator', 'Tax Saving', 'Budget Planner'],
-      discoverNew: [],
-      starters: [
-        { t: 'How much did I spend this month?', ic: 'c' },
-        { t: 'Should I start a SIP?', ic: 'q' },
-        { t: 'What\'s SENSEX at right now?', ic: 'i' },
+      onboard: {
+        title: 'Start tracking your money',
+        sub: 'Link one account to see where your money goes, set budgets, and plan SIPs. Bank-grade security, no sharing.',
+        steps: [
+          { t: 'Link account', done: false },
+          { t: 'Set goal', done: false },
+          { t: 'Budget', done: false },
+        ],
+        cta: 'Link first account',
+      },
+      discover: [
+        { t: 'SIP calculator', i: 'calc', feat: false },
+        { t: 'SENSEX today', i: 'chart', feat: false },
+        { t: 'Tax saving basics', i: 'info', feat: false },
+        { t: 'Budget planner', i: 'cal', feat: false },
+        { t: 'Goal planner', i: 'star', feat: false },
       ],
-      ph: 'Ask about spending, markets, investments, tax',
+      starters: [
+        { t: 'How much SIP should I start with?', i: 'q' },
+        { t: 'What is ELSS?', i: 'info' },
+        { t: 'Best ways to save on taxes', i: 'star' },
+      ],
+      ph: 'Ask about saving, investing, tax basics',
       last: null,
     },
     d7: {
+      tier: 1,
       emphasis: {
-        tag: 'ACTION NEEDED',
-        title: 'SIP due tomorrow · ₹5,000',
-        sub: 'Axis Bluechip Fund · Auto-pay is set up and ready',
-        countdown: null,
-        note: 'You\'ve invested consistently for 7 months',
+        live: 'DUE TOMORROW',
+        title: 'SIP · <span class="accent">₹5,000</span>',
+        sub: 'Axis Bluechip Fund · Auto-pay is ready to trigger',
+        cd: null,
+        cdMeta: null,
+        personal: 'You\'ve invested consistently for 7 months',
         ctas: ['Pay Now', 'Check Portfolio'],
       },
-      fyi: {
-        icon: 'money',
-        tag: 'FYI · YOUR PORTFOLIO',
-        title: 'Portfolio · ₹1,23,450',
-        meta: 'Updated at market close today',
-        rows: [
-          { l: 'This month change', r: '+₹2,340 · +1.9%' },
-          { l: 'Top performer', r: 'HDFC Bank · +3.1%' },
-          { l: 'SIP status', r: '7 of 12 months invested' },
-        ],
-        seeall: 'View full portfolio →',
-      },
+      fyi: [{
+        tag: 'YOUR PORTFOLIO',
+        title: 'Month to date',
+        headline: '+₹2,340 · +1.9%',
+        sub: 'HDFC Bank leading at +3.1% · SENSEX up 0.8% today',
+        icon: 'chart',
+      }],
       immersive: null,
-      discover: ['My Portfolio', 'SIP Status', 'Tax Filing', 'Goal Tracking', 'Market News'],
-      discoverNew: [],
+      discover: [
+        { t: 'My portfolio', i: 'chart', feat: true },
+        { t: 'SIP status', i: 'cal', feat: false },
+        { t: 'Tax filing', i: 'info', feat: false },
+        { t: 'Goal tracker', i: 'trophy', feat: false },
+        { t: 'Market news', i: 'info', feat: false },
+        { t: 'SENSEX live', i: 'chart', feat: false },
+      ],
       starters: [
-        { t: 'How is my portfolio doing?', ic: 'c' },
-        { t: 'Am I on track for my goals?', ic: 'trophy' },
-        { t: 'Where should I invest next?', ic: 'q' },
+        { t: 'How is my portfolio doing?', i: 'chart' },
+        { t: 'Am I on track for my goals?', i: 'trophy' },
+        { t: 'Where should I invest next?', i: 'q' },
       ],
       ph: 'Ask about your SIP, portfolio, spending',
-      last: 'Best mutual funds for 2026',
+      last: 'Best mutual funds 2026',
     },
     d30: {
+      tier: 3,
       emphasis: {
-        tag: 'BUDGET ALERT',
-        title: 'Food: ₹4,200 this month',
-        sub: '₹800 over your ₹3,400 budget · 10 days left',
-        countdown: null,
-        note: '₹320 under on transport — partially offsets',
-        ctas: ['See Breakdown', 'Adjust Budget'],
+        live: 'BUDGET ALERT',
+        title: 'Food · <span class="accent">₹800 over</span>',
+        sub: '₹4,200 spent this month · ₹3,400 budget · 10 days left',
+        cd: null,
+        cdMeta: null,
+        personal: '₹320 under on transport partially offsets',
+        ctas: ['See breakdown', 'Adjust budget'],
       },
-      fyi: {
-        icon: 'check',
-        tag: 'FYI · SIP CONFIRMED ✓',
-        title: 'Axis Bluechip invested yesterday',
-        meta: 'Auto-invested at 10:00 AM',
-        rows: [
-          { l: 'Amount invested', r: '₹5,000' },
-          { l: 'NAV at purchase', r: '₹183.40' },
-          { l: 'Total so far (12 months)', r: '₹60,000' },
-        ],
-        seeall: 'See investment history →',
-      },
+      fyi: [
+        {
+          tag: 'YESTERDAY ✓',
+          title: 'SIP confirmed',
+          headline: '₹5,000 invested',
+          sub: 'Axis Bluechip · NAV ₹183.40 · ₹60K total across 12 months',
+          icon: 'check',
+          data: true,
+        },
+        {
+          tag: 'MARKET',
+          title: 'HDFC leads your portfolio',
+          headline: '+3.1% this month',
+          sub: 'Worth checking: Reliance down 2.2% · reviewing worthwhile',
+          icon: 'chart',
+        },
+      ],
       immersive: {
-        title: 'April Spending · Priya Sharma',
-        sub: '21 days in · ₹28,400 of ₹40,000 budget',
-        badge: 'On Track',
+        type: 'stats',
+        eyebrow: 'APRIL SPENDING',
+        title: 'Priya · Day 21 of month',
+        sub: '₹28.4K of ₹40K budget · ₹11.6K remaining',
+        badge: 'On track',
         stats: [
           { n: '₹28.4K', l: 'Spent' },
-          { n: '₹11.6K', l: 'Remaining' },
-          { n: '87%', l: 'Avg Saving' },
+          { n: '₹11.6K', l: 'Left' },
+          { n: '87%', l: 'Avg save' },
         ],
-        form: null,
-        progLabel: 'Monthly budget: ₹40,000',
+        progLabel: 'Monthly budget · ₹40,000',
+        progPct: 71,
         progNote: '₹11,600 remaining with 10 days left',
-        prog: 71,
       },
-      discover: ['Monthly Report', 'Tax-saving Tips', 'Portfolio Health', 'Goal Tracker', 'Expense Audit'],
-      discoverNew: ['Monthly Report', 'Expense Audit'],
+      discover: [
+        { t: 'Monthly report', i: 'chart', feat: true },
+        { t: 'Expense audit', i: 'info', feat: true },
+        { t: 'Tax-saving tips', i: 'star', feat: false },
+        { t: 'Portfolio health', i: 'trophy', feat: false },
+        { t: 'Goal tracker', i: 'cal', feat: false },
+        { t: 'Set alert', i: 'info', feat: false },
+      ],
       starters: [
-        { t: 'Where am I overspending?', ic: 'c' },
-        { t: 'Am I saving enough for retirement?', ic: 'q' },
-        { t: 'Best ELSS fund for tax saving?', ic: 's' },
-        { t: 'Summarise my April finances', ic: 'i' },
+        { t: 'Where am I overspending?', i: 'chart' },
+        { t: 'Am I saving enough for retirement?', i: 'q' },
+        { t: 'Best ELSS for tax saving this year', i: 'star' },
+        { t: 'Summarise my April finances', i: 'info' },
       ],
       ph: 'Namasté Priya · Ask about your finances',
       last: 'April food budget breakdown',
@@ -922,12 +1230,12 @@ const DB = {
   },
 };
 
-// ── State ─────────────────────────────────────────────────────────────
+// ═══ STATE ═══
 let curState = 'd7';
 let curAst = 'cricket';
 let cdTimer = null;
 
-// ── Countdown ─────────────────────────────────────────────────────────
+// ═══ COUNTDOWN ═══
 function targetFromTime(hhmm) {
   const [h, m] = hhmm.split(':').map(Number);
   const t = new Date();
@@ -935,11 +1243,9 @@ function targetFromTime(hhmm) {
   if (t <= new Date()) t.setDate(t.getDate() + 1);
   return t;
 }
-
 function startCD(hhmm) {
   if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
   const target = targetFromTime(hhmm);
-
   function tick() {
     const diff = Math.max(0, target - Date.now());
     const h = Math.floor(diff / 3600000);
@@ -957,70 +1263,106 @@ function startCD(hhmm) {
   cdTimer = setInterval(tick, 1000);
 }
 
-// ── SVG Icons ─────────────────────────────────────────────────────────
-function icn(type, size = 17) {
-  const s = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"`;
-  const paths = {
-    trophy:  `<svg ${s}><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>`,
-    bar:     `<svg ${s}><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>`,
-    star:    `<svg ${s}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`,
-    check:   `<svg ${s}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
-    money:   `<svg ${s}><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>`,
-    person:  `<svg ${s}><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`,
-    arrow:   `<svg ${s}><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>`,
+// ═══ ICONS ═══
+function icn(t, s = 18) {
+  const a = `width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor"`;
+  const map = {
+    trophy: `<svg ${a}><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>`,
+    star: `<svg ${a}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`,
+    play: `<svg ${a}><path d="M8 5v14l11-7z"/></svg>`,
+    info: `<svg ${a}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`,
+    q: `<svg ${a}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>`,
+    team: `<svg ${a}><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`,
+    person: `<svg ${a}><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`,
+    cal: `<svg ${a}><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>`,
+    chart: `<svg ${a}><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>`,
+    vs: `<svg ${a}><path d="M16.59 5.59L18 7l-6 6-6-6 1.41-1.41L12 10.17zM6 18v-2h12v2z"/></svg>`,
+    check: `<svg ${a}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
+    calc: `<svg ${a}><path d="M19 3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm-6 2h5v4h-5V5zM6 5h5v2H6V5zm0 4h5v2H6V9zm0 4h5v2H6v-2zm0 4h5v2H6v-2zm11 2h-4v-4h4v4zm0-6h-4v-2h4v2z"/></svg>`,
+    arrow: `<svg ${a}><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>`,
+    bolt: `<svg ${a}><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>`,
   };
-  const starters = {
-    q:     `<svg ${s}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>`,
-    i:     `<svg ${s}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`,
-    c:     `<svg ${s}><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>`,
-    v:     `<svg ${s}><path d="M9.5 16.5l7-4.5-7-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>`,
-    s:     `<svg ${s}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`,
-    clock: `<svg ${s}><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>`,
-    trophy:`<svg ${s}><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>`,
-    play:  `<svg ${s}><path d="M8 5v14l11-7z"/></svg>`,
-  };
-  return paths[type] || starters[type] || paths.star;
+  return map[t] || map.info;
 }
 
-// ── Render ─────────────────────────────────────────────────────────────
+// ═══ RENDER ═══
 function render() {
   const ast = DB[curAst];
-  const d   = ast[curState];
-  const m   = ast.meta;
+  const d = ast[curState];
+  const m = ast.meta;
 
-  // Stop old countdown
+  // stop old countdown
   if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
 
-  // Update hero
-  document.getElementById('hd-name').textContent  = m.name;
-  document.getElementById('hd-live-txt').textContent = m.live;
-  document.getElementById('ast-title').textContent = m.name;
-  document.getElementById('ast-desc').textContent  = m.desc;
-  document.getElementById('ast-badge-txt').textContent = m.badge;
-  const img = document.getElementById('ast-img');
+  // hero
+  document.getElementById('hero-title').textContent = m.name;
+  document.getElementById('hero-desc').textContent = m.desc;
+  document.getElementById('hero-eyebrow').textContent = m.eyebrow;
+  document.getElementById('hero-pattern').innerHTML = HERO_PATTERNS[curAst];
+  const img = document.getElementById('hero-img');
   img.src = m.img; img.style.display = 'block';
 
-  // Bottom box
+  // bottom box
   document.getElementById('bm-ph').textContent = d.ph;
   const lastEl = document.getElementById('bm-last');
   if (d.last) { lastEl.textContent = `Last asked: "${d.last}"`; lastEl.style.display = 'block'; }
   else        { lastEl.style.display = 'none'; }
 
-  // Build scroll HTML
+  // logic pips
+  const emphCount = d.emphasis ? 1 : 0;
+  const fyiCount = d.fyi ? d.fyi.length : 0;
+  const imShow = d.immersive ? 'immersive: unlocked' : 'immersive: hidden';
+  document.getElementById('pip-tier').textContent = `Tier ${d.tier}`;
+  document.getElementById('pip-emph').textContent = `${emphCount} emphasis`;
+  document.getElementById('pip-fyi').textContent = `${fyiCount} fyi`;
+  document.getElementById('pip-im').textContent = imShow;
+
   let html = '';
 
-  // ── EMPHASIS ───────────────────────────────────────────────────────
+  // ═══ ONBOARDING (Day 0) ═══
+  if (d.onboard) {
+    const o = d.onboard;
+    html += `
+<div class="section fin d1">
+  <div class="section-head">
+    <div class="sh-left">
+      <div class="sh-eyebrow">WELCOME</div>
+      <div class="sh-title">Let's meet you first</div>
+    </div>
+  </div>
+  <div class="card-onboard" onclick="showToast('Starting: ${o.cta}')">
+    <div class="ob-icon-wrap">${icn('bolt', 30)}</div>
+    <div class="ob-title">${o.title}</div>
+    <div class="ob-sub">${o.sub}</div>
+    <div class="ob-steps">
+      ${o.steps.map(s => `<div class="ob-step${s.done ? ' done' : ''}">${s.t}</div>`).join('')}
+    </div>
+    <button class="ob-cta" onclick="event.stopPropagation();showToast('Starting: ${o.cta}')">
+      ${o.cta} ${icn('arrow', 14)}
+    </button>
+  </div>
+</div>`;
+  }
+
+  // ═══ EMPHASIS (one max) ═══
   if (d.emphasis) {
     const e = d.emphasis;
     html += `
 <div class="section fin d1">
-  <div class="sec-label emph"><div class="dot"></div>EMPHASIS · NEED NOW</div>
-  <div class="card-e" onclick="showToast('${esc(e.title)}')">
-    <div class="ce-tag"><div class="ce-pulse"></div>${e.tag}</div>
+  <div class="section-head">
+    <div class="sh-left">
+      <div class="sh-eyebrow">NEEDS YOU NOW</div>
+      <div class="sh-title">Today</div>
+    </div>
+  </div>
+  <div class="card-emph" onclick="showToast('Opening details')">
+    <div class="ce-row">
+      <div class="ce-live"><div class="ce-live-dot"></div>${e.live}</div>
+    </div>
     <div class="ce-title">${e.title}</div>
     <div class="ce-sub">${e.sub}</div>`;
 
-    if (e.countdown) {
+    if (e.cd) {
       html += `
     <div class="countdown">
       <div class="cd-block"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hrs</div></div>
@@ -1028,132 +1370,154 @@ function render() {
       <div class="cd-block"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
       <div class="cd-sep">:</div>
       <div class="cd-block"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div></div>
+      ${e.cdMeta ? `
+      <div class="cd-meta">
+        <div class="cd-meta-lbl">${e.cdMeta.lbl}</div>
+        <div class="cd-meta-val">${e.cdMeta.val}</div>
+      </div>` : ''}
     </div>`;
     }
 
-    if (e.note) {
+    if (e.personal) {
       html += `
-    <div class="ce-note">
-      <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-      ${e.note}
+    <div class="ce-personal">
+      ${icn('check', 14)}
+      ${e.personal}
     </div>`;
     }
 
     html += `
-    <div class="ce-actions">
-      <button class="btn-solid" onclick="event.stopPropagation();showToast('${esc(e.ctas[0])}')">${e.ctas[0]}</button>
-      <button class="btn-outline" onclick="event.stopPropagation();showToast('${esc(e.ctas[1])}')">${e.ctas[1]}</button>
+    <div class="ce-cta-row">
+      <button class="ce-btn solid" onclick="event.stopPropagation();showToast('${e.ctas[0]}')">${e.ctas[0]}</button>
+      <button class="ce-btn ghost" onclick="event.stopPropagation();showToast('${e.ctas[1]}')">${e.ctas[1]}</button>
     </div>
   </div>
 </div>`;
   }
 
-  // ── FYI ───────────────────────────────────────────────────────────
-  if (d.fyi) {
-    const f = d.fyi;
+  // ═══ FYI (up to 2) ═══
+  if (d.fyi && d.fyi.length) {
+    const fyiTitle = d.fyi.length > 1 ? 'Also worth knowing' : 'Worth knowing';
     html += `
 <div class="section fin d2">
-  <div class="sec-label fyi"><div class="dot"></div>FYI · BACKGROUND INFO</div>
-  <div class="card-f" onclick="showToast('${esc(f.title)}')">
-    <div class="cf-head">
-      <div class="cf-icon">${icn(f.icon)}</div>
-      <div style="flex:1">
-        <div class="cf-tag">${f.tag}</div>
-        <div class="cf-title">${f.title}</div>
-      </div>
-      <div class="cf-time">${f.meta}</div>
+  <div class="section-head">
+    <div class="sh-left">
+      <div class="sh-eyebrow">QUIET CONTEXT</div>
+      <div class="sh-title">${fyiTitle}</div>
+      <div class="sh-sub">${d.fyi.length} update${d.fyi.length > 1 ? 's' : ''} · no action needed</div>
     </div>
-    <div class="cf-rows">
-      ${f.rows.map(r => `
-      <div class="cf-row">
-        <div class="cf-left">${r.l}</div>
-        <div class="cf-right">${r.r}</div>
-      </div>`).join('')}
+  </div>`;
+    d.fyi.forEach((f, i) => {
+      html += `
+  <div class="card-fyi${i > 0 ? '' : ''}" style="${i > 0 ? 'margin-top:8px' : ''}" onclick="showToast('${f.title}')">
+    <div class="fyi-visual${f.data ? ' data' : ''}">${icn(f.icon, 26)}</div>
+    <div class="fyi-body">
+      <div class="fyi-tag">${f.tag}</div>
+      <div class="fyi-headline">${f.headline}</div>
+      <div class="fyi-sub">${f.sub}</div>
     </div>
-    <div class="cf-seeall" onclick="event.stopPropagation();showToast('${esc(f.seeall)}')">${f.seeall}</div>
-  </div>
-</div>`;
+  </div>`;
+    });
+    html += `</div>`;
   }
 
-  // ── IMMERSIVE (Day 7+) ─────────────────────────────────────────────
+  // ═══ IMMERSIVE (Day 7+ with data) ═══
   if (d.immersive) {
     const im = d.immersive;
     html += `
 <div class="section fin d3">
-  <div class="sec-label imm"><div class="dot"></div>IMMERSIVE · EXPERIENCE CARD · Day 7+</div>
-  <div class="card-i" onclick="showToast('${esc(im.title)}')">
-    <div class="ci-head">
-      <div>
-        <div class="ci-title">${im.title}</div>
-        <div class="ci-sub">${im.sub}</div>
-      </div>
-      <div class="ci-badge">${im.badge}</div>
+  <div class="section-head">
+    <div class="sh-left">
+      <div class="sh-eyebrow">${im.eyebrow}</div>
+      <div class="sh-title">Your journey</div>
+      <div class="sh-sub">Unlocked by ${d.tier === 3 ? '30 days' : '7 days'} of use</div>
     </div>
-    <div class="ci-stats">
+  </div>
+  <div class="card-immersive" onclick="showToast('${im.title}')">
+    <div class="im-head">
+      <div>
+        <div class="im-eyebrow">${im.eyebrow}</div>
+        <div class="im-title">${im.title}</div>
+        <div class="im-sub">${im.sub}</div>
+      </div>
+      <div class="im-badge">${im.badge}</div>
+    </div>
+    <div class="im-stats">
       ${im.stats.map(s => `
-      <div class="ci-stat">
-        <div class="ci-stat-num">${s.n}</div>
-        <div class="ci-stat-lbl">${s.l}</div>
+      <div class="im-stat">
+        <div class="im-stat-num">${s.n}</div>
+        <div class="im-stat-lbl">${s.l}</div>
       </div>`).join('')}
     </div>
     ${im.form ? `
-    <div class="ci-form-lbl">Last 5 results</div>
-    <div class="ci-form">
-      ${im.form.map(r => `<div class="ci-dot ${r}">${r}</div>`).join('')}
+    <div class="im-form-lbl">Last 5 results</div>
+    <div class="im-form">
+      ${im.form.map(r => `<div class="im-dot ${r}">${r}</div>`).join('')}
     </div>` : ''}
-    <div class="ci-prog-head"><span>${im.progLabel}</span><span>${im.prog}%</span></div>
-    <div class="ci-prog-bar"><div class="ci-prog-fill" style="width:${im.prog}%"></div></div>
-    <div class="ci-prog-note">${im.progNote}</div>
+    <div class="im-prog">
+      <div class="im-prog-row"><span>${im.progLabel}</span><span>${im.progPct}%</span></div>
+      <div class="im-prog-bar"><div class="im-prog-fill" style="width:${im.progPct}%"></div></div>
+      <div class="im-prog-note">${im.progNote}</div>
+    </div>
   </div>
 </div>`;
   }
 
-  // ── DISCOVER PILLS ─────────────────────────────────────────────────
+  // ═══ DISCOVER ═══
   html += `
 <div class="section fin d4">
-  <div class="sec-label disc"><div class="dot"></div>DISCOVER · EXPLORE MORE</div>
-  <div class="discover-scroll">
-    ${d.discover.map(p => {
-      const isNew = d.discoverNew.includes(p);
-      return `<button class="disc-pill${isNew ? ' new-feat' : ''}" onclick="showToast('Exploring: ${esc(p)}')">${p}</button>`;
-    }).join('')}
+  <div class="section-head">
+    <div class="sh-left">
+      <div class="sh-eyebrow">EXPLORE</div>
+      <div class="sh-title">Discover more</div>
+      <div class="sh-sub">${d.discover.filter(p => p.feat).length > 0 ? 'New for you · ' : ''}${d.discover.length} ways to go deeper</div>
+    </div>
   </div>
-</div>`;
-
-  // ── JOURNEY STARTERS ───────────────────────────────────────────────
-  html += `
-<div class="section fin d5">
-  <div class="sec-label start"><div class="dot"></div>START A CONVERSATION</div>
-  <div class="starters">
-    ${d.starters.map(s => `
-    <button class="starter" onclick="showToast('${esc(s.t)}')">
-      <div class="starter-ic">${icn(s.ic, 16)}</div>
-      <div class="starter-txt">${s.t}</div>
-      <div class="starter-arr">${icn('arrow', 16)}</div>
+  <div class="discover-scroll">
+    ${d.discover.map(p => `
+    <button class="disc-pill${p.feat ? ' feat' : ''}" onclick="showToast('Exploring: ${p.t}')">
+      ${p.feat ? '<span class="new-dot"></span>' : ''}${icn(p.i, 13)}${p.t}
     </button>`).join('')}
   </div>
 </div>`;
 
-  // Apply to DOM (fade trick)
+  // ═══ STARTERS ═══
+  html += `
+<div class="section fin d5">
+  <div class="section-head">
+    <div class="sh-left">
+      <div class="sh-eyebrow">START A CONVERSATION</div>
+      <div class="sh-title">Ask anything</div>
+      <div class="sh-sub">${curState === 'd30' ? 'Tuned to your time of day' : curState === 'd7' ? 'Based on your recent activity' : 'Popular starters for new users'}</div>
+    </div>
+  </div>
+  <div class="starters">
+    ${d.starters.map(s => `
+    <button class="starter" onclick="showToast('Starting: ${s.t.replace(/'/g,'&apos;')}')">
+      <div class="starter-icon">${icn(s.i, 16)}</div>
+      <div class="starter-text">${s.t}</div>
+      <div class="starter-arrow">${icn('arrow', 16)}</div>
+    </button>`).join('')}
+  </div>
+</div>`;
+
+  // mount with fade
   const scr = document.getElementById('screen');
-  scr.classList.add('fade-out');
+  scr.classList.add('switching');
   setTimeout(() => {
     document.getElementById('scroll').innerHTML = html;
-    scr.classList.remove('fade-out');
-    if (d.emphasis && d.emphasis.countdown) {
-      startCD(d.emphasis.countdown);
-    }
+    scr.classList.remove('switching');
+    if (d.emphasis && d.emphasis.cd) startCD(d.emphasis.cd);
   }, 120);
 }
 
-// ── Controls ───────────────────────────────────────────────────────────
+// ═══ CONTROLS ═══
 function setState(val) {
   curState = val;
   document.body.setAttribute('data-state', val);
   document.querySelectorAll('#state-group .tog').forEach(b => b.classList.toggle('on', b.dataset.val === val));
   render();
 }
-
 function setAst(val) {
   curAst = val;
   document.body.setAttribute('data-ast', val);
@@ -1161,7 +1525,7 @@ function setAst(val) {
   render();
 }
 
-// ── Toast ──────────────────────────────────────────────────────────────
+// ═══ TOAST ═══
 let toastT;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1170,10 +1534,7 @@ function showToast(msg) {
   toastT = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-// ── Helpers ────────────────────────────────────────────────────────────
-function esc(s) { return (s||'').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
-
-// ── Init ───────────────────────────────────────────────────────────────
+// ═══ INIT ═══
 (function init() {
   document.querySelectorAll('#state-group .tog').forEach(b => b.classList.toggle('on', b.dataset.val === curState));
   document.querySelectorAll('#ast-group .tog').forEach(b => b.classList.toggle('on', b.dataset.val === curAst));
