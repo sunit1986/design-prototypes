@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>JBIQ Homepage Blueprint · 6-State Prototype</title>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@700&display=swap" rel="stylesheet">
+<!-- v10 · Semantic icon fixes (Fiber→wifi, SIP→bank, birthday→gift, rain→umbrella) · Apple/Yahoo weather (big temp + 52px icon) · Grill'd See-all bottom-sheet · Weverse assistant notification dots · Locality cards get teal tint · Predict+routine cards no longer visually duplicate · Continue stack peeks more visibly · Discover See-all removed (inline CTA covers it) -->
+<style>
+@font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --p:   #3535f3;
+  --pb:  #3900ad;
+  --lp:  #6D17CE;
+  --sp:  #1eccb0;
+  --am:  #f7ab20;
+  --gh:  #eeeeef;
+  --gi:  #e7e9ff;
+  --g1:  #141414;
+  --g6:  rgba(20,20,20,0.65);
+  --g4:  rgba(20,20,20,0.38);
+  --g2:  #f5f5f5;
+  --bd:  rgba(36,38,43,0.12);
+  --err: #fa2f40;
+  --suc: #25ab21;
+  --wa:  #25D366;
+  --bg:  #f0eff4;
+  --discoverGreen: #6c8a5c;
+
+  --ease-gentle:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-snappy:  cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring:  cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-emp-dec: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-std-dec: cubic-bezier(0, 0, 0, 1);
+  --ease-smooth:  cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+body {
+  font-family: 'JioType', -apple-system, sans-serif;
+  background: var(--bg); min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 28px 20px 40px; -webkit-font-smoothing: antialiased; user-select: none;
+  color: var(--g1);
+  transition: background 500ms var(--ease-gentle);
+}
+/* Pattern 1 · State-driven background (subtle ambient tint per state) */
+body[data-state="fest"] { background: #fbeecd; }
+body[data-state="gap"]  { background: #eaf0f7; }
+body[data-state="pow"]  { background: #f0eaf5; }
+body[data-state="d30"]  { background: #eef5ef; }
+
+.top { width: 100%; max-width: 520px; margin: 0 auto 10px; }
+.top h1 { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
+.top p { font-size: 11px; font-weight: 500; color: var(--g6); margin-top: 3px; }
+
+/* State toggle */
+.state-toggle {
+  display: flex; gap: 4px; padding: 4px;
+  background: #fff; border: 1px solid var(--bd);
+  border-radius: 14px; margin: 10px auto 16px;
+  max-width: 520px; width: 100%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.state-chip {
+  flex: 1; padding: 8px 4px; border-radius: 10px; border: none;
+  font-family: inherit; font-size: 11px; font-weight: 600;
+  color: var(--g6); background: transparent; cursor: pointer; text-align: center;
+  transition: all 0.2s var(--ease-snappy);
+}
+.state-chip:hover { background: rgba(53,53,243,0.05); color: var(--g1); }
+.state-chip.active { background: var(--g1); color: #fff; }
+.state-chip small { display: block; font-size: 9px; font-weight: 500; opacity: 0.55; margin-top: 1px; }
+.state-note { width: 100%; max-width: 520px; margin: 0 auto 8px; font-size: 11px; color: var(--g6); font-weight: 500; text-align: center; }
+
+/* D · Scroll-budget readout — evidence-backed cap at 2100px (NN/g + Chartbeat + PhonePe band) */
+.scroll-budget {
+  width: 100%; max-width: 520px; margin: 0 auto 14px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--bd);
+  font-size: 11px; font-weight: 700; color: var(--g1);
+  cursor: help;
+}
+.sb-bar { flex: 1; height: 6px; background: var(--g2); border-radius: 999px; overflow: hidden; }
+.sb-fill { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--suc); transition: width 400ms var(--ease-emp-dec), background 240ms; }
+.sb-fill.warn { background: var(--am); }
+.sb-fill.over { background: var(--err); }
+.sb-txt { font-variant-numeric: tabular-nums; min-width: 110px; text-align: right; letter-spacing: 0.02em; }
+
+/* Phone */
+.phone {
+  width: 360px; height: 800px; background: #fff;
+  border-radius: 44px; border: 8px solid #1c1c1e;
+  box-shadow: 0 0 0 1px #333, 0 28px 60px rgba(0,0,0,0.35), inset 0 0 0 1px #2c2c2e;
+  position: relative; overflow: hidden;
+}
+.screen {
+  position: absolute; inset: 0; background: #fff;
+  display: flex; flex-direction: column; overflow: hidden;
+  transition: opacity 180ms var(--ease-gentle);
+}
+.screen.switching { opacity: 0; }
+
+/* Status + header */
+.sb { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; }
+.sbt { font-size: 14px; font-weight: 700; }
+.sbr { display: flex; gap: 5px; align-items: center; }
+.sbr svg { width: 14px; height: 14px; fill: currentColor; }
+.hd { height: 60px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--bd); }
+.hd-left { display: flex; align-items: center; gap: 10px; }
+.hd-menu { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer; border: none; }
+.hd-menu svg { width: 20px; height: 20px; fill: var(--g1); }
+.hd-logo { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+.hd-logo svg { width: 36px; height: 36px; display: block; }
+.hd-right { display: flex; align-items: center; gap: 10px; }
+.hd-streak { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 999px; background: #fff8ea; border: 1px solid rgba(247,171,32,0.35); font-size: 10px; font-weight: 700; color: #ac660c; }
+.hd-profile { width: 32px; height: 32px; border-radius: 50%; background: var(--gi); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--lp); border: 1px solid var(--bd); cursor: pointer; }
+
+/* Value ribbon */
+.value {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 18px; height: 44px;
+  background: #fff8ea; border-bottom: 1px solid var(--bd); cursor: pointer;
+  transition: background 200ms var(--ease-smooth);
+}
+.value.festive { background: #fef3dc; }
+.value.seed    { background: rgba(53,53,243,0.06); }
+.value:active  { background: #fff3d4; }
+.value-label { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.value.seed .value-label { color: var(--p); }
+.value-amount {
+  font-weight: 800; padding: 1px 5px; border-radius: 4px;
+  background-color: rgba(247,171,32,0.55);
+  animation: valueHlFade 2.4s ease-out 400ms forwards;
+}
+@keyframes valueHlFade {
+  0%   { background-color: rgba(247,171,32,0.55); }
+  100% { background-color: rgba(247,171,32,0.15); }
+}
+.value-right { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--g6); font-weight: 500; }
+.sparkline { width: 40px; height: 14px; }
+.sparkline path {
+  fill: none; stroke: var(--suc); stroke-width: 1.5;
+  stroke-dasharray: 80; stroke-dashoffset: 80;
+  animation: drawLine 600ms var(--ease-emp-dec) 250ms forwards;
+}
+@keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+/* Scroll + sections */
+.scroll { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding-bottom: 140px; }
+.scroll::-webkit-scrollbar { display: none; }
+.sect { padding: 18px 18px 6px; display: flex; align-items: baseline; justify-content: space-between; }
+.sect-title { font-size: 20px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; }
+.sect-hint  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--g6); }
+.sect-seeall {
+  display: inline-flex; align-items: center; gap: 2px;
+  background: transparent; border: none;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  color: var(--lp); cursor: pointer; padding: 0;
+}
+.sect-seeall:hover { text-decoration: underline; }
+
+/* Atlantic-inspired handwritten greeting · smaller + sparkle */
+.greeting-hw {
+  font-family: 'Caveat', 'Kalam', cursive;
+  font-size: 34px; font-weight: 700; line-height: 1;
+  letter-spacing: -0.005em; color: var(--g1);
+  padding: 16px 20px 6px;
+  position: relative;
+}
+.greeting-hw .accent { color: var(--lp); }
+.greeting-sparkle {
+  display: inline-block;
+  width: 14px; height: 14px;
+  margin-left: 2px; vertical-align: 6px;
+  color: var(--am);
+  animation: greetSparkle 2.8s ease-out forwards;
+  transform-origin: center;
+}
+.greeting-sparkle svg { width: 100%; height: 100%; fill: currentColor; }
+@keyframes greetSparkle {
+  0%   { opacity: 0; transform: scale(0) rotate(-180deg); }
+  20%  { opacity: 1; transform: scale(1.4) rotate(0deg); }
+  50%  { opacity: 1; transform: scale(1.1) rotate(90deg); }
+  80%  { opacity: 0.9; transform: scale(0.95) rotate(140deg); }
+  100% { opacity: 0; transform: scale(0.8) rotate(180deg); }
+}
+.greeting-hr { height: 1px; background: var(--bd); margin: 2px 18px 0; }
+
+/* Ambient weather · v10.1 compact Apple/Yahoo — big temp + 44px animated icon, tight height */
+.ambient {
+  display: flex; align-items: center; gap: 12px;
+  padding: 6px 20px 8px;
+}
+.ambient-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.ambient-temp {
+  font-size: 26px; font-weight: 800; letter-spacing: -0.035em;
+  line-height: 1.05; color: var(--g1);
+  font-variant-numeric: tabular-nums;
+  display: flex; align-items: flex-start; gap: 1px;
+}
+.ambient-temp .deg { font-size: 14px; font-weight: 600; color: var(--g6); padding-top: 2px; }
+.ambient-tip { font-size: 11px; font-weight: 500; color: var(--g6); line-height: 1.3; max-width: 230px; }
+.ambient-warn { color: var(--err); font-weight: 700; }
+
+.ambient-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px;
+}
+.ambient-icon svg { width: 26px; height: 26px; }
+.ambient-icon.sun    { background: #fff3d4; } .ambient-icon.sun svg    { fill: var(--am); animation: ambSun 32s linear infinite; }
+.ambient-icon.cloud  { background: #eef2f8; } .ambient-icon.cloud svg  { fill: #6b8bb8; animation: ambSway 4.5s ease-in-out infinite; }
+.ambient-icon.rain   { background: #d9e6f6; } .ambient-icon.rain svg   { fill: #3b6cab; }
+.ambient-icon.hot    { background: #ffe8d4; } .ambient-icon.hot svg    { fill: #e07a0f; animation: ambSun 40s linear infinite; }
+.ambient-icon.haze   { background: #f2ead9; } .ambient-icon.haze svg   { fill: #8b7a3a; }
+.ambient-icon.night  { background: #e3e6f4; } .ambient-icon.night svg  { fill: #3e4b77; }
+.ambient-icon .drop  { animation: ambDrop 1.4s ease-in infinite; }
+.ambient-icon .drop.d2 { animation-delay: 0.4s; }
+.ambient-icon .drop.d3 { animation-delay: 0.8s; }
+@keyframes ambSun { to { transform: rotate(360deg); } }
+@keyframes ambSway { 0%,100% { transform: translateX(-2px); } 50% { transform: translateX(2px); } }
+@keyframes ambDrop { 0% { transform: translateY(-4px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(8px); opacity: 0; } }
+
+/* Assistants */
+.assistants { display: flex; gap: 18px; overflow-x: auto; padding: 6px 18px 14px; scrollbar-width: none; }
+.assistants::-webkit-scrollbar { display: none; }
+.assistant { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; width: 68px; cursor: pointer; position: relative; transition: transform 200ms var(--ease-snappy); }
+.assistant:active { transform: scale(0.96); }
+.assistant-ring {
+  width: 68px; height: 68px; border-radius: 50%; padding: 2.5px;
+  background: var(--lp);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 8px rgba(109,23,206,0.22);
+}
+.assistant-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--gi); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.assistant-inner svg { width: 30px; height: 30px; fill: var(--lp); }
+.assistant-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.assistant-label { font-size: 11px; font-weight: 500; margin-top: 8px; max-width: 72px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Weverse-style unread/pending-context dot — 1 o'clock on the ring */
+.assistant-dot {
+  position: absolute; top: 6px; right: 6px;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--err);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 0 rgba(250,47,64,0.45);
+  animation: dotPulse 2.2s ease-out infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+@keyframes dotPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(250,47,64,0.45); }
+  70%  { box-shadow: 0 0 0 8px rgba(250,47,64,0); }
+  100% { box-shadow: 0 0 0 0 rgba(250,47,64,0); }
+}
+.assistant.promoted .assistant-ring {
+  animation: promotedBreath 700ms var(--ease-spring) 300ms;
+  box-shadow: 0 0 0 3px rgba(109,23,206,0.22), 0 0 16px rgba(109,23,206,0.22);
+}
+.assistant.promoted .assistant-label { color: var(--lp); font-weight: 700; }
+@keyframes promotedBreath { 0% { transform: scale(1); } 45% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.whisper {
+  position: absolute; top: -26px; left: 50%; transform: translateX(-50%) translateY(4px);
+  padding: 4px 8px; border-radius: 8px; background: var(--g1); color: #fff;
+  font-size: 10px; font-weight: 700; white-space: nowrap; opacity: 0; pointer-events: none;
+  animation: whisperIn 400ms var(--ease-emp-dec) 900ms forwards, whisperOut 400ms var(--ease-smooth) 3400ms forwards;
+}
+.whisper::after { content: ''; position: absolute; bottom: -4px; left: 50%; margin-left: -4px; border: 4px solid transparent; border-top-color: var(--g1); }
+@keyframes whisperIn { to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+@keyframes whisperOut { to { opacity: 0; transform: translateX(-50%) translateY(-4px); } }
+
+/* Updates — urgent action anchor */
+.upd-sect { padding: 4px 18px 4px; }
+.upd-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #fff8ea; border: 1px solid rgba(247,171,32,0.4); border-radius: 14px; cursor: pointer; transition: transform 200ms var(--ease-snappy); }
+.upd-item:active { transform: scale(0.99); }
+.upd-item.gap { background: #fef1f1; border-color: rgba(250,47,64,0.3); }
+.upd-item.event { background: #eef6fb; border-color: rgba(53,53,243,0.25); }
+.upd-icon { width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0; background: var(--am); display: flex; align-items: center; justify-content: center; }
+.upd-item.gap .upd-icon { background: var(--err); }
+.upd-item.event .upd-icon { background: var(--p); }
+.upd-icon svg { width: 18px; height: 18px; fill: #fff; }
+.upd-body { flex: 1; min-width: 0; }
+.upd-hook { font-size: 13px; font-weight: 700; }
+.upd-sub { font-size: 11px; color: var(--g6); margin-top: 2px; }
+.upd-more { font-size: 11px; font-weight: 600; color: var(--p); padding: 8px; text-align: center; cursor: pointer; }
+/* P9 · Auto-cycling Updates */
+.upd-cycle { position: relative; min-height: 66px; }
+.upd-cycle .upd-item { transition: opacity 400ms var(--ease-smooth), transform 400ms var(--ease-smooth); }
+.upd-cycle .upd-item[data-hidden="true"] { position: absolute; inset: 0; opacity: 0; transform: translateY(6px); pointer-events: none; }
+.upd-dots { display: flex; gap: 6px; justify-content: center; padding: 8px 0 4px; }
+.upd-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(20,20,20,0.18); transition: all 200ms; }
+.upd-dot.active { background: var(--am); width: 18px; border-radius: 999px; }
+
+/* For You cards */
+.fy-sect { padding: 4px 18px 4px; }
+.fc { background: #fff; border: 1px solid var(--bd); border-radius: 16px; padding: 14px; display: flex; gap: 12px; margin-bottom: 10px; cursor: pointer; transition: transform 200ms var(--ease-snappy); }
+.fc:active { transform: scale(0.99); }
+.fc-icon { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; background: var(--gi); display: flex; align-items: center; justify-content: center; }
+.fc-icon svg { width: 20px; height: 20px; fill: var(--p); }
+.fc-body { flex: 1; min-width: 0; }
+.fc-tag { font-size: 10px; font-weight: 700; color: var(--p); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.fc-title { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.fc-sub { font-size: 11px; color: var(--g6); margin-top: 3px; line-height: 1.4; }
+.fc-cta { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(53,53,243,0.3); background: rgba(53,53,243,0.05); font-size: 11px; font-weight: 700; color: var(--p); }
+.fc-cta svg { width: 10px; height: 10px; fill: currentColor; }
+.fc.vertical .fc-icon { background: #eef5ff; }
+.fc.partner  { background: #fff7e9; border-color: rgba(247,171,32,0.35); }
+.fc.partner .fc-icon { background: var(--am); }
+.fc.partner .fc-icon svg { fill: #fff; }
+.fc.partner .fc-tag { color: #ac660c; }
+.fc.partner .fc-cta { border-color: rgba(247,171,32,0.4); background: #fff; color: #ac660c; }
+.fc.predict  { background: #eef6fb; border-color: rgba(53,53,243,0.18); }
+.fc.predict .fc-icon { background: #d9e8ff; }
+.fc.predict .fc-tag { color: var(--pb); }
+.fc.alert    { background: #fef1f1; border-color: rgba(250,47,64,0.28); }
+.fc.alert .fc-icon { background: #ffe2e4; }
+.fc.alert .fc-icon svg { fill: var(--err); }
+.fc.alert .fc-tag { color: var(--err); }
+.fc.alert .fc-cta { border-color: rgba(250,47,64,0.3); color: var(--err); background: #fff; }
+.fc.locality { background: #e8fbf6; border-color: rgba(30,204,176,0.28); }
+.fc.locality .fc-icon { background: rgba(30,204,176,0.18); }
+.fc.locality .fc-icon svg { fill: #0e8575; }
+.fc.locality .fc-tag { color: #0e5c4f; }
+.fc.locality .fc-cta { border-color: rgba(30,204,176,0.4); color: #0e6e5e; background: #fff; }
+
+/* Everyday Intent quick tile row */
+.ei-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; margin: 0 -18px; }
+.ei-row::-webkit-scrollbar { display: none; }
+.ei-row::before, .ei-row::after { content: ''; flex: 0 0 10px; }
+.ei-tile { flex: 0 0 138px; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #fff; border: 1px solid var(--bd); cursor: pointer; transition: transform 200ms var(--ease-snappy); }
+.ei-tile:active { transform: scale(0.96); }
+.ei-tile .ei-icon { width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0; background: var(--gi); display: flex; align-items: center; justify-content: center; }
+.ei-tile .ei-icon svg { width: 14px; height: 14px; fill: var(--p); }
+.ei-tile .ei-label { font-size: 12px; font-weight: 600; }
+
+/* Continue — stacked hero */
+.ct-sect { padding: 4px 18px 4px; }
+.cthread {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px 14px 16px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.07);
+  border-left: 3px solid var(--ct-color, var(--lp));
+  cursor: pointer;
+  transition: transform 200ms var(--ease-snappy);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.07);
+  overflow: hidden;
+  position: relative;
+}
+.cthread:active { transform: scale(0.99); }
+
+/* Tilt pauses on interaction */
+.continue-stack .cthread[data-pos="0"]:hover,
+.continue-stack .cthread[data-pos="0"]:active { animation-play-state: paused; }
+@keyframes cthreadTilt {
+  0%, 100% { transform: perspective(1400px) rotateY(-1.6deg) rotateX(0.6deg) translateZ(0); }
+  50%      { transform: perspective(1400px) rotateY(1.6deg)  rotateX(-0.6deg) translateZ(0); }
+}
+.cthread-icon {
+  width: 44px; height: 44px; border-radius: 11px; flex-shrink: 0;
+  background: var(--ct-bg, rgba(109,23,206,0.12));
+  display: flex; align-items: center; justify-content: center;
+}
+.cthread-icon svg { width: 22px; height: 22px; fill: var(--ct-color, var(--lp)); }
+.cthread-body { flex: 1; min-width: 0; padding-bottom: 10px; }
+.cthread-tag { font-size: 9.5px; font-weight: 700; color: var(--ct-color, var(--lp)); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+.cthread-title { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.cthread-meta { font-size: 11px; color: var(--g6); font-weight: 500; margin-top: 3px; }
+/* Progress bar — thin strip at card bottom */
+.cthread-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: rgba(0,0,0,0.06);
+}
+.cthread-bar-fill {
+  height: 100%; border-radius: 0 999px 999px 0;
+  background: var(--ct-color, var(--lp));
+  opacity: 0.7;
+  transition: width 600ms var(--ease-emp-dec);
+}
+.cthread { position: relative; } /* needed for absolute bar */
+
+/* streak / gap overrides */
+.cthread.streak { background: #fff8ea; border-left-color: var(--am); }
+.cthread.streak .cthread-icon { background: rgba(247,171,32,0.16); }
+.cthread.streak .cthread-icon svg { fill: var(--am); }
+.cthread.streak .cthread-tag { color: #ac660c; }
+.cthread.streak .cthread-arrow { background: rgba(247,171,32,0.16); }
+.cthread.streak .cthread-arrow svg { fill: var(--am); }
+.cthread.gap { background: #fef1f1; border-left-color: var(--err); }
+.cthread.gap .cthread-icon { background: #ffe2e4; }
+.cthread.gap .cthread-icon svg { fill: var(--err); }
+.cthread.gap .cthread-tag { color: var(--err); }
+.cthread.gap .cthread-arrow { background: #ffe2e4; }
+.cthread.gap .cthread-arrow svg { fill: var(--err); }
+
+/* Stacked-hero · deck-of-cards peek */
+.continue-stack { position: relative; } /* min-height set by JS after render */
+.continue-stack .cthread {
+  position: absolute; left: 0; right: 0; top: 0;
+  margin: 0; cursor: pointer;
+  transition: transform 360ms var(--ease-emp-dec), box-shadow 260ms;
+  will-change: transform;
+  transform-origin: 50% 0;
+}
+/* Front card */
+.continue-stack .cthread[data-pos="0"] {
+  transform: translateY(0) scale(1);
+  z-index: 4;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.07), 0 12px 28px rgba(0,0,0,0.1);
+  animation: cthreadTilt 7.2s ease-in-out infinite;
+}
+/* Back cards — neutral slivers, translateY = desired peek px (8px each) */
+.continue-stack .cthread[data-pos="1"] { transform: translateY(8px)  scaleX(0.96); z-index: 3; background: #eeebf4 !important; border: 1px solid rgba(0,0,0,0.07) !important; border-left: 1px solid rgba(0,0,0,0.07) !important; box-shadow: none !important; }
+.continue-stack .cthread[data-pos="2"] { transform: translateY(16px) scaleX(0.92); z-index: 2; background: #e5e1ef !important; border: 1px solid rgba(0,0,0,0.06) !important; border-left: 1px solid rgba(0,0,0,0.06) !important; box-shadow: none !important; }
+.continue-stack .cthread[data-pos="3"] { transform: translateY(24px) scaleX(0.88); z-index: 1; background: #ddd8ea !important; border: 1px solid rgba(0,0,0,0.05) !important; border-left: 1px solid rgba(0,0,0,0.05) !important; box-shadow: none !important; }
+/* Back cards: hide all inner content */
+.continue-stack .cthread:not([data-pos="0"]) .cthread-icon,
+.continue-stack .cthread:not([data-pos="0"]) .cthread-body,
+.continue-stack .cthread:not([data-pos="0"]) .cthread-bar { opacity: 0; pointer-events: none; }
+.continue-stack .cthread:not([data-pos="0"]) { animation: none; }
+
+.ct-dots { display: flex; gap: 6px; justify-content: center; padding: 14px 0 4px; }
+.ct-dot {
+  width: 6px; height: 6px; border: none; border-radius: 50%;
+  background: rgba(109,23,206,0.24); cursor: pointer; padding: 0;
+  transition: all 240ms var(--ease-emp-dec);
+}
+.ct-dot.active { width: 22px; border-radius: 999px; background: var(--lp); }
+.ct-dot:hover:not(.active) { background: rgba(109,23,206,0.5); }
+
+/* Discover — single list-card (Figma WHATS NEW pattern) */
+.dc-sect { padding: 4px 18px 4px; }
+.list-card {
+  position: relative; overflow: hidden;
+  background: #fff; border: 1px solid var(--bd);
+  border-radius: 20px; padding: 20px;
+  cursor: pointer;
+  transform: scale(0.96); opacity: 0;
+  animation: listCardIn 550ms var(--ease-emp-dec) 400ms forwards;
+  transition: transform 200ms var(--ease-snappy);
+}
+.list-card:active { transform: scale(0.99); }
+@keyframes listCardIn { to { transform: scale(1); opacity: 1; } }
+.list-card-sparkle {
+  position: absolute; top: 14px; right: 14px;
+  font-size: 18px; color: var(--lp);
+  animation: sparkleSpin 3s linear infinite; transform-origin: center;
+}
+@keyframes sparkleSpin { 0% { transform: rotate(0) scale(1); opacity: 0.9; } 50% { transform: rotate(180deg) scale(1.2); opacity: 1; } 100% { transform: rotate(360deg) scale(1); opacity: 0.9; } }
+.list-card-tag {
+  font-size: 11px; font-weight: 700; color: var(--discoverGreen);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+}
+.list-card.unlock .list-card-tag { color: var(--lp); }
+.list-card.festive .list-card-tag { color: #ac660c; }
+.list-card.health .list-card-tag { color: var(--err); }
+.list-card-title { font-size: 22px; font-weight: 800; line-height: 1.15; letter-spacing: -0.015em; margin-bottom: 6px; }
+.list-card-sub { font-size: 12px; color: var(--g6); line-height: 1.45; margin-bottom: 14px; }
+.list-card-divider { height: 1px; background: var(--bd); margin-bottom: 14px; }
+.list-card-items { display: flex; flex-direction: column; gap: 14px; }
+.list-card-item { display: flex; align-items: center; gap: 12px; }
+.list-card-item-icon { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; background: rgba(109,23,206,0.1); display: flex; align-items: center; justify-content: center; }
+.list-card-item-icon svg { width: 18px; height: 18px; fill: var(--lp); }
+.list-card.festive .list-card-item-icon { background: rgba(247,171,32,0.18); }
+.list-card.festive .list-card-item-icon svg { fill: var(--am); }
+.list-card.health .list-card-item-icon { background: rgba(250,47,64,0.12); }
+.list-card.health .list-card-item-icon svg { fill: var(--err); }
+.list-card-item-text { font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--g1); flex: 1; min-width: 0; }
+.list-card-cta {
+  margin-top: 16px;
+  font-size: 14px; font-weight: 700; color: var(--lp);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.list-card-cta svg { width: 14px; height: 14px; fill: currentColor; }
+
+/* Glow-inspired bold-color Discover variant · full purple, white type */
+.list-card.bold {
+  background: var(--lp); color: #fff; border: none;
+  box-shadow: 0 12px 28px rgba(109,23,206,0.32), 0 2px 6px rgba(109,23,206,0.2);
+  position: relative;
+}
+.list-card.bold .list-card-tag { color: rgba(255,255,255,0.75); }
+.list-card.bold .list-card-title { color: #fff; }
+.list-card.bold .list-card-sub { color: rgba(255,255,255,0.88); }
+.list-card.bold .list-card-divider { background: rgba(255,255,255,0.22); }
+.list-card.bold .list-card-item-icon { background: rgba(255,255,255,0.18); }
+.list-card.bold .list-card-item-icon svg { fill: #fff; }
+.list-card.bold .list-card-item-text { color: #fff; }
+.list-card.bold .list-card-cta { color: #fff; }
+.list-card.bold .list-card-sparkle { color: #fff; }
+/* Ambient decorative motif — soft circle */
+.list-card.bold::after {
+  content: ''; position: absolute;
+  bottom: -40px; right: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  pointer-events: none;
+}
+
+/* Festival variant */
+.list-card.bold-fest {
+  background: var(--am); box-shadow: 0 12px 28px rgba(247,171,32,0.32);
+}
+.list-card.bold-fest::after { background: rgba(255,255,255,0.14); }
+
+/* Health/cross-domain variant */
+.list-card.bold-health {
+  background: #1a7d17; box-shadow: 0 12px 28px rgba(26,125,23,0.32);
+}
+.list-card.bold-health::after { background: rgba(255,255,255,0.1); }
+
+/* Moments — shareable (no value recap duplication) */
+.mm-sect { padding: 4px 18px 4px; }
+.moment-tile {
+  position: relative; overflow: hidden; padding: 18px; border-radius: 20px;
+  margin-bottom: 10px; cursor: pointer;
+  transition: transform 200ms var(--ease-snappy);
+}
+.moment-tile:active { transform: scale(0.99); }
+.moment-tile.festive { background: #fef3dc; border: 1px solid rgba(247,171,32,0.4); }
+.moment-tile.streak-share { background: #fff8ea; border: 1px solid rgba(247,171,32,0.35); }
+.moment-tile.wish { background: #f2f5ff; border: 1px solid rgba(53,53,243,0.2); }
+
+.moment-visual { height: 80px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; position: relative; }
+
+/* Diya · real system emoji with warm amber glow + sway */
+.diya-stage { display: flex; gap: 16px; justify-content: center; align-items: center; padding: 8px 0; min-height: 88px; }
+.diya-emoji {
+  font-size: 56px; line-height: 1;
+  display: inline-block; transform-origin: 50% 100%;
+  animation: diyaEmojiSway 2.4s ease-in-out infinite;
+  filter:
+    drop-shadow(0 -10px 28px rgba(255,140,0,0.85))
+    drop-shadow(0 -4px 12px rgba(255,210,80,0.95))
+    drop-shadow(0 0 48px rgba(255,160,40,0.55));
+}
+@keyframes diyaEmojiSway {
+  0%,100% { transform: translateY(0) rotate(-1.2deg) scale(1); }
+  50%     { transform: translateY(-3px) rotate(1.2deg) scale(1.04); }
+}
+
+/* Legacy SVG diya (kept for reference but no longer rendered) */
+.diya-stage { position: relative; height: 110px; display: flex; align-items: center; justify-content: center; }
+.diya-row { display: flex; gap: 22px; align-items: flex-end; position: relative; z-index: 1; }
+.diya { width: 48px; height: 72px; position: relative; animation: diyaSway 2.4s ease-in-out infinite; }
+.diya:nth-child(2) { animation-delay: 0.4s; }
+.diya:nth-child(3) { animation-delay: 0.8s; }
+.diya-flame {
+  position: absolute; left: 50%; bottom: 18px;
+  transform: translateX(-50%);
+  width: 14px; height: 26px;
+  background: #ff8c00;
+  border-radius: 50% 50% 22% 22% / 70% 70% 30% 30%;
+  box-shadow:
+    0 -6px 28px rgba(255,140,0,0.85),
+    0 -2px 12px rgba(255,210,80,0.95),
+    0 0 48px rgba(255,160,40,0.55);
+  animation: flameDance 0.9s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+.diya-flame::before {
+  content: ''; position: absolute;
+  left: 22%; right: 22%; top: 26%; bottom: 14%;
+  background: #ffe599;
+  border-radius: 50% 50% 20% 20% / 70% 70% 30% 30%;
+  animation: flameCore 0.7s ease-in-out infinite;
+}
+.diya-flame::after {
+  content: ''; position: absolute;
+  left: 36%; right: 36%; top: 48%; bottom: 30%;
+  background: #ffffff;
+  border-radius: 50% 50% 20% 20% / 70% 70% 30% 30%;
+  opacity: 0.82;
+}
+.diya-bowl {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 22px;
+  background: #995732;
+  border-radius: 0 0 55% 55% / 0 0 100% 100%;
+  box-shadow:
+    inset 0 -6px 0 rgba(0,0,0,0.2),
+    inset 0 2px 0 rgba(255,255,255,0.08),
+    0 6px 14px rgba(154,90,51,0.4),
+    0 0 32px rgba(255,160,40,0.28);
+}
+.diya-bowl::before {
+  content: ''; position: absolute;
+  top: 2px; left: 10%; right: 10%; height: 4px;
+  background: #6b3b1e; border-radius: 50%;
+}
+@keyframes diyaSway {
+  0%,100% { transform: translateY(0) rotate(-0.5deg); }
+  50%     { transform: translateY(-2px) rotate(0.5deg); }
+}
+@keyframes flameDance {
+  0%,100% { transform: translateX(-50%) scaleY(1) scaleX(1); }
+  30%     { transform: translateX(-50%) scaleY(1.14) scaleX(0.9); }
+  55%     { transform: translateX(-48%) scaleY(0.94) scaleX(1.06); }
+  80%     { transform: translateX(-52%) scaleY(1.04) scaleX(0.96); }
+}
+@keyframes flameCore {
+  0%,100% { opacity: 1; transform: scaleY(1); }
+  50%     { opacity: 0.82; transform: scaleY(0.86); }
+}
+
+/* Streak-share visual — big day count circle */
+.streak-visual { width: 90px; height: 90px; border-radius: 50%; background: var(--am); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; position: relative; box-shadow: 0 8px 24px rgba(247,171,32,0.35); }
+.streak-visual .big { font-size: 30px; font-weight: 900; line-height: 1; letter-spacing: -0.02em; }
+.streak-visual .sml { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 4px; opacity: 0.95; }
+.streak-flame { position: absolute; top: -6px; right: -4px; font-size: 22px; filter: drop-shadow(0 2px 6px rgba(255,100,0,0.5)); }
+
+/* Wish visual — big greeting in handwritten style */
+.wish-visual { display: flex; align-items: center; justify-content: center; padding: 8px 14px; background: #fff; border-radius: 14px; border: 1px solid var(--bd); font-family: 'Brush Script MT', cursive; font-size: 26px; color: var(--p); }
+
+.moment-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 4px; }
+.moment-tile.festive .moment-tag { color: #ac660c; }
+.moment-tile.streak-share .moment-tag { color: #ac660c; }
+.moment-tile.wish .moment-tag { color: var(--p); }
+.moment-title { font-size: 16px; font-weight: 700; line-height: 1.3; }
+.moment-sub   { font-size: 12px; color: var(--g6); margin-top: 4px; }
+/* R5 · Moments editable — hint + disabled Share until customized */
+.moment-hint {
+  font-size: 11px; font-weight: 600; color: var(--lp);
+  padding: 6px 10px; margin-top: 12px;
+  background: rgba(109,23,206,0.06); border-radius: 8px;
+  display: inline-block;
+}
+.moment-actions { display: flex; gap: 8px; margin-top: 10px; }
+.moment-actions > button {
+  flex: 1; justify-content: center;
+  height: 44px; padding: 0 14px;
+  font-size: 13px; font-weight: 700;
+  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+/* Primary = Customize (pre-edit) */
+.moment-customize {
+  background: var(--lp); color: #fff;
+  border: none; cursor: pointer;
+}
+.moment-customize:active { transform: scale(0.97); }
+/* Disabled share (pre-customize) — dashed outline, muted */
+.moment-wa.ghost {
+  background: transparent; color: var(--g4);
+  border: 1px dashed rgba(37,171,33,0.4);
+}
+.moment-wa.ghost svg { fill: var(--g4); }
+.moment-wa.ghost:active { transform: none; }
+/* Active Share (post-customize) */
+.moment-wa:not(.ghost) {
+  background: var(--wa); color: #fff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(37,211,102,0.3);
+}
+/* Post-customize: swap Customize to outlined secondary */
+.moment-customize.done {
+  background: transparent; color: var(--lp);
+  border: 1px solid rgba(109,23,206,0.35);
+}
+.moment-wa { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 999px; background: var(--wa); color: #fff; border: none; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; transition: transform 200ms var(--ease-snappy); }
+.moment-wa:active { transform: scale(0.96); }
+.moment-wa svg { width: 14px; height: 14px; fill: #fff; }
+.moment-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 999px; background: transparent; color: var(--g1); border: 1px solid var(--bd); font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+
+/* Floating multimodal — Plus + Mic primary (no Speak button) */
+.chat-input {
+  position: absolute; left: 16px; right: 16px; bottom: 18px;
+  background: #fff; border: 1px solid var(--bd); border-radius: 24px;
+  padding: 14px 14px 12px; box-shadow: 0 16px 40px rgba(109,23,206,0.14), 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 5;
+}
+
+/* v5 · Pattern 3 (Revolut comet) — perimeter glow on multimodal pill */
+.chat-comet {
+  position: absolute; inset: 0;
+  border-radius: 24px; pointer-events: none;
+  overflow: visible;
+}
+.chat-comet rect {
+  fill: none;
+  stroke: var(--lp);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 36 900;
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 4px rgba(109,23,206,0.5)) drop-shadow(0 0 10px rgba(109,23,206,0.22));
+  animation: cometRun 3.6s linear infinite;
+  opacity: 0.7;
+}
+@keyframes cometRun { to { stroke-dashoffset: -936; } }
+.chat-placeholder {
+  font-size: 14px; color: var(--g4); font-weight: 500;
+  margin-bottom: 12px; padding: 4px 2px;
+  animation: placeholderBreath 4s ease-in-out infinite;
+}
+@keyframes placeholderBreath { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.90; } }
+.chat-row { display: flex; align-items: center; justify-content: space-between; }
+.chat-btn { border: none; background: transparent; cursor: pointer; transition: transform 200ms var(--ease-snappy); }
+.chat-btn:active { transform: scale(0.9); }
+.chat-btn.plus { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.chat-btn.plus:hover { background: var(--g2); }
+.chat-btn.plus svg { width: 24px; height: 24px; fill: var(--lp); }
+.chat-btn.mic-primary {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--lp); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(109,23,206,0.3);
+}
+.chat-btn.mic-primary svg { width: 20px; height: 20px; fill: #fff; }
+
+/* ── Unique interaction · Radial Plus menu ────────
+   Tap [+] in multimodal → camera / gallery / document fan out with spring stagger
+─────────────────────────────────────────────── */
+.plus-wrap { position: relative; }
+.plus-menu {
+  position: absolute; left: -6px; bottom: 46px;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+}
+.plus-menu .pm-item {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 16px 9px 10px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--bd);
+  font-family: inherit; font-size: 13px; font-weight: 600; color: var(--g1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  cursor: pointer;
+  opacity: 0; transform: translateY(14px) scale(0.86);
+  transition: all 260ms var(--ease-spring);
+  white-space: nowrap;
+}
+.plus-menu .pm-item svg { width: 16px; height: 16px; fill: var(--lp); }
+.plus-menu.open .pm-item { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+.plus-menu.open .pm-item:nth-child(1) { transition-delay: 0ms; }
+.plus-menu.open .pm-item:nth-child(2) { transition-delay: 60ms; }
+.plus-menu.open .pm-item:nth-child(3) { transition-delay: 120ms; }
+.chat-btn.plus.open svg { transform: rotate(45deg); transition: transform 240ms var(--ease-spring); }
+.chat-btn.plus svg { transition: transform 240ms var(--ease-spring); }
+
+.plus-backdrop {
+  position: absolute; inset: 0; background: transparent;
+  z-index: 4; display: none;
+}
+.plus-backdrop.show { display: block; }
+
+/* ── Unique interaction · Festival sparkle burst ───
+   One-shot celebration rain on entering Festival state
+─────────────────────────────────────────────── */
+.fest-sparkles {
+  position: absolute; top: 44px; left: 0; right: 0; height: 300px;
+  pointer-events: none; overflow: hidden; z-index: 3;
+}
+.sp-particle {
+  position: absolute; bottom: -12px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #f5c518;
+  box-shadow: 0 0 10px rgba(247,171,32,0.9), 0 0 2px rgba(255,255,255,0.6) inset;
+  animation: sparkleRise 2600ms var(--ease-emp-dec) forwards;
+}
+.sp-particle.pink {
+  background: #ff6b9d;
+  box-shadow: 0 0 10px rgba(255,107,157,0.8);
+}
+.sp-particle.purple {
+  background: #b88cff;
+  box-shadow: 0 0 10px rgba(184,140,255,0.8);
+}
+@keyframes sparkleRise {
+  0%   { transform: translateY(0) scale(0.6) rotate(0deg); opacity: 0; }
+  15%  { opacity: 1; transform: translateY(-30px) scale(1) rotate(45deg); }
+  100% { transform: translateY(-340px) scale(0.3) rotate(180deg); opacity: 0; }
+}
+
+/* ── Unique interaction · Value counter roll-up ───
+   When state changes and savings grow, the ₹ number animates from last value
+─────────────────────────────────────────────── */
+.value-amount { font-variant-numeric: tabular-nums; display: inline-block; min-width: 36px; }
+.value-amount.rolling { color: var(--suc); transition: color 600ms var(--ease-smooth); }
+
+/* Voice tooltip removed — mic icon is self-evident */
+
+/* Modal */
+.modal-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: flex-end; justify-content: center; z-index: 10; }
+.modal-bg.open { display: flex; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+.modal { width: 100%; background: #fff; border-radius: 20px 20px 0 0; padding: 22px 20px 24px; animation: slideUp 0.32s var(--ease-emp-dec); position: relative; }
+@keyframes slideUp { from { transform: translateY(100%) } to { transform: translateY(0) } }
+.modal-handle { width: 36px; height: 4px; background: var(--g4); border-radius: 2px; margin: 0 auto 16px; }
+.modal-title { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 4px; padding-right: 36px; }
+.modal-sub { font-size: 12px; color: var(--g6); margin-bottom: 16px; }
+.recap-amt { font-size: 40px; font-weight: 900; letter-spacing: -0.03em; }
+.recap-unit { font-size: 13px; color: var(--g6); font-weight: 500; margin-top: 2px; }
+.recap-bd { margin-top: 16px; padding: 8px; background: var(--g2); border-radius: 12px; }
+.recap-row { display: flex; justify-content: space-between; font-size: 12px; padding: 8px 6px; border-radius: 8px; transition: background 150ms; }
+.recap-row.evi { cursor: pointer; }
+.recap-row.evi:hover { background: rgba(0,0,0,0.04); }
+.recap-row.evi.active { background: rgba(109,23,206,0.08); }
+.recap-row .lbl { color: var(--g6); }
+.recap-row .val { font-weight: 700; }
+.recap-row .evi-chev { color: var(--lp); opacity: 0.5; margin-left: 4px; font-weight: 500; }
+.recap-row.evi.active .evi-chev { opacity: 1; }
+/* R1 · Evidenced math panel */
+.evi-panel {
+  margin-top: 12px; padding: 12px 14px; border-radius: 12px;
+  background: #f7f0ff; border: 1px solid rgba(109,23,206,0.2);
+}
+.evi-title { font-size: 11px; font-weight: 800; color: var(--lp); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.evi-body  { font-size: 12px; color: var(--g1); line-height: 1.5; margin-bottom: 10px; }
+.evi-body b { font-weight: 800; }
+.evi-body a { color: var(--lp); text-decoration: underline; font-weight: 600; }
+.evi-dispute {
+  background: transparent; border: none; color: var(--err);
+  font-family: inherit; font-size: 11px; font-weight: 700;
+  padding: 0; cursor: pointer; text-decoration: underline;
+}
+
+/* Benefits list (seed modal) */
+.benefits { display: flex; flex-direction: column; gap: 14px; margin: 8px 0 4px; }
+.benefit { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 14px; background: var(--g2); }
+.benefit-ic { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.benefit-ic svg { width: 20px; height: 20px; fill: #fff; }
+.benefit-t { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.benefit-s { font-size: 12px; color: var(--g6); line-height: 1.4; }
+
+.modal-cta {
+  margin-top: 18px; padding: 14px; background: var(--lp); color: #fff; border: none;
+  width: 100%; font-family: inherit; border-radius: 999px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform 150ms var(--ease-snappy);
+}
+.modal-cta svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+.modal-cta:active { transform: scale(0.98); }
+.modal-cta.wa { background: var(--wa); }
+.modal-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: var(--g2); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.modal-close svg { width: 14px; height: 14px; fill: var(--g1); }
+
+/* Toast */
+.toast { position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%); background: var(--g1); color: #fff; padding: 10px 16px; border-radius: 12px; font-size: 12px; font-weight: 600; z-index: 20; opacity: 0; pointer-events: none; transition: opacity 0.25s; white-space: nowrap; }
+.toast.show { opacity: 1; }
+
+/* Grill'd-style See-all bottom-sheet · circular thumbnail rows */
+.sheet-bg {
+  position: absolute; inset: 0; background: rgba(10,10,20,0.45);
+  display: none; align-items: flex-end; justify-content: center; z-index: 15;
+  animation: fadeIn 0.22s ease;
+}
+.sheet-bg.open { display: flex; }
+.sheet {
+  width: 100%; background: #fff;
+  border-radius: 22px 22px 0 0;
+  padding: 10px 0 18px;
+  max-height: 82%;
+  display: flex; flex-direction: column;
+  animation: sheetSlideUp 0.36s var(--ease-emp-dec);
+}
+@keyframes sheetSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-handle { width: 40px; height: 4px; background: var(--g4); border-radius: 2px; margin: 0 auto 14px; }
+.sheet-head { padding: 0 20px 12px; display: flex; align-items: baseline; justify-content: space-between; }
+.sheet-title { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+.sheet-sub   { font-size: 11px; font-weight: 600; color: var(--g6); text-transform: uppercase; letter-spacing: 0.06em; }
+.sheet-list { flex: 1; overflow-y: auto; padding: 4px 8px 8px; scrollbar-width: none; }
+.sheet-list::-webkit-scrollbar { display: none; }
+.sheet-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 12px; border-radius: 14px;
+  cursor: pointer; transition: background 180ms;
+}
+.sheet-row:active { background: var(--g2); }
+.sheet-thumb {
+  width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--gi); overflow: hidden;
+}
+.sheet-thumb svg { width: 22px; height: 22px; fill: var(--p); }
+.sheet-thumb.partner   { background: #fff3d4; } .sheet-thumb.partner svg   { fill: #ac660c; }
+.sheet-thumb.predict   { background: #e3ecfd; } .sheet-thumb.predict svg   { fill: var(--pb); }
+.sheet-thumb.locality  { background: #d2f4ec; } .sheet-thumb.locality svg  { fill: #0e6e5e; }
+.sheet-thumb.alert     { background: #ffdfe2; } .sheet-thumb.alert svg     { fill: var(--err); }
+.sheet-thumb.streak    { background: #fff0cc; } .sheet-thumb.streak svg    { fill: var(--am); }
+.sheet-thumb.health    { background: #e2efe4; } .sheet-thumb.health svg    { fill: #2e7d3f; }
+.sheet-body { flex: 1; min-width: 0; }
+.sheet-hook { font-size: 14px; font-weight: 700; color: var(--g1); line-height: 1.25; }
+.sheet-meta { font-size: 11.5px; color: var(--g6); margin-top: 2px; line-height: 1.3; }
+.sheet-chev { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.4; }
+.sheet-chev svg { width: 100%; height: 100%; fill: currentColor; }
+.sheet-divider { height: 1px; background: var(--bd); margin: 4px 22px; }
+
+/* Fade-up stagger */
+.fade-in { opacity: 0; animation: fadeUp 400ms var(--ease-emp-dec) forwards; animation-delay: calc(var(--i, 0) * 55ms); }
+
+/* Section-badge anchor hosts — feed sections need relative positioning for badges,
+   but NOT .chat-input (which must stay absolutely-positioned at screen bottom) */
+.scroll > .fade-in, .hd, .value { position: relative; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .chat-placeholder, .diya, .list-card-sparkle { animation: none !important; opacity: 0.8 !important; }
+}
+
+@media (max-width: 540px) {
+  body { padding: 12px 10px 20px; background: #fff; }
+  .phone { border: none; border-radius: 0; box-shadow: none; width: 100%; max-width: 400px; height: calc(100dvh - 170px); }
+  .state-toggle { border-radius: 10px; padding: 3px; }
+  .state-chip { font-size: 10px; padding: 6px 3px; }
+  .state-chip small { font-size: 8px; }
+  body.annotations-on .annotations-panel { display: none; }  /* annotations hide on mobile */
+  body.annotations-on .frame-wrap { flex-direction: column; gap: 20px; }
+}
+
+/* ─── Logic Notations · engineering-drawing annotations on the right ─── */
+.frame-wrap {
+  display: flex; gap: 28px; justify-content: center; align-items: flex-start;
+  width: 100%; max-width: 1100px;
+}
+.annotations-panel {
+  width: 360px; flex-shrink: 0; display: none;
+  max-height: 800px; overflow-y: auto; padding-right: 4px;
+  scrollbar-width: thin;
+}
+body.annotations-on .annotations-panel { display: flex; flex-direction: column; gap: 8px; }
+.note-legend { font-size: 11px; color: var(--g6); font-weight: 600; margin-bottom: 4px; letter-spacing: 0.02em; }
+.note-card {
+  background: #fff; border: 1px solid var(--bd);
+  border-radius: 12px; padding: 10px 12px;
+  transition: opacity 200ms var(--ease-smooth);
+  position: relative;
+}
+.note-card.dim { opacity: 0.35; background: var(--g2); }
+.note-card.dim::after {
+  content: 'hidden in this state'; position: absolute; top: 10px; right: 12px;
+  font-size: 9px; font-weight: 600; color: var(--g6); letter-spacing: 0.04em;
+}
+.note-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.note-num {
+  width: 22px; height: 22px; flex-shrink: 0;
+  border-radius: 50%; background: var(--g1); color: #fff;
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.note-title { font-weight: 800; font-size: 13px; letter-spacing: -0.01em; }
+.note-row { display: flex; gap: 6px; font-size: 11px; line-height: 1.4; padding: 2px 0; }
+.note-label { flex-shrink: 0; width: 34px; font-size: 9px; font-weight: 800; letter-spacing: 0.1em; color: var(--g6); text-transform: uppercase; padding-top: 2px; }
+.note-text { color: var(--g1); flex: 1; min-width: 0; }
+
+/* Numbered badge on phone section */
+.section-badge {
+  position: absolute; top: 8px; right: 10px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--g1); color: #fff;
+  font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 4; pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  opacity: 0;
+  transition: opacity 200ms var(--ease-smooth);
+}
+body.annotations-on .section-badge { opacity: 0.92; }
+
+/* The annotation toggle button */
+.annotations-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; margin: 0 auto 12px;
+  background: #fff; border: 1px solid var(--bd);
+  border-radius: 999px;
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  color: var(--g1); cursor: pointer;
+  transition: all 200ms var(--ease-snappy);
+}
+.annotations-toggle:hover { background: var(--g2); }
+.annotations-toggle.on { background: var(--g1); color: #fff; border-color: var(--g1); }
+.annotations-toggle .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--g4); transition: background 200ms;
+}
+.annotations-toggle.on .dot { background: var(--sp); }
+
+/* Panel tabs (Logic / Risks) */
+.panel-tabs {
+  display: flex; gap: 4px; padding: 4px;
+  background: var(--g2); border-radius: 999px;
+  margin-bottom: 10px;
+}
+.panel-tab {
+  flex: 1; padding: 7px 10px; border-radius: 999px;
+  border: none; background: transparent;
+  font-family: inherit; font-size: 11px; font-weight: 700;
+  color: var(--g6); cursor: pointer;
+  transition: all 180ms var(--ease-snappy);
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.panel-tab .tab-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.55; }
+.panel-tab:hover { color: var(--g1); }
+.panel-tab.active { background: var(--g1); color: #fff; }
+.panel-tab.risks.active { background: var(--err); color: #fff; }
+
+/* Risk cards */
+.panel-group[data-view="risks"] { display: none; }
+body.risk-view .panel-group[data-view="logic"] { display: none; }
+body.risk-view .panel-group[data-view="risks"] { display: flex; flex-direction: column; gap: 8px; }
+
+.risk-items { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.risk-item { display: flex; gap: 8px; font-size: 11px; line-height: 1.4; }
+.risk-sev { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.risk-sev.critical { background: var(--err); box-shadow: 0 0 0 2px rgba(250,47,64,0.2); }
+.risk-sev.high     { background: var(--am);  box-shadow: 0 0 0 2px rgba(247,171,32,0.22); }
+.risk-sev.medium   { background: #c7a82a;    box-shadow: 0 0 0 2px rgba(199,168,42,0.22); }
+.risk-text { font-size: 11px; color: var(--g1); flex: 1; min-width: 0; line-height: 1.4; }
+.risk-text b { font-weight: 800; }
+
+.note-card.risk .note-num { background: var(--err); }
+.note-card.risk.global { background: #fff5f5; border-color: rgba(250,47,64,0.3); }
+.note-card.risk.global .note-num { background: var(--g1); }
+.note-card.risk.global .note-title { color: var(--g1); }
+
+/* Resolved-risk badge */
+.note-card.risk.resolved { border-color: rgba(37,171,33,0.4); background: #f0faf0; }
+.note-card.risk.resolved .note-num { background: var(--suc); }
+.resolved-badge {
+  margin-left: auto; font-size: 9px; font-weight: 800;
+  color: #fff; background: var(--suc); padding: 2px 8px;
+  border-radius: 999px; letter-spacing: 0.04em;
+}
+
+/* Risk mode: recolor section badges by severity */
+body.risk-view .section-badge { background: #444; color: #fff; }
+body.risk-view [data-risk-level="critical"] .section-badge { background: var(--err); box-shadow: 0 0 0 3px rgba(250,47,64,0.3); }
+body.risk-view [data-risk-level="high"]     .section-badge { background: var(--am);  box-shadow: 0 0 0 3px rgba(247,171,32,0.3); }
+body.risk-view [data-risk-level="medium"]   .section-badge { background: #c7a82a; }
+
+.risks-legend {
+  display: flex; gap: 12px; font-size: 10px; font-weight: 700;
+  color: var(--g6); margin-bottom: 8px; padding: 0 4px;
+  letter-spacing: 0.02em;
+}
+.risks-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.risks-legend .d { width: 8px; height: 8px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>JBIQ Homepage Blueprint · 6-State Prototype · v3</h1>
+  <p>Discover as single list-card · Continue stacked hero · Value modal educates at seed · Moments no longer duplicates Value · Tools removed</p>
+</div>
+
+<div class="state-toggle">
+  <button class="state-chip active" data-state="d0">Day 0<small>new install</small></button>
+  <button class="state-chip" data-state="d7">Day 7<small>repeating</small></button>
+  <button class="state-chip" data-state="d30">Day 30<small>N=1</small></button>
+  <button class="state-chip" data-state="gap">Returning<small>after 12d</small></button>
+  <button class="state-chip" data-state="fest">Festival<small>Diwali AM</small></button>
+  <button class="state-chip" data-state="pow">Power-user<small>new domain</small></button>
+</div>
+
+<div class="state-note" id="stateNote"></div>
+<div class="scroll-budget" id="scrollBudget" title="Scroll-budget readout. Target ≤ 2100px (NN/g 2-screen attention window · PhonePe/JioSaavn band · RAM-safe on 2GB Android).">
+  <span class="sb-bar"><span class="sb-fill" id="sbFill"></span></span>
+  <span class="sb-txt" id="sbTxt">– / 2100 px</span>
+</div>
+
+<button class="annotations-toggle" id="annoToggle" style="display:flex">
+  <span class="dot"></span>
+  <span id="annoLabel">Show logic notations</span>
+</button>
+
+<div class="frame-wrap">
+  <div class="phone">
+    <div class="screen" id="screen"></div>
+  </div>
+
+  <aside class="annotations-panel" id="annoPanel">
+    <div class="panel-tabs">
+      <button class="panel-tab active" data-tab="logic"><span class="tab-dot"></span>Logic · Why/How/When</button>
+      <button class="panel-tab risks" data-tab="risks"><span class="tab-dot" style="background:var(--err);opacity:1"></span>Risks · Where it breaks</button>
+    </div>
+    <div class="note-legend">Numbered badges on the phone map to these notations →</div>
+
+    <div class="risks-legend" id="risksLegend" style="display:none">
+      <span><span class="d" style="background:var(--err)"></span>Critical · will fail</span>
+      <span><span class="d" style="background:var(--am)"></span>High · will break at scale</span>
+      <span><span class="d" style="background:#c7a82a"></span>Medium · could break</span>
+    </div>
+
+    <div class="panel-group" data-view="logic">
+    <div class="note-card" data-sect="header"><div class="note-head"><span class="note-num">1</span><span class="note-title">Header</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">Identity + ambient lifecycle cue</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">Menu · Jio logo · conditional streak pill · profile avatar</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Always visible · streak pill only at D30 / Fest / Pow</span></div>
+    </div>
+    <div class="note-card" data-sect="value"><div class="note-head"><span class="note-num">2</span><span class="note-title">Value Ribbon</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">Persistent proof of money &amp; time saved</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">44px slim · counter roll-up on state change · tap → recap modal</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Always visible · seed at D0, tracked from D7+, festive tint at Fest</span></div>
+    </div>
+    <div class="note-card" data-sect="updates"><div class="note-head"><span class="note-num">3</span><span class="note-title">Updates</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">Priority anchor — cuts through feed for action-today items</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">1 hero + N-more · triggers: habit · event · lifecycle · gap-return</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Hidden at D0 · active when something is actionable</span></div>
+    </div>
+    <div class="note-card" data-sect="assistants"><div class="note-head"><span class="note-num">4</span><span class="note-title">Your Assistants</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">Always-on discovery across 12 domains — never cold</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">12 avatars · signal-ordered · FLIP reorder · promoted breath + whisper</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Always visible · order changes · presence never changes</span></div>
+    </div>
+    <div class="note-card" data-sect="foryou"><div class="note-head"><span class="note-num">5</span><span class="note-title">For You</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">Most-relevant-now — meat of the feed</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">3–5 cards · variants: vertical, partner, predict, alert, locality</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Always visible · 2 at Returning · 5 at Festival takeover</span></div>
+    </div>
+    <div class="note-card" data-sect="continue"><div class="note-head"><span class="note-num">6</span><span class="note-title">Continue</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">Respect unfinished threads · resume · defend streaks</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">Stacked hero · 1 primary + N-more pill · progress bar grows on render</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Hidden until Session 6 · active D7 onwards</span></div>
+    </div>
+    <div class="note-card" data-sect="discover"><div class="note-head"><span class="note-num">7</span><span class="note-title">Discover</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">Surface unfound value — must feel earned, not pushed</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">Single list-card · 3 items · rotating ✦ sparkle · tag varies by kind</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Hidden when nothing earns the slot (D30, Returning)</span></div>
+    </div>
+    <div class="note-card" data-sect="moments"><div class="note-head"><span class="note-num">8</span><span class="note-title">Moments</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">Shareable celebrations for WhatsApp viral loop</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">Themes: festive · streak-share · wish · green WhatsApp CTA</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Hidden most states · active at D30 (streak) and Festival (wishes)</span></div>
+    </div>
+    <div class="note-card" data-sect="multimodal"><div class="note-head"><span class="note-num">9</span><span class="note-title">Multimodal Input</span></div>
+      <div class="note-row"><span class="note-label">Why</span><span class="note-text">The primary interaction surface — voice, text, image, doc</span></div>
+      <div class="note-row"><span class="note-label">How</span><span class="note-text">+ radial menu · mic-primary · placeholder context-aware</span></div>
+      <div class="note-row"><span class="note-label">When</span><span class="note-text">Always visible · voice tip only at D0 / D7 (teaching states)</span></div>
+    </div>
+    </div>
+
+    <div class="panel-group" data-view="risks">
+      <div class="note-card risk" data-sect="header" data-risk-level="medium"><div class="note-head"><span class="note-num">1</span><span class="note-title">Header</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>Streak pill shame.</b> Showing "🔥 14d" then hiding it after streak break = felt loss. May accelerate churn for ~30% of habit-app users per behavioral research.</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk resolved" data-sect="value" data-risk-level="critical"><div class="note-head"><span class="note-num">2</span><span class="note-title">Value Ribbon</span><span class="resolved-badge">✓ FIXED</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev critical"></span><div class="risk-text"><b>Math is disputable.</b> "SIP auto-optimisation ₹800" — if user claims they'd have picked that SIP anyway, the whole ribbon's credibility dies permanently.</div></div>
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>Partner price dependency.</b> "Saved ₹X" requires real-time price feeds from JioMart/partners. API hiccups → wrong number → trust loss.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>Ribbon at ₹0 stays silent.</b> "Start saving" nudge for 7 days before first ₹ logs may feel like empty promise.</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk resolved" data-sect="updates" data-risk-level="high"><div class="note-head"><span class="note-num">3</span><span class="note-title">Updates</span><span class="resolved-badge">✓ R6+P9</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>Boundary vs For You is fuzzy.</b> "Fiber bill due in 3 days" — I put it in For You as alert, but Surfaces Framework says Updates is THE anchor for action-required. Blueprint self-contradicts.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>Empty state feels broken.</b> When no triggers fire for 2-3 days, users may interpret absence as system failure, not success.</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk" data-sect="assistants" data-risk-level="high"><div class="note-head"><span class="note-num">4</span><span class="note-title">Your Assistants</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>12 avatars is too many.</b> 4–5 visible, 7+ behind scroll. Casuals never discover the tail. Reorder helps power users who already know what they want.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>Cold-tap Vertical failure.</b> If any Vertical ships without a context spec, the tap loads nothing. User blames JBIQ, not the Vertical.</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk" data-sect="foryou" data-risk-level="critical"><div class="note-head"><span class="note-num">5</span><span class="note-title">For You</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev critical"></span><div class="risk-text"><b>Signal model is out of scope.</b> Entire ranking depends on signals that aren't in this blueprint. If signal team ships late, feed becomes random.</div></div>
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>2P partner data freshness.</b> "Atta ₹240 today" needs real-time inventory. Partner API hiccup = stale card = trust loss.</div></div>
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>Content ops scale.</b> 12 domains × 5 variants × 2 languages = thousands of copy strings per week. Team sized for this?</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk resolved" data-sect="continue" data-risk-level="critical"><div class="note-head"><span class="note-num">6</span><span class="note-title">Continue</span><span class="resolved-badge">✓ FIXED</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev critical"></span><div class="risk-text"><b>Progress bars will be wrong ~50%+.</b> We can't track scroll/time across web views, JioCinema playback, external articles. "45%" may mean 100% done.</div></div>
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>"Streak broken" copy accelerates churn.</b> Gentle guilt triggers "fuck-it" abandonment in habit research. Needs A/B test, not a default.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>Hidden until Session 6.</b> New users miss the value of Continue; doesn't build habit early.</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk" data-sect="discover" data-risk-level="high"><div class="note-head"><span class="note-num">7</span><span class="note-title">Discover</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>"WHATS NEW" weekly cadence.</b> Requires editorial team to ship copy every Monday for 12 domains. Without funding → recycled copy → reads as spam.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>Sparkle ≠ substance.</b> Rotating ✦ animation can feel decorative if the card itself isn't earning its slot.</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk resolved" data-sect="moments" data-risk-level="critical"><div class="note-head"><span class="note-num">8</span><span class="note-title">Moments</span><span class="resolved-badge">✓ FIXED</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev critical"></span><div class="risk-text"><b>Pre-written wishes feel corporate.</b> Users won't send a JBIQ-branded canned message to family — reads as forwarded spam. Kills the viral loop.</div></div>
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>Templates need user-editable last line</b> to feel personal. Currently pure canned content.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>WhatsApp-green CTA blurs JBIQ brand</b> and makes the share feel like a JBIQ-sanctioned forward, not a personal wish.</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk" data-sect="multimodal" data-risk-level="high"><div class="note-head"><span class="note-num">9</span><span class="note-title">Multimodal Input</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>Hindi ASR quality dependency.</b> Voice mode assumes high-quality Hindi/Hinglish recognition. Current state of Indic ASR = inconsistent for regional accents.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>No visible "send" action.</b> Pure chat input without a send arrow on empty state may confuse first-time users.</div></div>
+        </div>
+      </div>
+
+      <div class="note-card risk global" data-sect="global"><div class="note-head"><span class="note-num">⚠</span><span class="note-title">Global · Cross-cutting risks</span></div>
+        <div class="risk-items">
+          <div class="risk-item"><span class="risk-sev critical"></span><div class="risk-text"><b>Signal model dependency.</b> Entire home degrades without it. Assumes a signal layer that may be 6–12 months out. No degraded-mode home designed.</div></div>
+          <div class="risk-item"><span class="risk-sev critical"></span><div class="risk-text"><b>Content ops scale.</b> 12 domains × card variants × languages × weekly cadence. No editorial team sized or funded for this.</div></div>
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>CDN on raw.githubusercontent.com</b> — fine for prototype, unacceptable for production. Needs JioCDN.</div></div>
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>No offline / 2G story.</b> Assets don't load on slow Bharat networks → home looks broken. Needs skeleton + cache strategy.</div></div>
+          <div class="risk-item"><span class="risk-sev high"></span><div class="risk-text"><b>Motion budget undefined.</b> FLIP + stagger + sparkle + roll-up + breath = heavy on low-end Android. Will jank on 2GB-RAM devices.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>360×800 canvas dated.</b> 2026 median device is closer to 6.5" / 400×900. Implicit device-segment decision.</div></div>
+          <div class="risk-item"><span class="risk-sev medium"></span><div class="risk-text"><b>No success metrics defined.</b> Tap-through, share rate, zone-level retention — nothing. Core ↔ Vertical disputes will be unresolvable.</div></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="sheet-bg" id="sheet">
+  <div class="sheet" id="sheetContent"></div>
+</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Icons ─────────────────────────────────────────────────────────────
+const IC = {
+  menu: '<path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>',
+  cam:  '<path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 14a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>',
+  gal:  '<path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 14H4v-2l3-3 2 2 5-5 6 6v2zM9 10a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>',
+  doc:  '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>',
+  cloud:'<path d="M18 10h-1.3A5 5 0 006 11.5 4 4 0 007 19.5h11a4.75 4.75 0 000-9.5z"/>',
+  rain: '<path d="M18 10h-1.3A5 5 0 006 11.5 4 4 0 007 14h11a4.75 4.75 0 000-4z"/><line class="drop" x1="9" y1="16" x2="8" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line class="drop d2" x1="13" y1="16" x2="12" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line class="drop d3" x1="17" y1="16" x2="16" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  moon: '<path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>',
+  heat: '<circle cx="12" cy="12" r="3.5"/><path d="M3 9h3M3 12h5M3 15h3M18 9h3M16 12h5M18 15h3M12 3v2M12 19v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>',
+  chev: '<path d="M10 17a1 1 0 0 1-.7-.3 1 1 0 0 1 0-1.4L12.6 12 9.3 8.7a1 1 0 0 1 0-1.4 1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 0 1-.7.3z"/>',
+  arr:  '<path d="M4 12h14m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+  plus: '<path d="M12 5c-.55 0-1 .45-1 1v5H6c-.55 0-1 .45-1 1s.45 1 1 1h5v5c0 .55.45 1 1 1s1-.45 1-1v-5h5c.55 0 1-.45 1-1s-.45-1-1-1h-5V6c0-.55-.45-1-1-1z"/>',
+  mic:  '<path d="M12 15c.8 0 1.5-.3 2.1-.9.6-.6.9-1.3.9-2.1V5c0-.8-.3-1.5-.9-2.1C13.5 2.3 12.8 2 12 2s-1.5.3-2.1.9C9.3 3.5 9 4.2 9 5v7c0 .8.3 1.5.9 2.1.6.6 1.3.9 2.1.9zm6-5c-.3 0-.5.1-.7.3-.2.2-.3.4-.3.7v1c0 1.3-.5 2.6-1.5 3.5-.9.9-2.2 1.5-3.5 1.5s-2.6-.5-3.5-1.5C7.5 14.6 7 13.3 7 12v-1c0-.3-.1-.5-.3-.7-.2-.2-.4-.3-.7-.3s-.5.1-.7.3c-.2.2-.3.4-.3.7v1c0 1.9.7 3.6 2 4.9 1.3 1.3 3 2 4.9 2s3.6-.7 4.9-2c1.3-1.3 2-3 2-4.9v-1c0-.3-.1-.5-.3-.7-.2-.2-.4-.3-.7-.3zm-3 10H9c-.3 0-.5.1-.7.3-.2.2-.3.4-.3.7s.1.5.3.7c.2.2.4.3.7.3h6c.3 0 .5-.1.7-.3.2-.2.3-.4.3-.7s-.1-.5-.3-.7c-.2-.2-.4-.3-.7-.3z"/>',
+  wa:   '<path d="M17.4 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.6.1-1-.4-2-1.1-2.8-2-.2-.3 0-.5.2-.7.2-.2.3-.4.5-.6l.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.5c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.5-.4zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5l-1.3 5 5-1.3c1.5.8 3.2 1.3 5 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3 .8.8-3-.2-.3C4.4 15.2 4 13.6 4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8z"/>',
+  close:'<path d="M13.4 12l6.3-6.3c.38-.38.38-1 0-1.4-.38-.38-1-.38-1.4 0L12 10.6 5.7 4.3c-.4-.38-1-.38-1.4 0s-.38 1 0 1.4L10.6 12l-6.3 6.3c-.38.38-.38 1 0 1.4s1 .38 1.4 0L12 13.4l6.3 6.3c.4.38 1 .38 1.4 0s.38-1 0-1.4L13.4 12z"/>',
+  sparkle2: '<path d="M12 2l1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7L12 2z"/>',
+  clock:    '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm4.5 11H11V7.5a1 1 0 1 1 2 0V11h3.5a1 1 0 1 1 0 2z"/>',
+  rupee:    '<path d="M7 3h10a1 1 0 1 1 0 2h-2.2a4 4 0 0 1 1.1 3H17a1 1 0 1 1 0 2h-1.1a4 4 0 0 1-3.9 3h-.6l6.3 5.2a1 1 0 0 1-1.3 1.6L9.4 14H8v-2h3a2 2 0 0 0 2-2H7a1 1 0 1 1 0-2h5.8A2 2 0 0 0 11 5H7a1 1 0 0 1 0-2z"/>',
+
+  devotion: '<path d="M12 5a2 2 0 1 1 .3-4 2 2 0 0 1-.3 4zm7.7 14.3a1 1 0 0 1-.7.7H8l5.6-4.2a1 1 0 0 0 .4-.6c.1-.2.1-.5 0-.7L11 7.6c-.1-.1-.2-.3-.3-.4-.1-.1-.3-.2-.4-.2H9.9c-.1 0-.3 0-.4.1L8 8.8 5.6 7.2a1 1 0 0 0-.4-.2 1 1 0 0 0-.4 0 1 1 0 0 0-.4.2 1 1 0 0 0-.3.3v.4a1 1 0 0 0 .1.4 1 1 0 0 0 .3.2l3 2a1 1 0 0 0 .5.1 1 1 0 0 0 .5-.1L12.5 8.5l2.2 5.2-7.3 5.5a1 1 0 0 0-.4.5c-.1.2-.1.4 0 .6a1 1 0 0 0 .4.5c.2.1.4.2.6.1h11a1 1 0 0 0 .6-.1 1 1 0 0 0 .3-.4 1 1 0 0 0 0-.5 1 1 0 0 0-.2-.6z"/>',
+  cricket:  '<path d="M16 17a2 2 0 1 0 2 2 2 2 0 0 0-2-2zM2.6 19.4l2 2a2 2 0 0 0 2.8 0l10-10a2 2 0 0 0 .6-1.4V8.7l3.6-3.5a1 1 0 0 0 .3-.7 1 1 0 0 0-.3-.7 1 1 0 0 0-1.4 0L16.3 7.3a1 1 0 0 0-.3-.1H14a2 2 0 0 0-1.4.6l-10 10a2 2 0 0 0 0 2.8z"/>',
+  cart:     '<path d="M8.5 19a1.5 1.5 0 1 0 1.5 1.5 1.5 1.5 0 0 0-1.5-1.5zm9 0a1.5 1.5 0 1 0 1.5 1.5 1.5 1.5 0 0 0-1.5-1.5zm4.1-12.2a2 2 0 0 0-1.6-.8H6.6L6.2 4.5A1.8 1.8 0 0 0 4.2 3H3a1 1 0 0 0 0 2h1.2L7 15.5A2 2 0 0 0 9 17h8.7a2 2 0 0 0 1.8-1.4l2.4-7a2 2 0 0 0-.2-1.8z"/>',
+  movie:    '<path d="M19 5H5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3zm-13 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6-8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm6-8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>',
+  music:    '<path d="M20.2 2.4c-.3-.2-.6-.3-.9-.4-.3-.1-.6 0-.9.1l-8 2.4a2 2 0 0 0-1.4 1.9v8a3.5 3.5 0 0 0-2.5-.3 3.5 3.5 0 1 0 4.5 3.4V6.4l8-2.4v6.5a3.5 3.5 0 0 0-2.5-.3 3.5 3.5 0 1 0 4.5 3.4V4c0-.3-.1-.6-.2-.9-.1-.3-.3-.5-.6-.7z"/>',
+  news:     '<path d="M19 2h-9a3 3 0 0 0-3 3v13a1 1 0 0 1-1 1 1 1 0 0 1-1-1V8H4a2 2 0 0 0-2 2v9a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3zm-3 15h-5a1 1 0 0 1 0-2h5a1 1 0 0 1 0 2zm2-5h-7a1 1 0 0 1 0-2h7a1 1 0 0 1 0 2zm0-5h-7a1 1 0 0 1 0-2h7a1 1 0 0 1 0 2z"/>',
+  health:   '<path d="M17.9 7.4c-1.6-.5-3.4-.5-4.9.3v-.7a5 5 0 0 0-1.7-3c-.5-.2-1.1-.2-1.6 0a1 1 0 0 0-.5.4 1 1 0 0 0-.2.6c0 .2.1.4.3.6.2.2.4.3.6.4.4.2.7.5.9.8.3.4.4.8.5 1.2v.6c-1.5-.7-3.3-.8-4.9-.3-2.1.8-3.1 2.8-3.1 6 0 3 1.1 5.4 3 6.7 1 .6 2.1 1 3.2 1 .7 0 1.5-.2 2.2-.4.4-.1.8-.1 1.2 0 .1 0 .2.1.3.1-1.8-1.9-2.9-3.5-2.9-5.3 0-.5.1-1 .3-1.5.2-.5.5-.9.8-1.3.4-.4.8-.7 1.2-.9.5-.2 1-.3 1.4-.3.6 0 1.2.2 1.8.5.5-.3 1.1-.5 1.8-.5h.1c.5 0 1 .1 1.4.3.5.2.9.5 1.2.9.4.4.6.8.8 1.3.1.2.1.4.2.6V13c0-3-1-5.1-3.1-6z"/>',
+  money:    '<path d="M11 5h2c.5 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4 0-.3-.1-.5-.3-.7-.2-.2-.4-.3-.7-.3h-4c-.3 0-.5.1-.7.3-.2.2-.3.4-.3.7 0 .5.2 1 .6 1.4.4.4.9.6 1.4.6zM19 18.3V14c0-1.5-.5-3-1.4-4.2A7 7 0 0 0 14 7.3V7c0-.3-.1-.5-.3-.7-.2-.2-.4-.3-.7-.3h-2c-.3 0-.5.1-.7.3-.2.2-.3.4-.3.7v.3a7 7 0 0 0-3.6 2.5A7 7 0 0 0 5 14v4.3c-.3.2-.6.4-.7.7-.2.3-.3.7-.3 1.1 0 .5.2 1 .6 1.4.4.4.9.6 1.4.6h12c.5 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4 0-.4-.1-.7-.3-1-.2-.3-.4-.5-.7-.7z"/>',
+  edu:      '<path d="M21 7.6 12.6 4.1c-.4-.2-.8-.2-1.2 0L3 7.6c-.6.2-1 .8-1 1.4V16c0 .6.4 1 1 1s1-.4 1-1v-5.2l7.4 3.1c.2.1.4.1.6.1s.4 0 .6-.1L21 10.4c.6-.2 1-.8 1-1.4 0-.6-.4-1.2-1-1.4z"/>',
+  sparkle:  '<path d="M14.6 14.5c-.1-.1-.3-.2-.5-.3-.4-.1-.9-.2-1.4-.3-.5-.1-1-.3-1.4-.4l-.5-.1-.1-.1v-.1c-.1-.1-.1-.3-.2-.5-.1-.4-.2-.9-.3-1.4-.1-.5-.3-1-.4-1.4-.1-.2-.1-.4-.2-.5-.1-.1-.1-.2-.2-.2-.1-.1-.2-.1-.4-.1s-.3 0-.4.1c-.1.1-.1.1-.2.2 0 .1-.1.2-.2.4-.1.4-.2.9-.3 1.4-.1.5-.3 1-.4 1.4-.1.2-.1.4-.2.5l-.1.1-.1.1c-.1 0-.3.1-.5.1-.4.1-.9.3-1.4.4-.5.1-1 .2-1.4.3-.2.1-.3.1-.5.2-.1 0-.2.1-.2.2-.1.1-.2.3-.2.5s.1.3.2.4c.1.1.1.1.2.2.2.1.3.1.5.2.4.1.9.2 1.4.3.5.1 1 .2 1.4.3.2.1.4.1.5.2l.1.1v.1c.1.1.1.3.2.5.1.4.3.9.4 1.4.1.5.3 1 .4 1.4.1.2.1.4.2.5.1.1.1.2.2.2.1.1.2.1.4.1s.3-.1.4-.1c.1-.1.1-.1.2-.2 0-.1.1-.2.2-.4.1-.4.2-.9.3-1.4.1-.5.3-1 .4-1.4.1-.2.1-.4.2-.5l.1-.1.1-.1c.1 0 .3-.1.5-.1.4-.1.9-.3 1.4-.4.5-.1 1-.3 1.4-.4.2-.1.3-.1.5-.2.1 0 .2-.1.2-.2.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4z"/>',
+  sun:      '<path d="M6.3 16.2 4.9 17.6c-.4.4-.4 1 0 1.4.4.4 1 .4 1.4 0l1.4-1.4c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0zm0-8.4c.4.4 1 .4 1.4 0 .4-.4.4-1 0-1.4L6.3 5c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l1.4 1.4zM6 12c0-.6-.4-1-1-1H3c-.6 0-1 .4-1 1s.4 1 1 1h2c.6 0 1-.4 1-1zm6-6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1s-1 .4-1 1v2c0 .6.4 1 1 1zm5.7 1.8L19 6.3c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0l-1.4 1.4c-.4.4-.4 1 0 1.4.4.4 1 .4 1.5.1zM21 11h-2c-.6 0-1 .4-1 1s.4 1 1 1h2c.6 0 1-.4 1-1s-.4-1-1-1zM17.7 16.2c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l1.4 1.4c.4.4 1 .4 1.4 0 .4-.4.4-1 0-1.4l-1.4-1.4zM12 18c-.6 0-1 .4-1 1v2c0 .6.4 1 1 1s1-.4 1-1v-2c0-.6-.4-1-1-1zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>',
+  cal:      '<path d="M18 3h-1c0-.3-.1-.5-.3-.7-.2-.2-.4-.3-.7-.3s-.5.1-.7.3c-.2.2-.3.4-.3.7H9c0-.3-.1-.5-.3-.7C8.5 2.1 8.3 2 8 2s-.5.1-.7.3c-.2.2-.3.4-.3.7H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm-1.8 8.7-5 5a1 1 0 0 1-1.4 0l-2-2a1 1 0 0 1 0-1.4 1 1 0 0 1 1.4 0l1.3 1.3 4.3-4.3a1 1 0 0 1 1.4 0 1 1 0 0 1 0 1.4z"/>',
+
+  // Semantic additions — v10 icon pass (Fiber→wifi, SIP→bank, birthday→gift, rain→umbrella, bill→bill)
+  wifi:     '<path d="M12 17a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 12 17zm0-4a4 4 0 0 0-2.8 1.2 1 1 0 1 0 1.4 1.4 2 2 0 0 1 2.8 0 1 1 0 1 0 1.4-1.4A4 4 0 0 0 12 13zm0-4a8 8 0 0 0-5.6 2.3 1 1 0 1 0 1.4 1.4 6 6 0 0 1 8.4 0 1 1 0 1 0 1.4-1.4A8 8 0 0 0 12 9zm0-4a12 12 0 0 0-8.5 3.5 1 1 0 0 0 1.4 1.4 10 10 0 0 1 14.2 0 1 1 0 0 0 1.4-1.4A12 12 0 0 0 12 5z"/>',
+  gift:     '<path d="M20 7h-2.6a3 3 0 0 0-4-4 3 3 0 0 0-2.8 2 3 3 0 0 0-2.6-2 3 3 0 0 0-2 5H4a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-5-2a1 1 0 1 1 0 2h-2a3 3 0 0 1 2-2zm-6 0a1 1 0 0 1 2 0 3 3 0 0 1 0 2H8a1 1 0 0 1-1-1 1 1 0 0 1 1-1zm3 14H6v-6h6v6zm0-8H5V9h7v2zm6 8h-6v-6h6v6zm1-8h-7V9h7v2z"/>',
+  bank:     '<path d="M4 10h2v7H4v-7zm4 0h2v7H8v-7zm6 0h2v7h-2v-7zm4 0h2v7h-2v-7zM2 20h20v2H2v-2zm10-18L2 7v2h20V7L12 2z"/>',
+  umbrella: '<path d="M12 2a1 1 0 0 0-1 1v.3A9 9 0 0 0 3 12a1 1 0 0 0 1 1h7v7a3 3 0 0 0 6 0 1 1 0 0 0-2 0 1 1 0 0 1-2 0v-7h7a1 1 0 0 0 1-1A9 9 0 0 0 13 3.3V3a1 1 0 0 0-1-1z"/>',
+  bill:     '<path d="M18 2H6a2 2 0 0 0-2 2v18l3-2 3 2 3-2 3 2 3-2 3 2V4a2 2 0 0 0-2-2h-2zm-1 13H7v-2h10v2zm0-4H7V9h10v2zm0-4H7V5h10v2z"/>',
+  heart:    '<path d="M12 21.3-1.5-1.4C5.4 15.4 2 12.3 2 8.5A5.5 5.5 0 0 1 7.5 3c1.7 0 3.4.8 4.5 2A6 6 0 0 1 16.5 3 5.5 5.5 0 0 1 22 8.5c0 3.8-3.4 6.9-8.5 11.5L12 21.3z"/>',
+  bolt:     '<path d="M11 21h-1l1-7H7.5c-.6 0-.6-.3-.4-.7.2-.4.1-.2.1-.3C8.6 9.3 10.3 5.7 13 .5 13.3 0 13.9-.1 14 .4l.1.5-1.5 8.1H17c.5 0 .7.2.5.7l-.3.9C15.3 14.5 13.2 18.7 11 21z"/>',
+};
+const s = (n) => `<svg viewBox="0 0 24 24">${IC[n] || ''}</svg>`;
+
+// Per-vertical color + bg for Continue cards
+const ctConf = (icon) => ({
+  cricket: { color:'#00897B', bg:'rgba(0,137,123,0.12)' },
+  news:    { color:'#1A56DB', bg:'rgba(26,86,219,0.11)'  },
+  music:   { color:'#C2410C', bg:'rgba(194,65,12,0.11)'  },
+  health:  { color:'#166534', bg:'rgba(22,101,52,0.11)'  },
+  cart:    { color:'#B45309', bg:'rgba(180,83,9,0.11)'   },
+  bank:    { color:'#1A56DB', bg:'rgba(26,86,219,0.11)'  },
+  money:   { color:'#1A56DB', bg:'rgba(26,86,219,0.11)'  },
+}[icon] || { color:'#6D17CE', bg:'rgba(109,23,206,0.12)' });
+
+// "RESUME" is a generic placeholder; replace with vertical identity label
+const ctLabel = (icon, tag) => {
+  if (tag !== 'RESUME') return tag;
+  return { cricket:'CRICKET', news:'NEWS', music:'MUSIC', health:'HEALTH', cart:'SAVED CART', bank:'FINANCE', money:'FINANCE' }[icon] || 'RESUME';
+};
+
+// ── Domains ───────────────────────────────────────────────────────────
+const PERSONA_BASE = 'https://sunit1986.github.io/design-prototypes/Assets/';
+// Only use a persona where it genuinely fits. Utility domains use clean JDS icons.
+const DOMAINS = {
+  devotion: { icon: 'devotion', persona: 'persona-devotion.png',  label: 'Devotion' },
+  cricket:  { icon: 'cricket',  persona: 'persona-cricket.png',   label: 'Cricket' },
+  mart:     { icon: 'cart',                                        label: 'JioMart' },
+  cinema:   { icon: 'movie',    persona: 'persona-bollywood.png', label: 'Cinema' },
+  music:    { icon: 'music',                                       label: 'Music' },
+  news:     { icon: 'news',     persona: 'persona-govt.png',      label: 'News' },
+  health:   { icon: 'health',   persona: 'persona-health.png',    label: 'Health' },
+  finance:  { icon: 'money',    persona: 'persona-finance.png',   label: 'Finance' },
+  edu:      { icon: 'edu',      persona: 'persona-education.png', label: 'Education' },
+  astro:    { icon: 'sparkle',  persona: 'persona-astrology.png', label: 'Astrology' },
+  weather:  { icon: 'sun',                                         label: 'Weather' },
+  schedule: { icon: 'cal',                                         label: 'Schedule' },
+};
+
+// ── State definitions ─────────────────────────────────────────────────
+const STATES = {
+  d0: {
+    note: 'Day 0 · persona-seeded defaults · Continue / Moments hidden · Discover carries the page',
+    placeholder: 'Namasté Priya — try "weather for Pune"',
+    avatarOrder: ['devotion','cinema','mart','cricket','finance','health','news','music','edu','weather','astro','schedule'],
+    promoted: [],
+    value: { seed: true, text: 'Start saving with JBIQ' },
+    streak: null,
+    notifs: [],
+    updates: null,
+    forYou: [
+      { type: 'vertical', icon: 'sun',  tag: 'DAILY',   title: 'Your Morning Briefing',                 sub: '3 things for today — weather, calendar, news', cta: 'Start now' },
+      { type: 'partner',  icon: 'cart', tag: 'JIOMART', title: 'Free delivery on your first 3 orders',  sub: 'Kirana, fresh, and fashion · Koregaon Park',  cta: 'Shop' },
+    ],
+    eiRow: [
+      { icon: 'sparkle', label: 'Aaj ka Rashifal' },
+      { icon: 'news',    label: 'Top news now' },
+      { icon: 'cal',     label: 'Plan tomorrow' },
+      { icon: 'money',   label: 'Track my spending' },
+    ],
+    continueGroup: null,
+    discover: {
+      kind: 'unlock',
+      tag: 'START HERE',
+      title: 'What JBIQ can do for you',
+      sub: '3 things worth trying in your first week',
+      items: [
+        { icon: 'mic',   text: 'Ask anything in Hindi or English — voice, text, image' },
+        { icon: 'cal',   text: 'Pick a daily briefing time — it\'ll be ready for you' },
+        { icon: 'money', text: 'Track every ₹ saved — weekly recap lands Sunday' },
+      ],
+      cta: 'View all starter asks',
+    },
+    moments: null,
+  },
+
+  d7: {
+    note: 'Day 7 · steady state · 5 zones active · Moments still quiet',
+    placeholder: 'Hey Priya, what\'s on your mind?',
+    avatarOrder: ['cricket','mart','devotion','cinema','finance','health','news','weather','music','edu','astro','schedule'],
+    promoted: [],
+    value: { seed: false, amount: '₹180', sub: '· 2h saved this week', sparkline: true },
+    streak: null,
+    notifs: ['mart','weather'],
+    updates: [
+      { kind: 'default', icon: 'cart', hook: 'Your JioMart order arrives today', sub: 'Between 4–6 PM · Koregaon Park' },
+    ],
+    forYou: [
+      { type: 'alert',   icon: 'wifi',    tag: 'DUE IN 3 DAYS',  title: 'Fiber bill ₹1,299',               sub: 'Pay now for ₹50 cashback',       cta: 'Pay now' },
+      { type: 'predict', icon: 'cricket', tag: 'TONIGHT',        title: 'IND vs AUS 2nd T20 · 7 PM',       sub: 'JioCinema · Kohli back in form', cta: 'Remind me' },
+      { type: 'partner', icon: 'cart',    tag: 'YOUR USUAL',     title: 'Atta you buy is ₹240 today',      sub: 'Normally ₹285 · JioMart',        cta: 'Add to cart' },
+    ],
+    eiRow: null,
+    continueGroup: [
+      { variant: 'resume', icon: 'cricket', tag: 'RESUME',     title: 'Yesterday\'s match recap',              meta: '2 min left · last 6 overs',    pct: 72 },
+      { variant: 'resume', icon: 'cart',    tag: 'SAVED CART', title: 'Add 2 more items for free delivery',   meta: '₹120 away from free delivery', pct: 40 },
+    ],
+    discover: {
+      kind: 'whats-new',
+      tag: 'WHATS NEW',
+      title: 'This week\'s new drop',
+      sub: '13 new features this week that will make you more productive',
+      items: [
+        { icon: 'mic',     text: 'Hindi Voice Search gets smarter · try it now' },
+        { icon: 'cricket', text: 'JioTV live cricket scores right inside your chat' },
+        { icon: 'news',    text: 'Good Morning AI briefing your day in 60 secs' },
+      ],
+      cta: 'View all features',
+    },
+    moments: null,
+  },
+
+  d30: {
+    note: 'Day 30 · N=1 · Updates busy · Moments shares your streak (not Value — Value already in ribbon)',
+    placeholder: 'Good morning Priya — your usual Morning Briefing?',
+    avatarOrder: ['cricket','mart','cinema','devotion','finance','news','weather','health','music','astro','edu','schedule'],
+    promoted: [],
+    value: { seed: false, amount: '₹2,340', sub: '· 12h this month', sparkline: true },
+    streak: { days: 14, label: 'Morning Briefing' },
+    notifs: ['finance','health','mart'],
+    updates: [
+      { kind: 'default', icon: 'bank',   hook: 'SIP payment due today',         sub: '₹5,000 to Axis Bluechip · auto-pay ready' },
+      { kind: 'default', icon: 'gift',   hook: 'Mom\'s birthday is tomorrow',   sub: 'You usually order flowers from JioMart' },
+      { kind: 'default', icon: 'health', hook: 'HbA1c follow-up due this week', sub: 'Home sample ₹299 · Thyrocare · 2km' },
+    ],
+    forYou: [
+      { type: 'predict',  icon: 'umbrella',tag: 'PREDICTIVE',  title: 'Rain at 6 PM — leave by 5:30?',       sub: 'Calendar free after 5:15 · route clear', cta: 'Plan route' },
+      { type: 'vertical', icon: 'cricket', tag: 'YOUR USUAL',  title: 'IND vs AUS 7 PM · watch at home?',    sub: 'You watched the last 4 at home',          cta: 'Set reminder' },
+      { type: 'locality', icon: 'cart',    tag: 'NEARBY',      title: 'Dhaniya ₹12 cheaper today',           sub: 'JioMart Fresh · deliver in 90 min',       cta: 'Order' },
+    ],
+    eiRow: null,
+    continueGroup: [
+      { variant: 'resume', icon: 'news',     tag: 'RESUME', title: 'Reading: RBI policy change', meta: '3 min left · saved 2 days ago', pct: 45 },
+      { variant: 'streak', icon: 'sparkle2', tag: 'STREAK', title: 'Morning Briefing · Day 14', meta: 'Longest streak yet 🔥',          pct: 90 },
+      { variant: 'resume', icon: 'music',    tag: 'LISTEN', title: 'Finish your morning playlist', meta: '12 min left',                  pct: 65 },
+    ],
+    discover: null,
+    moments: [
+      {
+        theme: 'streak-share',
+        tag: 'CELEBRATE',
+        title: '14 days of Morning Briefings',
+        sub: 'Share your streak card with family — ready for WhatsApp',
+        visual: 'streak',
+        days: 14,
+      },
+    ],
+  },
+
+  gap: {
+    note: 'Returning after 12d silence · gap-return dominant · Discover hidden · Continue carries familiarity',
+    placeholder: 'Welcome back, Priya — ask me what you missed',
+    avatarOrder: ['cricket','mart','cinema','devotion','finance','news','weather','health','music','astro','edu','schedule'],
+    promoted: [],
+    value: { seed: false, amount: '₹2,340', sub: '· saved last 30 days · stay on track', sparkline: true },
+    streak: null,
+    notifs: ['finance','health'],
+    updates: [
+      { kind: 'gap', icon: 'bank',  hook: 'Your SIP tracking paused 2 weeks ago', sub: 'Restart · 10 seconds' },
+    ],
+    forYou: [
+      { type: 'alert',    icon: 'bank',  tag: 'YOU MISSED', title: 'RBI cut repo rate 0.25% last week', sub: 'Your EMI may drop · check now',          cta: 'See impact' },
+      { type: 'vertical', icon: 'gift',  tag: 'REMINDER',   title: 'Mom\'s birthday on Monday',         sub: 'You usually order flowers from JioMart', cta: 'Plan gift' },
+    ],
+    eiRow: null,
+    continueGroup: [
+      { variant: 'gap', icon: 'health',   tag: 'GAP RETURN',   title: 'Diabetes diet research · paused',  meta: '3 articles saved · resume?',     pct: 30 },
+      { variant: 'gap', icon: 'sparkle2', tag: 'STREAK LOST',  title: 'Morning Briefing · broken at 14', meta: 'Want to start again tomorrow?',   pct: 0 },
+    ],
+    discover: null,
+    moments: null,
+  },
+
+  fest: {
+    note: 'Festival (Diwali AM) · event takeover · Moments pre-ready for WhatsApp · avatars reorder festive-first',
+    placeholder: 'Shubh Diwali, Priya 🪔 — muhurat or recipes?',
+    avatarOrder: ['cinema','mart','devotion','cricket','finance','music','news','weather','health','astro','edu','schedule'],
+    promoted: ['cinema','mart','devotion'],
+    value: { seed: false, amount: '₹1,890', sub: '· festive savings · 2× last year', sparkline: true, festive: true },
+    streak: { days: 3, label: 'Festive savings' },
+    notifs: ['devotion','cinema','mart'],
+    updates: [
+      { kind: 'event', icon: 'sparkle2', hook: 'Lakshmi Pooja muhurat 6:04 PM', sub: 'Amavasya tonight · audio guide ready · 12 min' },
+      { kind: 'event', icon: 'movie',    hook: 'IPL final starts 8 PM · JioCinema', sub: 'Watch-along mode ready for your family' },
+    ],
+    forYou: [
+      { type: 'vertical', icon: 'devotion', tag: 'DIY',     title: '3 last-minute rangoli designs',     sub: '15 min each · ingredients in your kitchen', cta: 'See all' },
+      { type: 'partner',  icon: 'cart',     tag: 'JIOMART', title: 'Diwali stock · 50% off diyas',     sub: 'Deliver by 5 PM if ordered before 2',      cta: 'Shop' },
+      { type: 'predict',  icon: 'movie',    tag: 'WATCH',   title: 'Ramleela watch-along · JioCinema', sub: 'Invite 4 family members on WhatsApp',      cta: 'Start' },
+    ],
+    eiRow: null,
+    continueGroup: [
+      { variant: 'resume', icon: 'music', tag: 'PLAYLIST', title: 'Your Diwali playlist · last year', meta: '32 songs · JioSaavn · start now', pct: 0 },
+    ],
+    discover: {
+      kind: 'festive',
+      tag: 'FESTIVE UNLOCKS',
+      title: 'Diwali surprises for your family',
+      sub: '3 formats you haven\'t tried yet this week',
+      items: [
+        { icon: 'movie',   text: 'Ramleela Together Mode — synced watch party' },
+        { icon: 'sparkle2',text: 'Diya-lighting countdown timer · shareable' },
+        { icon: 'edu',     text: '5-minute Lakshmi Pooja primer · audio guide' },
+      ],
+      cta: 'Try something festive',
+    },
+    moments: [
+      { theme: 'festive', tag: 'READY TO SHARE', title: 'Diwali wishes for your family', sub: 'Pre-written in Hindi · tap to send on WhatsApp', visual: 'diya' },
+    ],
+  },
+
+  pow: {
+    note: 'Power-user exploring a new domain · Mom newly diabetic → JioHealth promoted 8→3 · Discover earns its slot',
+    placeholder: 'Priya — diabetes-friendly recipes for your mother?',
+    avatarOrder: ['devotion','mart','health','cricket','cinema','finance','news','weather','music','astro','edu','schedule'],
+    promoted: ['health'],
+    value: { seed: false, amount: '₹2,340', sub: '· 12h this month', sparkline: true },
+    streak: { days: 14, label: 'Morning Briefing' },
+    notifs: ['health','news','finance'],
+    updates: [
+      { kind: 'default', icon: 'bank',  hook: 'SIP payment due today', sub: '₹5,000 to Axis Bluechip · auto-pay ready' },
+    ],
+    forYou: [
+      { type: 'alert',    icon: 'health', tag: 'FOR YOUR MOM', title: 'HbA1c test — 3 centres within 2 km', sub: 'Home sample ₹299 · Thyrocare',    cta: 'Book a test' },
+      { type: 'vertical', icon: 'sun',    tag: 'YOUR USUAL',   title: 'Morning Briefing · Pune',             sub: '32°C · light rain at 6 PM',      cta: 'Open' },
+      { type: 'locality', icon: 'cart',   tag: 'NEARBY',       title: 'Karela & methi at Apna Bazaar',       sub: 'JioMart Fresh · 90 min delivery', cta: 'Order' },
+    ],
+    eiRow: null,
+    continueGroup: [
+      { variant: 'resume', icon: 'news', tag: 'RESUME', title: 'Reading: RBI policy change', meta: '3 min left · saved 2 days ago', pct: 45 },
+    ],
+    discover: {
+      kind: 'health',
+      tag: 'NEW DOMAIN · UNLOCK',
+      title: 'Meet your JioHealth assistant',
+      sub: 'First consult free · three ways she\'ll help with your mother\'s care',
+      items: [
+        { icon: 'health', text: 'Diabetes diet plan tailored to North Indian food' },
+        { icon: 'edu',    text: 'Diabetes 101 for caregivers · 7-day short course' },
+        { icon: 'cal',    text: 'Book HbA1c every 3 months — I\'ll remind you' },
+      ],
+      cta: 'Explore JioHealth',
+    },
+    moments: null,
+  },
+};
+
+// ── Render ────────────────────────────────────────────────────────────
+const screen    = document.getElementById('screen');
+const stateNote = document.getElementById('stateNote');
+let lastKey = null;
+let lastPositions = null;
+
+function captureAvatarPositions() {
+  const map = new Map();
+  screen.querySelectorAll('.assistant').forEach(el => {
+    const k = el.dataset.domain;
+    if (k) map.set(k, el.getBoundingClientRect());
+  });
+  return map;
+}
+function applyFLIP(prev) {
+  if (!prev || prev.size === 0) return;
+  screen.querySelectorAll('.assistant').forEach(el => {
+    const first = prev.get(el.dataset.domain);
+    if (!first) return;
+    const last = el.getBoundingClientRect();
+    const dx = first.left - last.left, dy = first.top - last.top;
+    if (dx || dy) el.animate([{ transform: `translate(${dx}px,${dy}px)` }, { transform: 'translate(0,0)' }], { duration: 500, easing: 'cubic-bezier(0.05,0.7,0.1,1)' });
+  });
+}
+
+const GREETINGS = {
+  d0:   { line: 'Namasté, <span class="accent">Priya</span>' },
+  d7:   { line: 'Good morning, <span class="accent">Priya</span>' },
+  d30:  { line: 'Good morning, <span class="accent">Priya</span>' },
+  gap:  { line: 'Welcome back, <span class="accent">Priya</span>' },
+  fest: { line: 'Shubh Diwali, <span class="accent">Priya</span>' },
+  pow:  { line: 'Good morning, <span class="accent">Priya</span>' },
+};
+
+// Ambient weather per state · real-value environmental context
+const AMBIENTS = {
+  d0:   { kind: 'sun',   icon: 'sun',   temp: '31°C', city: 'Pune', tip: 'Clear skies · perfect for an evening walk' },
+  d7:   { kind: 'cloud', icon: 'cloud', temp: '32°C', city: 'Pune', tip: 'Light rain expected at 6 PM · carry an umbrella' },
+  d30:  { kind: 'rain',  icon: 'rain',  temp: '28°C', city: 'Pune', tip: 'Rain at 6 PM · leave by 5:30 to stay dry' },
+  gap:  { kind: 'rain',  icon: 'rain',  temp: '26°C', city: 'Pune', tip: 'Monsoon active · cell coverage patchy in Koregaon' },
+  fest: { kind: 'night', icon: 'moon',  temp: '29°C', city: 'Pune', tip: 'Clear night · perfect for Lakshmi Pooja at 6:04 PM' },
+  pow:  { kind: 'hot',   icon: 'heat',  temp: '35°C', city: 'Pune', tip: 'AQI 168 unhealthy · limit outdoor time for seniors', warn: true },
+};
+
+function render(key, withFLIP = false) {
+  const st = STATES[key];
+  stateNote.textContent = st.note;
+  document.body.dataset.state = key;  // Pattern 1: state-driven background tint
+
+  const html = `
+    <div class="sb fade-in" style="--i:0">
+      <span class="sbt">9:30</span>
+      <span class="sbr">
+        <svg viewBox="0 0 24 24"><path d="M4 14h2v4H4v-4zm4-3h2v7H8v-7zm4-3h2v10h-2V8zm4 2h2v8h-2v-8zm4-4h2v12h-2V6z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h14v-8h3L12 3z"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="9" width="12" height="6" rx="0.5"/><rect x="21" y="10" width="2" height="4" rx="0.5"/></svg>
+      </span>
+    </div>
+
+    <div class="hd fade-in" style="--i:0" data-risk-level="medium">
+      <span class="section-badge">1</span>
+      <div class="hd-left">
+        <button class="hd-menu">${s('menu')}</button>
+        <div class="hd-logo" aria-label="JBIQ">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="16" fill="#6D17CE"/>
+            <path d="M11.304 9.64981H10.7707C9.75853 9.64981 9.20564 10.2205 9.20564 11.3621V16.8679C9.20564 18.2854 8.72683 18.7829 7.60357 18.7829C6.72001 18.7829 6.00209 18.3959 5.43112 17.6963C5.37572 17.6229 4.21631 18.1749 4.21631 19.5378C4.21631 21.0107 5.59646 21.9132 8.15705 21.9132C11.2682 21.9132 12.9079 20.3479 12.9079 16.9233V11.3621C12.9061 10.222 12.3538 9.64981 11.304 9.64981ZM23.704 12.3381C20.6839 12.3381 18.6771 14.2531 18.6771 17.1085C18.6771 20.0365 20.6098 21.915 23.6483 21.915C26.6676 21.915 28.6557 20.0365 28.6557 17.1274C28.6575 14.2531 26.6868 12.3381 23.704 12.3381ZM23.667 19.206C22.488 19.206 21.6782 18.3408 21.6782 17.107C21.6782 15.8922 22.5079 15.0264 23.667 15.0264C24.8261 15.0264 25.6554 15.8922 25.6554 17.1257C25.6557 18.3221 24.8089 19.206 23.6673 19.206H23.667ZM16.1253 12.43H15.7565C14.8548 12.43 14.1736 12.8531 14.1736 14.1426V20.0347C14.1736 21.3423 14.8368 21.7476 15.7938 21.7476H16.1624C17.0646 21.7476 17.7088 21.3052 17.7088 20.0347V14.1426C17.7088 12.8169 17.0833 12.43 16.1253 12.43ZM15.923 8.15885C14.7811 8.15885 14.0631 8.80359 14.0631 9.81633C14.0631 10.8469 14.8 11.4913 15.9781 11.4913C17.1197 11.4913 17.8379 10.8469 17.8379 9.81633C17.8379 8.78581 17.1014 8.15885 15.923 8.15885Z" fill="white"/>
+          </svg>
+        </div>
+      </div>
+      <div class="hd-right">
+        ${st.streak ? `<span class="hd-streak">🔥 ${st.streak.days}d · ${st.streak.label}</span>` : ''}
+        <div class="hd-profile" title="Priya">P</div>
+      </div>
+    </div>
+
+    <div class="value${st.value.seed ? ' seed' : ''}${st.value.festive ? ' festive' : ''}" onclick="openModal('${key}')" data-risk-level="critical">
+      <span class="section-badge">2</span>
+      <div class="value-label">
+        ${st.value.seed ? `<span>${st.value.text} →</span>` : `<span>You've saved <span class="value-amount" data-target="${(st.value.amount || '').replace(/[^0-9]/g,'')}">${st.value.amount}</span> ${st.value.sub}</span>`}
+      </div>
+      <div class="value-right">
+        ${st.value.sparkline ? `<svg class="sparkline" viewBox="0 0 40 14"><path d="M0,11 L6,9 L12,10 L18,7 L24,8 L30,5 L36,3 L40,2"/></svg>` : ''}
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;opacity:0.55">${IC.chev}</svg>
+      </div>
+    </div>
+
+    <div class="scroll" id="scrollBody">
+      <div class="greeting-hw fade-in" style="--i:1">
+        ${GREETINGS[key].line}
+        <span class="greeting-sparkle" key="${key}-sp">${s('sparkle2')}</span>
+      </div>
+      <div class="ambient fade-in" style="--i:1">
+        <div class="ambient-body">
+          <div class="ambient-temp">${AMBIENTS[key].temp.replace('°C', '')}<span class="deg">°</span></div>
+          <div class="ambient-tip${AMBIENTS[key].warn ? ' ambient-warn' : ''}">${AMBIENTS[key].tip}</div>
+        </div>
+        <div class="ambient-icon ${AMBIENTS[key].kind}"><svg viewBox="0 0 24 24" fill="currentColor">${IC[AMBIENTS[key].icon]}</svg></div>
+      </div>
+      <div class="greeting-hr"></div>
+
+      ${st.updates ? `
+        <div class="fade-in" style="--i:1" data-risk-level="high">
+          <span class="section-badge">3</span>
+          <div class="sect"><div class="sect-title">Updates</div></div>
+          <div class="upd-sect">
+            <div class="upd-cycle" data-count="${st.updates.length}">
+              ${st.updates.map((u, i) => `
+                <div class="upd-item ${u.kind}" data-idx="${i}"${i === 0 ? '' : ' data-hidden="true"'}>
+                  <div class="upd-icon">${s(u.icon)}</div>
+                  <div class="upd-body"><div class="upd-hook">${u.hook}</div><div class="upd-sub">${u.sub}</div></div>
+                </div>
+              `).join('')}
+            </div>
+            ${st.updates.length > 1 ? `<div class="upd-dots">${st.updates.map((_, i) => `<span class="upd-dot${i === 0 ? ' active' : ''}" data-dot-idx="${i}"></span>`).join('')}</div>` : ''}
+          </div>
+        </div>` : ''}
+
+      <div class="fade-in" style="--i:2" data-risk-level="high">
+        <span class="section-badge">4</span>
+        <div class="sect"><div class="sect-title">Your Assistants</div></div>
+        <div class="assistants">
+          ${st.avatarOrder.map(k => {
+            const d = DOMAINS[k];
+            const promoted = st.promoted.includes(k);
+            const hasDot = (st.notifs || []).includes(k);
+            const inner = d.persona
+              ? `<img src="${PERSONA_BASE}${d.persona}" alt="${d.label}" loading="lazy">`
+              : s(d.icon);
+            return `
+              <div class="assistant${promoted ? ' promoted' : ''}" data-domain="${k}">
+                ${promoted ? '<div class="whisper">New for you</div>' : ''}
+                <div class="assistant-ring"><div class="assistant-inner">${inner}</div></div>
+                ${hasDot ? '<span class="assistant-dot" aria-label="Pending context"></span>' : ''}
+                <div class="assistant-label">${d.label}</div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="fade-in" style="--i:3" data-risk-level="critical">
+        <span class="section-badge">5</span>
+        <div class="sect"><div class="sect-title">For You</div><button class="sect-seeall">See all</button></div>
+        <div class="fy-sect">
+          ${st.forYou.map(c => renderFY(c)).join('')}
+          ${st.eiRow ? `<div class="ei-row">${st.eiRow.map(e => `<div class="ei-tile"><div class="ei-icon">${s(e.icon)}</div><div class="ei-label">${e.label}</div></div>`).join('')}</div>` : ''}
+        </div>
+      </div>
+
+      ${st.continueGroup ? `
+        <div class="fade-in" style="--i:4" data-risk-level="critical">
+          <span class="section-badge">6</span>
+          <div class="sect"><div class="sect-title">Continue</div>${st.continueGroup.length > 1 ? '<button class="sect-seeall">See all</button>' : ''}</div>
+          <div class="ct-sect">${renderContinueGroup(st.continueGroup)}</div>
+        </div>` : ''}
+
+      ${st.discover ? `
+        <div class="fade-in" style="--i:5" data-risk-level="high">
+          <span class="section-badge">7</span>
+          <div class="sect"><div class="sect-title">Discover</div></div>
+          <div class="dc-sect">${renderListCard(st.discover)}</div>
+        </div>` : ''}
+
+      ${st.moments ? `
+        <div class="fade-in" style="--i:6" data-risk-level="critical">
+          <span class="section-badge">8</span>
+          <div class="sect"><div class="sect-title">Moments</div></div>
+          <div class="mm-sect">${st.moments.map(m => renderMoment(m)).join('')}</div>
+        </div>` : ''}
+    </div>
+
+    <div class="fest-sparkles" id="festSparkles"></div>
+    <div class="plus-backdrop" id="plusBackdrop"></div>
+    <div class="chat-input fade-in" style="--i:1" data-risk-level="high">
+      <svg class="chat-comet" viewBox="0 0 330 102" preserveAspectRatio="none"><rect x="1" y="1" width="328" height="100" rx="23"/></svg>
+      <span class="section-badge">9</span>
+      <div class="chat-placeholder">${st.placeholder}</div>
+      <div class="chat-row">
+        <div class="plus-wrap">
+          <button class="chat-btn plus" id="plusBtn">${s('plus')}</button>
+          <div class="plus-menu" id="plusMenu">
+            <button class="pm-item">${s('cam')} Camera</button>
+            <button class="pm-item">${s('gal')} Gallery</button>
+            <button class="pm-item">${s('doc')} Document</button>
+          </div>
+        </div>
+        <button class="chat-btn mic-primary">${s('mic')}</button>
+      </div>
+    </div>
+  `;
+
+  screen.innerHTML = html;
+
+  screen.querySelectorAll('.assistant').forEach(el => el.addEventListener('click', () => showToast(`Would open ${el.querySelector('.assistant-label').textContent} context-loaded`)));
+  // Continue stack — card tap rotates the selected thread to front
+  const stack = screen.querySelector('.continue-stack');
+  if (stack) {
+    const cards = Array.from(stack.querySelectorAll('.cthread'));
+    const PEEK = 8; // px each back card peeks below the previous
+    const fixHeight = () => {
+      requestAnimationFrame(() => {
+        const front = stack.querySelector('[data-pos="0"]');
+        if (!front) return;
+        const n = +stack.dataset.count;
+        stack.style.minHeight = (front.offsetHeight + (n - 1) * PEEK) + 'px';
+      });
+    };
+    const rotateTo = (targetIdx) => {
+      const n = cards.length;
+      cards.forEach((card) => {
+        const i = +card.dataset.idx;
+        const pos = (i - targetIdx + n) % n;
+        card.dataset.pos = pos;
+      });
+      fixHeight();
+    };
+    cards.forEach(c => c.addEventListener('click', (e) => {
+      if (c.dataset.pos !== '0') { e.stopPropagation(); rotateTo(+c.dataset.idx); }
+    }));
+    fixHeight();
+  }
+  screen.querySelectorAll('.sect-seeall').forEach(el => el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const section = el.closest('.fade-in')?.querySelector('.sect-title')?.textContent || 'section';
+    openSheet(section);
+  }));
+  screen.querySelectorAll('.moment-wa').forEach(el => el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (el.classList.contains('ghost')) { showToast('Tap ✎ Customize first — add your own line'); return; }
+    showToast('Would open WhatsApp share sheet');
+  }));
+  screen.querySelectorAll('.moment-customize').forEach(el => el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const tile = el.closest('.moment-tile');
+    tile.querySelector('.moment-wa')?.classList.remove('ghost');
+    const hint = tile.querySelector('.moment-hint');
+    if (hint) { hint.textContent = '✓ Customized — ready to share'; hint.style.color = 'var(--suc)'; hint.style.background = 'rgba(37,171,33,0.08)'; }
+    el.innerHTML = '<span style="font-style:italic">✎ Edit again</span>';
+    el.classList.add('done');
+    showToast('Editor opened — added "Love, Priya"');
+  }));
+
+  // Radial plus menu
+  const plusBtn = document.getElementById('plusBtn');
+  const plusMenu = document.getElementById('plusMenu');
+  const plusBackdrop = document.getElementById('plusBackdrop');
+  if (plusBtn) {
+    plusBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = plusMenu.classList.toggle('open');
+      plusBtn.classList.toggle('open', open);
+      plusBackdrop.classList.toggle('show', open);
+    });
+    plusBackdrop.addEventListener('click', () => {
+      plusMenu.classList.remove('open');
+      plusBtn.classList.remove('open');
+      plusBackdrop.classList.remove('show');
+    });
+    plusMenu.querySelectorAll('.pm-item').forEach(it => it.addEventListener('click', () => {
+      showToast(`Would open ${it.textContent.trim()} picker`);
+      plusMenu.classList.remove('open');
+      plusBtn.classList.remove('open');
+      plusBackdrop.classList.remove('show');
+    }));
+  }
+
+  // Value counter roll-up
+  animateValueAmount();
+
+  // Festival sparkle burst — one-shot on entering Festival state
+  if (key === 'fest' && lastKey !== 'fest') spawnFestSparkles();
+
+  // P9 · Auto-cycling Updates
+  startUpdatesCycle();
+
+  // D · Scroll budget readout
+  measureScrollBudget();
+
+  // Annotation visibility — dim cards for sections that are hidden in this state
+  updateAnnotationDim(st);
+
+  if (withFLIP) applyFLIP(lastPositions);
+  lastKey = key;
+}
+
+function updateAnnotationDim(st) {
+  const visible = {
+    header: true,
+    value: true,
+    updates: !!st.updates,
+    assistants: true,
+    foryou: true,
+    continue: !!st.continueGroup,
+    discover: !!st.discover,
+    moments: !!st.moments,
+    multimodal: true,
+  };
+  document.querySelectorAll('.note-card').forEach(card => {
+    const key = card.dataset.sect;
+    card.classList.toggle('dim', visible[key] === false);
+  });
+}
+
+// Annotation toggle
+const annoBtn = document.getElementById('annoToggle');
+const annoLabel = document.getElementById('annoLabel');
+const risksLegend = document.getElementById('risksLegend');
+annoBtn.addEventListener('click', () => {
+  const on = document.body.classList.toggle('annotations-on');
+  annoBtn.classList.toggle('on', on);
+  annoLabel.textContent = on ? 'Hide logic notations' : 'Show logic notations';
+  if (!on) {
+    document.body.classList.remove('risk-view');
+    risksLegend.style.display = 'none';
+    document.querySelectorAll('.panel-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'logic'));
+  }
+});
+
+// Panel tab switch (Logic / Risks)
+document.querySelectorAll('.panel-tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.panel-tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const isRisks = t.dataset.tab === 'risks';
+    document.body.classList.toggle('risk-view', isRisks);
+    risksLegend.style.display = isRisks ? 'flex' : 'none';
+  });
+});
+
+// ── Delightful interactions ──────────────────────────────────────────
+let _lastValue = null;
+function animateValueAmount() {
+  const el = screen.querySelector('.value-amount');
+  if (!el) { _lastValue = null; return; }
+  const target = parseInt(el.dataset.target || '0', 10);
+  if (isNaN(target)) return;
+  if (_lastValue !== null && _lastValue !== target) {
+    const from = _lastValue;
+    const to = target;
+    const grow = to > from;
+    el.classList.toggle('rolling', grow);
+    const start = performance.now();
+    const dur = 700;
+    (function step(now) {
+      const t = Math.min(1, (now - start) / dur);
+      const e = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      const v = Math.round(from + (to - from) * e);
+      el.textContent = '₹' + v.toLocaleString('en-IN');
+      if (t < 1) requestAnimationFrame(step);
+      else if (grow) setTimeout(() => el.classList.remove('rolling'), 400);
+    })(performance.now());
+  }
+  _lastValue = target;
+}
+
+// D · Scroll-budget measurement — evidence-backed cap at 2100px (NN/g 2-screen window + Chartbeat + PhonePe band)
+const SCROLL_CAP = 2100;
+const SCROLL_WARN = 1600;  // Myntra: "users click on first two scrolls only"
+function measureScrollBudget() {
+  const sb = document.getElementById('scrollBody');
+  if (!sb) return;
+  requestAnimationFrame(() => {
+    const height = sb.scrollHeight;
+    const pct = Math.min(100, (height / SCROLL_CAP) * 100);
+    const fill = document.getElementById('sbFill');
+    const txt  = document.getElementById('sbTxt');
+    if (!fill || !txt) return;
+    fill.style.width = pct + '%';
+    fill.classList.remove('warn', 'over');
+    if (height > SCROLL_CAP) fill.classList.add('over');
+    else if (height > SCROLL_WARN) fill.classList.add('warn');
+    txt.textContent = `${height} / ${SCROLL_CAP} px · ${Math.round(height / 800 * 10) / 10}× viewport`;
+  });
+}
+
+let updatesCycleTimer = null;
+function startUpdatesCycle() {
+  if (updatesCycleTimer) clearInterval(updatesCycleTimer);
+  const cycle = screen.querySelector('.upd-cycle');
+  if (!cycle) return;
+  const items = Array.from(cycle.querySelectorAll('.upd-item'));
+  const dots  = Array.from(screen.querySelectorAll('.upd-dot'));
+  if (items.length <= 1) return;
+  let idx = 0;
+  updatesCycleTimer = setInterval(() => {
+    items[idx].setAttribute('data-hidden', 'true');
+    dots[idx]?.classList.remove('active');
+    idx = (idx + 1) % items.length;
+    items[idx].removeAttribute('data-hidden');
+    dots[idx]?.classList.add('active');
+  }, 4000);
+}
+
+function spawnFestSparkles() {
+  const container = document.getElementById('festSparkles');
+  if (!container) return;
+  container.innerHTML = '';
+  const count = 14;
+  const colors = ['', 'pink', 'purple'];
+  for (let i = 0; i < count; i++) {
+    const sp = document.createElement('div');
+    sp.className = 'sp-particle ' + colors[i % 3];
+    sp.style.left = (6 + Math.random() * 88) + '%';
+    sp.style.animationDelay = (i * 90) + 'ms';
+    sp.style.animationDuration = (2200 + Math.random() * 800) + 'ms';
+    container.appendChild(sp);
+  }
+  setTimeout(() => { if (container) container.innerHTML = ''; }, 4500);
+}
+
+// Grill'd-style See-all bottom sheet · per-section content
+const SHEET_DATA = {
+  'For You': {
+    sub: 'More picks for you this week',
+    rows: [
+      { tone: 'alert',    icon: 'wifi',    hook: 'Fiber bill ₹1,299',              meta: 'Due in 3 days · ₹50 cashback available' },
+      { tone: 'predict',  icon: 'umbrella',hook: 'Rain at 6 PM · carry umbrella',   meta: 'Route from Koregaon Park · 18 min' },
+      { tone: 'partner',  icon: 'cart',    hook: 'Atta you buy is ₹240 today',      meta: 'Normally ₹285 · JioMart Fresh' },
+      { tone: 'locality', icon: 'cart',    hook: 'Dhaniya ₹12 cheaper today',       meta: 'JioMart Fresh · 90 min delivery' },
+      { tone: 'health',   icon: 'health',  hook: 'HbA1c follow-up due this week',   meta: 'Thyrocare · home sample ₹299' },
+      { tone: 'predict',  icon: 'cricket', hook: 'IND vs AUS tonight · 7 PM',       meta: 'JioCinema · Kohli back in form' },
+      { tone: 'alert',    icon: 'bank',    hook: 'RBI cut repo rate 0.25%',         meta: 'Your EMI may drop · check now' },
+    ],
+  },
+  'Continue': {
+    sub: 'Threads you can pick up anytime',
+    rows: [
+      { tone: 'predict', icon: 'news',     hook: 'Reading: RBI policy change',        meta: '3 min left · saved 2 days ago' },
+      { tone: 'streak',  icon: 'sparkle2', hook: 'Morning Briefing · Day 14',          meta: 'Longest streak · keep it going' },
+      { tone: 'predict', icon: 'music',    hook: 'Finish your morning playlist',       meta: '12 min left · JioSaavn' },
+      { tone: 'health',  icon: 'health',   hook: 'Diabetes diet research',             meta: '3 articles saved · paused 5 days ago' },
+      { tone: 'partner', icon: 'cart',     hook: 'Cart: add 2 more for free delivery', meta: '₹120 away · JioMart' },
+    ],
+  },
+};
+
+let _sheet_last_opener = null;
+function openSheet(sectionName) {
+  const data = SHEET_DATA[sectionName];
+  if (!data) { showToast(`Would open full ${sectionName} screen`); return; }
+  const sheet = document.getElementById('sheet');
+  const content = document.getElementById('sheetContent');
+  content.innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div><div class="sheet-title">${sectionName}</div></div>
+      <div class="sheet-sub">${data.rows.length} picks</div>
+    </div>
+    <div class="sheet-divider"></div>
+    <div class="sheet-list">
+      ${data.rows.map(r => `
+        <div class="sheet-row">
+          <div class="sheet-thumb ${r.tone}">${s(r.icon)}</div>
+          <div class="sheet-body">
+            <div class="sheet-hook">${r.hook}</div>
+            <div class="sheet-meta">${r.meta}</div>
+          </div>
+          <div class="sheet-chev">${s('chev')}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  sheet.classList.add('open');
+  content.querySelectorAll('.sheet-row').forEach(row => row.addEventListener('click', () => {
+    const hook = row.querySelector('.sheet-hook').textContent;
+    showToast(`Would open: ${hook}`);
+  }));
+}
+function closeSheet() { document.getElementById('sheet').classList.remove('open'); }
+document.getElementById('sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSheet(); });
+
+function renderFY(c) {
+  const cta = c.cta ? `<div class="fc-cta">${c.cta} ${s('chev')}</div>` : '';
+  return `
+    <div class="fc ${c.type}">
+      <div class="fc-icon">${s(c.icon)}</div>
+      <div class="fc-body">
+        <div class="fc-tag">${c.tag}</div>
+        <div class="fc-title">${c.title}</div>
+        ${c.sub ? `<div class="fc-sub">${c.sub}</div>` : ''}
+        ${cta}
+      </div>
+    </div>`;
+}
+
+function cthreadHTML(c, extra='') {
+  const conf = ctConf(c.icon);
+  const label = ctLabel(c.icon, c.tag);
+  const pct = c.pct != null ? c.pct : 0;
+  const styleVars = (c.variant !== 'streak' && c.variant !== 'gap')
+    ? `style="--ct-color:${conf.color};--ct-bg:${conf.bg}"`
+    : '';
+  return `
+    <div class="cthread ${c.variant}" ${extra} ${styleVars}>
+      <div class="cthread-icon">${s(c.icon)}</div>
+      <div class="cthread-body">
+        <div class="cthread-tag">${label}</div>
+        <div class="cthread-title">${c.title}</div>
+        <div class="cthread-meta">${c.meta}</div>
+      </div>
+      <div class="cthread-bar"><div class="cthread-bar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+}
+
+function renderContinueGroup(group) {
+  if (!group || group.length === 0) return '';
+  if (group.length === 1) return cthreadHTML(group[0]);
+  return `
+    <div class="continue-stack" data-count="${group.length}">
+      ${group.map((c, i) => cthreadHTML(c, `data-idx="${i}" data-pos="${i}"`)).join('')}
+    </div>
+  `;
+}
+function renderContinue(c) {
+  return cthreadHTML(c);
+}
+
+function renderListCard(d) {
+  // Glow-inspired bold-color variant per kind
+  const variant = d.kind === 'festive' ? 'bold bold-fest'
+                 : d.kind === 'health'  ? 'bold bold-health'
+                 : 'bold';
+  return `
+    <div class="list-card ${variant}">
+      <div class="list-card-sparkle">✦</div>
+      <div class="list-card-tag">${d.tag}</div>
+      <div class="list-card-title">${d.title}</div>
+      <div class="list-card-sub">${d.sub}</div>
+      <div class="list-card-divider"></div>
+      <div class="list-card-items">
+        ${d.items.map(it => `
+          <div class="list-card-item">
+            <div class="list-card-item-icon">${s(it.icon)}</div>
+            <div class="list-card-item-text">${it.text}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="list-card-cta">${d.cta} ${s('arr')}</div>
+    </div>
+  `;
+}
+
+function renderMoment(m) {
+  let visual = '';
+  if (m.visual === 'diya') {
+    // Real system 🪔 emoji at 56px + warm amber drop-shadow stack for proper glow
+    visual = `<div class="diya-stage">
+      <span class="diya-emoji" style="animation-delay:0s">🪔</span>
+      <span class="diya-emoji" style="animation-delay:0.4s">🪔</span>
+      <span class="diya-emoji" style="animation-delay:0.8s">🪔</span>
+    </div>`;
+  } else if (m.visual === 'streak') {
+    visual = `<div class="streak-visual"><span class="streak-flame">🔥</span><div class="big">${m.days}</div><div class="sml">Day streak</div></div>`;
+  } else if (m.visual === 'wish') {
+    visual = `<div class="wish-visual">Good morning</div>`;
+  }
+  return `
+    <div class="moment-tile ${m.theme}">
+      <div class="moment-visual">${visual}</div>
+      <div class="moment-tag">${m.tag}</div>
+      <div class="moment-title">${m.title}</div>
+      <div class="moment-sub">${m.sub}</div>
+      <div class="moment-hint">✎ Add your personal line before sending</div>
+      <div class="moment-actions">
+        <button class="moment-secondary moment-customize">✎ Customize</button>
+        <button class="moment-wa ghost">${s('wa')} Share on WhatsApp</button>
+      </div>
+    </div>
+  `;
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────
+const toast = document.getElementById('toast');
+let toastTimer;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ── Modal · different content for seed vs tracked ─────────────────────
+function openModal(stateKey) {
+  const st = STATES[stateKey];
+  const content = document.getElementById('modalContent');
+  if (st.value.seed) {
+    content.innerHTML = `
+      <div class="modal-handle"></div>
+      <button class="modal-close" onclick="closeModal()">${s('close')}</button>
+      <div class="modal-title">How JBIQ saves you money &amp; time</div>
+      <div class="modal-sub">Three ways we track your value — automatically, in the background</div>
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-ic" style="background: var(--am)">${s('rupee')}</div>
+          <div>
+            <div class="benefit-t">Best price automatically</div>
+            <div class="benefit-s">We compare JioMart &amp; partner prices before you ask.</div>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-ic" style="background: var(--suc)">${s('sparkle2')}</div>
+          <div>
+            <div class="benefit-t">Deals auto-applied</div>
+            <div class="benefit-s">Every offer worth your time — applied in your cart, not hunted for.</div>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-ic" style="background: var(--lp)">${s('clock')}</div>
+          <div>
+            <div class="benefit-t">Research time saved</div>
+            <div class="benefit-s">We count the minutes you save on daily asks. Weekly recap lands Sunday.</div>
+          </div>
+        </div>
+      </div>
+      <button class="modal-cta" onclick="closeModal()">Got it — let's start</button>
+    `;
+  } else {
+    content.innerHTML = `
+      <div class="modal-handle"></div>
+      <button class="modal-close" onclick="closeModal()">${s('close')}</button>
+      <div class="modal-title">Your Value Recap</div>
+      <div class="modal-sub">What JBIQ has saved you this month — evidence-backed</div>
+      <div class="recap-amt">${st.value.amount}</div>
+      <div class="recap-unit">${st.value.sub.replace('· ', '+ ').replace('this month', 'across domains')}</div>
+      <div class="recap-bd">
+        <div class="recap-row evi" data-evi="jiomart"><span class="lbl">JioMart savings</span><span class="val">₹1,240 <span class="evi-chev">›</span></span></div>
+        <div class="recap-row evi" data-evi="fiber"><span class="lbl">Fiber recharge discount</span><span class="val">₹300 <span class="evi-chev">›</span></span></div>
+        <div class="recap-row evi" data-evi="sip"><span class="lbl">SIP auto-optimisation</span><span class="val">₹800 <span class="evi-chev">›</span></span></div>
+        <div class="recap-row evi" data-evi="time"><span class="lbl">Time saved on research</span><span class="val">12 hrs <span class="evi-chev">›</span></span></div>
+      </div>
+      <div class="evi-panel" id="eviPanel">
+        <div class="evi-title">How we counted this</div>
+        <div class="evi-body" id="eviBody">Tap any row above to see the evidence — price comparisons, timing logs, and sources.</div>
+        <button class="evi-dispute">Report an incorrect item</button>
+      </div>
+      <button class="modal-cta wa" onclick="shareRecap()">${s('wa')} Share with family on WhatsApp</button>
+    `;
+    // Wire row-level evidence
+    const eviBody = content.querySelector('#eviBody');
+    const EVI = {
+      jiomart: '<b>4 purchases</b> · avg ₹140 cheaper vs alternate sellers · <a href="#">not me</a>',
+      fiber:   '<b>Auto-applied</b> ₹50 cashback × 6 months via JioPay partner offer · <a href="#">not me</a>',
+      sip:     '<b>3 fund swaps</b> redirected based on expense-ratio · estimated ₹800/yr saving · <a href="#">not me</a>',
+      time:    '<b>47 queries</b> resolved in-app avg 38s · vs avg 8 min manual research',
+    };
+    content.querySelectorAll('.recap-row.evi').forEach(r => r.addEventListener('click', () => {
+      content.querySelectorAll('.recap-row.evi').forEach(x => x.classList.remove('active'));
+      r.classList.add('active');
+      eviBody.innerHTML = EVI[r.dataset.evi];
+    }));
+    content.querySelector('.evi-dispute')?.addEventListener('click', () => showToast('Would open dispute flow'));
+  }
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function shareRecap() { showToast('Would open WhatsApp share sheet'); closeModal(); }
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+// ── State toggle · cross-dissolve + FLIP reorder ─────────────────────
+document.querySelectorAll('.state-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const next = btn.dataset.state;
+    if (next === lastKey) return;
+    document.querySelector('.state-chip.active')?.classList.remove('active');
+    btn.classList.add('active');
+    lastPositions = captureAvatarPositions();
+    screen.classList.add('switching');
+    setTimeout(() => {
+      render(next, true);
+      requestAnimationFrame(() => screen.classList.remove('switching'));
+      const sb = document.getElementById('scrollBody');
+      if (sb) sb.scrollTop = 0;
+    }, 180);
+  });
+});
+
+render('d0');
+</script>
+</body>
+</html>
