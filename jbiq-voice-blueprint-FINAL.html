@@ -730,6 +730,10 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 .kword{color:var(--ink-4);transition:color .25s var(--ease)}
 .kword.said{color:var(--ink)}
 .kword.cur{color:var(--violet-3)}
+/* Inside agent-inline (Speaking · karaoke), words read as plain body text; only the current word takes a subtle purple accent */
+.agent-inline .kword{color:var(--ink)}
+.agent-inline .kword.said{color:var(--ink)}
+.agent-inline .kword.cur{color:var(--bold)}
 
 /* ============ CURSOR IN CHAT STREAM ============ */
 .stream-cursor{display:inline-block;width:2px;height:22px;background:var(--ink);vertical-align:-4px;margin-left:3px;animation:blink .7s step-end infinite}
@@ -1356,11 +1360,11 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
         <button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
       </div>
     </div>
-    <!-- CURRENT (v1) — simple 3-dot typing. Ships first. -->
-    <div class="proc-simple" aria-hidden="true">
+    <!-- CURRENT (v1) — compact inline typing row, matches Existing-conversation style -->
+    <div class="ec-thinking" aria-hidden="true">
       <span class="pd-dot"></span><span class="pd-dot"></span><span class="pd-dot"></span>
+      <span class="ec-thinking-tx" data-hi="सोच रही हूँ…">Thinking…</span>
     </div>
-    <div class="hero" style="text-align:left;margin-top:8px" data-hi="सोच रही हूँ…">Thinking…</div>
     <!-- FUTURE (v2) — reasoning-steps carousel. Hidden by default. Add .rstep-future to s-processing screen to reveal. -->
     <div class="rstep-stage" id="rstepStage" aria-hidden="true" style="display:none">
       <div class="rs-sweep"></div>
@@ -1554,7 +1558,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
         <button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
       </div>
     </div>
-    <div class="hero-sub" id="karaoke" style="margin-top:4px;font-size:26px;line-height:1.2;color:var(--agent)">
+    <div class="agent-inline" id="karaoke" style="margin-top:12px">
       <span class="kword">Tap</span> <span class="kword">the</span> <span class="kword">mic</span> <span class="kword">to</span> <span class="kword">ask</span> <span class="kword">something.</span>
     </div>
     <!-- Karaoke pulse — 24 bars, real waveform simulation (or analyser-driven during TTS) -->
