@@ -1601,7 +1601,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="mmodal">
       <button class="mmodal-plus"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <div class="mmodal-field">
-        <input type="text" placeholder="Tap to chat" data-hi-placeholder="चैट करने के लिए टैप करें" onkeydown="if(event.key==='Enter'){sendText(this.value);this.value=''}">
+        <input type="text" placeholder="Ask anything" data-hi-placeholder="कुछ भी पूछें" autofocus onkeydown="if(event.key==='Enter'){sendText(this.value);this.value=''}">
         <button class="mmodal-send" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
         <button class="mmodal-voice" onclick="go('idle')" aria-label="Voice">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
@@ -1642,7 +1642,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="mmodal">
       <button class="mmodal-plus"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <div class="mmodal-field">
-        <input type="text" placeholder="Ask anything" onkeydown="if(event.key==='Enter'){sendText(this.value);this.value=''}">
+        <input type="text" placeholder="Type your reply…" data-hi-placeholder="जवाब लिखें…" autofocus onkeydown="if(event.key==='Enter'){sendText(this.value);this.value=''}">
         <button class="mmodal-send" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
         <button class="mmodal-voice" onclick="go('idle')" aria-label="Voice">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
