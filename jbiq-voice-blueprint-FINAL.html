@@ -77,6 +77,107 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 .lang-tab-btn.active{background:var(--ink);color:#fff}
 .lang-tab-btn.active .lt-dot{background:var(--sparkle);opacity:1}
 .lang-tab-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);padding:0 8px 0 4px}
+.lang-tab-sep{width:1px;height:22px;background:rgba(0,0,0,.1);margin:0 4px}
+.theme-tab-btn{width:32px;height:32px;padding:0;border:none;background:transparent;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s var(--ease);color:var(--ink-3)}
+.theme-tab-btn:hover{background:rgba(0,0,0,.05);color:var(--ink)}
+.theme-tab-btn svg{fill:currentColor}
+body.dark-mode .theme-tab-btn{color:var(--sparkle)}
+
+/* ============ DARK MODE — token swaps only, structure untouched ============ */
+body.dark-mode .lang-tab{background:#1a1a1f;border-color:rgba(255,255,255,.08);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+body.dark-mode .lang-tab-label{color:rgba(255,255,255,.5)}
+body.dark-mode .lang-tab-btn{color:rgba(255,255,255,.6)}
+body.dark-mode .lang-tab-btn.active{background:rgba(255,255,255,.95);color:#0a0a0d}
+body.dark-mode .lang-tab-sep{background:rgba(255,255,255,.12)}
+body.dark-mode .sidebar{background:#111116;border-color:rgba(255,255,255,.06)}
+body.dark-mode .sb-title,body.dark-mode .sb-btn{color:rgba(255,255,255,.55)}
+body.dark-mode .sb-btn:hover{background:rgba(255,255,255,.05);color:#fff}
+body.dark-mode .sb-btn.active{background:rgba(255,255,255,.9);color:#0a0a0d}
+body.dark-mode .phone{background:#0f0f12}
+body.dark-mode .phone-frame{background:#0f0f12;border-color:#2a2a30}
+body.dark-mode .screen{background:#0f0f12;color:#ececec}
+body.dark-mode .status,body.dark-mode .status-r svg{fill:#ececec;color:#ececec}
+body.dark-mode .mhdr-back{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1)}
+body.dark-mode .mhdr-back svg{fill:#ececec}
+body.dark-mode .mhdr-title{color:#f5f5f5}
+body.dark-mode .mhdr-state-tx{color:rgba(255,255,255,.6)}
+body.dark-mode .hero,body.dark-mode .hero-sub,body.dark-mode .hero-line{color:#f5f5f5}
+body.dark-mode .greet-hi,body.dark-mode .greet-meta{color:#f5f5f5}
+body.dark-mode .sec h3,body.dark-mode .see{color:#f5f5f5}
+body.dark-mode .uvb-main,body.dark-mode .user-text{background:#24242a;color:#ececec}
+body.dark-mode .uvb-meta{color:rgba(255,255,255,.5)}
+body.dark-mode .uvb-meta svg,body.dark-mode .uvb-edit svg{fill:rgba(255,255,255,.5)}
+body.dark-mode .uvb-edit:hover{background:rgba(255,255,255,.08)}
+body.dark-mode .agent-inline{color:#f5f5f5}
+body.dark-mode .kword{color:rgba(255,255,255,.35)}
+body.dark-mode .kword.said{color:#f5f5f5}
+body.dark-mode .mmodal{background:#1a1a1f;border-color:rgba(255,255,255,.08);box-shadow:0 -2px 24px rgba(0,0,0,.4)}
+body.dark-mode .mmodal-plus{background:rgba(109,55,209,.2)}
+body.dark-mode .mmodal-plus svg{fill:#ececec}
+body.dark-mode .mmodal-field{background:#24242a}
+body.dark-mode .mmodal-field input{color:#ececec}
+body.dark-mode .mmodal-field input::placeholder{color:rgba(255,255,255,.4)}
+body.dark-mode .mmodal-send svg{fill:rgba(255,255,255,.4)}
+body.dark-mode .pill-btn{background:rgba(255,255,255,.12);box-shadow:0 8px 20px rgba(0,0,0,.4),0 2px 6px rgba(0,0,0,.2);border:.5px solid rgba(255,255,255,.1)}
+body.dark-mode .pill-btn:hover{background:rgba(255,255,255,.18)}
+body.dark-mode .pill-btn svg{fill:#f5f5f5}
+body.dark-mode .pill-btn[disabled],body.dark-mode .pill-btn.is-disabled{background:#1e1e24}
+body.dark-mode .pill-btn[disabled] svg,body.dark-mode .pill-btn.is-disabled svg{fill:rgba(255,255,255,.3)}
+body.dark-mode .dock-hint{background:rgba(30,30,36,.85);color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.08)}
+body.dark-mode .kb{background:#1a1a1f;border-top-color:rgba(255,255,255,.1)}
+body.dark-mode .kb-key{background:#3a3a42;color:#f5f5f5;box-shadow:0 1px 0 rgba(0,0,0,.6)}
+body.dark-mode .kb-key.dk{background:#27272e;color:#f5f5f5}
+body.dark-mode .top-wash{background:linear-gradient(180deg,rgba(15,15,18,.6) 0%,rgba(15,15,18,0) 100%)}
+body.dark-mode .tchip{background:#24242a;color:#ececec;border-color:rgba(255,255,255,.08)}
+body.dark-mode .fy-card,body.dark-mode .disc,body.dark-mode .vribbon,body.dark-mode .suggest-row{background:#1a1a1f;border-color:rgba(255,255,255,.08);color:#ececec}
+body.dark-mode .fy-title,body.dark-mode .disc-title,body.dark-mode .vribbon-eye,body.dark-mode .vribbon-num,body.dark-mode .suggest-tx,body.dark-mode .suggest-num{color:#f5f5f5}
+body.dark-mode .fy-sub,body.dark-mode .disc-sub,body.dark-mode .disc-i-tx,body.dark-mode .fy-tag,body.dark-mode .disc-tag,body.dark-mode .vribbon-sub{color:rgba(255,255,255,.6)}
+body.dark-mode .disc-view-all{color:#f5f5f5;border-color:rgba(255,255,255,.1)}
+body.dark-mode .ec-thinking-tx{color:rgba(255,255,255,.6)}
+body.dark-mode .fbk-btn svg{fill:rgba(255,255,255,.6)}
+body.dark-mode .mode-divider .ln{background:rgba(255,255,255,.14)}
+body.dark-mode .mode-divider .tx,body.dark-mode .mode-divider svg{color:rgba(255,255,255,.55);fill:rgba(255,255,255,.55)}
+body.dark-mode .act-btn.ghost{color:#f5f5f5;border-color:rgba(255,255,255,.18)}
+body.dark-mode .home-indicator{background:rgba(255,255,255,.85)}
+/* CTA orbs — brighter, more saturated JDS tokens for dark canvas */
+body.dark-mode #s-home-voice-first,body.dark-mode #s-idle,body.dark-mode #s-idle-ec,body.dark-mode #s-listening-ec,body.dark-mode #s-consent-mic,body.dark-mode #s-silence-nudge,body.dark-mode #s-receipt,body.dark-mode #s-confirm{
+  --cta-bg: var(--user);
+  --cta-icon: #0f0f12;
+  --cta-shadow: 0 12px 30px rgba(30,204,176,.28), 0 4px 10px rgba(30,204,176,.18);
+  --cta-shadow-hover: 0 16px 36px rgba(30,204,176,.34), 0 5px 12px rgba(30,204,176,.22);
+  --cta-halo: rgba(30,204,176,.22);
+}
+body.dark-mode{
+  --cta-bg: var(--agent);
+  --cta-icon: #fff;
+  --cta-shadow: 0 12px 30px rgba(57,0,173,.34), 0 4px 10px rgba(57,0,173,.2);
+  --cta-shadow-hover: 0 16px 36px rgba(57,0,173,.4), 0 5px 12px rgba(57,0,173,.24);
+  --cta-halo: rgba(57,0,173,.24);
+  background:#0a0a0d;
+}
+body.dark-mode #s-err-net-voice,body.dark-mode #s-err-net-chat,body.dark-mode #s-err-proc-ec,body.dark-mode #s-perm-denied{
+  --cta-bg: var(--err);
+  --cta-icon: #0f0f12;
+  --cta-shadow: 0 12px 30px rgba(250,47,64,.28), 0 4px 10px rgba(250,47,64,.18);
+  --cta-shadow-hover: 0 16px 36px rgba(250,47,64,.34), 0 5px 12px rgba(250,47,64,.22);
+  --cta-halo: rgba(250,47,64,.24);
+}
+/* Dark-mode text sweep — primary text to cream, secondary to muted grey */
+body.dark-mode .ast-label,body.dark-mode .eyebrow,body.dark-mode .pause-title,body.dark-mode .pause-sub,body.dark-mode .live-tx,body.dark-mode .ec-live-tx,body.dark-mode .err-line,body.dark-mode .rec-title,body.dark-mode .rstep-caption,body.dark-mode .home-cta-tx .t1,body.dark-mode .upd-title,body.dark-mode .pd-banner-tx,body.dark-mode .bene-row,body.dark-mode .bene-row div,body.dark-mode .conf-title,body.dark-mode .nudge-line,body.dark-mode .meta,body.dark-mode .err-retry,body.dark-mode .suggest-row em,body.dark-mode .uvb-main em,body.dark-mode .agent-inline em,body.dark-mode .hero em,body.dark-mode .hero-sub em,body.dark-mode .pause-title em,body.dark-mode .clarify-chip,body.dark-mode .disc-sparkle,body.dark-mode .rs-num,body.dark-mode .disc-tag,body.dark-mode .fy-tag{color:#f5f5f5}
+body.dark-mode .rec-sub,body.dark-mode .upd-sub,body.dark-mode .home-cta-tx .t2,body.dark-mode .disc-i-tx,body.dark-mode .fy-sub,body.dark-mode .disc-sub,body.dark-mode .rs-label{color:rgba(255,255,255,.62)}
+body.dark-mode .disc-i-icon svg,body.dark-mode .vribbon-icon svg,body.dark-mode .upd-icon svg,body.dark-mode .disc-i-arrow,body.dark-mode .vribbon-arrow{fill:rgba(255,255,255,.75)}
+body.dark-mode .clarify-chip{background:#1a1a1f;border-color:rgba(255,255,255,.12)}
+body.dark-mode .pd-banner{background:rgba(250,47,64,.12);border-color:rgba(250,47,64,.24)}
+body.dark-mode .pd-banner-icon svg{fill:var(--err)}
+body.dark-mode .nudge-toast{background:rgba(255,255,255,.12);color:#f5f5f5}
+body.dark-mode .pause-card,body.dark-mode .rcard,body.dark-mode .conf-card,body.dark-mode .exec-card,body.dark-mode .consent-mic-ill{background:#1a1a1f;border-color:rgba(255,255,255,.08)}
+body.dark-mode .cmi-core{background:rgba(30,204,176,.18)}
+body.dark-mode .cmi-ring-1,body.dark-mode .cmi-ring-2{border-color:rgba(30,204,176,.22)}
+body.dark-mode .weather-emoji,body.dark-mode .ast-av,body.dark-mode .fy-icon{filter:brightness(.9) saturate(.9)}
+body.dark-mode .jio-logo{filter:invert(1) brightness(1.4)}
+body.dark-mode .jio-avatar{background:rgba(255,255,255,.1);color:#f5f5f5;border-color:rgba(255,255,255,.18)}
+body.dark-mode .jio-avatar-badge{background:var(--user);color:#0f0f12}
+body.dark-mode .greet-row-r{filter:brightness(1.05)}
 
 /* ============ SIDEBAR ============ */
 .sidebar{width:210px;max-height:92vh;overflow-y:auto;background:var(--cream);border-radius:20px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.08);flex-shrink:0;border:1px solid rgba(0,0,0,.05)}
@@ -157,16 +258,18 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 /* ============ MICRO HEADER ============ */
 .mhdr{position:absolute;top:50px;left:18px;right:18px;z-index:50;display:flex;justify-content:space-between;align-items:center}
 .mhdr-l{display:flex;align-items:center;gap:10px}
+.mhdr-ts{display:flex;flex-direction:column;gap:0;line-height:1.18;padding:2px 0}
+.mhdr-title{font-family:var(--ui);font-size:14px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
 .mhdr-back{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:.5px solid rgba(0,0,0,.06)}
 .mhdr-back:active{transform:scale(.92)}
 .mhdr-back svg{width:16px;height:16px;fill:var(--ink)}
-.mhdr-state{display:flex;align-items:center;gap:7px;padding:7px 12px 7px 8px;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-radius:999px;border:.5px solid rgba(0,0,0,.05)}
-.mhdr-dot{width:7px;height:7px;border-radius:50%;background:var(--peach-3);animation:dotBreath 1.8s ease-in-out infinite}
+.mhdr-state{display:flex;align-items:center;gap:5px;padding:0;background:transparent;border:none}
+.mhdr-dot{width:6px;height:6px;border-radius:50%;background:var(--peach-3);animation:dotBreath 1.8s ease-in-out infinite}
 .mhdr-dot.teal{background:var(--teal-3)}
 .mhdr-dot.violet{background:var(--violet-2)}
 .mhdr-dot.amber{background:var(--amber-2)}
 .mhdr-dot.rose{background:var(--error)}
-.mhdr-state-tx{font-size:11px;font-weight:600;color:var(--ink);letter-spacing:-.005em}
+.mhdr-state-tx{font-size:11px;font-weight:500;color:var(--ink-3);letter-spacing:-.005em}
 @keyframes dotBreath{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.2)}}
 .mhdr-r{display:flex;gap:6px}
 .mhdr-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:.5px solid rgba(0,0,0,.06)}
@@ -219,31 +322,59 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 .pill-btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(20,15,5,.18),0 3px 8px rgba(20,15,5,.1)}
 .pill-btn:active{transform:scale(.92)}
 .pill-btn svg{width:22px;height:22px;fill:var(--ink)}
-/* Center stop/mic — bigger, darker, deeper shadow */
-.pill-btn.stop{background:var(--ink);width:76px;height:76px;box-shadow:0 12px 30px rgba(0,0,0,.28),0 4px 10px rgba(0,0,0,.16)}
-.pill-btn.stop:hover{box-shadow:0 16px 36px rgba(0,0,0,.34),0 5px 12px rgba(0,0,0,.2)}
-.pill-btn.stop svg{fill:#fff;width:24px;height:24px}
-/* Quick mic-pulse animation on the icon — subtle bounce every 1.2s */
-.pill-btn.mic svg{animation:micPulse 1.2s ease-in-out infinite}
-.pill-btn.stop svg{animation:stopPulse 1.4s ease-in-out infinite;transform-origin:center}
+/* ============ CTA tokens — state-family driven ============
+   --cta-bg / --cta-icon / --cta-shadow are set per screen below. Default = agent-violet. */
+:root{
+  --cta-bg: var(--agent-d);
+  --cta-icon: #fff;
+  --cta-shadow: 0 12px 30px rgba(36,0,107,.32), 0 4px 10px rgba(36,0,107,.18);
+  --cta-shadow-hover: 0 16px 36px rgba(36,0,107,.38), 0 5px 12px rgba(36,0,107,.22);
+  --cta-halo: rgba(36,0,107,.16);
+}
+/* Teal family — user's turn */
+#s-home-voice-first,#s-idle,#s-idle-ec,#s-listening-ec,#s-consent-mic,#s-silence-nudge,#s-receipt,#s-confirm{
+  --cta-bg: var(--user-d);
+  --cta-icon: #fff;
+  --cta-shadow: 0 12px 30px rgba(10,107,88,.3), 0 4px 10px rgba(10,107,88,.18);
+  --cta-shadow-hover: 0 16px 36px rgba(10,107,88,.36), 0 5px 12px rgba(10,107,88,.22);
+  --cta-halo: rgba(10,107,88,.18);
+}
+/* Rose family — error */
+#s-err-net-voice,#s-err-net-chat,#s-err-proc-ec,#s-perm-denied{
+  --cta-bg: var(--err-d);
+  --cta-icon: #fff;
+  --cta-shadow: 0 12px 30px rgba(143,14,28,.3), 0 4px 10px rgba(143,14,28,.18);
+  --cta-shadow-hover: 0 16px 36px rgba(143,14,28,.36), 0 5px 12px rgba(143,14,28,.22);
+  --cta-halo: rgba(143,14,28,.18);
+}
+
+/* Centre CTAs — all use the same token set, only difference is icon & motion */
+.pill-btn.stop,.pill-btn.mic,.pill-btn.pause,.pill-btn.connecting{
+  background: var(--cta-bg);
+  width:76px;height:76px;
+  box-shadow: var(--cta-shadow);
+}
+.pill-btn.stop:hover,.pill-btn.mic:hover,.pill-btn.pause:hover,.pill-btn.connecting:hover{
+  box-shadow: var(--cta-shadow-hover);
+}
+.pill-btn.stop svg,.pill-btn.mic svg,.pill-btn.pause svg,.pill-btn.connecting svg{fill: var(--cta-icon)}
+.pill-btn.stop svg{width:24px;height:24px;animation:stopPulse 1.4s ease-in-out infinite;transform-origin:center}
+.pill-btn.mic svg{width:26px;height:26px;animation:micPulse 1.2s ease-in-out infinite}
+.pill-btn.pause svg{width:24px;height:24px;animation:none}
+.pill-btn.connecting svg{width:26px;height:26px;opacity:.7;position:relative;z-index:1}
 @keyframes stopPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
 @keyframes micPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-/* Soft breathing halo — appears as a translucent ring around the stop button */
-.pill-btn.stop::after{content:'';position:absolute;inset:-8px;border-radius:50%;background:rgba(0,0,0,.08);opacity:0;pointer-events:none;z-index:-1;animation:stopHalo 2.6s ease-in-out infinite}
+/* Halos match the CTA family tint */
+.pill-btn.stop::after{content:'';position:absolute;inset:-8px;border-radius:50%;background:var(--cta-halo);opacity:0;pointer-events:none;z-index:-1;animation:stopHalo 2.6s ease-in-out infinite}
 .pill-btn.stop.recording::after{background:rgba(255,255,255,.4);opacity:1;animation:stopHaloRec 1.8s ease-out infinite}
+.pill-btn.mic::after{content:'';position:absolute;inset:-10px;border-radius:50%;background:var(--cta-halo);opacity:0;pointer-events:none;z-index:-1;animation:micHalo 1.8s ease-out infinite}
+.pill-btn.stop::before{content:'';position:absolute;inset:-10px;border-radius:50%;background:var(--cta-halo);opacity:0;pointer-events:none;z-index:-1;animation:micHalo 1.8s ease-out infinite}
 @keyframes stopHalo{0%,100%{transform:scale(1);opacity:0}50%{transform:scale(1.12);opacity:.5}}
 @keyframes stopHaloRec{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.6);opacity:0}}
-.pill-btn.mic{background:var(--bold);width:76px;height:76px;box-shadow:0 12px 30px rgba(57,0,173,.32),0 4px 10px rgba(57,0,173,.18)}
-.pill-btn.mic svg{fill:#fff;width:26px;height:26px}
-.pill-btn.mic:hover{box-shadow:0 16px 36px rgba(57,0,173,.38),0 5px 12px rgba(57,0,173,.22)}
-/* Outer breathing halo around the mic — subtle purple glow */
-.pill-btn.mic::after{content:'';position:absolute;inset:-10px;border-radius:50%;background:rgba(57,0,173,.12);opacity:0;pointer-events:none;z-index:-1;animation:micHalo 1.8s ease-out infinite}
-.pill-btn.stop::before{content:'';position:absolute;inset:-10px;border-radius:50%;background:rgba(0,0,0,.08);opacity:0;pointer-events:none;z-index:-1;animation:micHalo 1.8s ease-out infinite}
-/* Connecting — system not yet active. Same footprint as mic, purple fill, mic icon centred with an orbiting ring */
-.pill-btn.connecting{background:var(--bold);width:76px;height:76px;box-shadow:0 8px 22px rgba(57,0,173,.22),0 3px 8px rgba(57,0,173,.12);cursor:wait;pointer-events:none}
-.pill-btn.connecting svg{fill:#fff;width:26px;height:26px;opacity:.7;position:relative;z-index:1}
+/* Connecting spinner — reads CTA family tint */
+.pill-btn.connecting{cursor:wait;pointer-events:none}
 .pill-btn.connecting::before{content:'';position:absolute;inset:3px;border-radius:50%;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;animation:pillSpin .9s linear infinite;z-index:0}
-.pill-btn.connecting::after{content:'';position:absolute;inset:-10px;border-radius:50%;border:1.5px solid rgba(57,0,173,.18);opacity:0;pointer-events:none;z-index:-1;animation:connectHalo 1.6s ease-out infinite}
+.pill-btn.connecting::after{content:'';position:absolute;inset:-10px;border-radius:50%;border:1.5px solid var(--cta-halo);opacity:0;pointer-events:none;z-index:-1;animation:connectHalo 1.6s ease-out infinite}
 @keyframes pillSpin{to{transform:rotate(360deg)}}
 @keyframes connectHalo{0%{transform:scale(.9);opacity:.45}70%{opacity:.08}100%{transform:scale(1.3);opacity:0}}
 /* Disabled pill buttons — used on connecting state */
@@ -593,7 +724,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 /* ============ ERROR SECONDARY LINE — subtitle under hero on err screens ============ */
 .err-line{font-family:var(--ui);font-size:15px;font-weight:500;color:var(--ink-2);line-height:1.45;letter-spacing:-.003em;text-align:left;margin-top:12px;max-width:320px;width:100%;animation:riseIn .5s var(--ease) .05s both}
 /* Kill the purple em accent inside error hero/err-line — errors = black text only */
-#s-err-proc .hero em,#s-err-proc .err-line em,#s-err-net-voice .hero em,#s-err-net-voice .err-line em{color:var(--ink);font-weight:700}
+#s-err-net-voice .hero em,#s-err-net-voice .err-line em{color:var(--ink);font-weight:700}
 
 /* ============ PROCESSING · CURRENT (v1) — simple 3-dot typing ============
    Ships first. Future branch uses .rstep-stage (reasoning carousel, hidden by default). */
@@ -761,7 +892,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
    right, bottom 320px of the screen. Used consistently across all "tap to
    start" surfaces: Home · Voice + Chat, Home · Voice-first, Idle, Idle · existing.
    pointer-events:none so content/taps pass through. */
-.vf-bg-glow{position:absolute;left:0;right:0;bottom:0;height:220px;background:radial-gradient(ellipse at 15% 100%,rgba(255,210,165,.55) 0%,rgba(255,210,165,.2) 40%,transparent 72%),radial-gradient(ellipse at 85% 100%,rgba(30,204,176,.55) 0%,rgba(30,204,176,.2) 42%,transparent 74%);pointer-events:none;z-index:50}
+.vf-bg-glow{position:absolute;left:0;right:0;bottom:0;height:220px;background:radial-gradient(ellipse at 15% 100%,rgba(30,204,176,.22) 0%,rgba(30,204,176,.06) 38%,transparent 68%),radial-gradient(ellipse at 85% 100%,rgba(30,204,176,.22) 0%,rgba(30,204,176,.06) 40%,transparent 70%);pointer-events:none;z-index:50}
 #s-home-voice-first .home-scroll{padding-bottom:240px}
 /* Mini preview of homepage content visible behind the voice zone */
 .vf-home-peek{padding:96px 20px 60% 20px;position:relative;z-index:1}
@@ -919,6 +1050,10 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <span class="lang-tab-label">Language</span>
   <button class="lang-tab-btn active" onclick="setLang('en')" id="langEn"><span class="lt-dot"></span>English</button>
   <button class="lang-tab-btn" onclick="setLang('hi')" id="langHi"><span class="lt-dot"></span>हिन्दी</button>
+  <span class="lang-tab-sep" aria-hidden="true"></span>
+  <button class="theme-tab-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle dark mode" aria-label="Toggle dark mode">
+    <svg id="themeIcon" viewBox="0 0 24 24" width="16" height="16"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.41 5.41 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+  </button>
 </div>
 
 <!-- ============ SIDEBAR ============ -->
@@ -940,7 +1075,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <button class="sb-btn" onclick="go('chat-stream')" data-hi="चैट जवाब">Chat streaming</button>
   <div class="sb-title" data-hi="गलतियाँ">Errors</div>
   <button class="sb-btn" onclick="go('err-net-voice')" data-hi="नेटवर्क">Network</button>
-  <button class="sb-btn" onclick="go('err-proc')" data-hi="प्रोसेसिंग गलती">Processing error</button>
   <div class="sb-title" data-hi="पूरी बातचीत">Thread</div>
   <button class="sb-btn" onclick="go('thread')" data-hi="पूरी बातचीत">Full conversation</button>
   <div class="sb-title" data-hi="जारी बातचीत">Existing conversation</div>
@@ -1249,7 +1383,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="जुड़ रहा है…">Connecting…</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="जुड़ रहा है…">Connecting…</div></div></div>
     </div>
   </div>
 
@@ -1270,25 +1404,30 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 
 <!-- ======== 4. IDLE ======== -->
 <div class="screen" id="s-idle">
-  <div class="vf-bg-glow"></div>
+  <div class="stage-glow on teal"><div class="g-mid"></div></div>
   <div class="top-wash"></div>
   <div class="status"><span>9:41</span><div class="status-r"></div></div>
 
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot"></div><div class="mhdr-state-tx" data-hi="लाइव">Live</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="कनेक्टेड">Connected</div></div></div>
     </div>
     <div class="mhdr-r"><div class="mhdr-icon"><svg viewBox="0 0 24 24"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29z"/></svg></div></div>
   </div>
 
-  <div class="content center">
-    <div class="hero" data-hi="कुछ भी बोलिए।">Say anything.</div>
-    <div class="hero-line" data-hi="हिन्दी, अंग्रेज़ी या दोनों — मैं समझ लूँगी।">Hindi, English, or mix both — I'll follow.</div>
+  <div class="content" style="padding-top:110px">
+    <div class="sec" style="padding:0 20px 14px"><h3 data-hi="पूछकर देखें">Try asking</h3></div>
+    <div class="tools" style="padding:0 20px">
+      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--bold)"></span>Aaj ka rashifal</div>
+      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--primary)"></span>Top news right now</div>
+      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--sparkle)"></span>Plan tomorrow</div>
+      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--sec)"></span>Track my spending</div>
+      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--bold)"></span>Open JioMart</div>
+    </div>
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="सुन रही हूँ">Listening</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <button class="pill-btn mic" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
@@ -1306,7 +1445,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div></div>
     </div>
   </div>
 
@@ -1485,10 +1624,9 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="रोकने के लिए कहीं भी टैप करें">Tap anywhere to interrupt</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('speaking')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
+      <button class="pill-btn stop" onclick="go('speaking')" aria-label="Tap to interrupt"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('home-chat')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -1503,7 +1641,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="बोल रही हूँ…">Speaking…</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="बोल रही हूँ…">Speaking…</div></div></div>
     </div>
     <div class="mhdr-r"><div class="mhdr-icon" id="spkToggle" role="button" aria-label="Mute voice" title="Tap to mute voice" onclick="toggleTTSMute(this)"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg></div></div>
   </div>
@@ -1529,7 +1667,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="dock">
     <div class="pill">
       <button class="pill-btn" onclick="interruptSpeaking()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="interruptSpeaking()"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
+      <button class="pill-btn stop" onclick="interruptSpeaking()" aria-label="Tap to interrupt"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="cancelVoice()"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -1544,7 +1682,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('speaking')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="चैट पर जा रहे हैं">Switching to chat</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Chat</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="कनेक्टेड">Connected</div></div></div>
     </div>
   </div>
 
@@ -1587,13 +1725,19 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-chat')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot"></div><div class="mhdr-state-tx" data-hi="लाइव">Live</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Chat</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="कनेक्टेड">Connected</div></div></div>
     </div>
   </div>
 
-  <div class="content center" style="padding-bottom:330px">
-    <div class="hero" data-hi="अपना सवाल लिखें।">Type your question.</div>
-    <div class="hero-line" data-hi="या माइक दबाकर बोल भी सकते हैं।">Or tap the mic to speak anytime.</div>
+  <div class="content" style="padding-top:110px;padding-bottom:330px">
+    <div class="sec" style="padding:0 20px 14px"><h3 data-hi="पूछकर देखें">Try asking</h3></div>
+    <div class="tools" style="padding:0 20px">
+      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--bold)"></span>Show my calendar today</div>
+      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--primary)"></span>Summarise top news</div>
+      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--sparkle)"></span>Track my monthly spend</div>
+      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--sec)"></span>What's on TV tonight?</div>
+      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--bold)"></span>Draft a quick reply</div>
+    </div>
   </div>
 
   <div class="dock" style="bottom:240px;z-index:60">
@@ -1626,7 +1770,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('chat-idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Chat</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div></div>
     </div>
   </div>
 
@@ -1666,7 +1810,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('chat-idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · 4:22">Dinner plan · 4:22</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="4:22">4:22</div></div></div>
     </div>
     <div class="mhdr-r"><div class="mhdr-icon" role="button" aria-label="New chat" title="Start a new chat"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></div>
   </div>
@@ -1693,14 +1837,17 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
       </div>
       <div class="agent-inline" data-hi="Booked. Spice Garden में 4 लोगों के लिए table, आज रात 8 बजे. Confirmation number <em>SG2026</em>.">Booked. Table for 4 at Spice Garden, 8 pm tonight. Confirmation number <em>SG2026</em>.</div>
 
-      <div class="user-voice-bubble">
-        <div class="uvb-main" data-hi="Thanks, क्या उनके पास kids' menu है?">Thanks, do they have a kids' menu?</div>
-        <div class="uvb-meta">
-          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
-          <span>0:02</span>
-          <button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+      <!-- Mode divider — user switched from voice to chat here -->
+      <div class="mode-divider">
+        <div class="ln"></div>
+        <div class="tx">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          switched to chat
         </div>
+        <div class="ln"></div>
       </div>
+
+      <div class="user-text" data-hi="Thanks, क्या उनके पास kids' menu है?">Thanks, do they have a kids' menu?</div>
       <div class="agent-inline"><span class="kword said">Yes.</span> <span class="kword said">Spice</span> <span class="kword said">Garden</span> <span class="kword said">has</span> <span class="kword said">a</span> <span class="kword said">dedicated</span> <span class="kword said">kids'</span> <span class="kword cur">menu</span> <span class="kword">—</span> <span class="kword">pasta,</span> <span class="kword">pizza,</span> <span class="kword">and</span> <span class="kword">chicken</span> <span class="kword">nuggets,</span> <span class="kword">all</span> <span class="kword">under</span> <span class="kword">₹250.</span></div>
       <div class="fbk">
         <button class="fbk-btn" title="Like"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></button>
@@ -1734,7 +1881,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot rose"></div><div class="mhdr-state-tx" data-hi="कनेक्शन टूट गया">Connection lost</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot rose"></div><div class="mhdr-state-tx" data-hi="कनेक्शन टूट गया">Connection lost</div></div></div>
     </div>
   </div>
 
@@ -1751,7 +1898,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="कनेक्शन नहीं">No connection</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <button class="pill-btn stop" style="background:var(--error)" onclick="go('connecting')"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg></button>
@@ -1768,7 +1914,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('chat-idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot rose"></div><div class="mhdr-state-tx" data-hi="जियोभारतIQ से संपर्क नहीं">Can't reach JioBharatIQ</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Chat</div><div class="mhdr-state"><div class="mhdr-dot rose"></div><div class="mhdr-state-tx" data-hi="जियोभारतIQ से संपर्क नहीं">Can't reach JioBharatIQ</div></div></div>
     </div>
   </div>
 
@@ -1793,52 +1939,16 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   </div>
 </div>
 
-<!-- ======== 16. ERROR processing ======== -->
-<div class="screen" id="s-err-proc">
-  <div class="stage-glow on rose" style="opacity:.55"><div class="g-mid"></div></div>
-  <div class="top-wash"></div>
-  <div class="status"><span>9:41</span><div class="status-r"></div></div>
-
-  <div class="mhdr">
-    <div class="mhdr-l">
-      <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot" style="background:var(--err)"></div><div class="mhdr-state-tx" data-hi="समझ नहीं आया">Didn't understand</div></div>
-    </div>
-  </div>
-
-  <div class="content center">
-    <div class="err-chip" aria-hidden="true">
-      <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-    </div>
-    <div class="orb orb-error" id="orbErr" style="display:none" aria-hidden="true"><div class="orb-core"></div></div>
-    <div class="hero" style="color:var(--ink)" data-hi="समझ नहीं आया।">I didn't catch that.</div>
-    <div class="err-line" data-hi="फिर से कहें — शायद अलग तरीके से?">Try saying it again — maybe a different way?</div>
-    <button class="err-retry err-btn" style="margin-top:24px" onclick="go('processing')">
-      <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg>
-      Try again
-    </button>
-  </div>
-
-  <div class="dock">
-    <div class="dock-hint" data-hi="फिर से कोशिश के लिए माइक टैप करें">Tap the mic to retry</div>
-    <div class="pill">
-      <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" style="background:var(--err)" onclick="go('processing')" aria-label="Retry"><svg viewBox="0 0 24 24" style="fill:#fff"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg></button>
-      <button class="pill-btn" onclick="go('home-chat')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
-    </div>
-  </div>
-</div>
-
 <!-- ======== NEW · 1.1 CONSENT · MIC ======== -->
 <div class="screen" id="s-consent-mic">
-  <div class="stage-glow on peach"><div class="g-mid"></div></div>
+  <div class="stage-glow on teal"><div class="g-mid"></div></div>
   <div class="top-wash"></div>
   <div class="status"><span>9:41</span><div class="status-r"></div></div>
 
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot"></div><div class="mhdr-state-tx" data-hi="माइक की अनुमति">Mic permission</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot"></div><div class="mhdr-state-tx" data-hi="माइक की अनुमति">Mic permission</div></div></div>
     </div>
   </div>
 
@@ -1865,8 +1975,8 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     </div>
 
     <div class="act-stack">
-      <button class="act-btn fill" onclick="go('connecting')" data-hi="<svg viewBox='0 0 24 24' fill='#f5f5f5'><path d='M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z'/></svg>अनुमति दें">
-        <svg viewBox="0 0 24 24" fill="#f5f5f5"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
+      <button class="act-btn fill" style="background:var(--agent);box-shadow:0 8px 20px rgba(57,0,173,.28),0 2px 6px rgba(57,0,173,.14)" onclick="go('connecting')" data-hi="<svg viewBox='0 0 24 24' fill='#fff'><path d='M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z'/></svg>अनुमति दें">
+        <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
         Grant access
       </button>
     </div>
@@ -1886,7 +1996,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot rose"></div><div class="mhdr-state-tx" data-hi="माइक बंद है">Mic off</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot rose"></div><div class="mhdr-state-tx" data-hi="माइक बंद है">Mic off</div></div></div>
     </div>
   </div>
 
@@ -1901,13 +2011,13 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="hero" style="margin-top:28px" data-hi="माइक JBIQ के लिए बंद है।">Mic is turned off for JBIQ.</div>
 
     <div class="act-stack" style="margin-top:32px">
-      <button class="act-btn fill" onclick="showToast('Opening Settings…')" data-hi="<svg viewBox='0 0 24 24' fill='#fff'><path d='M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8 4c0-.46-.04-.91-.1-1.35l2.12-1.66c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.73-.56-1.53-1.02-2.41-1.36L14 3.44c-.03-.24-.24-.44-.49-.44h-4c-.25 0-.46.2-.49.44l-.37 2.87c-.88.34-1.68.8-2.41 1.36l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64L4.1 10.65c-.06.44-.1.89-.1 1.35s.04.91.1 1.35l-2.12 1.66c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.73.56 1.53 1.02 2.41 1.36l.37 2.87c.03.24.24.44.49.44h4c.25 0 .46-.2.49-.44l.37-2.87c.88-.34 1.68-.8 2.41-1.36l2.49 1c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64L19.9 13.35c.06-.44.1-.89.1-1.35z'/></svg>सेटिंग्स खोलें">
-        <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8 4c0-.46-.04-.91-.1-1.35l2.12-1.66c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.73-.56-1.53-1.02-2.41-1.36L14 3.44c-.03-.24-.24-.44-.49-.44h-4c-.25 0-.46.2-.49.44l-.37 2.87c-.88.34-1.68.8-2.41 1.36l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64L4.1 10.65c-.06.44-.1.89-.1 1.35s.04.91.1 1.35l-2.12 1.66c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.73.56 1.53 1.02 2.41 1.36l.37 2.87c.03.24.24.44.49.44h4c.25 0 .46-.2.49-.44l.37-2.87c.88-.34 1.68-.8 2.41-1.36l2.49 1c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64L19.9 13.35c.06-.44.1-.89.1-1.35z"/></svg>
-        Open Settings
-      </button>
-      <button class="act-btn ghost" onclick="go('chat-idle')" data-hi="<svg viewBox='0 0 24 24' fill='#141414'><path d='M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z'/></svg>चैट करें">
+      <button class="act-btn ghost" onclick="go('chat-idle')" data-hi="<svg viewBox='0 0 24 24' fill='#fff'><path d='M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z'/></svg>चैट करें">
         <svg viewBox="0 0 24 24" fill="#141414"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>
         Use chat
+      </button>
+      <button class="act-btn fill" style="background:var(--agent);box-shadow:0 8px 20px rgba(57,0,173,.28),0 2px 6px rgba(57,0,173,.14)" onclick="showToast('Opening Settings…')" data-hi="<svg viewBox='0 0 24 24' fill='#141414'><path d='M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8 4c0-.46-.04-.91-.1-1.35l2.12-1.66c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.73-.56-1.53-1.02-2.41-1.36L14 3.44c-.03-.24-.24-.44-.49-.44h-4c-.25 0-.46.2-.49.44l-.37 2.87c-.88.34-1.68.8-2.41 1.36l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64L4.1 10.65c-.06.44-.1.89-.1 1.35s.04.91.1 1.35l-2.12 1.66c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.73.56 1.53 1.02 2.41 1.36l.37 2.87c.03.24.24.44.49.44h4c.25 0 .46-.2.49-.44l.37-2.87c.88-.34 1.68-.8 2.41-1.36l2.49 1c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64L19.9 13.35c.06-.44.1-.89.1-1.35z'/></svg>सेटिंग्स खोलें">
+        <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8 4c0-.46-.04-.91-.1-1.35l2.12-1.66c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.73-.56-1.53-1.02-2.41-1.36L14 3.44c-.03-.24-.24-.44-.49-.44h-4c-.25 0-.46.2-.49.44l-.37 2.87c-.88.34-1.68.8-2.41 1.36l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64L4.1 10.65c-.06.44-.1.89-.1 1.35s.04.91.1 1.35l-2.12 1.66c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.73.56 1.53 1.02 2.41 1.36l.37 2.87c.03.24.24.44.49.44h4c.25 0 .46-.2.49-.44l.37-2.87c.88-.34 1.68-.8 2.41-1.36l2.49 1c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64L19.9 13.35c.06-.44.1-.89.1-1.35z"/></svg>
+        Open Settings
       </button>
     </div>
   </div>
@@ -1927,12 +2037,11 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="अब भी सुन रही हूँ">Still listening</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="अब भी सुन रही हूँ">Still listening</div></div></div>
     </div>
   </div>
 
   <div class="content" style="padding-top:120px">
-    <div class="eyebrow" style="color:var(--teal-3)" data-hi="कोई जल्दी नहीं">No rush</div>
     <div class="wave listening idle" id="waveNudge" style="margin-top:14px">
       <div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div>
     </div>
@@ -1942,10 +2051,9 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="nudge-toast" data-hi="कोई बात नहीं — जब चाहें माइक दबाएँ।">Koi baat nahi — jab chahe mic dabao.</div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="रुकें। रुकने पर मैं भेज दूँगी।">Pause. I'll send when you stop.</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop recording" onclick="go('idle')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
+      <button class="pill-btn pause" onclick="go('idle')" aria-label="Paused — tap to resume"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="4" height="14" rx="1.5"/><rect x="13" y="5" width="4" height="14" rx="1.5"/></svg></button>
       <button class="pill-btn" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -1960,7 +2068,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('speaking')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot amber"></div><div class="mhdr-state-tx" data-hi="पुष्टि चाहिए">Confirm needed</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot amber"></div><div class="mhdr-state-tx" data-hi="पुष्टि चाहिए">Confirm needed</div></div></div>
     </div>
   </div>
 
@@ -1987,10 +2095,9 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="वॉइस अब भी सुन रही है">Voice still listening</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop recording"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
+      <button class="pill-btn pause" aria-label="Paused — tap to resume"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="4" height="14" rx="1.5"/><rect x="13" y="5" width="4" height="14" rx="1.5"/></svg></button>
       <button class="pill-btn" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2005,7 +2112,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('confirm')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="चल रहा है…">Executing…</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="चल रहा है…">Executing…</div></div></div>
     </div>
   </div>
 
@@ -2027,10 +2134,9 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="रोकने के लिए कहीं भी टैप करें">Tap anywhere to cancel</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('receipt')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
+      <button class="pill-btn pause" onclick="go('receipt')" aria-label="Paused — tap to resume"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="4" height="14" rx="1.5"/><rect x="13" y="5" width="4" height="14" rx="1.5"/></svg></button>
       <button class="pill-btn" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2045,7 +2151,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('thread')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="हो गया!">Done</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="हो गया!">Done</div></div></div>
     </div>
   </div>
 
@@ -2076,7 +2182,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="और क्या चाहिए?">Anything else?</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <button class="pill-btn mic" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
@@ -2094,7 +2199,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="एक सवाल">Quick check</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="एक सवाल">Quick check</div></div></div>
     </div>
   </div>
 
@@ -2122,7 +2227,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="टैप करें या बोलें">Tap or speak</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <button class="pill-btn mic" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
@@ -2139,7 +2243,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · 4:22">Dinner plan · 4:22</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="4:22">4:22</div></div></div>
     </div>
     <div class="mhdr-r"><div class="mhdr-icon" role="button" aria-label="New chat" title="Start a new chat" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></div>
   </div>
@@ -2177,10 +2281,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
       <div class="ln"></div>
     </div>
 
-    <div class="user-voice-bubble">
-      <div class="uvb-main">Can I get directions to Spice Garden now?</div>
-      <div class="uvb-meta"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg><span>0:03</span><button class="uvb-edit" title="Edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div>
-    </div>
+    <div class="user-text">Can I get directions to Spice Garden now?</div>
 
     <div class="agent-inline">Opening maps now — 15 min drive from your location.</div>
   </div>
@@ -2205,13 +2306,13 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 
 <!-- IDLE · existing conversation -->
 <div class="screen" id="s-idle-ec">
-  <div class="vf-bg-glow"></div>
+  <div class="stage-glow on teal"><div class="g-mid"></div></div>
   <div class="top-wash"></div>
   <div class="status"><span>9:41</span><div class="status-r"></div></div>
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot" style="background:var(--user)"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · तैयार">Dinner plan · Ready</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot" style="background:var(--user)"></div><div class="mhdr-state-tx" data-hi="तैयार">Ready</div></div></div>
     </div>
   </div>
   <div class="content" style="padding-top:100px;padding-bottom:180px">
@@ -2223,7 +2324,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     </div>
   </div>
   <div class="dock">
-    <div class="dock-hint" data-hi="जारी रखने के लिए कहीं भी टैप करें">Tap anywhere to continue</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <button class="pill-btn mic" onclick="go('listening-ec')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
@@ -2240,7 +2340,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · सुन रही हूँ">Dinner plan · Listening</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="सुन रही हूँ">Listening</div></div></div>
     </div>
   </div>
   <div class="content" style="padding-top:100px;padding-bottom:180px">
@@ -2256,7 +2356,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="dock">
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn mic" onclick="go('processing-ec')" aria-label="Listening — tap to send"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
+      <button class="pill-btn pause" onclick="go('processing-ec')" aria-label="Paused — tap to resume"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="4" height="14" rx="1.5"/><rect x="13" y="5" width="4" height="14" rx="1.5"/></svg></button>
       <button class="pill-btn" onclick="go('thread')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2270,7 +2370,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · प्रोसेसिंग">Dinner plan · Processing</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div></div>
     </div>
   </div>
   <div class="content" style="padding-top:100px;padding-bottom:180px">
@@ -2288,7 +2388,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="dock">
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('speaking-ec')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
+      <button class="pill-btn stop" onclick="go('speaking-ec')" aria-label="Tap to interrupt"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('thread')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2302,7 +2402,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · बोल रही हूँ">Dinner plan · Speaking</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="बोल रही हूँ">Speaking</div></div></div>
     </div>
   </div>
   <div class="content" style="padding-top:100px;padding-bottom:180px">
@@ -2317,7 +2417,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="dock">
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
+      <button class="pill-btn stop" onclick="go('idle-ec')" aria-label="Tap to interrupt"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('thread')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2331,7 +2431,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot" style="background:var(--err)"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · गलती">Dinner plan · Error</div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot" style="background:var(--err)"></div><div class="mhdr-state-tx" data-hi="गलती">Error</div></div></div>
     </div>
   </div>
   <div class="content" style="padding-top:100px;padding-bottom:180px">
@@ -2353,7 +2453,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     </button>
   </div>
   <div class="dock">
-    <div class="dock-hint" data-hi="फिर से कोशिश के लिए माइक टैप करें">Tap the mic to retry</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <button class="pill-btn stop" style="background:var(--err)" onclick="go('listening-ec')" aria-label="Retry"><svg viewBox="0 0 24 24" style="fill:#fff"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg></button>
@@ -3015,7 +3114,6 @@ const NOTES={
   'chat-stream':{tier:'Chat',title:'Chat · streaming',why:'Word-by-word streaming. User can read ahead of TTS.',when:'First LLM chunk arrives',exits:'Stream end → feedback row · User typing → stop',color:'Ink text on white',rules:['Cursor blink at stream head','Charts/cards render after first paragraph','Never auto-scroll if user scrolled up']},
   'err-net-voice':{tier:'Error',title:'Error · network (voice)',why:'Voice path failed. Preserve intent, offer retry.',when:'STT/TTS WebSocket closes · or timeout',exits:'Retry → <span class="tok indigo">Connecting</span> · Chat → <span class="tok">Home-chat</span>',color:'Rose muted — calm, not alarm',rules:['Never blame the user','Save draft question if captured','Always offer chat fallback']},
   'err-net-chat':{tier:'Error',title:'Error · network (chat)',why:'Text send failed. Draft saved.',when:'Chat fetch rejects · or offline',exits:'Retry → <span class="tok indigo">Chat processing</span>',color:'Rose inline banner',rules:['Draft stays in input','No modal — inline error only']},
-  'err-proc':{tier:'Error',title:'Error · processing',why:'Low confidence or failure. Ask user to rephrase.',when:'Intent conf <0.55 after 1 retry',exits:'Retry → <span class="tok teal">Listening</span> · Manual text → <span class="tok">Chat idle</span>',color:'Amber — confusion, not failure',rules:['Copy: "Ek baar phir boliyega?" — not "Didn\'t understand"','All yellow, no red — this is decision, not error','Visual: small <b>amber info chip</b> (72px, muted amber ring with info glyph) — no red orb. Signals "hmm, let\'s try again" not "something broke".','Audio: gentle two-note fall (C5→G4) — apology, not alarm.','Voice retry primary']},
   'thread':{tier:'History',title:'Thread · full conversation',why:'Review conversation. Replay, share, re-engage.',when:'Tap old session · or back from Speaking complete',exits:'New question → bottom of thread → Processing',color:'White, minimal chrome',rules:['Voice bubbles italic + mic icon + duration','Receipts permanent (never truncated)','Truncated agent lines show "interrupted by you"']},
   'consent-mic':{tier:'New States',title:'Consent · mic (1.1)',why:'First-run mic grant. Soft, not legalese. Give a chat fallback always.',when:'First mic tap · app has no mic permission yet',exits:'Grant → <span class="tok indigo">Connecting</span> · Deny → <span class="tok">Chat idle</span>',color:'Peach glow · warm invite',rules:['Never auto-ask — wait for intent','Show 2 benefits max, specific not abstract','Ghost "Just use chat" equally respected','Visual: <b>mic-in-circle</b> illustration with 2 breathing halo rings — on-brand, no mascot video.'],copyEN:'Can I listen when you tap the mic?',copyHI:'जब माइक दबाओ, क्या सुन लूँ?'},
   'perm-denied':{tier:'New States',title:'Perm denied (1.2)',why:'Mic blocked at OS level. Offer Settings deeplink + chat path. Calm, not scary.',when:'navigator.permissions = "denied" at any mic tap',exits:'Enable → OS Settings → re-check · Chat → <span class="tok">Chat idle</span>',color:'Rose edge · muted banner only',rules:['Never red-flag alert — rose tint only','Banner explains state, no finger-pointing','Chat fallback always present']},
@@ -3060,7 +3158,7 @@ const TRANSLATIONS = {
     'Paused':'विराम',
     'Transitions':'बदलाव','Voice → Chat':'वॉइस → चैट',
     'Chat states':'चैट अवस्थाएं','Chat idle':'चैट तैयार','Chat processing':'चैट सोच रही','Chat streaming':'चैट जवाब',
-    'Errors':'गलतियाँ','Network (voice)':'नेटवर्क (वॉइस)','Network (chat)':'नेटवर्क (चैट)','Processing error':'प्रोसेसिंग गलती',
+    'Errors':'गलतियाँ','Network (voice)':'नेटवर्क (वॉइस)','Network (chat)':'नेटवर्क (चैट)',
     'Thread':'पूरी बातचीत','Full conversation':'पूरी बातचीत',
     'New States':'नई अवस्थाएं','Consent · mic':'माइक अनुमति','Permission denied':'माइक बंद','Silence nudge':'चुप्पी पर इशारा','Clarify · disambig':'एक बात पक्की','TTS buffer':'आवाज़ बफर','Confirm · action':'पुष्टि करें','Executing':'चल रहा है','Receipt · complete':'रसीद',
     // Home greeting
@@ -3164,6 +3262,19 @@ const HI_TEXT={
 
 // Per-element HI content provided directly via data-hi attribute takes highest priority.
 // Fallback: HI_OVERRIDES by selector. Fallback: leaf text dictionary lookup.
+
+// Theme toggle — swaps dark-mode class + icon glyph
+function toggleTheme(){
+  const isDark=document.body.classList.toggle('dark-mode');
+  const icon=document.getElementById('themeIcon');
+  if(!icon)return;
+  icon.innerHTML=isDark
+    ? '<path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zm-3.76 7.16h3v-2h-3v2zm9 10h2v-3h-2v3zm7.45-18.16l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zM12 7a5 5 0 100 10 5 5 0 000-10zm0 12h3v-3h-3v3zm9-12h-3v2h3v-2zm-8.24-3.84l1.42-1.41-1.79-1.79-1.41 1.41 1.78 1.79zM5.34 19.66l-1.79 1.79 1.41 1.41 1.79-1.79-1.41-1.41z"/>'
+    : '<path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.41 5.41 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>';
+  try{localStorage.setItem('jbiq-theme',isDark?'dark':'light')}catch(e){}
+}
+// Restore theme on load
+try{if(localStorage.getItem('jbiq-theme')==='dark')toggleTheme()}catch(e){}
 
 function setLang(lang){
   document.querySelectorAll('.lang-tab-btn').forEach(b=>b.classList.remove('active'));
@@ -3372,7 +3483,6 @@ function setLang(lang){
         playSpeakRise();
         stopPlateCarousel();
         break;
-      case 'err-proc':
       case 'err-net-voice':
       case 'err-net-chat':
         playErrorCue();
