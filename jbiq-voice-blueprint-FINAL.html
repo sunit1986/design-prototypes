@@ -83,6 +83,25 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 .theme-tab-btn svg{fill:currentColor}
 body.dark-mode .theme-tab-btn{color:var(--sparkle)}
 
+/* ============ IDLE / CHAT IDLE STARTER CHIPS · 2-col grid ============ */
+.askstart-h1{font-family:var(--ui);font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.015em;padding:0 10px 16px;line-height:1.2;animation:riseIn .4s var(--ease) both}
+.askstart-list{display:flex;flex-direction:column;gap:10px;padding:0 10px;align-items:flex-start;animation:riseIn .5s var(--ease) .05s both}
+.askstart-chip{display:inline-flex;align-items:center;gap:10px;padding:11px 18px 11px 14px;background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:999px;cursor:pointer;transition:all .15s var(--ease);box-shadow:0 1px 2px rgba(20,20,20,.04);font-family:var(--ui);text-align:left;outline:none;width:auto;flex:0 0 auto}
+.askstart-chip:hover{transform:translateY(-1px);border-color:rgba(0,0,0,.18);box-shadow:0 4px 10px rgba(20,20,20,.08)}
+.askstart-chip:active{transform:scale(.97)}
+.askstart-ic{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.askstart-ic svg{width:20px;height:20px}
+.askstart-tx{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.005em;line-height:1.2;white-space:nowrap}
+/* Voice Idle — icon tinted JDS sparkle */
+#s-idle .askstart-ic svg{fill:var(--user-d)}
+/* Chat Idle — icon tinted JDS surface-bold */
+#s-chat-idle .askstart-ic svg{fill:var(--agent)}
+body.dark-mode .askstart-chip{background:#1a1a1f;border-color:rgba(255,255,255,.06);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+body.dark-mode .askstart-chip:hover{background:#22222a}
+body.dark-mode .askstart-ic svg{fill:rgba(255,255,255,.75)}
+body.dark-mode .askstart-tx{color:#f5f5f5}
+body.dark-mode .askstart-h1{color:#f5f5f5}
+
 /* ============ DARK MODE — token swaps only, structure untouched ============ */
 body.dark-mode .lang-tab{background:#1a1a1f;border-color:rgba(255,255,255,.08);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 body.dark-mode .lang-tab-label{color:rgba(255,255,255,.5)}
@@ -360,7 +379,11 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
 .pill-btn.stop svg,.pill-btn.mic svg,.pill-btn.pause svg,.pill-btn.connecting svg{fill: var(--cta-icon)}
 .pill-btn.stop svg{width:24px;height:24px;animation:stopPulse 1.4s ease-in-out infinite;transform-origin:center}
 .pill-btn.mic svg{width:26px;height:26px;animation:micPulse 1.2s ease-in-out infinite}
-.pill-btn.pause svg{width:24px;height:24px;animation:none}
+.pill-btn.pause svg{width:24px;height:24px;animation:none;fill:#fff}
+/* Pause is its own family — distinct from mic/stop so it stands apart from the green listening/idle state */
+.pill-btn.pause{background:var(--agent)!important;box-shadow:0 12px 30px rgba(57,0,173,.32),0 4px 10px rgba(57,0,173,.18)!important}
+.pill-btn.pause:hover{box-shadow:0 16px 36px rgba(57,0,173,.38),0 5px 12px rgba(57,0,173,.22)!important}
+body.dark-mode .pill-btn.pause{background:#8B48D9!important;box-shadow:0 12px 30px rgba(139,72,217,.32),0 4px 10px rgba(139,72,217,.18)!important}
 .pill-btn.connecting svg{width:26px;height:26px;opacity:.7;position:relative;z-index:1}
 @keyframes stopPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
 @keyframes micPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
@@ -1416,14 +1439,25 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
     <div class="mhdr-r"><div class="mhdr-icon"><svg viewBox="0 0 24 24"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29z"/></svg></div></div>
   </div>
 
-  <div class="content" style="padding-top:110px">
-    <div class="sec" style="padding:0 20px 14px"><h3 data-hi="पूछकर देखें">Try asking</h3></div>
-    <div class="tools" style="padding:0 20px">
-      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--bold)"></span>Aaj ka rashifal</div>
-      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--primary)"></span>Top news right now</div>
-      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--sparkle)"></span>Plan tomorrow</div>
-      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--sec)"></span>Track my spending</div>
-      <div class="tchip" onclick="go('processing')"><span class="tdot" style="background:var(--bold)"></span>Open JioMart</div>
+  <div class="content" style="padding-top:150px">
+    <div class="askstart-h1" data-hi="कहाँ से शुरू करें?">Try saying</div>
+    <div class="askstart-list">
+      <button class="askstart-chip" onclick="go('processing')">
+        <span class="askstart-ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.39 4.84L20 7.5l-4 3.9.94 5.5L12 14.4 7.06 16.9 8 11.4 4 7.5l5.61-.66z"/></svg></span>
+        <span class="askstart-tx" data-hi="आज का राशिफल">Aaj ka rashifal</span>
+      </button>
+      <button class="askstart-chip" onclick="go('processing')">
+        <span class="askstart-ic"><svg viewBox="0 0 24 24"><path d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM6 7h5v6H6zm12 8H6v-2h12v2zm0-4h-6V9h6v2zm0-4h-6V7h6v2z"/></svg></span>
+        <span class="askstart-tx" data-hi="खबरें सुनाओ">What's the news?</span>
+      </button>
+      <button class="askstart-chip" onclick="go('processing')">
+        <span class="askstart-ic"><svg viewBox="0 0 24 24"><path d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/></svg></span>
+        <span class="askstart-tx" data-hi="मेरी शाम की योजना बनाओ">Plan my evening</span>
+      </button>
+      <button class="askstart-chip" onclick="go('processing')">
+        <span class="askstart-ic"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg></span>
+        <span class="askstart-tx" data-hi="जियोमार्ट खोलो">Open JioMart</span>
+      </button>
     </div>
   </div>
 
@@ -1445,7 +1479,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div></div>
     </div>
   </div>
 
@@ -1641,7 +1675,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="बोल रही हूँ…">Speaking…</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="बोल रही हूँ…">Speaking…</div></div></div>
     </div>
     <div class="mhdr-r"><div class="mhdr-icon" id="spkToggle" role="button" aria-label="Mute voice" title="Tap to mute voice" onclick="toggleTTSMute(this)"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg></div></div>
   </div>
@@ -1682,7 +1716,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('speaking')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Chat</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="कनेक्टेड">Connected</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="कनेक्टेड">Connected</div></div></div>
     </div>
   </div>
 
@@ -1729,14 +1763,25 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
     </div>
   </div>
 
-  <div class="content" style="padding-top:110px;padding-bottom:330px">
-    <div class="sec" style="padding:0 20px 14px"><h3 data-hi="पूछकर देखें">Try asking</h3></div>
-    <div class="tools" style="padding:0 20px">
-      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--bold)"></span>Show my calendar today</div>
-      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--primary)"></span>Summarise top news</div>
-      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--sparkle)"></span>Track my monthly spend</div>
-      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--sec)"></span>What's on TV tonight?</div>
-      <div class="tchip" onclick="go('chat-proc')"><span class="tdot" style="background:var(--bold)"></span>Draft a quick reply</div>
+  <div class="content" style="padding-top:150px;padding-bottom:330px">
+    <div class="askstart-h1" data-hi="पूछकर देखें">Try asking</div>
+    <div class="askstart-list">
+      <button class="askstart-chip" onclick="go('chat-proc')">
+        <span class="askstart-ic"><svg viewBox="0 0 24 24"><path d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/></svg></span>
+        <span class="askstart-tx" data-hi="कैलेंडर दिखाओ">My calendar</span>
+      </button>
+      <button class="askstart-chip" onclick="go('chat-proc')">
+        <span class="askstart-ic"><svg viewBox="0 0 24 24"><path d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM6 7h5v6H6zm12 8H6v-2h12v2zm0-4h-6V9h6v2zm0-4h-6V7h6v2z"/></svg></span>
+        <span class="askstart-tx" data-hi="खबरें">Top news</span>
+      </button>
+      <button class="askstart-chip" onclick="go('chat-proc')">
+        <span class="askstart-ic"><svg viewBox="0 0 24 24"><path d="M7 3h10a1 1 0 110 2h-2.2a4 4 0 011.1 3H17a1 1 0 110 2h-1.1a4 4 0 01-3.9 3h-.6l6.3 5.2a1 1 0 11-1.3 1.6L9.4 14H8v-2h3a2 2 0 002-2H7a1 1 0 110-2h5.8A2 2 0 0011 5H7a1 1 0 010-2z"/></svg></span>
+        <span class="askstart-tx" data-hi="खर्च का हिसाब">Track spend</span>
+      </button>
+      <button class="askstart-chip" onclick="go('chat-proc')">
+        <span class="askstart-ic"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></span>
+        <span class="askstart-tx" data-hi="जवाब लिखो">Draft a reply</span>
+      </button>
     </div>
   </div>
 
@@ -1770,7 +1815,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('chat-idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Chat</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div></div>
     </div>
   </div>
 
@@ -2037,7 +2082,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="अब भी सुन रही हूँ">Still listening</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="अब भी सुन रही हूँ">Still listening</div></div></div>
     </div>
   </div>
 
@@ -2068,7 +2113,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('speaking')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot amber"></div><div class="mhdr-state-tx" data-hi="पुष्टि चाहिए">Confirm needed</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot amber"></div><div class="mhdr-state-tx" data-hi="पुष्टि चाहिए">Confirm needed</div></div></div>
     </div>
   </div>
 
@@ -2112,7 +2157,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('confirm')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="चल रहा है…">Executing…</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="चल रहा है…">Executing…</div></div></div>
     </div>
   </div>
 
@@ -2151,7 +2196,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('thread')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="हो गया!">Done</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="हो गया!">Done</div></div></div>
     </div>
   </div>
 
@@ -2199,7 +2244,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Voice</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="एक सवाल">Quick check</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="एक सवाल">Quick check</div></div></div>
     </div>
   </div>
 
@@ -2312,7 +2357,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot" style="background:var(--user)"></div><div class="mhdr-state-tx" data-hi="तैयार">Ready</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="कनेक्टेड">Connected</div></div></div>
     </div>
   </div>
   <div class="content" style="padding-top:100px;padding-bottom:180px">
@@ -2340,7 +2385,7 @@ body.dark-mode .greet-row-r{filter:brightness(1.05)}
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="सुन रही हूँ">Listening</div></div></div>
+      <div class="mhdr-ts"><div class="mhdr-title">Dinner plan</div><div class="mhdr-state"><div class="mhdr-dot" style="background:var(--agent)"></div><div class="mhdr-state-tx" data-hi="रोकी गई">Paused</div></div></div>
     </div>
   </div>
   <div class="content" style="padding-top:100px;padding-bottom:180px">
@@ -3121,11 +3166,24 @@ const NOTES={
   'confirm':{tier:'New States',title:'Confirm (1.6)',why:'Irreversible ₹ action. User sees summary + speaks "haan/nahin" or taps.',when:'Intent resolved → action involves money, delete, or external call',exits:'Haan → <span class="tok indigo">Executing</span> · Nahin → <span class="tok">Idle</span>',color:'Amber glow · decision moment',rules:['Always show amount + vendor + plan — never 1 line','Voice stays hot for spoken yes/no','"Haan" is primary (ink), "Nahin" is ghost — same size'],copyEN:'Recharge ₹499 to Jio — confirm?',copyHI:'₹499 का जियो रिचार्ज — करूँ?'},
   'executing':{tier:'New States',title:'Executing (1.7)',why:'Action fired. Show steady progress so user doesn\'t double-tap.',when:'Confirm → Haan · external API in flight',exits:'Success → <span class="tok teal">Receipt</span> · Fail → <span class="tok rose">Err proc</span> · >8s → cancel CTA',color:'Indigo · same as Processing',rules:['Status line rotates: booking → holding → confirmed','Border progress bar, never spinner','Cancel available until success lands']},
   'receipt':{tier:'New States',title:'Receipt (1.8)',why:'Action complete. Permanent proof + 3 follow-up chips to close the loop.',when:'Executing success response received',exits:'Chip → sub-flow · Mic → <span class="tok teal">Listening</span> · X → <span class="tok">Home</span>',color:'Sparkle teal · celebration, not loud',rules:['Receipt #ID shown always — permanent','Max 3 chips — directions, calendar, cancel','Receipt persists in Thread forever'],copyEN:'Booked! Spice Garden · 8 pm tonight · 4 guests · #SG2026',copyHI:'बुक हो गया! स्पाइस गार्डन · आज रात 8 बजे · 4 लोग · #SG2026'},
-  'clarify':{tier:'New States',title:'Clarify (1.9)',why:'Intent confidence 0.55–0.80. One-turn disambig — not a re-ask loop.',when:'LLM returns 2+ plausible intents · conf in band',exits:'Chip or speech → <span class="tok indigo">Processing</span> · Kuch aur → <span class="tok teal">Listening</span>',color:'Violet · soft query, not failure',rules:['Max 3 chips, one "kuch aur" escape','Voice stays hot — user can speak answer','Never ask twice in same turn — escalate to err-proc'],copyEN:'Score? Schedule? Kuch aur?',copyHI:'स्कोर? शेड्यूल? कुछ और?'}
+  'clarify':{tier:'New States',title:'Clarify (1.9)',why:'Intent confidence 0.55–0.80. One-turn disambig — not a re-ask loop.',when:'LLM returns 2+ plausible intents · conf in band',exits:'Chip or speech → <span class="tok indigo">Processing</span> · Kuch aur → <span class="tok teal">Listening</span>',color:'Violet · soft query, not failure',rules:['Max 3 chips, one "kuch aur" escape','Voice stays hot — user can speak answer','Never ask twice in same turn — escalate to err-proc'],copyEN:'Score? Schedule? Kuch aur?',copyHI:'स्कोर? शेड्यूल? कुछ और?'},
+  'home-voice-first':{tier:'Entry',title:'Home · Voice-first',why:'Voice-led default home. Same content as Voice + Chat but with the 3-button voice dock instead of the chat input.',when:'App open · voice is the primary input · user hasn\'t typed yet',exits:'Mic tap → <span class="tok indigo">Processing</span> · Keyboard icon → <span class="tok">Home · chat</span>',color:'White · soft teal bloom at bottom',rules:['Teal bottom glow signals "voice is live"','Centre mic reads JDS sparkle-dark — same family as Idle/Listening','No chat input, no placeholder — the pill dock is the affordance']},
+  'idle-ec':{tier:'History',title:'Idle · existing conversation',why:'User is mid-thread and ready to speak again. Thread context sits above the dock.',when:'User returns to an ongoing thread with mic hot',exits:'Speech onset → <span class="tok indigo">Processing · existing</span> · Back → <span class="tok">Thread</span>',color:'Teal bloom — user turn signal',rules:['Mini-thread (last 2–3 turns) visible above the dock','Same teal family as fresh Idle — only differs by the ec-thread above']},
+  'listening-ec':{tier:'History',title:'Listening · existing conversation',why:'User is speaking into an ongoing thread. Live transcript above existing bubbles.',when:'Mid-thread, user tapped mic and speech onset detected',exits:'Silence end → <span class="tok indigo">Processing · existing</span> · Tap pause → <span class="tok">Pause</span>',color:'Teal — user active',rules:['Centre dock is now a pause ‖ (tap = pause my mic)','Live transcript renders beneath the existing thread','Bubbles above retain italic + mic-meta — history preserved']},
+  'processing-ec':{tier:'History',title:'Processing · existing conversation',why:'User finished speaking in an ongoing thread. Agent is thinking.',when:'STT final → LLM in flight, thread already active',exits:'Answer ready → <span class="tok">Speaking · existing</span> · Err → <span class="tok rose">Error · existing</span>',color:'Violet bloom · agent busy',rules:['Inline ec-thinking row (3 purple dots + "Thinking…") — not a hero card','Header Title "Dinner plan" / subtitle "Processing"','Same stop-square CTA semantics as voice Processing']},
+  'speaking-ec':{tier:'History',title:'Speaking · existing conversation',why:'Agent delivers answer in the context of an ongoing thread.',when:'TTS chunks arrive · thread already active',exits:'TTS end → <span class="tok">Idle · existing</span> · Barge-in → <span class="tok teal">Listening · existing</span>',color:'Violet · same as fresh Speaking',rules:['Agent line rendered as plain .agent-inline (no karaoke bar below)','Centre CTA = stop square — tap to interrupt','Thread above preserved during playback']},
+  'err-proc-ec':{tier:'Error',title:'Error · processing (existing)',why:'Intent was unclear mid-thread. Ask to rephrase without breaking context.',when:'Low-confidence intent on an ongoing thread',exits:'Retry → <span class="tok teal">Listening · existing</span> · Chat → <span class="tok">Thread</span>',color:'Rose edge, not body',rules:['Warning chip sits inline-left of the heading — one cohesive error headline','Thread context stays visible above','No red alert — muted rose only']}
 };
 function renderNotes(id){
-  const n=NOTES[id];const el=document.getElementById('npBody');
-  if(!n||!el)return;
+  const el=document.getElementById('npBody');
+  if(!el)return;
+  const n=NOTES[id];
+  if(!n){
+    // Fallback: derive a title from the id so the panel still updates
+    const label=id.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    el.innerHTML='<div class="np-tier">Screen</div><div class="np-title">'+label+'</div><div class="np-row"><div class="np-value" style="color:var(--ink-3);font-style:italic">No structured notes for this screen yet.</div></div>';
+    return;
+  }
   let html='<div class="np-tier '+(n.tier==='Error'?'t2':n.tier==='History'?'t3':'')+'">'+n.tier+'</div>';
   html+='<div class="np-title">'+n.title+'</div>';
   if(n.why)html+='<div class="np-row"><div class="np-label">Why</div><div class="np-value">'+n.why+'</div></div>';
