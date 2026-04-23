@@ -933,7 +933,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <button class="sb-btn" onclick="go('processing')" data-hi="सोच रही हूँ">Processing</button>
   <button class="sb-btn" onclick="go('speaking')" data-hi="बोल रही हूँ (कराओके)">Speaking (karaoke)</button>
   <div class="sb-title" data-hi="विराम">Paused</div>
-  <button class="sb-btn" onclick="go('paused-explicit')" data-hi="रोकी गई">Explicit pause</button>
   <div class="sb-title" data-hi="बदलाव">Transitions</div>
   <button class="sb-btn" onclick="go('mode-switch')" data-hi="वॉइस → चैट">Voice → Chat</button>
   <div class="sb-title" data-hi="चैट अवस्थाएं">Chat states</div>
@@ -1491,7 +1490,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <button class="pill-btn stop" onclick="go('speaking')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
-      <button class="pill-btn" onclick="go('paused-explicit')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
+      <button class="pill-btn" onclick="go('home-chat')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
 </div>
@@ -1533,44 +1532,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
       <button class="pill-btn" onclick="interruptSpeaking()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <button class="pill-btn stop" onclick="interruptSpeaking()"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="cancelVoice()"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
-    </div>
-  </div>
-</div>
-
-<!-- ======== 9. PAUSED explicit ======== -->
-<div class="screen" id="s-paused-explicit">
-  <div class="stage-glow on amber"><div class="g-mid"></div></div>
-  <div class="top-wash"></div>
-  <div class="status"><span>9:41</span><div class="status-r"></div></div>
-
-  <div class="mhdr">
-    <div class="mhdr-l">
-      <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot amber"></div><div class="mhdr-state-tx" data-hi="आपने रोका">Paused by you</div></div>
-    </div>
-  </div>
-
-  <div class="pause-card">
-    <div class="pause-title" data-hi="साँस <em>लें</em>।<br/>तैयार हों तो जारी रखें।">Saans <em>lo</em>.<br/>Resume when ready.</div>
-    <div class="pause-sub" data-hi="आपकी बात सेव है। जब तैयार हों, Resume दबाएँ।">Your context is saved. Jab wapas ready ho, tap Resume.</div>
-    <div class="pause-actions">
-      <button class="pause-btn pause-btn-ghost" onclick="go('home-chat')">
-        <svg viewBox="0 0 24 24" fill="#1a1a1a"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-        Switch to chat
-      </button>
-      <button class="pause-btn pause-btn-fill" onclick="go('speaking')">
-        <svg viewBox="0 0 24 24" fill="#f7f1e6"><path d="M8 5v14l11-7z"/></svg>
-        Resume
-      </button>
-    </div>
-  </div>
-
-  <div class="dock">
-    <div class="dock-hint" data-hi="आराम से">Take your time</div>
-    <div class="pill">
-      <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('speaking')" aria-label="Paused — tap to resume"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="4" height="14" rx="1.5"/><rect x="13" y="5" width="4" height="14" rx="1.5"/></svg></button>
-      <button class="pill-btn" onclick="go('home-chat')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
 </div>
@@ -3047,7 +3008,6 @@ const NOTES={
   'idle':{tier:'Voice',title:'Idle · ready',why:'Mic is hot. Wait for speech onset.',when:'After Connecting · or after Silence exit (1.4)',exits:'Speech onset → <span class="tok teal">Listening</span> · Tap X → Home',color:'Peach soft — inviting, not urgent',rules:['Text: "Tap karein ya bolna shuru karein"','Never show "no wake-word needed" (confusing copy)','Orb breathes at 0.8Hz']},
   'processing':{tier:'Voice',title:'Processing',why:'Hide latency. Show reasoning progress.',when:'STT final → intent + tool calls',exits:'Answer ready → <span class="tok">Speaking</span> · >3s → Cancel CTA · Conf 0.55–0.80 → <span class="tok">Clarify (1.9)</span>',color:'Indigo — brooding, thinking',rules:['Rotate 3–5 Hindi status lines, server-generated','Never exceed 5s without progress signal','Visual: <b>plate carousel</b> — 4 stylized dish disks (biryani → thali → dosa → tandoori) cross-fade every 2.2s with a slow spin and indigo conic ring. Caption updates with each swap ("Considering X spots").','Audio: soft marimba <i>tick</i> on each swap — reinforces "still thinking".','Swap SVGs for real <code>&lt;img&gt;</code> once photography lands at <code>/Assets/dish-N.png</code>.']},
   'speaking':{tier:'Voice',title:'Speaking · karaoke',why:'Deliver answer. Word-level reveal synced to TTS.',when:'TTS first chunk audible',exits:'TTS end → <span class="tok">Complete + chips</span> · VAD user speech → <span class="tok">Barge-in (1.5)</span> · Tap X → <span class="tok amber">Paused</span>',color:'Violet bold — agent voice',rules:['One voice across app, never swap persona','Duck to 20% on user onset, hard stop at 200ms','Visual: <b>slim pulse bar</b> under caption (5 violet bars, center sparkle-tinted). No 3D orb — caption is the hero.','Audio: short 4-note glissando (E5→B5) as TTS starts, matches ChatGPT "begin speaking" feel.']},
-  'paused-explicit':{tier:'Paused',title:'Paused · by user',why:'User tapped pause. Context preserved.',when:'Pause button during Speaking/Listening',exits:'Resume → return to state · Switch to chat → <span class="tok">Chat idle</span>',color:'Amber — user-invoked hold',rules:['Context stays intact','Audio muted fully, STT stopped']},
   'mode-switch':{tier:'Transition',title:'Voice → Chat',why:'Keyboard slides up. Thread context carried over.',when:'User taps chat icon during voice',exits:'Send text → <span class="tok indigo">Chat processing</span> · Mic → back to voice',color:'Violet fade',rules:['No "switched to chat" toast — show context','Last voice bubble stays visible above keyboard']},
   'chat-idle':{tier:'Chat',title:'Chat · idle',why:'Waiting for typing. Voice muted.',when:'User typed entry · or paused voice',exits:'Enter → <span class="tok indigo">Chat processing</span> · Mic → <span class="tok">Idle</span>',color:'White, no stage glow',rules:['No TTS auto-play ever','Mic icon always primary-l tinted']},
   'chat-proc':{tier:'Chat',title:'Chat · processing',why:'Match voice latency tiers. Same engine, different surface.',when:'Text submitted',exits:'Stream chunk → <span class="tok">Chat stream</span> · Err → <span class="tok rose">Net chat err</span>',color:'Indigo (matches voice)',rules:['Show 3 dots + 1-line status','Cancel button after 3s']},
@@ -3096,7 +3056,7 @@ const TRANSLATIONS = {
     'JioBharatIQ\nconversation': 'जियोभारत<em>IQ</em><br/>बातचीत',
     'Entry': 'प्रवेश','Home · voice-ready':'होम · वॉइस','Home · chat-focus':'होम · चैट',
     'Voice states':'वॉइस अवस्थाएं','Connecting':'जुड़ रहा है','Idle':'तैयार','Processing':'सोच रही हूँ','Speaking (karaoke)':'बोल रही हूँ',
-    'Paused':'विराम','Explicit pause':'रोकी गई',
+    'Paused':'विराम',
     'Transitions':'बदलाव','Voice → Chat':'वॉइस → चैट',
     'Chat states':'चैट अवस्थाएं','Chat idle':'चैट तैयार','Chat processing':'चैट सोच रही','Chat streaming':'चैट जवाब',
     'Errors':'गलतियाँ','Network (voice)':'नेटवर्क (वॉइस)','Network (chat)':'नेटवर्क (चैट)','Processing error':'प्रोसेसिंग गलती',
@@ -3125,7 +3085,7 @@ const TRANSLATIONS = {
     // Input placeholders
     'Ask anything':'कुछ भी पूछें','Ask anything…':'कुछ भी पूछें…','Type your message…':'अपना संदेश लिखें…','Continue the conversation…':'बातचीत जारी रखें…','Type your reply…':'जवाब लिखें…',
     // State labels
-    'Connecting…':'जुड़ रहा है…','Ready · listening soon':'तैयार · सुन रही हूँ','Ready · voice on':'तैयार · वॉइस चालू','Listening…':'सुन रही हूँ…','Thinking…':'सोच रही हूँ…','Speaking…':'बोल रही हूँ…','Paused by you':'आपने रोका','Switching to chat':'चैट पर जा रहे हैं','Chat mode · voice muted':'चैट मोड · वॉइस बंद','JioBharatIQ is thinking…':'जियोभारतIQ सोच रही है…','April expenses':'अप्रैल के खर्च','Can\'t reach JioBharatIQ':'जियोभारतIQ से संपर्क नहीं','Connection lost':'कनेक्शन टूट गया','Didn\'t understand':'समझ नहीं आया','Dinner plan · 4:22':'रात के खाने की योजना · 4:22','Voice · 4:22':'वॉइस · 4:22',
+    'Connecting…':'जुड़ रहा है…','Ready · listening soon':'तैयार · सुन रही हूँ','Ready · voice on':'तैयार · वॉइस चालू','Listening…':'सुन रही हूँ…','Thinking…':'सोच रही हूँ…','Speaking…':'बोल रही हूँ…','Switching to chat':'चैट पर जा रहे हैं','Chat mode · voice muted':'चैट मोड · वॉइस बंद','JioBharatIQ is thinking…':'जियोभारतIQ सोच रही है…','April expenses':'अप्रैल के खर्च','Can\'t reach JioBharatIQ':'जियोभारतIQ से संपर्क नहीं','Connection lost':'कनेक्शन टूट गया','Didn\'t understand':'समझ नहीं आया','Dinner plan · 4:22':'रात के खाने की योजना · 4:22','Voice · 4:22':'वॉइस · 4:22',
     // Dock hints
     'Tap anywhere to interrupt':'रोकने के लिए कहीं भी टैप करें','Tap the mic to retry':'फिर से कोशिश के लिए माइक टैप करें','Tap anywhere to start':'शुरू करने के लिए टैप करें','Waiting for you':'आपका इंतज़ार','Take your time':'आराम से','No connection':'कनेक्शन नहीं','Please wait':'कृपया प्रतीक्षा करें','Pause. I\'ll send when you stop.':'रुकें। रुकने पर मैं भेज दूँगी।','Speak — I\'ll send when you stop':'बोलें — रुकने पर भेज दूँगी',
     // Hero text
