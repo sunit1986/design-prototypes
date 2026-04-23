@@ -224,7 +224,9 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 .pill-btn.stop:hover{box-shadow:0 16px 36px rgba(0,0,0,.34),0 5px 12px rgba(0,0,0,.2)}
 .pill-btn.stop svg{fill:#fff;width:24px;height:24px}
 /* Quick mic-pulse animation on the icon — subtle bounce every 1.2s */
-.pill-btn.stop svg,.pill-btn.mic svg{animation:micPulse 1.2s ease-in-out infinite}
+.pill-btn.mic svg{animation:micPulse 1.2s ease-in-out infinite}
+.pill-btn.stop svg{animation:stopPulse 1.4s ease-in-out infinite;transform-origin:center}
+@keyframes stopPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
 @keyframes micPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 /* Soft breathing halo — appears as a translucent ring around the stop button */
 .pill-btn.stop::after{content:'';position:absolute;inset:-8px;border-radius:50%;background:rgba(0,0,0,.08);opacity:0;pointer-events:none;z-index:-1;animation:stopHalo 2.6s ease-in-out infinite}
@@ -583,7 +585,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 .ec-live-tx .live-cursor{display:inline-block;width:2px;height:14px;background:var(--ink-2);vertical-align:middle;margin-left:3px;animation:blink .7s step-end infinite}
 /* Thinking indicator — small 3-dot pulse + "Thinking..." label, as current agent turn */
 .ec-thinking{display:flex;align-items:center;gap:6px;padding:4px 2px;animation:riseIn .3s var(--ease) both}
-.ec-thinking .pd-dot{width:6px;height:6px;border-radius:50%;background:var(--ink-3);animation:pdBeat 1.4s ease-in-out infinite}
+.ec-thinking .pd-dot{width:6px;height:6px;border-radius:50%;background:var(--agent);animation:pdBeat 1.4s ease-in-out infinite}
 .ec-thinking .pd-dot:nth-child(2){animation-delay:.18s}
 .ec-thinking .pd-dot:nth-child(3){animation-delay:.36s}
 .ec-thinking .ec-thinking-tx{margin-left:6px;font-family:var(--ui);font-size:14px;font-weight:500;color:var(--ink-3)}
@@ -721,7 +723,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 
 /* ============ THINKING DOTS ============ */
 .thinking{display:inline-flex;gap:5px;align-items:center;margin-right:8px}
-.thinking i{width:6px;height:6px;border-radius:50%;background:var(--ink-2);animation:thinkBeat 1.2s ease-in-out infinite}
+.thinking i{width:6px;height:6px;border-radius:50%;background:var(--agent);animation:thinkBeat 1.2s ease-in-out infinite}
 .thinking i:nth-child(2){animation-delay:.15s}
 .thinking i:nth-child(3){animation-delay:.3s}
 @keyframes thinkBeat{0%,80%,100%{transform:scale(.5);opacity:.3}40%{transform:scale(1);opacity:1}}
@@ -729,11 +731,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 /* ============ KARAOKE WORDS ============ */
 .kword{color:var(--ink-4);transition:color .25s var(--ease)}
 .kword.said{color:var(--ink)}
-.kword.cur{color:var(--violet-3)}
-/* Inside agent-inline (Speaking · karaoke), words read as plain body text; only the current word takes a subtle purple accent */
-.agent-inline .kword{color:var(--ink)}
-.agent-inline .kword.said{color:var(--ink)}
-.agent-inline .kword.cur{color:var(--bold)}
+.kword.cur{color:var(--bold)}
 
 /* ============ CURSOR IN CHAT STREAM ============ */
 .stream-cursor{display:inline-block;width:2px;height:22px;background:var(--ink);vertical-align:-4px;margin-left:3px;animation:blink .7s step-end infinite}
@@ -821,7 +819,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 .sparkle{display:inline-block;width:16px;height:16px;color:var(--peach-3);animation:sparkle 3s ease-in-out infinite}
 @keyframes sparkle{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(45deg) scale(1.1)}}
 
-/* ============ NEW STATES — consent, perm-denied, silence, confirm, executing, receipt, clarify, tts-buffer ============ */
+/* ============ NEW STATES — consent, perm-denied, silence, confirm, executing, receipt, clarify ============ */
 
 /* Avatar video top-hero (consent) — legacy, kept for backwards compat */
 .avatar-hero{width:120px;height:120px;border-radius:50%;overflow:hidden;margin:0 auto 22px;background:var(--peach-1);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 36px rgba(30,204,176,.22);animation:riseIn .6s var(--ease) both}
@@ -932,11 +930,9 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="sb-title" data-hi="वॉइस अवस्थाएं">Voice states</div>
   <button class="sb-btn" onclick="go('connecting')" data-hi="जुड़ रहा है">Connecting</button>
   <button class="sb-btn" onclick="go('idle')" data-hi="तैयार">Idle</button>
-  <button class="sb-btn" onclick="go('listening')" data-hi="सुन रही हूँ">Listening</button>
   <button class="sb-btn" onclick="go('processing')" data-hi="सोच रही हूँ">Processing</button>
   <button class="sb-btn" onclick="go('speaking')" data-hi="बोल रही हूँ (कराओके)">Speaking (karaoke)</button>
   <div class="sb-title" data-hi="विराम">Paused</div>
-  <button class="sb-btn" onclick="go('paused-mid')" data-hi="बीच में रुकी">Mid-utterance</button>
   <button class="sb-btn" onclick="go('paused-explicit')" data-hi="रोकी गई">Explicit pause</button>
   <div class="sb-title" data-hi="बदलाव">Transitions</div>
   <button class="sb-btn" onclick="go('mode-switch')" data-hi="वॉइस → चैट">Voice → Chat</button>
@@ -954,14 +950,12 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <button class="sb-btn" onclick="go('listening-ec')" data-hi="सुन रही · जारी">Listening · existing</button>
   <button class="sb-btn" onclick="go('processing-ec')" data-hi="सोच रही · जारी">Processing · existing</button>
   <button class="sb-btn" onclick="go('speaking-ec')" data-hi="बोल रही · जारी">Speaking · existing</button>
-  <button class="sb-btn" onclick="go('paused-ec')" data-hi="विराम · जारी">Paused · existing</button>
   <button class="sb-btn" onclick="go('err-proc-ec')" data-hi="गलती · जारी">Error · existing</button>
   <div class="sb-title" data-hi="अनुमति">Permissions</div>
   <button class="sb-btn" onclick="go('consent-mic')" data-hi="माइक अनुमति">Consent · mic</button>
   <button class="sb-btn" onclick="go('perm-denied')" data-hi="माइक बंद">Permission denied</button>
   <div class="sb-title" data-hi="सूक्ष्म अवस्थाएं">Micro-states</div>
   <button class="sb-btn" onclick="go('silence-nudge')" data-hi="चुप्पी पर इशारा">Silence nudge</button>
-  <button class="sb-btn" onclick="go('tts-buffer')" data-hi="आवाज़ बफर">TTS buffer</button>
   <div class="sb-title" data-hi="भविष्य की अवस्थाएं (v2)">Future states (v2)</div>
   <button class="sb-btn" onclick="go('clarify')" data-hi="एक बात पक्की (भविष्य)">Clarify · disambig (future)</button>
   <button class="sb-btn" onclick="go('confirm')" data-hi="पुष्टि करें (भविष्य)">Confirm · action (future)</button>
@@ -1072,7 +1066,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="बात शुरू करने के लिए टैप करें">Tap to start talking</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn mic" onclick="go('listening')" aria-label="Tap to start talking"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
+      <button class="pill-btn mic" onclick="go('processing')" aria-label="Tap to start talking"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
       <button class="pill-btn" onclick="go('home-chat')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -1285,69 +1279,36 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot"></div><div class="mhdr-state-tx" data-hi="तैयार · सुन रही हूँ">Ready · listening soon</div></div>
+      <div class="mhdr-state"><div class="mhdr-dot"></div><div class="mhdr-state-tx" data-hi="लाइव">Live</div></div>
     </div>
     <div class="mhdr-r"><div class="mhdr-icon"><svg viewBox="0 0 24 24"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29z"/></svg></div></div>
   </div>
 
   <div class="content center">
     <div class="hero" data-hi="कुछ भी बोलिए।">Say anything.</div>
-    <div class="hero-line" data-hi="माइक टैप करें या बस बोलें।">Tap the mic or just start speaking.</div>
+    <div class="hero-line" data-hi="हिन्दी, अंग्रेज़ी या दोनों — मैं समझ लूँगी।">Hindi, English, or mix both — I'll follow.</div>
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="शुरू करने के लिए कहीं भी टैप करें">Tap anywhere to start</div>
+    <div class="dock-hint" data-hi="सुन रही हूँ">Listening</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn mic" onclick="go('listening')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
+      <button class="pill-btn mic" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
       <button class="pill-btn" onclick="go('home-chat')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
-    </div>
-  </div>
-</div>
-
-<!-- ======== 5. LISTENING ======== -->
-<div class="screen" id="s-listening">
-  <div class="stage-glow on teal"><div class="g-mid"></div></div>
-  <div class="top-wash"></div>
-  <div class="status"><span>9:41</span><div class="status-r"></div></div>
-
-  <div class="mhdr">
-    <div class="mhdr-l">
-      <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot teal"></div><div class="mhdr-state-tx" data-hi="सुन रही हूँ…">Listening…</div></div>
-    </div>
-  </div>
-
-  <div class="content" style="padding-top:120px">
-    <!-- Listening page: only the live transcript. Bottom dock mic button is the
-         animated indicator (pulsing .recording state). No center circle/waveform. -->
-    <div class="live-tx" id="liveTx" data-hi="अभी बोलें<span class='live-cursor'></span>">Speak now<span class="live-cursor"></span></div>
-    <!-- hidden legacy orb + ripple + wave kept so driveOrb/stopOrb + simulator remain safe no-ops -->
-    <div class="listen-ripple" id="listenRipple" style="display:none" aria-hidden="true"><div class="lr-core lr-core-dot"></div></div>
-    <div class="orb orb-listening" id="orbListen" style="display:none" aria-hidden="true"><div class="orb-core"></div></div>
-    <div class="wave listening idle" id="waveListen" style="display:none" aria-hidden="true"></div>
-  </div>
-
-  <div class="dock">
-    <div class="dock-hint" id="listenHint" data-hi="रुकें। रुकने पर मैं भेज दूँगी।">Pause. I'll send when you stop.</div>
-    <div class="pill">
-      <button class="pill-btn" onclick="stopListening()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop recording" onclick="stopListening()"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
-      <button class="pill-btn" onclick="cancelVoice()"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
 </div>
 
 <!-- ======== 6. PROCESSING ======== -->
 <div class="screen" id="s-processing">
-  <div class="stage-glow on indigo"><div class="g-mid"></div></div>
+  <div class="stage-glow on violet"><div class="g-mid"></div></div>
   <div class="top-wash"></div>
   <div class="status"><span>9:41</span><div class="status-r"></div></div>
 
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="सोच रही हूँ…">Thinking…</div></div>
+      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div>
     </div>
   </div>
 
@@ -1529,7 +1490,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="रोकने के लिए कहीं भी टैप करें">Tap anywhere to interrupt</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('speaking')"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+      <button class="pill-btn stop" onclick="go('speaking')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('paused-explicit')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -1559,16 +1520,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
       </div>
     </div>
     <div class="agent-inline" id="karaoke" style="margin-top:12px">
-      <span class="kword">Tap</span> <span class="kword">the</span> <span class="kword">mic</span> <span class="kword">to</span> <span class="kword">ask</span> <span class="kword">something.</span>
-    </div>
-    <!-- Karaoke pulse — 24 bars, real waveform simulation (or analyser-driven during TTS) -->
-    <div class="karaoke-pulse" id="kPulse" aria-hidden="true">
-      <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-      <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-      <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-      <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-      <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-      <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
+      <span class="kword said">Spice</span> <span class="kword said">Garden</span> <span class="kword said">in</span> <span class="kword said">Andheri</span> <span class="kword said">West</span> <span class="kword said">is</span> <span class="kword said">popular</span> <span class="kword said">—</span> <span class="kword cur">4.6</span> <span class="kword">rating,</span> <span class="kword">family-friendly,</span> <span class="kword">15</span> <span class="kword">minutes</span> <span class="kword">away.</span> <span class="kword">Want</span> <span class="kword">me</span> <span class="kword">to</span> <span class="kword">book</span> <span class="kword">a</span> <span class="kword">table?</span>
     </div>
     <!-- hidden orb kept only so legacy driveOrb/stopOrb calls are harmless -->
     <div class="orb orb-speaking" id="orbSpeak" style="display:none" aria-hidden="true"><div class="orb-core"></div></div>
@@ -1577,49 +1529,10 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   </div>
 
   <div class="dock">
-    <div class="dock-hint" data-hi="रोकने के लिए कहीं भी टैप करें">Tap anywhere to interrupt</div>
     <div class="pill">
       <button class="pill-btn" onclick="interruptSpeaking()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="interruptSpeaking()"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+      <button class="pill-btn stop" onclick="interruptSpeaking()"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="cancelVoice()"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
-    </div>
-  </div>
-</div>
-
-<!-- ======== 8. PAUSED mid-utterance ======== -->
-<div class="screen" id="s-paused-mid">
-  <div class="stage-glow on amber"><div class="g-mid"></div></div>
-  <div class="top-wash"></div>
-  <div class="status"><span>9:41</span><div class="status-r"></div></div>
-
-  <div class="mhdr">
-    <div class="mhdr-l">
-      <div class="mhdr-back" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot amber"></div><div class="mhdr-state-tx" data-hi="विराम">Paused</div></div>
-    </div>
-  </div>
-
-  <div class="pause-card">
-    <div class="pause-title" data-hi="कुछ और <em>बोलना</em> है?">Kuch aur <em>bolna</em> hai?</div>
-    <div class="pause-sub" data-hi="आराम से। मैं रुकती हूँ — या जो कहा वो भेज दूँ।">Take your time. I'll wait — or send what you have so far.</div>
-    <div class="pause-actions">
-      <button class="pause-btn pause-btn-ghost" onclick="go('listening')">
-        <svg viewBox="0 0 24 24" fill="#1a1a1a"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
-        Keep going
-      </button>
-      <button class="pause-btn pause-btn-fill" onclick="go('processing')">
-        <svg viewBox="0 0 24 24" fill="#f7f1e6"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        Send now
-      </button>
-    </div>
-  </div>
-
-  <div class="dock">
-    <div class="dock-hint" data-hi="आपका इंतज़ार">Waiting for you</div>
-    <div class="pill">
-      <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('listening')" aria-label="Resume listening"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
-      <button class="pill-btn" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
 </div>
@@ -1656,7 +1569,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="आराम से">Take your time</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('speaking')" aria-label="Resume"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
+      <button class="pill-btn stop" onclick="go('speaking')" aria-label="Paused — tap to resume"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="4" height="14" rx="1.5"/><rect x="13" y="5" width="4" height="14" rx="1.5"/></svg></button>
       <button class="pill-btn" onclick="go('home-chat')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -1714,26 +1627,33 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('home-chat')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot" style="background:var(--ink-3)"></div><div class="mhdr-state-tx" data-hi="चैट मोड · वॉइस बंद">Chat mode · voice muted</div></div>
+      <div class="mhdr-state"><div class="mhdr-dot"></div><div class="mhdr-state-tx" data-hi="लाइव">Live</div></div>
     </div>
   </div>
 
-  <div class="content center" style="padding-bottom:140px">
+  <div class="content center" style="padding-bottom:330px">
     <div class="hero" data-hi="अपना सवाल लिखें।">Type your question.</div>
     <div class="hero-line" data-hi="या माइक दबाकर बोल भी सकते हैं।">Or tap the mic to speak anytime.</div>
   </div>
 
-  <div class="dock">
+  <div class="dock" style="bottom:240px;z-index:60">
     <div class="mmodal">
       <button class="mmodal-plus"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <div class="mmodal-field">
-        <input type="text" placeholder="Ask anything" onkeydown="if(event.key==='Enter'){sendText(this.value);this.value=''}">
+        <input type="text" placeholder="Tap to chat" data-hi-placeholder="चैट करने के लिए टैप करें" onkeydown="if(event.key==='Enter'){sendText(this.value);this.value=''}">
         <button class="mmodal-send" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
         <button class="mmodal-voice" onclick="go('idle')" aria-label="Voice">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
         </button>
       </div>
     </div>
+  </div>
+
+  <div class="kb">
+    <div class="kb-row"><div class="kb-key">q</div><div class="kb-key">w</div><div class="kb-key">e</div><div class="kb-key">r</div><div class="kb-key">t</div><div class="kb-key">y</div><div class="kb-key">u</div><div class="kb-key">i</div><div class="kb-key">o</div><div class="kb-key">p</div></div>
+    <div class="kb-row" style="padding:3px 16px"><div class="kb-key">a</div><div class="kb-key">s</div><div class="kb-key">d</div><div class="kb-key">f</div><div class="kb-key">g</div><div class="kb-key">h</div><div class="kb-key">j</div><div class="kb-key">k</div><div class="kb-key">l</div></div>
+    <div class="kb-row"><div class="kb-key dk">⇧</div><div class="kb-key">z</div><div class="kb-key">x</div><div class="kb-key">c</div><div class="kb-key">v</div><div class="kb-key">b</div><div class="kb-key">n</div><div class="kb-key">m</div><div class="kb-key dk">⌫</div></div>
+    <div class="kb-row"><div class="kb-key dk">123</div><div class="kb-key dk">😀</div><div class="kb-key wide">space</div><div class="kb-key dk">.</div><div class="kb-key dk">return</div></div>
   </div>
 </div>
 
@@ -1746,18 +1666,18 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('chat-idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="जियोभारतIQ सोच रही है…">JioBharatIQ is thinking…</div></div>
+      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="प्रोसेसिंग">Processing</div></div>
     </div>
   </div>
 
-  <div class="content" style="padding-top:100px;padding-bottom:140px">
+  <div class="content" style="padding-top:100px;padding-bottom:330px">
     <div class="user-text">What's on my credit card this month?</div>
     <div class="agent-inline" style="color:var(--ink-3)">
       <span class="thinking"><i></i><i></i><i></i></span>Pulling up your April statement<em>…</em>
     </div>
   </div>
 
-  <div class="dock">
+  <div class="dock" style="bottom:240px;z-index:60">
     <div class="mmodal">
       <button class="mmodal-plus"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
       <div class="mmodal-field">
@@ -1769,6 +1689,13 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
       </div>
     </div>
   </div>
+
+  <div class="kb">
+    <div class="kb-row"><div class="kb-key">q</div><div class="kb-key">w</div><div class="kb-key">e</div><div class="kb-key">r</div><div class="kb-key">t</div><div class="kb-key">y</div><div class="kb-key">u</div><div class="kb-key">i</div><div class="kb-key">o</div><div class="kb-key">p</div></div>
+    <div class="kb-row" style="padding:3px 16px"><div class="kb-key">a</div><div class="kb-key">s</div><div class="kb-key">d</div><div class="kb-key">f</div><div class="kb-key">g</div><div class="kb-key">h</div><div class="kb-key">j</div><div class="kb-key">k</div><div class="kb-key">l</div></div>
+    <div class="kb-row"><div class="kb-key dk">⇧</div><div class="kb-key">z</div><div class="kb-key">x</div><div class="kb-key">c</div><div class="kb-key">v</div><div class="kb-key">b</div><div class="kb-key">n</div><div class="kb-key">m</div><div class="kb-key dk">⌫</div></div>
+    <div class="kb-row"><div class="kb-key dk">123</div><div class="kb-key dk">😀</div><div class="kb-key wide">space</div><div class="kb-key dk">.</div><div class="kb-key dk">return</div></div>
+  </div>
 </div>
 
 <!-- ======== 13. CHAT STREAM ======== -->
@@ -1779,44 +1706,48 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('chat-idle')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot" style="background:var(--ink-3)"></div><div class="mhdr-state-tx" data-hi="अप्रैल के खर्च">April expenses</div></div>
+      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · 4:22">Dinner plan · 4:22</div></div>
     </div>
+    <div class="mhdr-r"><div class="mhdr-icon" role="button" aria-label="New chat" title="Start a new chat"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></div>
   </div>
 
   <div class="content" style="padding-top:100px;padding-bottom:140px">
-    <div class="user-text">Show my April spending breakdown</div>
-    <div class="agent-inline">Here's your April — <em>₹48,200</em> across six categories.<br/>
-      <div style="margin-top:16px;padding:18px;background:#fff;border-radius:18px;border:.5px solid rgba(0,0,0,.06);box-shadow:0 18px 48px rgba(30,15,0,.08)">
-        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px">
-          <div style="font-family:var(--ui);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-3)">Total spend</div>
-          <div style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--ink);letter-spacing:-.015em">₹48,200</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--ui);font-size:13px;margin-bottom:3px"><span style="color:var(--ink-2);font-weight:500">Food &amp; Dining</span><span style="font-weight:700">₹12,400</span></div>
-            <div style="height:4px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden"><div style="height:100%;background:var(--peach-3);width:62%"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--ui);font-size:13px;margin-bottom:3px"><span style="color:var(--ink-2);font-weight:500">Travel</span><span style="font-weight:700">₹9,800</span></div>
-            <div style="height:4px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden"><div style="height:100%;background:var(--teal-3);width:48%"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--ui);font-size:13px;margin-bottom:3px"><span style="color:var(--ink-2);font-weight:500">Shopping</span><span style="font-weight:700">₹8,500</span></div>
-            <div style="height:4px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden"><div style="height:100%;background:var(--amber-2);width:42%"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--ui);font-size:13px;margin-bottom:3px"><span style="color:var(--ink-2);font-weight:500">Bills &amp; Utilities</span><span style="font-weight:700">₹6,800</span></div>
-            <div style="height:4px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden"><div style="height:100%;background:var(--violet-2);width:34%"></div></div>
-          </div>
+    <div class="ec-thread">
+      <div class="user-voice-bubble">
+        <div class="uvb-main" data-hi="मुझे आज डिनर के लिए अच्छा रेस्तराँ बताओ, अंधेरी वेस्ट के पास">Mujhe aaj dinner ke liye achha restaurant suggest karo, kuch near Andheri West</div>
+        <div class="uvb-meta">
+          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
+          <span>0:06</span>
+          <button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
         </div>
       </div>
-    </div>
-    <div class="agent-inline" style="font-size:18px">Biggest jump: <em>dining</em> (up 28% from March).<span class="stream-cursor"></span></div>
-    <div class="fbk">
-      <button class="fbk-btn" title="Like"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></button>
-      <button class="fbk-btn" title="Dislike"><svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button>
-      <button class="fbk-btn" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
-      <button class="fbk-btn" title="Share"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
+      <div class="agent-inline" data-hi="अंधेरी वेस्ट में <em>Spice Garden</em> popular है — 4.6 rating, family-friendly, 15 min drive. क्या table book करूँ?">Andheri West mein <em>Spice Garden</em> popular hai — 4.6 rating, family-friendly, 15 min drive. Do you want me to book a table?</div>
+
+      <div class="user-voice-bubble">
+        <div class="uvb-main" data-hi="हाँ, 8 बजे के लिए book करो, 4 लोग">Haan book karo, 8 baje ke liye, 4 log</div>
+        <div class="uvb-meta">
+          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
+          <span>0:03</span>
+          <button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+        </div>
+      </div>
+      <div class="agent-inline" data-hi="Booked. Spice Garden में 4 लोगों के लिए table, आज रात 8 बजे. Confirmation number <em>SG2026</em>.">Booked. Table for 4 at Spice Garden, 8 pm tonight. Confirmation number <em>SG2026</em>.</div>
+
+      <div class="user-voice-bubble">
+        <div class="uvb-main" data-hi="Thanks, क्या उनके पास kids' menu है?">Thanks, do they have a kids' menu?</div>
+        <div class="uvb-meta">
+          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
+          <span>0:02</span>
+          <button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+        </div>
+      </div>
+      <div class="agent-inline"><span class="kword said">Yes.</span> <span class="kword said">Spice</span> <span class="kword said">Garden</span> <span class="kword said">has</span> <span class="kword said">a</span> <span class="kword said">dedicated</span> <span class="kword said">kids'</span> <span class="kword cur">menu</span> <span class="kword">—</span> <span class="kword">pasta,</span> <span class="kword">pizza,</span> <span class="kword">and</span> <span class="kword">chicken</span> <span class="kword">nuggets,</span> <span class="kword">all</span> <span class="kword">under</span> <span class="kword">₹250.</span></div>
+      <div class="fbk">
+        <button class="fbk-btn" title="Like"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></button>
+        <button class="fbk-btn" title="Dislike"><svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button>
+        <button class="fbk-btn" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+        <button class="fbk-btn" title="Share"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
+      </div>
     </div>
   </div>
 
@@ -1922,7 +1853,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="orb orb-error" id="orbErr" style="display:none" aria-hidden="true"><div class="orb-core"></div></div>
     <div class="hero" style="color:var(--ink)" data-hi="समझ नहीं आया।">I didn't catch that.</div>
     <div class="err-line" data-hi="फिर से कहें — शायद अलग तरीके से?">Try saying it again — maybe a different way?</div>
-    <button class="err-retry err-btn" style="margin-top:24px" onclick="go('listening')">
+    <button class="err-retry err-btn" style="margin-top:24px" onclick="go('processing')">
       <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg>
       Try again
     </button>
@@ -1932,7 +1863,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="फिर से कोशिश के लिए माइक टैप करें">Tap the mic to retry</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" style="background:var(--err)" onclick="go('listening')" aria-label="Retry"><svg viewBox="0 0 24 24" style="fill:#fff"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg></button>
+      <button class="pill-btn stop" style="background:var(--err)" onclick="go('processing')" aria-label="Retry"><svg viewBox="0 0 24 24" style="fill:#fff"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg></button>
       <button class="pill-btn" onclick="go('home-chat')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -1965,7 +1896,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="bene-list">
       <div class="bene-row">
         <div class="bene-dot"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-        <div data-hi="जब तक आप माइक दबाए रखोगे, <em>तभी</em> सुनूंगी।">I only listen while you <em>hold the mic</em>.</div>
+        <div data-hi="सिर्फ जब माइक <em>चालू</em> हो, तभी सुनूंगी।">I only listen when the mic is <em>on</em>.</div>
       </div>
       <div class="bene-row">
         <div class="bene-dot"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
@@ -1978,7 +1909,6 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
         <svg viewBox="0 0 24 24" fill="#f5f5f5"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
         Grant access
       </button>
-      <button class="act-btn ghost" onclick="go('chat-idle')" data-hi="सिर्फ चैट करें">Just use chat</button>
     </div>
   </div>
 
@@ -2055,7 +1985,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="रुकें। रुकने पर मैं भेज दूँगी।">Pause. I'll send when you stop.</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop recording" onclick="go('idle')"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+      <button class="pill-btn stop recording" onclick="go('idle')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2100,7 +2030,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="वॉइस अब भी सुन रही है">Voice still listening</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop recording"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+      <button class="pill-btn stop recording"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2140,7 +2070,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="रोकने के लिए कहीं भी टैप करें">Tap anywhere to cancel</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('receipt')"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+      <button class="pill-btn stop" onclick="go('receipt')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2189,7 +2119,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="और क्या चाहिए?">Anything else?</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn mic" onclick="go('listening')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
+      <button class="pill-btn mic" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
       <button class="pill-btn" onclick="go('home-voice')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2222,7 +2152,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
         <span>Schedule</span>
         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
       </button>
-      <button class="clarify-chip" onclick="go('listening')" data-hi="<span>कुछ और</span><svg viewBox='0 0 24 24'><path d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z'/></svg>">
+      <button class="clarify-chip" onclick="go('processing')" data-hi="<span>कुछ और</span><svg viewBox='0 0 24 24'><path d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z'/></svg>">
         <span>Kuch aur</span>
         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
       </button>
@@ -2235,41 +2165,7 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     <div class="dock-hint" data-hi="टैप करें या बोलें">Tap or speak</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn mic" onclick="go('listening')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
-      <button class="pill-btn" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
-    </div>
-  </div>
-</div>
-
-<!-- ======== NEW · 1.11 TTS BUFFER ======== -->
-<div class="screen" id="s-tts-buffer">
-  <div class="stage-glow on indigo" style="opacity:.75"><div class="g-mid"></div></div>
-  <div class="stage-glow on violet" style="opacity:.35;animation:none"><div class="g-mid"></div></div>
-  <div class="top-wash"></div>
-  <div class="status"><span>9:41</span><div class="status-r"></div></div>
-
-  <div class="mhdr">
-    <div class="mhdr-l">
-      <div class="mhdr-back" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="आवाज़ तैयार हो रही है">Voice loading</div></div>
-    </div>
-  </div>
-
-  <div class="content" style="padding-top:140px;padding-bottom:180px">
-    <div class="user-said" data-hi="अंधेरी के पास सबसे अच्छा डिनर?">What's the best dinner near Andheri?</div>
-    <div class="eyebrow" data-hi="जियोभारतIQ">JioBharatIQ is</div>
-    <div class="hero-sub" data-hi="जवाब <em>तैयार है</em>,<br/>आवाज़ आ रही है<em>…</em>">Jawab <em>tayyar hai</em>,<br/>awaaz aa rahi hai<em>…</em></div>
-    <div class="tts-bar-wrap">
-      <div class="tts-bar-fill"></div>
-    </div>
-    <div class="meta" style="margin-top:16px" data-hi="एक सेकंड — <em>पढ़कर सुना रही हूँ।</em>">A moment — <em>speaking it out now.</em></div>
-  </div>
-
-  <div class="dock">
-    <div class="dock-hint" data-hi="रोकने के लिए कहीं भी टैप करें">Tap anywhere to interrupt</div>
-    <div class="pill">
-      <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('speaking')"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+      <button class="pill-btn mic" onclick="go('processing')"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
       <button class="pill-btn" onclick="go('idle')"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2398,10 +2294,9 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     </div>
   </div>
   <div class="dock">
-    <div class="dock-hint" data-hi="रुकें। रुकने पर मैं भेज दूँगी।">Pause. I'll send when you stop.</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop recording" onclick="go('processing-ec')"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+      <button class="pill-btn mic" onclick="go('processing-ec')" aria-label="Listening — tap to send"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
       <button class="pill-btn" onclick="go('thread')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2409,13 +2304,13 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
 
 <!-- PROCESSING · existing conversation -->
 <div class="screen" id="s-processing-ec">
-  <div class="stage-glow on indigo"><div class="g-mid"></div></div>
+  <div class="stage-glow on violet"><div class="g-mid"></div></div>
   <div class="top-wash"></div>
   <div class="status"><span>9:41</span><div class="status-r"></div></div>
   <div class="mhdr">
     <div class="mhdr-l">
       <div class="mhdr-back" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · सोच रही हूँ">Dinner plan · Thinking</div></div>
+      <div class="mhdr-state"><div class="mhdr-dot violet"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · प्रोसेसिंग">Dinner plan · Processing</div></div>
     </div>
   </div>
   <div class="content" style="padding-top:100px;padding-bottom:180px">
@@ -2431,10 +2326,9 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
     </div>
   </div>
   <div class="dock">
-    <div class="dock-hint" data-hi="रोकने के लिए कहीं भी टैप करें">Tap anywhere to interrupt</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('speaking-ec')"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+      <button class="pill-btn stop" onclick="go('speaking-ec')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('thread')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2458,66 +2352,12 @@ body{background:#e8e8ec;display:flex;align-items:flex-start;justify-content:cent
       <div class="user-voice-bubble"><div class="uvb-main">South Mumbai day mein kya cover karna chahiye?</div><div class="uvb-meta"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg><span>0:04</span><button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div></div>
       <!-- Current agent response being spoken — plain inline text, consistent with other agent lines -->
       <div class="agent-inline">Gateway of India, Colaba Causeway, Marine Drive walk at sunset, and Cafe Mondegar for lunch. Full day, 6–7 spots.</div>
-      <!-- Slim pulse bar indicates "currently speaking" — below the response, not colored differently -->
-      <div class="karaoke-pulse" aria-hidden="true">
-        <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-        <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-        <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-        <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-        <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-        <div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div><div class="kp-bar"></div>
-      </div>
     </div>
   </div>
   <div class="dock">
-    <div class="dock-hint" data-hi="रोकने के लिए कहीं भी टैप करें">Tap anywhere to interrupt</div>
     <div class="pill">
       <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
-      <button class="pill-btn" onclick="go('thread')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
-    </div>
-  </div>
-</div>
-
-<!-- PAUSED · existing conversation -->
-<div class="screen" id="s-paused-ec">
-  <div class="stage-glow on amber"><div class="g-mid"></div></div>
-  <div class="top-wash"></div>
-  <div class="status"><span>9:41</span><div class="status-r"></div></div>
-  <div class="mhdr">
-    <div class="mhdr-l">
-      <div class="mhdr-back" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
-      <div class="mhdr-state"><div class="mhdr-dot" style="background:var(--user)"></div><div class="mhdr-state-tx" data-hi="रात के खाने की योजना · विराम">Dinner plan · Paused</div></div>
-    </div>
-  </div>
-  <div class="content" style="padding-top:100px;padding-bottom:180px">
-    <div class="ec-thread">
-      <div class="user-voice-bubble"><div class="uvb-main">Kal 3 din ke liye Mumbai ghumna hai</div><div class="uvb-meta"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg><span>0:04</span><button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div></div>
-      <div class="agent-inline">Perfect. Then best rahega ki trip ko easy rakho — one South Mumbai day, one family fun day, and one flexible day.</div>
-      <div class="user-voice-bubble"><div class="uvb-main">South Mumbai day mein kya cover karna chahiye?</div><div class="uvb-meta"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg><span>0:04</span><button class="uvb-edit" aria-label="Edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div></div>
-      <div class="agent-inline">Gateway of India, Colaba Causeway, Marine Drive walk at sunset, and Cafe Mondegar for lunch.</div>
-    </div>
-    <!-- Pause card — below the mini-thread so both are visible -->
-    <div class="pause-card" style="margin-top:16px">
-      <div class="pause-title" data-hi="कुछ और <em>बोलना</em> है?">Kuch aur <em>bolna</em> hai?</div>
-      <div class="pause-sub" data-hi="आराम से। मैं रुकती हूँ।">Take your time. I'll wait.</div>
-      <div class="pause-actions">
-        <button class="pause-btn pause-btn-ghost" onclick="go('listening-ec')">
-          <svg viewBox="0 0 24 24" fill="#1a1a1a"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg>
-          Keep going
-        </button>
-        <button class="pause-btn pause-btn-fill" onclick="go('processing-ec')">
-          <svg viewBox="0 0 24 24" fill="#f7f1e6"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-          Send now
-        </button>
-      </div>
-    </div>
-  </div>
-  <div class="dock">
-    <div class="dock-hint" data-hi="आपका इंतज़ार">Waiting for you</div>
-    <div class="pill">
-      <button class="pill-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-      <button class="pill-btn stop" onclick="go('listening-ec')" aria-label="Resume"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92z"/></svg></button>
+      <button class="pill-btn stop" onclick="go('idle-ec')"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></button>
       <button class="pill-btn" onclick="go('thread')" aria-label="Switch to chat"><svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg></button>
     </div>
   </div>
@@ -2814,7 +2654,7 @@ function startOrbSim(){
 // ============ ENTRY POINTS ============
 function startVoice(seedText){
   spokenText='';responseText='';
-  go('listening');
+  go('processing');
   if(seedText){
     // Suggested prompt — skip listening, go straight to processing
     spokenText=seedText;
@@ -2950,12 +2790,6 @@ async function processAndSpeak(userText){
   // Simulate thinking — duration controlled by Latency Demo toggle
   await latencyDelay();
 
-  // Slow tier → pop through TTS-buffer screen for 1s before speaking
-  if(LATENCY_MODE === 'slow'){
-    go('tts-buffer');
-    await wait(1000);
-  }
-
   go('speaking');
   await speakText(r.text);
 }
@@ -3076,7 +2910,7 @@ function interruptSpeaking(){
   stopWave(document.getElementById('waveSpeak'));
   stopOrb(document.getElementById('orbSpeak'));
   // Go back to listening for barge-in
-  go('listening');
+  go('processing');
   setTimeout(()=>startListening(),200);
 }
 
@@ -3211,10 +3045,8 @@ const NOTES={
   'home-chat':{tier:'Entry',title:'Home · chat-focus',why:'Typing entry. Suggest starter prompts. Voice one tap away.',when:'User switched mode · or cold entry for literate-typing users',exits:'Send → <span class="tok indigo">Chat processing</span> · Mic → <span class="tok">Idle</span>',color:'White · no stage glow',rules:['No voice announce on entry','Mic button always returns to voice home']},
   'connecting':{tier:'Voice',title:'Connecting',why:'Covers socket open + model warm-up. Protect from dead-air.',when:'Mic tap → STT + TTS stream init',exits:'Ready in <800ms → <span class="tok">Idle</span> · Timeout >3s → <span class="tok rose">Err net</span>',color:'Peach bloom, calm',rules:['Max 1.5s before fail-fast','No text yet — orb does the talking','Mic not hot until Idle']},
   'idle':{tier:'Voice',title:'Idle · ready',why:'Mic is hot. Wait for speech onset.',when:'After Connecting · or after Silence exit (1.4)',exits:'Speech onset → <span class="tok teal">Listening</span> · Tap X → Home',color:'Peach soft — inviting, not urgent',rules:['Text: "Tap karein ya bolna shuru karein"','Never show "no wake-word needed" (confusing copy)','Orb breathes at 0.8Hz']},
-  'listening':{tier:'Voice',title:'Listening',why:'Capture user intent. Visualise confidence.',when:'VAD detects onset · continuous until silence',exits:'Silence 4s → nudge (1.3) · Silence 8s → Idle · Speech → <span class="tok indigo">Processing</span>',color:'Teal sparkle — user-owned moment',rules:['Interim text @ 70% ink-3 · Final @ 100% ink','STT stays on during TTS for barge-in','Visual: <b>concentric ripple rings</b> + 64px central mic dot. Rings expand outward every 1s, opacity + dot scale both driven by mic RMS. No 3D sphere — lets "Speak now" be the hero.','Audio: ascending C5·E5·G5 "start" ding on enter.']},
   'processing':{tier:'Voice',title:'Processing',why:'Hide latency. Show reasoning progress.',when:'STT final → intent + tool calls',exits:'Answer ready → <span class="tok">Speaking</span> · >3s → Cancel CTA · Conf 0.55–0.80 → <span class="tok">Clarify (1.9)</span>',color:'Indigo — brooding, thinking',rules:['Rotate 3–5 Hindi status lines, server-generated','Never exceed 5s without progress signal','Visual: <b>plate carousel</b> — 4 stylized dish disks (biryani → thali → dosa → tandoori) cross-fade every 2.2s with a slow spin and indigo conic ring. Caption updates with each swap ("Considering X spots").','Audio: soft marimba <i>tick</i> on each swap — reinforces "still thinking".','Swap SVGs for real <code>&lt;img&gt;</code> once photography lands at <code>/Assets/dish-N.png</code>.']},
   'speaking':{tier:'Voice',title:'Speaking · karaoke',why:'Deliver answer. Word-level reveal synced to TTS.',when:'TTS first chunk audible',exits:'TTS end → <span class="tok">Complete + chips</span> · VAD user speech → <span class="tok">Barge-in (1.5)</span> · Tap X → <span class="tok amber">Paused</span>',color:'Violet bold — agent voice',rules:['One voice across app, never swap persona','Duck to 20% on user onset, hard stop at 200ms','Visual: <b>slim pulse bar</b> under caption (5 violet bars, center sparkle-tinted). No 3D orb — caption is the hero.','Audio: short 4-note glissando (E5→B5) as TTS starts, matches ChatGPT "begin speaking" feel.']},
-  'paused-mid':{tier:'Paused',title:'Paused · mid-utterance',why:'User mid-sentence, uncertain. Offer both paths.',when:'Listening · silence 4–8s',exits:'Tap Keep going → <span class="tok teal">Listening</span> · Tap Send → <span class="tok">Processing</span>',color:'Amber — decision, not error',rules:['Never auto-send — user chooses','Card overlay, don\'t kill the stream']},
   'paused-explicit':{tier:'Paused',title:'Paused · by user',why:'User tapped pause. Context preserved.',when:'Pause button during Speaking/Listening',exits:'Resume → return to state · Switch to chat → <span class="tok">Chat idle</span>',color:'Amber — user-invoked hold',rules:['Context stays intact','Audio muted fully, STT stopped']},
   'mode-switch':{tier:'Transition',title:'Voice → Chat',why:'Keyboard slides up. Thread context carried over.',when:'User taps chat icon during voice',exits:'Send text → <span class="tok indigo">Chat processing</span> · Mic → back to voice',color:'Violet fade',rules:['No "switched to chat" toast — show context','Last voice bubble stays visible above keyboard']},
   'chat-idle':{tier:'Chat',title:'Chat · idle',why:'Waiting for typing. Voice muted.',when:'User typed entry · or paused voice',exits:'Enter → <span class="tok indigo">Chat processing</span> · Mic → <span class="tok">Idle</span>',color:'White, no stage glow',rules:['No TTS auto-play ever','Mic icon always primary-l tinted']},
@@ -3230,8 +3062,7 @@ const NOTES={
   'confirm':{tier:'New States',title:'Confirm (1.6)',why:'Irreversible ₹ action. User sees summary + speaks "haan/nahin" or taps.',when:'Intent resolved → action involves money, delete, or external call',exits:'Haan → <span class="tok indigo">Executing</span> · Nahin → <span class="tok">Idle</span>',color:'Amber glow · decision moment',rules:['Always show amount + vendor + plan — never 1 line','Voice stays hot for spoken yes/no','"Haan" is primary (ink), "Nahin" is ghost — same size'],copyEN:'Recharge ₹499 to Jio — confirm?',copyHI:'₹499 का जियो रिचार्ज — करूँ?'},
   'executing':{tier:'New States',title:'Executing (1.7)',why:'Action fired. Show steady progress so user doesn\'t double-tap.',when:'Confirm → Haan · external API in flight',exits:'Success → <span class="tok teal">Receipt</span> · Fail → <span class="tok rose">Err proc</span> · >8s → cancel CTA',color:'Indigo · same as Processing',rules:['Status line rotates: booking → holding → confirmed','Border progress bar, never spinner','Cancel available until success lands']},
   'receipt':{tier:'New States',title:'Receipt (1.8)',why:'Action complete. Permanent proof + 3 follow-up chips to close the loop.',when:'Executing success response received',exits:'Chip → sub-flow · Mic → <span class="tok teal">Listening</span> · X → <span class="tok">Home</span>',color:'Sparkle teal · celebration, not loud',rules:['Receipt #ID shown always — permanent','Max 3 chips — directions, calendar, cancel','Receipt persists in Thread forever'],copyEN:'Booked! Spice Garden · 8 pm tonight · 4 guests · #SG2026',copyHI:'बुक हो गया! स्पाइस गार्डन · आज रात 8 बजे · 4 लोग · #SG2026'},
-  'clarify':{tier:'New States',title:'Clarify (1.9)',why:'Intent confidence 0.55–0.80. One-turn disambig — not a re-ask loop.',when:'LLM returns 2+ plausible intents · conf in band',exits:'Chip or speech → <span class="tok indigo">Processing</span> · Kuch aur → <span class="tok teal">Listening</span>',color:'Violet · soft query, not failure',rules:['Max 3 chips, one "kuch aur" escape','Voice stays hot — user can speak answer','Never ask twice in same turn — escalate to err-proc'],copyEN:'Score? Schedule? Kuch aur?',copyHI:'स्कोर? शेड्यूल? कुछ और?'},
-  'tts-buffer':{tier:'New States',title:'TTS buffer (1.11)',why:'Answer ready, audio not yet. Protect the gap with motion + copy.',when:'LLM final chunk received · TTS first audio byte pending',exits:'Audio arrives → <span class="tok">Speaking</span> · >2s → fallback to text-only',color:'Indigo → violet · same chrome as Processing',rules:['Progress bar pulses, never stalls','Max 2s before fallback to silent stream','Never show blank — always one line of status']}
+  'clarify':{tier:'New States',title:'Clarify (1.9)',why:'Intent confidence 0.55–0.80. One-turn disambig — not a re-ask loop.',when:'LLM returns 2+ plausible intents · conf in band',exits:'Chip or speech → <span class="tok indigo">Processing</span> · Kuch aur → <span class="tok teal">Listening</span>',color:'Violet · soft query, not failure',rules:['Max 3 chips, one "kuch aur" escape','Voice stays hot — user can speak answer','Never ask twice in same turn — escalate to err-proc'],copyEN:'Score? Schedule? Kuch aur?',copyHI:'स्कोर? शेड्यूल? कुछ और?'}
 };
 function renderNotes(id){
   const n=NOTES[id];const el=document.getElementById('npBody');
@@ -3264,8 +3095,8 @@ const TRANSLATIONS = {
     // Sidebar
     'JioBharatIQ\nconversation': 'जियोभारत<em>IQ</em><br/>बातचीत',
     'Entry': 'प्रवेश','Home · voice-ready':'होम · वॉइस','Home · chat-focus':'होम · चैट',
-    'Voice states':'वॉइस अवस्थाएं','Connecting':'जुड़ रहा है','Idle':'तैयार','Listening':'सुन रही हूँ','Processing':'सोच रही हूँ','Speaking (karaoke)':'बोल रही हूँ',
-    'Paused':'विराम','Mid-utterance':'बीच में रुकी','Explicit pause':'रोकी गई',
+    'Voice states':'वॉइस अवस्थाएं','Connecting':'जुड़ रहा है','Idle':'तैयार','Processing':'सोच रही हूँ','Speaking (karaoke)':'बोल रही हूँ',
+    'Paused':'विराम','Explicit pause':'रोकी गई',
     'Transitions':'बदलाव','Voice → Chat':'वॉइस → चैट',
     'Chat states':'चैट अवस्थाएं','Chat idle':'चैट तैयार','Chat processing':'चैट सोच रही','Chat streaming':'चैट जवाब',
     'Errors':'गलतियाँ','Network (voice)':'नेटवर्क (वॉइस)','Network (chat)':'नेटवर्क (चैट)','Processing error':'प्रोसेसिंग गलती',
