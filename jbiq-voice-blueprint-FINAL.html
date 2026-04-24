@@ -131,8 +131,8 @@ body.dark-mode .agent-inline{color:#f5f5f5}
 body.dark-mode .kword{color:rgba(255,255,255,.35)}
 body.dark-mode .kword.said{color:#f5f5f5}
 body.dark-mode .mmodal{background:#1a1a1f;border-color:rgba(255,255,255,.08);box-shadow:0 -2px 24px rgba(0,0,0,.4)}
-body.dark-mode .mmodal-plus{background:rgba(109,55,209,.2)}
-body.dark-mode .mmodal-plus svg{fill:#ececec}
+body.dark-mode .mmodal-plus{background:rgba(30,204,176,.2)}
+body.dark-mode .mmodal-plus svg{fill:var(--user)}
 body.dark-mode .mmodal-field{background:#24242a}
 body.dark-mode .mmodal-field input{color:#ececec}
 body.dark-mode .mmodal-field input::placeholder{color:rgba(255,255,255,.4)}
@@ -837,9 +837,9 @@ body.dark-mode .pill-btn.pause{background:#8B48D9!important;box-shadow:0 12px 30
 
 /* ============ MULTIMODAL INPUT — lifted from jbiq-voice-text-prototype ============ */
 .mmodal{width:calc(100% - 32px);background:#fff;border:.5px solid rgba(0,0,0,.06);border-radius:24px;padding:8px;display:flex;align-items:center;gap:8px;box-shadow:0 -2px 24px rgba(0,0,0,.08),0 12px 32px rgba(0,0,0,.06)}
-.mmodal-plus{width:42px;height:42px;border-radius:50%;background:var(--primary-l);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s}
+.mmodal-plus{width:42px;height:42px;border-radius:50%;background:var(--user-l);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s}
 .mmodal-plus:active{transform:scale(.9)}
-.mmodal-plus svg{width:20px;height:20px;fill:#170054}
+.mmodal-plus svg{width:20px;height:20px;fill:var(--user-d)}
 /* Text input pill — input + send + voice all INSIDE one gray rounded field */
 .mmodal-field{flex:1;height:44px;border-radius:22px;background:#ebebed;display:flex;align-items:center;padding:0 4px 0 16px;gap:4px}
 .mmodal-field input{flex:1;min-width:0;height:100%;border:none;background:transparent;outline:none;font-family:var(--ui);font-size:15px;color:var(--ink);font-weight:500}
