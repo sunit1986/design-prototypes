@@ -3686,6 +3686,112 @@ body.dark-mode .app-hint{background:rgba(255,255,255,.92);color:#0f0f12}
 
 document.body.classList.add('app-mode');
 
+/* ============ GEMINI · real response generation ============
+   Key is stored per-browser in localStorage — never in git.
+   First-time users paste the key once via a prompt; it's remembered.
+   Replaces the keyword matcher (pickResponse) with live Gemini calls. */
+const GEMINI_MODEL = 'gemini-2.0-flash-exp';
+const JBIQ_SYSTEM  = `You are JBIQ (JioBharatIQ), a warm, helpful voice assistant for Jio customers in India.
+Rules:
+- Respond in the same language/script the user uses (English, Hindi, or Hinglish — match them).
+- Keep answers SHORT: 1–3 sentences max. Your reply will be read aloud by TTS, so brevity matters.
+- Be warm, direct, actionable. No filler like "I'd be happy to help" or "As an AI…".
+- Reference Jio services naturally when relevant: JioMart (shopping), JioSaavn (music), JioCinema (video), JioFinance (money), JioHealth, JioFiber.
+- If unsure, say so briefly and suggest a next step.
+- If the user asks for a list, use a compact Hinglish tone (e.g. "Teen baatein: pehle A, phir B, aur C.").`;
+
+function getGeminiKey(){
+  let k = '';
+  try{ k = localStorage.getItem('jbiq-gemini-key') || ''; }catch(e){}
+  return k;
+}
+function promptForGeminiKey(){
+  const k = prompt('Paste your Gemini API key (get one at aistudio.google.com/app/apikey).\n\nStored in your browser only — never sent to GitHub.\nLeave blank to keep using the canned fallback.');
+  if(k && k.trim()){
+    try{ localStorage.setItem('jbiq-gemini-key', k.trim()); }catch(e){}
+    return k.trim();
+  }
+  return null;
+}
+
+let convoHistory = [];
+
+async function callGemini(userText){
+  let key = getGeminiKey();
+  if(!key){ key = promptForGeminiKey(); }
+  if(!key) return null; // user skipped — fall back to canned
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(key)}`;
+  convoHistory.push({role:'user', parts:[{text:userText}]});
+  if(convoHistory.length > 10) convoHistory = convoHistory.slice(-10);
+  try{
+    const r = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        systemInstruction:{parts:[{text:JBIQ_SYSTEM}]},
+        contents:convoHistory,
+        generationConfig:{temperature:0.8, maxOutputTokens:180}
+      })
+    });
+    if(!r.ok){
+      const err = await r.text();
+      console.warn('Gemini '+r.status+':', err);
+      if(r.status===401||r.status===403){
+        // Key is bad — clear it so the user gets prompted next time
+        try{ localStorage.removeItem('jbiq-gemini-key'); }catch(e){}
+        alert('Gemini key rejected ('+r.status+'). You\'ll be asked to re-enter it next turn.');
+      }
+      convoHistory.pop();
+      return null;
+    }
+    const data = await r.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if(!text){ convoHistory.pop(); return null; }
+    convoHistory.push({role:'model', parts:[{text:text}]});
+    return text;
+  }catch(e){
+    console.warn('Gemini error:', e);
+    convoHistory.pop();
+    return null;
+  }
+}
+
+// Override processAndSpeak to use Gemini. Falls back to pickResponse on failure.
+if(typeof window.processAndSpeak === 'function'){
+  window.processAndSpeak = async function(userText){
+    const sq = document.getElementById('spokenQuestion');
+    if(sq) sq.textContent = userText;
+
+    let text = await callGemini(userText);
+    if(!text){
+      // Gemini failed → keep the demo alive with canned fallback
+      const r = pickResponse(userText);
+      text = r.text;
+    }
+    window.responseText = text;
+
+    // Update the karaoke element for the speaking screen word-by-word reveal
+    const k = document.getElementById('karaoke');
+    if(k){
+      k.innerHTML = text.split(/\s+/).map((w,i)=>`<span class="kword">${i?' ':''}${w}</span>`).join('');
+    }
+
+    // For chat-stream screen, drop the agent reply into the thread
+    const chatStream = document.querySelector('#s-chat-stream .ec-thread');
+    if(chatStream){
+      const prev = chatStream.querySelector('.agent-inline.live');
+      if(prev) prev.remove();
+      const ai = document.createElement('div');
+      ai.className = 'agent-inline live';
+      ai.textContent = text;
+      chatStream.appendChild(ai);
+    }
+
+    if(typeof go === 'function') go('speaking');
+    if(typeof speakText === 'function') await speakText(text);
+  };
+}
+
 // Rewire every mic button to actually fire the real recording pipeline.
 // The sandbox (FINAL) maps mic taps to go('processing') for dev convenience;
 // in the real app we want startVoice() which opens the mic via Web Speech API,
