@@ -3653,6 +3653,7 @@ function setLang(lang){
 <style>
 body.app-mode .sidebar{display:none!important}
 body.app-mode .notes-panel{display:none!important}
+body.app-mode .lang-tab{display:none!important}
 body.app-mode{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:0;margin:0;background:#f0f0f5}
 body.app-mode.dark-mode{background:#0a0a0d}
 body.app-mode .phone-wrap{margin:0 auto;max-width:none}
@@ -3684,6 +3685,40 @@ body.dark-mode .app-hint{background:rgba(255,255,255,.92);color:#0f0f12}
    We only remove the dev sidebar + notes panel and land on home. */
 
 document.body.classList.add('app-mode');
+
+// Rewire every mic button to actually fire the real recording pipeline.
+// The sandbox (FINAL) maps mic taps to go('processing') for dev convenience;
+// in the real app we want startVoice() which opens the mic via Web Speech API,
+// captures the user's utterance, picks a response, and plays TTS back.
+function wireMicButtons(){
+  document.querySelectorAll('.pill-btn.mic').forEach(btn=>{
+    // Replace any existing onclick — the real flow starts the mic
+    btn.setAttribute('onclick','startVoice()');
+  });
+  // Chat-input mic (.mmodal-voice) also triggers real mic (was go('idle'))
+  document.querySelectorAll('.mmodal-voice').forEach(btn=>{
+    btn.setAttribute('onclick','startVoice()');
+  });
+  // Pause orb on Listening · existing — tap to stop and send
+  document.querySelectorAll('#s-listening-ec .pill-btn.pause').forEach(btn=>{
+    btn.setAttribute('onclick','stopListening()');
+  });
+}
+
+// Let chat input Enter key send the message (already wired, just ensure focus works)
+function wireChatInputs(){
+  document.querySelectorAll('.mmodal-field input').forEach(inp=>{
+    // Keep existing onkeydown — already calls sendText()
+    // Just make sure the send button fires too
+    const sendBtn = inp.parentElement.querySelector('.mmodal-send');
+    if(sendBtn){
+      sendBtn.setAttribute('onclick','(function(b){var i=b.parentElement.querySelector("input");if(i&&i.value.trim()){sendText(i.value);i.value=""}})(this)');
+    }
+  });
+}
+
+wireMicButtons();
+wireChatInputs();
 
 // Land on home-voice-first so the user sees the real app, not a dev screen
 try{ if(typeof window.go === 'function') window.go('home-voice-first'); }catch(e){}
